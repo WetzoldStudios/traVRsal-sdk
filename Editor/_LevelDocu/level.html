@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>traVRsal Level: {LevelName}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="jumbotron text-center">
+        <h1>Level: {LevelName}</h1>
+        <p>Automatically generated documentation</p>
+    </div>
+
+    <div class="container mb-4">
+        <dl class="row">
+            <dt class="col-sm-1">Key</dt>
+            <dd class="col-sm-11">/{LevelKey}</dd>
+        </dl>
+    </div>
+
+    <div class="container mb-4">
+        <h3>Objects: {PiecesCount}</h3>
+        {PiecesList}
+    </div>
+
+    <div class="container mb-4">
+        <h3>Materials: {MaterialsCount}</h3>
+        {MaterialsList}
+    </div>
+
+    <div class="container mb-4">
+        <h3>Images: {ImagesCount}</h3>
+        {ImagesList}
+    </div>
+
+    <div class="container mb-4">
+        <h3>Sceneries: {SceneriesCount}</h3>
+        {SceneriesList}
+    </div>
+
+    <div class="container mb-4">
+        <h3>Sound Effects: {EffectsCount}</h3>
+        {EffectsList}
+    </div>
+
+    <div class="container mb-4">
+        <h3>Music: {MusicCount}</h3>
+        {MusicList}
+    </div>
+
+    <div class="container mt-4">
+        <footer class="blockquote-footer">Created with traVRsal {AppVersion} ({Date})</footer>
+    </div>
+</body>
+
+</html>
