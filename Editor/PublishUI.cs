@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace traVRsal.SDK
 {
-    public class PublishUI : EditorWindow
+    public class PublishUI : BasicEditorUI
     {
         public const string LOCKFILE_NAME = "traVRsal.lock";
 
@@ -23,7 +23,6 @@ namespace traVRsal.SDK
         private bool uploadInProgress = false;
         private DateTime uploadStartTime;
         private float uploadProgress = 1;
-        private GUIStyle logo;
         private int packageMode = 1;
         private static DirectoryWatcher dirWatcher;
 
@@ -33,13 +32,9 @@ namespace traVRsal.SDK
             GetWindow<PublishUI>("traVRsal Publisher");
         }
 
-        void OnEnable()
+        public override void OnEnable()
         {
-            Texture2D logoImage = null;
-            if (logoImage == null) logoImage = AssetDatabase.LoadAssetAtPath("Packages/com.wetzold.travrsal.sdk/Editor/Images/travrsal-300.png", typeof(Texture2D)) as Texture2D;
-            if (logoImage == null) logoImage = AssetDatabase.LoadAssetAtPath("Assets/SDK/Editor/Images/travrsal-300.png", typeof(Texture2D)) as Texture2D;
-
-            logo = new GUIStyle { normal = { background = logoImage }, fixedWidth = 128, fixedHeight = 64 };
+            base.OnEnable();
 
             if (dirWatcher == null)
             {
@@ -48,17 +43,10 @@ namespace traVRsal.SDK
             }
         }
 
-        void OnGUI()
+        public override void OnGUI()
         {
-            GUILayout.Space(10);
+            base.OnGUI();
 
-            GUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            GUILayout.Box("", logo);
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-
-            GUILayout.Space(10);
             GUILayout.Label("Packaging ensures that the editor shows the most up to date version of your level.", EditorStyles.wordWrappedLabel);
 
             GUILayout.BeginHorizontal();
@@ -106,7 +94,7 @@ namespace traVRsal.SDK
             }
             else
             {
-                if (GUILayout.Button("Upload")) EditorCoroutineUtility.StartCoroutine(UploadLevels(), this);
+                if (GUILayout.Button("Upload")) UploadLevels();
             }
 
             int timeRemaining = Mathf.Max(1, Mathf.RoundToInt((DateTime.Now.Subtract(uploadStartTime).Seconds / uploadProgress) * (1 - uploadProgress)));
@@ -249,27 +237,31 @@ namespace traVRsal.SDK
                 html = html.Replace("{AppVersion}", Application.version);
                 html = html.Replace("{Date}", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
 
-                foreach (string folder in new string[] { "Images", "Materials", "Pieces", "Sceneries", "Sounds/Effects", "Sounds/Music" })
+                foreach (string folder in new string[] { "Images", "Logic", "Materials", "Pieces", "Sceneries", "Sounds/Effects", "Sounds/Music" })
                 {
-                    if (!Directory.Exists($"{root}{folder}")) continue;
-                    Directory.CreateDirectory(docuPath + folder);
-
-                    string[] assets = AssetDatabase.FindAssets("*", new[] { $"{root}{folder}" });
+                    string[] assets = new string[0];
                     string objects = "";
-                    foreach (string asset in assets)
-                    {
-                        string assetPath = AssetDatabase.GUIDToAssetPath(asset);
 
-                        objects += "<div class=\"media\">";
-                        string imageName = folder + "/" + Path.GetFileName(assetPath) + ".png";
-                        if (File.Exists(docuPath + imageName))
+                    if (Directory.Exists($"{root}{folder}"))
+                    {
+                        Directory.CreateDirectory(docuPath + folder);
+
+                        assets = AssetDatabase.FindAssets("*", new[] { $"{root}{folder}" });
+                        foreach (string asset in assets)
                         {
-                            objects += "<img src=\"" + imageName + "\" class=\"mr-3\">";
+                            string assetPath = AssetDatabase.GUIDToAssetPath(asset);
+
+                            objects += "<div class=\"media\">";
+                            string imageName = folder + "/" + Path.GetFileName(assetPath) + ".png";
+                            if (File.Exists(docuPath + imageName))
+                            {
+                                objects += "<img src=\"" + imageName + "\" class=\"mr-3\">";
+                            }
+                            objects += "<div class=\"media-body\">/" + levelName + "/" + Path.GetFileNameWithoutExtension(assetPath);
+                            objects += "</div></div>";
                         }
-                        objects += "<div class=\"media-body\">/" + levelName + "/" + Path.GetFileNameWithoutExtension(assetPath);
-                        objects += "</div></div>";
+                        objects += "</table>";
                     }
-                    objects += "</table>";
                     html = html.Replace($"{{{Path.GetFileName(folder)}List}}", objects);
                     html = html.Replace($"{{{Path.GetFileName(folder)}Count}}", assets.Length.ToString());
                 }
@@ -412,16 +404,22 @@ namespace traVRsal.SDK
             return Directory.GetDirectories(Application.dataPath + "/Levels").Where(s => !Path.GetFileName(s).StartsWith("_")).ToArray();
         }
 
-        private IEnumerator UploadLevels()
+        private async void UploadLevels()
         {
             PackageLevels(true, true);
+
+            if (!Directory.Exists(GetServerDataPath()))
+            {
+                Debug.LogError("Could not find directory to upload: " + GetServerDataPath());
+                return;
+            }
 
             uploadInProgress = true;
             uploadProgress = 0;
             uploadStartTime = DateTime.Now;
 
             AWSUtil aws = new AWSUtil();
-            yield return aws.UploadDirectory(GetServerDataPath(), (progress) => uploadProgress = progress);
+            await aws.UploadDirectory(GetServerDataPath(), progress => uploadProgress = progress);
 
             EditorUtility.ClearProgressBar();
             uploadInProgress = false;
