@@ -1,0 +1,3 @@
+xNode is only included as source since Unity does not yet allow GitHub references in custom packages. It is on the roadmap though and hopefully lands in 2020.2.
+
+See also: https://forum.unity.com/threads/custom-package-with-git-dependencies.628390/
