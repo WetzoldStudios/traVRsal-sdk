@@ -188,7 +188,7 @@ namespace traVRsal.SDK
                 Directory.CreateDirectory(docuPath);
 
                 string root = $"Assets/Levels/{levelName}/";
-                foreach (string folder in new string[] { "Pieces", "Sceneries" })
+                foreach (string folder in new[] { "Pieces", "Sceneries" })
                 {
                     Directory.CreateDirectory(docuPath + folder);
 
@@ -237,7 +237,7 @@ namespace traVRsal.SDK
                 html = html.Replace("{AppVersion}", Application.version);
                 html = html.Replace("{Date}", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
 
-                foreach (string folder in new string[] { "Images", "Logic", "Materials", "Pieces", "Sceneries", "Sounds/Effects", "Sounds/Music" })
+                foreach (string folder in new[] { "Images", "Logic", "Materials", "Pieces", "Sceneries", "Audio/Effects", "Audio/Music" })
                 {
                     string[] assets = new string[0];
                     string objects = "";
@@ -313,7 +313,7 @@ namespace traVRsal.SDK
 
         private void ConvertTileMaps()
         {
-            foreach (string extension in new string[] { TileMapUtil.MAP_EXTENSION, TileMapUtil.WORLD_EXTENSION })
+            foreach (string extension in new[] { TileMapUtil.MAP_EXTENSION, TileMapUtil.WORLD_EXTENSION })
             {
                 string[] files = Directory.GetFiles(Application.dataPath, "*." + extension, SearchOption.AllDirectories);
                 TileMapUtil.ConvertTileMaps(files.ToList(), TravrsalSettingsManager.Get<string>("tiledPath"));
@@ -323,11 +323,11 @@ namespace traVRsal.SDK
 
         private void RenameCatalogs()
         {
-            foreach (string path in new string[] { GetServerDataPath(), Application.dataPath + "/../Library/com.unity.addressables/aa/Windows/Levels" })
+            foreach (string path in new[] { GetServerDataPath(), Application.dataPath + "/../Library/com.unity.addressables/aa/Windows/Levels" })
             {
                 if (Directory.Exists(path))
                 {
-                    foreach (string extension in new string[] { "hash", "json" })
+                    foreach (string extension in new[] { "hash", "json" })
                     {
                         string[] files = Directory.GetFiles(path, "catalog_*." + extension, SearchOption.AllDirectories);
                         foreach (string file in files)
