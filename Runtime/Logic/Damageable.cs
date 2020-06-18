@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace traVRsal.SDK
 {
-    public class Damageable : MonoBehaviour
+    public class Damageable : ExecutorConfig
     {
         public DamageableConfig config;
 
@@ -14,7 +14,5 @@ namespace traVRsal.SDK
         public List<Behaviour> enabledComponentsOnDestruction;
         public List<Behaviour> disabledComponentsOnDestruction;
         public AudioSource[] breakSounds;
-
-        void Start() { }
     }
 }

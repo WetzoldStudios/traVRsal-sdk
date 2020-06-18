@@ -2,7 +2,7 @@
 
 namespace traVRsal.SDK
 {
-    public class ProjectileShooter : MonoBehaviour
+    public class ProjectileShooter : ExecutorConfig
     {
         public GameObject bullet;
         public Transform firePoint;
@@ -12,7 +12,5 @@ namespace traVRsal.SDK
         public bool byPlayer = false;
         public AudioSource audioSource;
         public DamageInflictor damageInflictor;
-
-        void Start() { }
     }
 }

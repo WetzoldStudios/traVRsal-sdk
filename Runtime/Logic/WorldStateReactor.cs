@@ -14,5 +14,6 @@ namespace traVRsal.SDK
             }
         }
 
+        void Start() { }
     }
 }

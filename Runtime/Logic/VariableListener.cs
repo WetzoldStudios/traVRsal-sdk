@@ -2,7 +2,7 @@
 
 namespace traVRsal.SDK
 {
-    public class VariableListener : MonoBehaviour
+    public class VariableListener : ExecutorConfig
     {
         public enum Action
         {

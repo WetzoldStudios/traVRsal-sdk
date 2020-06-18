@@ -2,7 +2,7 @@
 
 namespace traVRsal.SDK
 {
-    public class EnemyBehavior : MonoBehaviour
+    public class EnemyBehavior : ExecutorConfig
     {
         public enum EnemyState
         {
@@ -42,7 +42,5 @@ namespace traVRsal.SDK
         public bool snapToGrid = true;
         public bool reportMovement = true;
         public AudioSource walkSound;
-
-        void Start() { }
     }
 }
