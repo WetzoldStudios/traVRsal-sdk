@@ -101,5 +101,139 @@ namespace traVRsal.SDK
             }
         }
     }
+
+    public class BasicEntityAttributeProcessor<T> : OdinAttributeProcessor<T> where T : BasicEntity
+    {
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        {
+            if (member.Name == "lowKey")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+        }
+    }
+
+    public class FloorAttributeProcessor<T> : OdinAttributeProcessor<T> where T : Floor
+    {
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        {
+            if (member.Name == "idx")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "positionInfoMarker")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "node")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "bounds")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "center")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+        }
+    }
+
+    public class MazeAttributeProcessor<T> : OdinAttributeProcessor<T> where T : Maze
+    {
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        {
+            if (member.Name == "holeCount")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "autoSeed")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+        }
+    }
+
+    public class LevelAttributeProcessor<T> : OdinAttributeProcessor<T> where T : Level
+    {
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        {
+            if (member.Name == "levelData")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "rooms")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "roomTemplates")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+        }
+    }
+
+    public class RoomAttributeProcessor<T> : OdinAttributeProcessor<T> where T : Room
+    {
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        {
+            if (member.Name == "curSize")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "scenePath")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "musicPlayed")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "agentCount")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "idx")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "stencilId")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "layerIdx")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "navAgentId")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "node")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "bounds")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+            if (member.Name == "center")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+        }
+    }
+
+    public class TextFragmentAttributeProcessor<T> : OdinAttributeProcessor<T> where T : TextFragment
+    {
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        {
+            if (member.Name == "played")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
+        }
+    }
 }
 #endif
