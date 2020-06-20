@@ -6,6 +6,8 @@ namespace traVRsal.SDK
 {
     public class SetupUI : BasicEditorUI
     {
+        private string[] REQUIRED_TAGS = { "ExcludeTeleport", "Interactable", "Enemy", "Fire", "Collectible" };
+
         private string levelName;
 
         [MenuItem("traVRsal/Setup", priority = 100)]
@@ -25,8 +27,31 @@ namespace traVRsal.SDK
             if (GUILayout.Button("Create New Level")) CreateSampleLevel();
 
             GUILayout.Space(10);
-            GUILayout.Label("Tiled data evolves over time with new icons and options. If you didn't make changes to the Tiled data yourself (recommended), you should update it with every new SDK release. This will copy the newest version to your project.", EditorStyles.wordWrappedLabel);
-            if (GUILayout.Button("Update/Restore Tiled")) RestoreTiled();
+            GUILayout.Label("The following actions should be performed once after an update of the SDK was installed, since the framework constantly evolves.", EditorStyles.wordWrappedLabel);
+            if (GUILayout.Button("Setup Tags")) SetupTags();
+            if (GUILayout.Button("Update/Restore Tiled Data")) RestoreTiled();
+        }
+
+        private void SetupTags()
+        {
+            SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+            SerializedProperty tagsProp = tagManager.FindProperty("tags");
+
+            // delete all tags first
+            for (int i = tagsProp.arraySize - 1; i >= 0; i--)
+            {
+                tagsProp.DeleteArrayElementAtIndex(i);
+            }
+
+            // recreate in exact order required
+            for (int i = 0; i < REQUIRED_TAGS.Length; i++)
+            {
+                tagsProp.InsertArrayElementAtIndex(i);
+                SerializedProperty newTag = tagsProp.GetArrayElementAtIndex(i);
+                newTag.stringValue = REQUIRED_TAGS[i];
+            }
+
+            tagManager.ApplyModifiedProperties();
         }
 
         private string GetLevelPath()
