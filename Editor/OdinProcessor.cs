@@ -87,21 +87,6 @@ namespace traVRsal.SDK
         }
     }
 
-    public class TimeManipulatorAttributeProcessor<T> : OdinAttributeProcessor<T> where T : TimeManipulator
-    {
-        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
-        {
-            if (member.Name == "mode")
-            {
-                attributes.Add(new ReadOnlyAttribute());
-            }
-            if (member.Name == "defaultPhysicsTimeStep")
-            {
-                attributes.Add(new ReadOnlyAttribute());
-            }
-        }
-    }
-
     public class BasicEntityAttributeProcessor<T> : OdinAttributeProcessor<T> where T : BasicEntity
     {
         public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)

@@ -10,10 +10,13 @@ namespace traVRsal.SDK
             USER_DRIVEN, AUTO_DEACTIVATE
         }
 
-        public OperationMode mode = OperationMode.USER_DRIVEN;
         public float slowTimeValue = 0.05f;
         public float duration = 3f;
         public float cooldown = 5f;
+
+        [HideInInspector]
+        public OperationMode mode = OperationMode.USER_DRIVEN;
+        [HideInInspector]
         public float defaultPhysicsTimeStep;
 
         private float lastUsage;
