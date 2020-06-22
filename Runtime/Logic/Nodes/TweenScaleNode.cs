@@ -11,6 +11,7 @@ namespace traVRsal.SDK
         [Input] public Vector3 scale;
         [Input] public float duration;
         [Input] public bool relative;
+        [Output(connectionType: ConnectionType.Override)] public bool Done;
 
         public override object GetValue(NodePort port)
         {
