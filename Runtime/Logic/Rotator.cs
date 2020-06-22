@@ -4,12 +4,12 @@ namespace traVRsal.SDK
 {
     public class Rotator : MonoBehaviour
     {
-        public float speed = 20f;
-        public float degrees = 1f;
+        public float degreesPerSecond = 10f;
+        public Vector3 axis = Vector3.up;
 
         void Update()
         {
-            transform.Rotate(0, degrees * Time.deltaTime * speed, 0);
+            transform.Rotate(axis, degreesPerSecond * Time.deltaTime);
         }
     }
 }
