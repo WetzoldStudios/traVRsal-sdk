@@ -1,7 +1,8 @@
 {
     "name": "traVRsal.SDK.runtime",
     "references": [
-        "GUID:14d48567ce135a342885fcf881aecad2"
+        "GUID:14d48567ce135a342885fcf881aecad2",
+        "GUID:b8e24fd1eb19b4226afebb2810e3c19b"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
