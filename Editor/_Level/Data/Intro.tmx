@@ -5,7 +5,7 @@
   <property name="NoSpawning" type="bool" value="false"/>
  </properties>
  <tileset firstgid="1" source="../../_Tiled/Master.tsx"/>
- <tileset firstgid="29" source="../../_Tiled/Deko.tsx"/>
+ <tileset firstgid="29" source="../../_Tiled/Deco.tsx"/>
  <group id="5" name="Floor 0">
   <properties>
    <property name="Height" type="float" value="2.5"/>

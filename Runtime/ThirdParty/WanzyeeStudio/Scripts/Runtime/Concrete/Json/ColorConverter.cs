@@ -6,6 +6,9 @@
 \.ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ./  (_(__(S)   |___*/
 
 using UnityEngine;
+using UnityEngine.Scripting;
+
+[assembly:Preserve]
 
 namespace WanzyeeStudio.Json{
 	

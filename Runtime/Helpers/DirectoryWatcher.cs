@@ -74,26 +74,27 @@ namespace traVRsal.SDK
 
     public class FSWParams
     {
-        public string path, filter;
+        public string path;
+        public string filter;
         public NotifyFilters notifiers;
         public bool includeSubfolders;
 
-        public FSWParams(string path)
+        public FSWParams(string path, string filter = "*.*")
         {
             this.path = path;
-            filter = "*.*";
+            this.filter = filter;
             notifiers = NotifyFilters.CreationTime | NotifyFilters.DirectoryName
                 | NotifyFilters.FileName | NotifyFilters.LastAccess | NotifyFilters.LastWrite
                 | NotifyFilters.Size;
             includeSubfolders = true;
         }
 
-        public FSWParams(string p, string f, NotifyFilters nf, bool isf)
+        public FSWParams(string path, string filter, NotifyFilters notifiers, bool includeSubfolders)
         {
-            path = p;
-            filter = f;
-            notifiers = nf;
-            includeSubfolders = isf;
+            this.path = path;
+            this.filter = filter;
+            this.notifiers = notifiers;
+            this.includeSubfolders = includeSubfolders;
         }
     }
 }

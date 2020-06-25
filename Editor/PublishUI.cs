@@ -81,6 +81,7 @@ namespace traVRsal.SDK
             {
                 if (GUILayout.Button("Create Documentation (Experimental)")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
             }
+            if (GUILayout.Button("Reimport all Tiled files")) ReimportTiled();
 
             GUILayout.Space(10);
             GUILayout.Label("Once a level or game is done, it can be packaged and sent to the central server for distribution. It will do an automatic full packaging step before.", EditorStyles.wordWrappedLabel);
@@ -99,6 +100,12 @@ namespace traVRsal.SDK
 
             int timeRemaining = Mathf.Max(1, Mathf.RoundToInt((DateTime.Now.Subtract(uploadStartTime).Seconds / uploadProgress) * (1 - uploadProgress)));
             if (uploadInProgress) EditorUtility.DisplayProgressBar("Progress", "Uploading levels to server... " + timeRemaining + "s", uploadProgress);
+        }
+
+        private void ReimportTiled()
+        {
+            List<string> allfiles = DirectoryUtil.GetFiles(Application.dataPath, new string[] { "*.world", "*.tmx" }, SearchOption.AllDirectories).ToList();
+            TileMapConverter.ConvertTiledToJSON(allfiles);
         }
 
         private string GetServerDataPath()

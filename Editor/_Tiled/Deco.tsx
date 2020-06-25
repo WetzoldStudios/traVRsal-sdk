@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.2" tiledversion="1.3.4" name="Deko" tilewidth="50" tileheight="50" tilecount="4" columns="0">
+<tileset version="1.2" tiledversion="1.3.4" name="Deco" tilewidth="50" tileheight="50" tilecount="4" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="3" type="/Base/MultiDisplay">
   <properties>
