@@ -6,18 +6,31 @@ using Amazon.S3.Model;
 using Amazon.Runtime;
 using System.IO;
 using System;
-using Amazon.CognitoIdentity;
 using Amazon;
 using System.Threading.Tasks;
 using Amazon.S3.Transfer;
 using System.Threading;
+using UnityEngine.Scripting;
+
+[assembly: Preserve]
 
 namespace traVRsal.SDK
 {
     public class AWSUtil
     {
-        public static string IdentityPoolId = "eu-west-1:87055e81-6bbc-4556-aa65-7b6df7d1ebe7";
-        public static string S3Root = "https://s3-eu-west-1.amazonaws.com/eu.west1.travrsal.repo/";
+        // Amazon settings
+        // Amazon-only: public static string IdentityPoolId = "eu-west-1:87055e81-6bbc-4556-aa65-7b6df7d1ebe7";
+        // Amazon-only: public static string S3Root = "https://s3-eu-west-1.amazonaws.com/eu.west1.travrsal.repo/";
+
+        // Digital Ocean settings
+        public static string S3LoginRoot = "https://sfo2.digitaloceanspaces.com/";
+        public static string S3Root = "https://travrsal-live.sfo2.digitaloceanspaces.com/";
+
+        // FIXME: only leave in for beta, new mechanism as soon as backend is up and running
+        public static string AccessKey = "56OHHRYAJWSCDODSF6X3";
+        public static string AccessKeySecret = "mNfWLF/J40vn65nQoyCrnU+/g89TM1lIAohiikSxNm8";
+        // Amazon-only: public static string S3BucketName = "eu.west1.travrsal.repo";
+        public static string S3BucketName = "travrsal-live";
 
         public string CognitoIdentityRegion = RegionEndpoint.EUWest1.SystemName;
         private RegionEndpoint _CognitoIdentityRegion
@@ -29,7 +42,6 @@ namespace traVRsal.SDK
         {
             get { return RegionEndpoint.GetBySystemName(S3Region); }
         }
-        public string S3BucketName = "eu.west1.travrsal.repo";
 
         private IAmazonS3 _s3Client;
         private AWSCredentials _credentials;
@@ -38,7 +50,8 @@ namespace traVRsal.SDK
         {
             get
             {
-                if (_credentials == null) _credentials = new CognitoAWSCredentials(IdentityPoolId, _CognitoIdentityRegion);
+                // Amazon-only: if (_credentials == null) _credentials = new CognitoAWSCredentials(IdentityPoolId, _CognitoIdentityRegion);
+                if (_credentials == null) _credentials = new BasicAWSCredentials(AccessKey, AccessKeySecret);
                 return _credentials;
             }
         }
@@ -47,7 +60,8 @@ namespace traVRsal.SDK
         {
             get
             {
-                if (_s3Client == null) _s3Client = new AmazonS3Client(Credentials, _S3Region);
+                // Amazon-only: if (_s3Client == null) _s3Client = new AmazonS3Client(Credentials, _S3Region);
+                if (_s3Client == null) _s3Client = new AmazonS3Client(Credentials, new AmazonS3Config { ServiceURL = S3LoginRoot });
                 return _s3Client;
             }
         }
@@ -107,7 +121,7 @@ namespace traVRsal.SDK
                 {
                     BucketName = S3BucketName,
                     Directory = path,
-                    StorageClass = S3StorageClass.StandardInfrequentAccess,
+                    // Amazon-only: StorageClass = S3StorageClass.StandardInfrequentAccess,
                     CannedACL = S3CannedACL.PublicRead,
                     SearchOption = SearchOption.AllDirectories,
 
