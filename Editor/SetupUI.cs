@@ -61,8 +61,21 @@ namespace traVRsal.SDK
 
         private void CreateSampleLevel()
         {
+            if (string.IsNullOrEmpty(levelName))
+            {
+                Debug.LogError("No level name specified.");
+                return;
+            }
+
             if (CreateLevelsRoot()) RestoreTiled();
             CreateSampleWorld();
+
+            EditorUtility.FocusProjectWindow();
+            Object obj = AssetDatabase.LoadAssetAtPath<Object>("Assets/Levels/" + levelName);
+            Selection.activeObject = obj;
+            EditorGUIUtility.PingObject(obj);
+
+            levelName = "";
         }
 
         private bool CreateLevelsRoot()
