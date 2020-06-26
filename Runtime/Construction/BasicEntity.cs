@@ -64,6 +64,8 @@ namespace traVRsal.SDK
             anchor = copyFrom.anchor;
             position = copyFrom.position;
             scale = copyFrom.scale;
+            height = copyFrom.height;
+            yGrid = copyFrom.yGrid;
             flipX = copyFrom.flipX;
             flipZ = copyFrom.flipZ;
             socket = copyFrom.socket;
@@ -74,6 +76,7 @@ namespace traVRsal.SDK
             direction = copyFrom.direction;
 
             key = copyFrom.key;
+            baseKey = copyFrom.baseKey;
             lowKey = copyFrom.lowKey;
             name = copyFrom.name;
             layerName = copyFrom.layerName;

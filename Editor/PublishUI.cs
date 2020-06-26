@@ -207,7 +207,9 @@ namespace traVRsal.SDK
 
                         GameObject prefab = PrefabUtility.LoadPrefabContents(assetPath);
 
-                        // this is asynchronous
+                        // this is asynchronous, and really shitty
+                        // it will run into endless loops and other strange things on Unity side
+                        // pounding it with a retry hammer seems to work though, just takes much longer
                         AssetPreview.GetAssetPreview(prefab);
                         Repaint(); // force async start
                         float startTime = Time.realtimeSinceStartup;
@@ -241,7 +243,7 @@ namespace traVRsal.SDK
                 string html = File.ReadAllText(docuPath + "level.html");
                 html = html.Replace("{LevelName}", levelName);
                 html = html.Replace("{LevelKey}", levelName);
-                html = html.Replace("{AppVersion}", Application.version);
+                html = html.Replace("{AppVersion}", Application.version); // FIXME: points to wrong version
                 html = html.Replace("{Date}", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
 
                 foreach (string folder in new[] { "Images", "Logic", "Materials", "Pieces", "Sceneries", "Audio/Effects", "Audio/Music" })
@@ -274,6 +276,7 @@ namespace traVRsal.SDK
                 }
 
                 File.WriteAllText(docuPath + "level.html", html);
+                Help.BrowseURL(docuPath + "level.html");
             }
             documentationInProgress = false;
         }
