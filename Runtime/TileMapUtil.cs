@@ -42,5 +42,21 @@ namespace traVRsal.SDK
                 }
             }
         }
+
+        public static void TileMapToImage(string fileName, string targetName, string converterExecutable)
+        {
+            if (!File.Exists(converterExecutable))
+            {
+                Debug.LogError($"tmxrasterizer.exe could not be found under the path provided: {converterExecutable}");
+                return;
+            }
+
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            process.StartInfo.FileName = converterExecutable;
+            process.StartInfo.Arguments = "-t 200 \"" + fileName + "\" \"" + targetName + "\"";
+            process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            process.Start();
+            process.WaitForExit();
+        }
     }
 }

@@ -79,7 +79,7 @@ namespace traVRsal.SDK
             }
             else
             {
-                if (GUILayout.Button("Create Documentation (Experimental)")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
+                if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
             }
             if (GUILayout.Button("Reimport all Tiled files")) ReimportTiled();
 
@@ -187,52 +187,25 @@ namespace traVRsal.SDK
         {
             documentationInProgress = true;
 
+            string converterPath = TravrsalSettingsManager.Get<string>("tiledPath");
+            if (!string.IsNullOrEmpty(converterPath)) converterPath = Path.GetDirectoryName(converterPath) + "/tmxrasterizer.exe";
+
             foreach (string dir in GetLevelPaths())
             {
                 string levelName = Path.GetFileName(dir);
                 string docuPath = $"{Application.dataPath}/../Documentation/{levelName}/";
-                if (Directory.Exists(docuPath)) Directory.Delete(docuPath, true);
-                Directory.CreateDirectory(docuPath);
+                try
+                {
+                    if (Directory.Exists(docuPath)) Directory.Delete(docuPath, true);
+                    Directory.CreateDirectory(docuPath);
+                }
+                catch
+                {
+                    EditorUtility.DisplayDialog("Error", $"Could not access documentation directory ({docuPath}). Most likely it is open somewhere in an explorer.", "OK");
+                    continue;
+                }
 
                 string root = $"Assets/Levels/{levelName}/";
-                foreach (string folder in new[] { "Pieces", "Sceneries" })
-                {
-                    Directory.CreateDirectory(docuPath + folder);
-
-                    string[] assets = AssetDatabase.FindAssets("*", new[] { $"{root}{folder}" });
-                    foreach (string asset in assets)
-                    {
-                        string assetPath = AssetDatabase.GUIDToAssetPath(asset);
-                        if (!assetPath.ToLower().EndsWith(".prefab")) continue;
-
-                        GameObject prefab = PrefabUtility.LoadPrefabContents(assetPath);
-
-                        // this is asynchronous, and really shitty
-                        // it will run into endless loops and other strange things on Unity side
-                        // pounding it with a retry hammer seems to work though, just takes much longer
-                        AssetPreview.GetAssetPreview(prefab);
-                        Repaint(); // force async start
-                        float startTime = Time.realtimeSinceStartup;
-                        while (AssetPreview.IsLoadingAssetPreview(prefab.GetInstanceID()))
-                        {
-                            if (Time.realtimeSinceStartup > startTime + 2f)
-                            {
-                                AssetPreview.GetAssetPreview(prefab);
-                                startTime = Time.realtimeSinceStartup;
-                            }
-                            yield return new WaitForSeconds(0.5f);
-                        }
-
-                        // still will not return something for all assets
-                        Texture2D icon = AssetPreview.GetAssetPreview(prefab);
-                        if (icon == null || !icon.isReadable) continue;
-
-                        byte[] bytes = icon.EncodeToPNG();
-                        if (bytes == null) continue;
-
-                        File.WriteAllBytes(docuPath + folder + "/" + Path.GetFileName(assetPath) + ".png", bytes);
-                    }
-                }
 
                 // fill HTML template
                 string id = AssetDatabase.FindAssets("_LevelDocu")[0];
@@ -246,10 +219,13 @@ namespace traVRsal.SDK
                 html = html.Replace("{AppVersion}", Application.version); // FIXME: points to wrong version
                 html = html.Replace("{Date}", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
 
-                foreach (string folder in new[] { "Images", "Logic", "Materials", "Pieces", "Sceneries", "Audio/Effects", "Audio/Music" })
+                foreach (string folder in new[] { "Data", "Images", "Logic", "Materials", "Pieces", "Sceneries", "Audio/Effects", "Audio/Music" })
                 {
+                    HashSet<string> doneAlready = new HashSet<string>();
                     string[] assets = new string[0];
                     string objects = "";
+                    int objCount = 0;
+                    string variableName = Path.GetFileName(folder);
 
                     if (Directory.Exists($"{root}{folder}"))
                     {
@@ -259,20 +235,112 @@ namespace traVRsal.SDK
                         foreach (string asset in assets)
                         {
                             string assetPath = AssetDatabase.GUIDToAssetPath(asset);
+                            if (doneAlready.Contains(assetPath)) continue;
+                            doneAlready.Add(assetPath);
 
-                            objects += "<div class=\"media\">";
-                            string imageName = folder + "/" + Path.GetFileName(assetPath) + ".png";
-                            if (File.Exists(docuPath + imageName))
+                            string imageLink = "NoPreview.png";
+                            bool withExtension = true;
+                            bool generatePreview = false;
+                            Type type = null;
+
+                            switch (folder)
                             {
-                                objects += "<img src=\"" + imageName + "\" class=\"mr-3\">";
+                                case "Data":
+                                    if (!assetPath.ToLower().EndsWith(".tmx")) continue;
+                                    imageLink = folder + "/" + Path.GetFileName(assetPath) + ".png";
+                                    TileMapUtil.TileMapToImage(assetPath, docuPath + imageLink, converterPath);
+                                    variableName = "Rooms";
+                                    withExtension = false;
+                                    break;
+
+                                case "Images":
+                                    generatePreview = true;
+                                    type = typeof(Texture2D);
+                                    break;
+
+                                case "Materials":
+                                    if (!assetPath.ToLower().EndsWith(".mat")) continue;
+                                    withExtension = false;
+                                    generatePreview = true;
+                                    type = typeof(Material);
+                                    break;
+
+                                case "Pieces":
+                                    if (!assetPath.ToLower().EndsWith(".prefab")) continue;
+                                    withExtension = false;
+                                    generatePreview = true;
+                                    break;
+
+                                case "Sceneries":
+                                    withExtension = false;
+                                    generatePreview = true;
+                                    break;
+
+                                case "Audio/Music":
+                                case "Audio/Effects":
+                                    generatePreview = true;
+                                    type = typeof(AudioClip);
+                                    break;
                             }
-                            objects += "<div class=\"media-body\">/" + levelName + "/" + Path.GetFileNameWithoutExtension(assetPath);
+                            objCount++;
+
+                            if (generatePreview)
+                            {
+                                GameObject prefab = null;
+                                UnityEngine.Object obj = null;
+                                if (type != null)
+                                {
+                                    obj = AssetDatabase.LoadAssetAtPath(assetPath, type);
+                                }
+                                else
+                                {
+                                    prefab = PrefabUtility.LoadPrefabContents(assetPath);
+                                    obj = prefab;
+                                }
+                                if (obj != null)
+                                {
+                                    Texture2D icon = AssetPreview.GetAssetPreview(obj);
+
+                                    while (icon == null && AssetPreview.IsLoadingAssetPreview(obj.GetInstanceID()))
+                                    {
+                                        Repaint();
+                                        yield return new EditorWaitForSeconds(0.05f);
+                                        icon = AssetPreview.GetAssetPreview(obj);
+                                    }
+                                    if (prefab != null) PrefabUtility.UnloadPrefabContents(prefab);
+
+                                    // still will not return something for all assets
+                                    if (icon == null || !icon.isReadable) continue;
+
+                                    byte[] bytes = icon.EncodeToPNG();
+                                    if (bytes == null) continue;
+
+                                    File.WriteAllBytes(docuPath + folder + "/" + Path.GetFileName(assetPath) + ".png", bytes);
+                                }
+                                else
+                                {
+                                    // most likely a directory
+                                    continue;
+                                }
+                            }
+
+                            objects += "<div class=\"media mb-1\">";
+                            string imageName = folder + "/" + Path.GetFileName(assetPath) + ".png";
+                            string accessKey = assetPath.Substring((root + folder).Length + 1);
+                            if (!withExtension) accessKey = accessKey.Substring(0, accessKey.LastIndexOf('.'));
+
+                            if (generatePreview)
+                            {
+                                imageLink = File.Exists(docuPath + imageName) ? imageName : "MissingPreview.png";
+                            }
+                            objects += "<img src=\"" + imageLink + "\" class=\"mr-3\" width=\"128\">";
+                            objects += "<div class=\"media-body\">/" + levelName + "/" + accessKey;
                             objects += "</div></div>";
                         }
                         objects += "</table>";
                     }
-                    html = html.Replace($"{{{Path.GetFileName(folder)}List}}", objects);
-                    html = html.Replace($"{{{Path.GetFileName(folder)}Count}}", assets.Length.ToString());
+                    html = html.Replace($"{{{variableName}List}}", objects);
+                    html = html.Replace($"{{{variableName}Count}}", objCount.ToString());
                 }
 
                 File.WriteAllText(docuPath + "level.html", html);
@@ -434,7 +502,7 @@ namespace traVRsal.SDK
             EditorUtility.ClearProgressBar();
             uploadInProgress = false;
 
-            Debug.Log("Upload completed.");
+            EditorUtility.DisplayDialog("Invalid Entry", "Upload completed.", "OK");
         }
 
         void OnInspectorUpdate()

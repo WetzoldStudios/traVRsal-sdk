@@ -32,6 +32,8 @@ namespace traVRsal.SDK
         public List<LevelDataReference> levelData;
 
         [Header("Runtime Data")]
+        public List<string> dependencies;
+        public List<string> levelDependencies;
         public List<Room> rooms;
         public List<Room> roomTemplates;
 
@@ -50,6 +52,8 @@ namespace traVRsal.SDK
             initialVariables = new List<Variable>();
             settings = new List<LevelSetting>();
             levelData = new List<LevelDataReference>();
+            dependencies = new List<string>();
+            levelDependencies = new List<string>();
         }
 
         public Level(string key) : this()

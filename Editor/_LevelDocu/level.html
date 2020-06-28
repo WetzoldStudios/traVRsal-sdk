@@ -16,10 +16,15 @@
     </div>
 
     <div class="container mb-4">
-        <dl class="row">
-            <dt class="col-sm-1">Key</dt>
-            <dd class="col-sm-11">/{LevelKey}</dd>
-        </dl>
+        <table class="table table-striped table">
+            <th scope="col">Level Key</th>
+            <td scope="row">/{LevelKey}</td>
+        </table>
+    </div>
+
+    <div class="container mb-4">
+        <h3>Rooms: {RoomsCount}</h3>
+        {RoomsList}
     </div>
 
     <div class="container mb-4">
@@ -52,7 +57,7 @@
         {MusicList}
     </div>
 
-    <div class="container mt-4">
+    <div class="container mt-4 mb-4">
         <footer class="blockquote-footer">Created with traVRsal ({Date})</footer>
     </div>
 </body>
