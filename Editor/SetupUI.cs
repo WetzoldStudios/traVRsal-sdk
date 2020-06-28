@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
@@ -63,7 +64,12 @@ namespace traVRsal.SDK
         {
             if (string.IsNullOrEmpty(levelName))
             {
-                Debug.LogError("No level name specified.");
+                EditorUtility.DisplayDialog("Invalid Entry", "No level name specified.", "OK");
+                return;
+            }
+            if (!IsValidLevelName(levelName))
+            {
+                EditorUtility.DisplayDialog("Invalid Entry", "Level name is not valid: must be upper and lower case characters, numbers and undercore only.", "OK");
                 return;
             }
 
@@ -76,6 +82,12 @@ namespace traVRsal.SDK
             EditorGUIUtility.PingObject(obj);
 
             levelName = "";
+        }
+
+        private bool IsValidLevelName(string levelName)
+        {
+            Regex allowed = new Regex("[^a-zA-Z0-9_]");
+            return levelName != "_" && !allowed.IsMatch(levelName);
         }
 
         private bool CreateLevelsRoot()
