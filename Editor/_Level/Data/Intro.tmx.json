@@ -1,4 +1,4 @@
-{ "compressionlevel":-1,
+{ "compressionlevel":0,
  "height":3,
  "infinite":false,
  "layers":[
@@ -23,7 +23,7 @@
                          "value":true
                         }],
                  "type":"tilelayer",
-                 "visible":false,
+                 "visible":true,
                  "width":3,
                  "x":0,
                  "y":0
@@ -40,7 +40,7 @@
                          "name":"",
                          "properties":[
                                 {
-                                 "name":"MazeRoom",
+                                 "name":"MazeRooms",
                                  "type":"string",
                                  "value":"HorizontalMaze"
                                 }, 
@@ -169,7 +169,7 @@
          "value":false
         }],
  "renderorder":"left-up",
- "tiledversion":"1.3.5",
+ "tiledversion":"1.4.1",
  "tileheight":50,
  "tilesets":[
         {
@@ -547,7 +547,7 @@
              "width":1
             },
          "margin":0,
-         "name":"Deko",
+         "name":"Deco",
          "spacing":0,
          "tilecount":4,
          "tileheight":50,
@@ -631,6 +631,6 @@
         }],
  "tilewidth":50,
  "type":"map",
- "version":1.2,
+ "version":1.4,
  "width":3
 }

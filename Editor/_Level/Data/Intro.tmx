@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.4" orientation="orthogonal" renderorder="left-up" compressionlevel="0" width="3" height="3" tilewidth="50" tileheight="50" infinite="0" nextlayerid="27" nextobjectid="63">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="left-up" compressionlevel="0" width="3" height="3" tilewidth="50" tileheight="50" infinite="0" nextlayerid="27" nextobjectid="63">
  <properties>
   <property name="NoAgents" type="bool" value="false"/>
   <property name="NoSpawning" type="bool" value="false"/>
@@ -10,7 +10,7 @@
   <properties>
    <property name="Height" type="float" value="2.5"/>
   </properties>
-  <layer id="1" name="Ground" width="3" height="3" visible="0">
+  <layer id="1" name="Ground" width="3" height="3">
    <properties>
     <property name="Materials" value="[ground]"/>
     <property name="Walkable" type="bool" value="true"/>
@@ -24,7 +24,7 @@
   <objectgroup id="4" name="Transitions">
    <object id="8" gid="8" x="50" y="150" width="50" height="50" rotation="-90">
     <properties>
-     <property name="MazeRoom" value="HorizontalMaze"/>
+     <property name="MazeRooms" value="HorizontalMaze"/>
      <property name="MazeTransitions" type="int" value="2"/>
      <property name="TargetRoom" value="[exit]"/>
     </properties>

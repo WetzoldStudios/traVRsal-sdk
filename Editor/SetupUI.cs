@@ -24,7 +24,7 @@ namespace traVRsal.SDK
             GUILayout.Label("Levels are the basic building block. Single levels can either be shared with others on traVRsal or combined with other levels into your own game.", EditorStyles.wordWrappedLabel);
 
             GUILayout.Space(10);
-            levelName = EditorGUILayout.TextField("Level Name: ", levelName);
+            levelName = EditorGUILayout.TextField("Level Key: ", levelName);
             if (GUILayout.Button("Create New Level")) CreateSampleLevel();
 
             GUILayout.Space(10);
@@ -64,12 +64,12 @@ namespace traVRsal.SDK
         {
             if (string.IsNullOrEmpty(levelName))
             {
-                EditorUtility.DisplayDialog("Invalid Entry", "No level name specified.", "OK");
+                EditorUtility.DisplayDialog("Invalid Entry", "No level key specified.", "OK");
                 return;
             }
             if (!IsValidLevelName(levelName))
             {
-                EditorUtility.DisplayDialog("Invalid Entry", "Level name is not valid: must be upper and lower case characters, numbers and undercore only.", "OK");
+                EditorUtility.DisplayDialog("Invalid Entry", "Level key is not valid: must be upper and lower case characters, numbers and undercore only.", "OK");
                 return;
             }
 

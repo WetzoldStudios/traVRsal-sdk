@@ -32,6 +32,7 @@ namespace traVRsal.SDK
         public int health;
         public float scale = 100f;
         public float y = 0;
+        public float[] yRange;
         public int minDistance = 0;
         public bool snap = false;
         public bool atCeiling = false;

@@ -28,7 +28,6 @@ This is an early alpha version to get feedback and steer the direction of future
 * switching to game mode does not allow to move with cursor keys for some reason (it works in the editor)
 * incorrect JSON files will cause the editor to become stuck
 * auto-refresh sometimes does not load the newest packaged assets, restarting the editor solves this
-* gizmos are sometimes misaligned or shine through geometry
 * the minimum tile count in a grid right now is 4 due to a limitation with maze generation
 * deleting the Levels folder will spam the Unity console with errors if the Publish UI of the traVRsal SDK is still open
 * custom interactions are not possible yet (only premade Button for now)

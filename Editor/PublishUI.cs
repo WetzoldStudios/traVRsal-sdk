@@ -134,10 +134,10 @@ namespace traVRsal.SDK
 
         private void PackageLevels(bool allLevels, bool allTargets)
         {
-            CreateLockFile();
-
             string[] levelsToBuild = allLevels ? GetLevelPaths() : GetLevelsToBuild();
+            if (levelsToBuild.Length == 0) return;
 
+            CreateLockFile();
             ConvertTileMaps();
             CreateAddressableSettings(!allTargets);
             AddressableAssetSettings.CleanPlayerContent();
