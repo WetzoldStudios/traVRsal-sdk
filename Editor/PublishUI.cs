@@ -272,6 +272,7 @@ namespace traVRsal.SDK
                                     break;
 
                                 case "Sceneries":
+                                    if (!assetPath.ToLower().EndsWith(".prefab")) continue;
                                     withExtension = false;
                                     generatePreview = true;
                                     break;

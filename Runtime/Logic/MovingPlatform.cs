@@ -2,7 +2,7 @@
 
 namespace traVRsal.SDK
 {
-    public class MovingPlatform : MonoBehaviour
+    public class MovingPlatform : ExecutorConfig
     {
         public enum Trigger
         {
