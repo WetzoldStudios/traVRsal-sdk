@@ -1,5 +1,7 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/WetzoldStudios/traVRsal-sdk/master/LICENSE.md)
 
+![Cover](/Editor/Images/travrsal-300.png)
+
 # Introduction
 
 traVRsal brings natural walking to VR. It is an engine on top of Unity for creating immersive, room-scale experiences utilizing impossible spaces and non-euclidean geometry. Using the SDK, anybody can now easily create such experiences.
@@ -7,7 +9,7 @@ traVRsal brings natural walking to VR. It is an engine on top of Unity for creat
 # Getting Started
 
 * [Experience It](https://sidequestvr.com/app/449/1) - Download the app
-* [Create Your Own Levels](https://github.com/WetzoldStudios/traVRsal-sdk/wiki) - Follow the wiki
+* [Create Levels](https://github.com/WetzoldStudios/traVRsal-sdk/wiki) - Follow the wiki
 * [Levels Repository](https://github.com/WetzoldStudios/traVRsal-levels) - See how existing levels were built and reuse parts
 
 # Roadmap
@@ -27,6 +29,7 @@ This is an early alpha version to get feedback and steer the direction of future
 * shaders need to support stencils to be visible through transitions
 * transparent objects are not visible through transitions
 * switching to game mode does not allow to move with cursor keys for some reason (it works in the editor)
+* gizmos are sometimes not easily visible (F5 to reload level works as a mitigation)
 * incorrect JSON files will cause the editor to become stuck
 * auto-refresh sometimes does not load the newest packaged assets, restarting the editor solves this
 * the minimum tile count in a grid right now is 4 due to a limitation with maze generation
