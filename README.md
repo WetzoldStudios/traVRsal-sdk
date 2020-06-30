@@ -1,10 +1,12 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/WetzoldStudios/traVRsal-sdk/master/LICENSE.md)
 
+<p align="center">
+  <img src="Editor/Images/travrsal-300.png">
+</p>
+
 # Introduction
 
 traVRsal brings natural walking to VR. It is an engine on top of Unity for creating immersive, room-scale experiences utilizing impossible spaces and non-euclidean geometry. Using the SDK, anybody can now easily create such experiences.
-
-![Cover](/Editor/Images/travrsal-300.png)
 
 # Getting Started
 
