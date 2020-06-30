@@ -10,6 +10,8 @@
 
 traVRsal brings natural walking to VR. It is an engine on top of Unity for creating immersive, room-scale experiences utilizing impossible spaces and non-euclidean geometry. Using the SDK, anybody can now easily create such experiences.
 
+![Cover](https://raw.githubusercontent.com/wiki/WetzoldStudios/traVRsal-sdk/Images/EngineDescription.jpg)
+
 # Getting Started
 
 * [Experience It](https://sidequestvr.com/app/449/1) - Download the app
