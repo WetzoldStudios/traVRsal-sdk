@@ -213,7 +213,7 @@ namespace traVRsal.SDK
                 DirectoryCopy(Application.dataPath + "/../" + path, docuPath);
                 AssetDatabase.Refresh();
 
-                string html = File.ReadAllText(docuPath + "level.html");
+                string html = File.ReadAllText(docuPath + "index.html");
                 html = html.Replace("{LevelName}", levelName);
                 html = html.Replace("{LevelKey}", levelName);
                 html = html.Replace("{AppVersion}", Application.version); // FIXME: points to wrong version
@@ -344,8 +344,18 @@ namespace traVRsal.SDK
                     html = html.Replace($"{{{variableName}Count}}", objCount.ToString());
                 }
 
-                File.WriteAllText(docuPath + "level.html", html);
-                Help.BrowseURL(docuPath + "level.html");
+                // copy data contents and level descriptor
+                DirectoryCopy(root + "/Data", docuPath + "/Data");
+                File.Copy(root + "/level.json", docuPath + "/level.json");
+
+                // remove all meta files
+                foreach (string fileName in Directory.EnumerateFiles(docuPath, "*.meta", SearchOption.AllDirectories))
+                {
+                    File.Delete(fileName);
+                }
+
+                File.WriteAllText(docuPath + "index.html", html);
+                Help.BrowseURL(docuPath + "index.html");
             }
             documentationInProgress = false;
         }
