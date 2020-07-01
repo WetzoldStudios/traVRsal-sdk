@@ -42,7 +42,7 @@
                                 {
                                  "name":"MazeRooms",
                                  "type":"string",
-                                 "value":"HorizontalMaze"
+                                 "value":"\/Base\/HorizontalMaze"
                                 }, 
                                 {
                                  "name":"MazeTransitions",
