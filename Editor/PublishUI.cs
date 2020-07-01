@@ -177,7 +177,7 @@ namespace traVRsal.SDK
             }
 
             RenameCatalogs();
-            dirWatcher.affectedFiles.Clear(); // only do at end, since during build might cause false positives
+            dirWatcher.ClearAffected(); // only do at end, since during build might cause false positives
             RemoveLockFile();
 
             Debug.Log("Packaging completed.");

@@ -36,6 +36,7 @@ namespace traVRsal.SDK
         public static void ConvertTiledToJSON(List<string> changedFiles)
         {
             string tiledExe = TravrsalSettingsManager.Get<string>("tiledPath");
+            if (string.IsNullOrEmpty(tiledExe)) return;
 
             foreach (string file in changedFiles)
             {

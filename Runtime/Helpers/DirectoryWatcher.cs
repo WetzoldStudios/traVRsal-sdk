@@ -25,12 +25,20 @@ namespace traVRsal.SDK
             watcher.Renamed += new RenamedEventHandler(OnRenamed);
         }
 
+        public void ClearAffected()
+        {
+            lock (affectedFiles) affectedFiles.Clear();
+        }
+
         private void OnChanged(object source, FileSystemEventArgs e)
         {
             methodCalled = "OnChanged";
 
-            if (!isCalled) affectedFiles.Clear();
-            affectedFiles.Add(e.FullPath);
+            lock (affectedFiles)
+            {
+                if (!isCalled) affectedFiles.Clear();
+                affectedFiles.Add(e.FullPath);
+            }
             isCalled = true;
         }
 
@@ -38,8 +46,11 @@ namespace traVRsal.SDK
         {
             methodCalled = "OnCreated";
 
-            if (!isCalled) affectedFiles.Clear();
-            affectedFiles.Add(e.FullPath);
+            lock (affectedFiles)
+            {
+                if (!isCalled) affectedFiles.Clear();
+                affectedFiles.Add(e.FullPath);
+            }
             isCalled = true;
         }
 
@@ -47,8 +58,11 @@ namespace traVRsal.SDK
         {
             methodCalled = "OnDeleted";
 
-            if (!isCalled) affectedFiles.Clear();
-            affectedFiles.Add(e.FullPath);
+            lock (affectedFiles)
+            {
+                if (!isCalled) affectedFiles.Clear();
+                affectedFiles.Add(e.FullPath);
+            }
             isCalled = true;
         }
 
@@ -56,8 +70,11 @@ namespace traVRsal.SDK
         {
             methodCalled = "OnRenamed";
 
-            if (!isCalled) affectedFiles.Clear();
-            affectedFiles.Add(e.FullPath);
+            lock (affectedFiles)
+            {
+                if (!isCalled) affectedFiles.Clear();
+                affectedFiles.Add(e.FullPath);
+            }
             isCalled = true;
         }
 
