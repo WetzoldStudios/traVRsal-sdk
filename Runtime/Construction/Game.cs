@@ -11,6 +11,8 @@ namespace traVRsal.SDK
         public string key = "game";
         public string name = "Development Mode";
         public List<string> levels;
+        public string menuScene = "Menu-OoD";
+        public string pauseScene = "Pause-OoD";
         public bool devMode = false;
 
         public Game()

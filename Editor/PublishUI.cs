@@ -513,7 +513,7 @@ namespace traVRsal.SDK
             EditorUtility.ClearProgressBar();
             uploadInProgress = false;
 
-            EditorUtility.DisplayDialog("Invalid Entry", "Upload completed.", "OK");
+            EditorUtility.DisplayDialog("Success", "Upload completed.", "OK");
         }
 
         void OnInspectorUpdate()
