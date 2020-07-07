@@ -11,7 +11,7 @@ namespace traVRsal.SDK
         }
 
         public string key;
-        public ReplacementType type;
+        public ReplacementType type = ReplacementType.OBJECT;
         public string objectKey;
         public string materials;
 

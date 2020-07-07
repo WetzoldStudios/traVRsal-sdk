@@ -8,11 +8,11 @@ namespace traVRsal.SDK
     {
         public enum IdentifierType
         {
-            LevelCoverImage = 1,
+            SettingsDialog = 1,
             LevelDetailsDialog = 2,
             LevelsRoot = 0,
-            NoSettingsHint = 3,
-            SettingsRoot = 4
+            NoLevelSettingsHint = 3,
+            LevelSettingsRoot = 4
         }
 
         public IdentifierType type = IdentifierType.LevelsRoot;
