@@ -8,6 +8,7 @@ namespace traVRsal.SDK
     {
         public enum IdentifierType
         {
+            GameOverDialog = 5,
             SettingsDialog = 1,
             LevelDetailsDialog = 2,
             LevelsRoot = 0,

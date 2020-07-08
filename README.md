@@ -43,3 +43,4 @@ This is an early alpha version to get feedback and steer the direction of future
 * custom interactions are not possible yet (only premade Button for now)
 * sky boxes are not yet supported 
 * audio is not assigned to correct mixer channels yet 
+* objects needs to be marked "Enable Read/Write" at import, otherwise NavMesh will fail or might even result in crashes

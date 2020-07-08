@@ -21,6 +21,8 @@ namespace traVRsal.SDK
         public string detailKPIs = "0,4"; // TODO: switch to array?
         public string initialItemLeft;
         public string initialItemRight;
+        public string introScenery = "/Base/LightHall";
+        public string outroScenery = "/Base/LightHall-Outro";
         public MultiBehaviors behaviors;
         public List<Variable> initialVariables;
         public List<ObjectSpec> objectSpecs;
