@@ -21,15 +21,18 @@ namespace traVRsal.SDK
         private bool packagingInProgress = false;
         private bool documentationInProgress = false;
         private bool uploadInProgress = false;
+        private bool verifyInProgress = false;
         private DateTime uploadStartTime;
         private float uploadProgress = 1;
         private int packageMode = 1;
         private static DirectoryWatcher dirWatcher;
+        private static PublishUI window;
+        private static Dictionary<string, VerificationResult> verifications = new Dictionary<string, VerificationResult>();
 
         [MenuItem("traVRsal/Publisher", priority = 110)]
         public static void ShowWindow()
         {
-            GetWindow<PublishUI>("traVRsal Publisher");
+            window = GetWindow<PublishUI>("traVRsal Publisher");
         }
 
         public override void OnEnable()
@@ -49,63 +52,98 @@ namespace traVRsal.SDK
 
             GUILayout.Label("Packaging ensures that the editor shows the most up to date version of your level.", EditorStyles.wordWrappedLabel);
 
+            GUILayout.Space(10);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Packaging Mode:", EditorStyles.wordWrappedLabel);
             packageMode = GUILayout.SelectionGrid(packageMode, PACKAGE_OPTIONS, 3, EditorStyles.radioButton);
             GUILayout.EndHorizontal();
 
-            if (packagingInProgress)
+            EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress);
+            string buttonText = "Package";
+            if (packageMode == 1)
             {
-                GUILayout.Label("Packaging in progress...", EditorStyles.boldLabel);
+                string[] levelsToBuild = GetLevelsToBuild().Select(path => Path.GetFileName(path)).ToArray();
+                buttonText += " (" + ((dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", levelsToBuild) : "everything") + ")";
             }
-            else if (uploadInProgress)
-            {
-                GUILayout.Label("Packaging not possible during upload", EditorStyles.boldLabel);
-            }
-            else
-            {
-                string buttonText = "Package";
-                if (packageMode == 1)
-                {
-                    string[] levelsToBuild = GetLevelsToBuild().Select(path => Path.GetFileName(path)).ToArray();
-                    buttonText += " (" + ((dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", levelsToBuild) : "everything") + ")";
-                }
-                if (GUILayout.Button(buttonText)) PackageLevels(packageMode == 2 ? true : false, packageMode == 2 ? true : false);
-            }
+            if (GUILayout.Button(buttonText)) PackageLevels(packageMode == 2 ? true : false, packageMode == 2 ? true : false);
+            EditorGUI.EndDisabledGroup();
 
-            if (documentationInProgress)
-            {
-                GUILayout.Label("Documentation creation in progress...", EditorStyles.boldLabel);
-            }
-            else
-            {
-                if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
-            }
-            if (GUILayout.Button("Reimport all Tiled files")) ReimportTiled();
+            GUILayout.BeginHorizontal();
+            EditorGUI.BeginDisabledGroup(verifyInProgress);
+            if (GUILayout.Button("Verify")) PerformVerifications();
+            EditorGUI.EndDisabledGroup();
 
-            GUILayout.Space(10);
-            GUILayout.Label("Once a level or game is done, it can be packaged and sent to the central server for distribution. It will do an automatic full packaging step before.", EditorStyles.wordWrappedLabel);
-            if (uploadInProgress)
-            {
-                GUILayout.Label("Upload in progress...", EditorStyles.boldLabel);
-            }
-            else if (packagingInProgress)
-            {
-                GUILayout.Label("Upload not possible during packaging", EditorStyles.boldLabel);
-            }
-            else
-            {
-                if (GUILayout.Button("Upload")) UploadLevels();
-            }
+            EditorGUI.BeginDisabledGroup(documentationInProgress);
+            if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
+            EditorGUI.EndDisabledGroup();
+
+            EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress);
+            if (GUILayout.Button("Upload")) UploadLevels();
+            EditorGUI.EndDisabledGroup();
+
+            GUILayout.EndHorizontal();
 
             int timeRemaining = Mathf.Max(1, Mathf.RoundToInt((DateTime.Now.Subtract(uploadStartTime).Seconds / uploadProgress) * (1 - uploadProgress)));
             if (uploadInProgress) EditorUtility.DisplayProgressBar("Progress", "Uploading levels to server... " + timeRemaining + "s", uploadProgress);
+
+            GUILayout.Space(10);
+            GUILayout.Label("Verification Results", EditorStyles.boldLabel);
+
+            foreach (string dir in GetLevelPaths())
+            {
+                string levelName = Path.GetFileName(dir);
+                if (!verifications.ContainsKey(levelName)) continue;
+
+                VerificationResult v = verifications[levelName];
+
+                v.showDetails = EditorGUILayout.Foldout(v.showDetails, levelName);
+
+                if (v.showDetails)
+                {
+                    PrintTableRow("Original Size", SDKUtil.BytesToString(v.sourceSize));
+                    PrintTableRow("Android Size", v.distroExistsAndroid ? SDKUtil.BytesToString(v.distroSizeAndroid) : "not packaged yet");
+                    PrintTableRow("PC Size", v.distroExistsStandalone ? SDKUtil.BytesToString(v.distroSizeStandalone) : "not packaged yet");
+                    PrintTableRow("Documentation", v.documentationExists ? "OK" : "not created yet");
+                }
+            }
+
+            OnGUIDone();
         }
 
-        private void ReimportTiled()
+        private void PrintTableRow(string key, string value)
         {
-            List<string> allfiles = DirectoryUtil.GetFiles(Application.dataPath, new string[] { "*.world", "*.tmx" }, SearchOption.AllDirectories).ToList();
-            TileMapConverter.ConvertTiledToJSON(allfiles);
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("", GUILayout.Width(5));
+            GUILayout.Label(key, GUILayout.Width(100));
+            GUILayout.Label(value);
+            GUILayout.EndHorizontal();
+        }
+
+        private void PerformVerifications()
+        {
+            verifyInProgress = true;
+            verifications.Clear();
+
+            foreach (string dir in GetLevelPaths())
+            {
+                string levelName = Path.GetFileName(dir);
+
+                VerificationResult result = new VerificationResult();
+                result.sourceSize = DirectoryUtil.GetSize(dir);
+
+                result.documentationExists = Directory.Exists(GetDocuPath(levelName));
+
+                result.distroPathAndroid = GetServerDataPath() + "/Levels/" + levelName + "/Android";
+                result.distroExistsAndroid = Directory.Exists(result.distroPathAndroid);
+                result.distroSizeAndroid = DirectoryUtil.GetSize(result.distroPathAndroid);
+
+                result.distroPathStandalone = GetServerDataPath() + "/Levels/" + levelName + "/StandaloneWindows64";
+                result.distroExistsStandalone = Directory.Exists(result.distroPathStandalone);
+                result.distroSizeStandalone = DirectoryUtil.GetSize(result.distroPathStandalone);
+
+                verifications.Add(levelName, result);
+            }
+            verifyInProgress = false;
         }
 
         private string GetServerDataPath()
@@ -134,53 +172,75 @@ namespace traVRsal.SDK
 
         private void PackageLevels(bool allLevels, bool allTargets)
         {
-            string[] levelsToBuild = allLevels ? GetLevelPaths() : GetLevelsToBuild();
-            if (levelsToBuild.Length == 0) return;
-
-            CreateLockFile();
-            ConvertTileMaps();
-            CreateAddressableSettings(!allTargets);
-            AddressableAssetSettings.CleanPlayerContent();
-            if (Directory.Exists(GetServerDataPath()) && (packageMode == 0 || allLevels)) Directory.Delete(GetServerDataPath(), true);
-
-            // set build targets
-            List<BuildTarget> targets = new List<BuildTarget>();
-            // if (allTargets) targets.Add(BuildTarget.Android);
-            targets.Add(BuildTarget.StandaloneWindows64); // set windows last so that we can continue with editor iterations normally right afterwards
-
-            // build each level individually
-            AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
-            foreach (string dir in levelsToBuild)
+            try
             {
-                string levelName = Path.GetFileName(dir);
+                string[] levelsToBuild = allLevels ? GetLevelPaths() : GetLevelsToBuild();
+                if (levelsToBuild.Length == 0) return;
 
-                string serverDir = GetServerDataPath() + "/Levels/" + Path.GetFileName(dir);
-                if (packageMode == 1 && !allLevels && Directory.Exists(serverDir)) Directory.Delete(serverDir, true);
+                CreateLockFile();
+                ConvertTileMaps();
+                CreateAddressableSettings(!allTargets);
+                AddressableAssetSettings.CleanPlayerContent();
+                if (Directory.Exists(GetServerDataPath()) && (packageMode == 0 || allLevels)) Directory.Delete(GetServerDataPath(), true);
 
-                settings.activeProfileId = settings.profileSettings.GetProfileId(levelName);
-                settings.groups.ForEach(group =>
+                // set build targets
+                List<BuildTarget> targets = new List<BuildTarget>();
+                targets.Add(BuildTarget.Android);
+                // targets.Add(BuildTarget.StandaloneWindows64); // set windows last so that we can continue with editor iterations normally right afterwards
+
+                // build each level individually
+                AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
+                foreach (string dir in levelsToBuild)
                 {
-                    if (group.ReadOnly) return;
-                    group.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = group.name == levelName;
-                });
+                    string levelName = Path.GetFileName(dir);
 
-                BundledAssetGroupSchema schema = settings.groups.Where(group => group.name == levelName).First().GetSchema<BundledAssetGroupSchema>();
-                settings.RemoteCatalogBuildPath = schema.BuildPath;
-                settings.RemoteCatalogLoadPath = schema.LoadPath;
+                    string serverDir = GetServerDataPath() + "/Levels/" + Path.GetFileName(dir);
+                    if (packageMode == 1 && !allLevels && Directory.Exists(serverDir)) Directory.Delete(serverDir, true);
 
-                // iterate over all supported platforms
-                foreach (BuildTarget target in targets)
-                {
-                    EditorUserBuildSettings.SwitchActiveBuildTarget(target);
-                    AddressableAssetSettings.BuildPlayerContent();
+                    settings.activeProfileId = settings.profileSettings.GetProfileId(levelName);
+                    settings.groups.ForEach(group =>
+                    {
+                        if (group.ReadOnly) return;
+                        group.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = group.name == levelName;
+                    });
+
+                    BundledAssetGroupSchema schema = settings.groups.Where(group => group.name == levelName).First().GetSchema<BundledAssetGroupSchema>();
+                    settings.RemoteCatalogBuildPath = schema.BuildPath;
+                    settings.RemoteCatalogLoadPath = schema.LoadPath;
+
+                    if (allTargets)
+                    {
+                        // iterate over all supported platforms
+                        foreach (BuildTarget target in targets)
+                        {
+                            EditorUserBuildSettings.SwitchActiveBuildTarget(target);
+                            AddressableAssetSettings.BuildPlayerContent();
+                        }
+                    }
+                    else
+                    {
+                        // build only for currently active target
+                        AddressableAssetSettings.BuildPlayerContent();
+                    }
                 }
+
+                RenameCatalogs();
+                dirWatcher.ClearAffected(); // only do at end, since during build might cause false positives
+                RemoveLockFile();
+                PerformVerifications();
+
+                Debug.Log("Packaging completed successfully.");
             }
+            catch (Exception e)
+            {
+                packagingInProgress = false;
+                EditorUtility.DisplayDialog("Error", "Packaging could not be completed. Error: " + e.Message, "Close");
+            }
+        }
 
-            RenameCatalogs();
-            dirWatcher.ClearAffected(); // only do at end, since during build might cause false positives
-            RemoveLockFile();
-
-            Debug.Log("Packaging completed.");
+        private string GetDocuPath(string levelName)
+        {
+            return $"{Application.dataPath}/../Documentation/{levelName}/";
         }
 
         private IEnumerator CreateDocumentation()
@@ -193,7 +253,7 @@ namespace traVRsal.SDK
             foreach (string dir in GetLevelPaths())
             {
                 string levelName = Path.GetFileName(dir);
-                string docuPath = $"{Application.dataPath}/../Documentation/{levelName}/";
+                string docuPath = GetDocuPath(levelName);
                 try
                 {
                     if (Directory.Exists(docuPath)) Directory.Delete(docuPath, true);
@@ -210,7 +270,7 @@ namespace traVRsal.SDK
                 // fill HTML template
                 string id = AssetDatabase.FindAssets("_LevelDocu")[0];
                 string path = AssetDatabase.GUIDToAssetPath(id);
-                DirectoryCopy(Application.dataPath + "/../" + path, docuPath);
+                DirectoryUtil.Copy(Application.dataPath + "/../" + path, docuPath);
                 AssetDatabase.Refresh();
 
                 string html = File.ReadAllText(docuPath + "index.html");
@@ -345,7 +405,7 @@ namespace traVRsal.SDK
                 }
 
                 // copy data contents and level descriptor
-                DirectoryCopy(root + "/Data", docuPath + "/Data");
+                DirectoryUtil.Copy(root + "/Data", docuPath + "/Data");
                 File.Copy(root + "/level.json", docuPath + "/level.json");
 
                 // remove all meta files
@@ -358,29 +418,6 @@ namespace traVRsal.SDK
                 Help.BrowseURL(docuPath + "index.html");
             }
             documentationInProgress = false;
-        }
-
-        private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs = true)
-        {
-            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
-            DirectoryInfo[] dirs = dir.GetDirectories();
-            if (!Directory.Exists(destDirName)) Directory.CreateDirectory(destDirName);
-
-            FileInfo[] files = dir.GetFiles();
-            foreach (FileInfo file in files)
-            {
-                string temppath = Path.Combine(destDirName, file.Name);
-                file.CopyTo(temppath, false);
-            }
-
-            if (copySubDirs)
-            {
-                foreach (DirectoryInfo subdir in dirs)
-                {
-                    string temppath = Path.Combine(destDirName, subdir.Name);
-                    DirectoryCopy(subdir.FullName, temppath, copySubDirs);
-                }
-            }
         }
 
         public static string GetLockFileLocation()
@@ -396,7 +433,7 @@ namespace traVRsal.SDK
 
         private void RemoveLockFile()
         {
-            if (File.Exists(GetLockFileLocation())) File.Delete(GetLockFileLocation());
+            if (File.Exists(GetLockFileLocation())) FileUtil.DeleteFileOrDirectory(GetLockFileLocation());
             packagingInProgress = false;
         }
 

@@ -6,6 +6,7 @@ namespace traVRsal.SDK
     public abstract class BasicEditorUI : EditorWindow
     {
         private static GUIStyle logo;
+        private Vector2 scrollPos;
 
         public virtual void OnEnable()
         {
@@ -18,6 +19,7 @@ namespace traVRsal.SDK
 
         public virtual void OnGUI()
         {
+            scrollPos = GUILayout.BeginScrollView(scrollPos, false, false);
             GUILayout.Space(10);
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
@@ -25,6 +27,11 @@ namespace traVRsal.SDK
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
+        }
+
+        public void OnGUIDone()
+        {
+            GUILayout.EndScrollView();
         }
 
         public string GetLevelsRoot()

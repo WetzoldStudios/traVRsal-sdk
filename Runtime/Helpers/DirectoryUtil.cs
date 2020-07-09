@@ -28,5 +28,43 @@ namespace traVRsal.SDK
                    .SelectMany(searchPattern =>
                           Directory.EnumerateFiles(path, searchPattern, searchOption));
         }
+
+        public static void Copy(string sourceDirName, string destDirName, bool copySubDirs = true)
+        {
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+            DirectoryInfo[] dirs = dir.GetDirectories();
+            if (!Directory.Exists(destDirName)) Directory.CreateDirectory(destDirName);
+
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string temppath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(temppath, false);
+            }
+
+            if (copySubDirs)
+            {
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    string temppath = Path.Combine(destDirName, subdir.Name);
+                    Copy(subdir.FullName, temppath, copySubDirs);
+                }
+            }
+        }
+
+        public static long GetSize(string path)
+        {
+            if (!Directory.Exists(path)) return 0;
+
+            DirectoryInfo dirInfo = new DirectoryInfo(path);
+            long size = 0;
+
+            foreach (FileInfo fi in dirInfo.GetFiles("*", SearchOption.AllDirectories))
+            {
+                size += fi.Length;
+            }
+
+            return size;
+        }
     }
 }
