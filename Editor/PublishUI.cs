@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Asyncoroutine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +19,7 @@ namespace traVRsal.SDK
 
         private string[] PACKAGE_OPTIONS = { "Everything", "Intelligent", "Server" };
 
+        private bool debugMode = false;
         private bool packagingInProgress = false;
         private bool documentationInProgress = false;
         private bool uploadInProgress = false;
@@ -65,7 +67,7 @@ namespace traVRsal.SDK
                 string[] levelsToBuild = GetLevelsToBuild().Select(path => Path.GetFileName(path)).ToArray();
                 buttonText += " (" + ((dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", levelsToBuild) : "everything") + ")";
             }
-            if (GUILayout.Button(buttonText)) PackageLevels(packageMode == 2 ? true : false, packageMode == 2 ? true : false);
+            if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageLevels(packageMode == 2 ? true : false, packageMode == 2 ? true : false), this);
             EditorGUI.EndDisabledGroup();
 
             GUILayout.BeginHorizontal();
@@ -73,12 +75,8 @@ namespace traVRsal.SDK
             if (GUILayout.Button("Verify")) PerformVerifications();
             EditorGUI.EndDisabledGroup();
 
-            EditorGUI.BeginDisabledGroup(documentationInProgress);
-            if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
-            EditorGUI.EndDisabledGroup();
-
             EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress);
-            if (GUILayout.Button("Upload")) UploadLevels();
+            if (GUILayout.Button("Upload")) EditorCoroutineUtility.StartCoroutine(UploadLevels(), this);
             EditorGUI.EndDisabledGroup();
 
             GUILayout.EndHorizontal();
@@ -86,25 +84,36 @@ namespace traVRsal.SDK
             int timeRemaining = Mathf.Max(1, Mathf.RoundToInt((DateTime.Now.Subtract(uploadStartTime).Seconds / uploadProgress) * (1 - uploadProgress)));
             if (uploadInProgress) EditorUtility.DisplayProgressBar("Progress", "Uploading levels to server... " + timeRemaining + "s", uploadProgress);
 
-            GUILayout.Space(10);
-            GUILayout.Label("Verification Results", EditorStyles.boldLabel);
-
-            foreach (string dir in GetLevelPaths())
+            if (verifications.Count() > 0)
             {
-                string levelName = Path.GetFileName(dir);
-                if (!verifications.ContainsKey(levelName)) continue;
+                GUILayout.Space(10);
+                GUILayout.Label("Verification Results", EditorStyles.boldLabel);
 
-                VerificationResult v = verifications[levelName];
-
-                v.showDetails = EditorGUILayout.Foldout(v.showDetails, levelName);
-
-                if (v.showDetails)
+                foreach (string dir in GetLevelPaths())
                 {
-                    PrintTableRow("Original Size", SDKUtil.BytesToString(v.sourceSize));
-                    PrintTableRow("Android Size", v.distroExistsAndroid ? SDKUtil.BytesToString(v.distroSizeAndroid) : "not packaged yet");
-                    PrintTableRow("PC Size", v.distroExistsStandalone ? SDKUtil.BytesToString(v.distroSizeStandalone) : "not packaged yet");
-                    PrintTableRow("Documentation", v.documentationExists ? "OK" : "not created yet");
+                    string levelName = Path.GetFileName(dir);
+                    if (!verifications.ContainsKey(levelName)) continue;
+
+                    VerificationResult v = verifications[levelName];
+
+                    v.showDetails = EditorGUILayout.Foldout(v.showDetails, levelName);
+
+                    if (v.showDetails)
+                    {
+                        PrintTableRow("Size (Original)", SDKUtil.BytesToString(v.sourceSize));
+                        PrintTableRow("Size (Android)", v.distroExistsAndroid ? SDKUtil.BytesToString(v.distroSizeAndroid) : "not packaged yet");
+                        PrintTableRow("Size (PC)", v.distroExistsStandalone ? SDKUtil.BytesToString(v.distroSizeStandalone) : "not packaged yet");
+                        PrintTableRow("Documentation", v.documentationExists ? "OK" : "not created yet");
+                        // Help.BrowseURL(docuPath + "index.html");
+                    }
                 }
+            }
+
+            if (debugMode)
+            {
+                EditorGUI.BeginDisabledGroup(documentationInProgress);
+                if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
+                EditorGUI.EndDisabledGroup();
             }
 
             OnGUIDone();
@@ -170,16 +179,17 @@ namespace traVRsal.SDK
             return levelsToBuild;
         }
 
-        private void PackageLevels(bool allLevels, bool allTargets)
+        private IEnumerator PackageLevels(bool allLevels, bool allTargets)
         {
             try
             {
                 string[] levelsToBuild = allLevels ? GetLevelPaths() : GetLevelsToBuild();
-                if (levelsToBuild.Length == 0) return;
+                if (levelsToBuild.Length == 0) yield break;
 
                 CreateLockFile();
                 ConvertTileMaps();
                 CreateAddressableSettings(!allTargets);
+                EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ASTC;
                 AddressableAssetSettings.CleanPlayerContent();
                 if (Directory.Exists(GetServerDataPath()) && (packageMode == 0 || allLevels)) Directory.Delete(GetServerDataPath(), true);
 
@@ -223,19 +233,22 @@ namespace traVRsal.SDK
                         AddressableAssetSettings.BuildPlayerContent();
                     }
                 }
-
+                CreateAddressableSettings(!allTargets); // do again to have clean build state, as some settings were messed with while building
                 RenameCatalogs();
-                dirWatcher.ClearAffected(); // only do at end, since during build might cause false positives
-                RemoveLockFile();
-                PerformVerifications();
-
-                Debug.Log("Packaging completed successfully.");
             }
             catch (Exception e)
             {
                 packagingInProgress = false;
                 EditorUtility.DisplayDialog("Error", "Packaging could not be completed. Error: " + e.Message, "Close");
+                yield break;
             }
+
+            yield return CreateDocumentation();
+            dirWatcher.ClearAffected(); // only do at end, since during build might cause false positives
+            RemoveLockFile();
+            PerformVerifications();
+
+            Debug.Log("Packaging completed successfully.");
         }
 
         private string GetDocuPath(string levelName)
@@ -297,6 +310,7 @@ namespace traVRsal.SDK
                             string assetPath = AssetDatabase.GUIDToAssetPath(asset);
                             if (doneAlready.Contains(assetPath)) continue;
                             doneAlready.Add(assetPath);
+                            if (assetPath.ToLower().EndsWith(".md")) continue;
 
                             string imageLink = "NoPreview.png";
                             bool withExtension = true;
@@ -415,7 +429,6 @@ namespace traVRsal.SDK
                 }
 
                 File.WriteAllText(docuPath + "index.html", html);
-                Help.BrowseURL(docuPath + "index.html");
             }
             documentationInProgress = false;
         }
@@ -512,7 +525,7 @@ namespace traVRsal.SDK
                 groupSchema.UseAssetBundleCache = true;
                 groupSchema.UseAssetBundleCrc = false;
                 groupSchema.IncludeInBuild = isBase ? true : false;
-                groupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.NoHash;
+                groupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.AppendHash; // hash is needed to disimbiguate identically named files, e.g. standard shaders
                 groupSchema.BundleMode = BundledAssetGroupSchema.BundlePackingMode.PackTogether;
                 groupSchema.Compression = BundledAssetGroupSchema.BundleCompressionMode.LZ4;
                 groupSchema.BuildPath.SetVariableByName(settings, localMode ? AddressableAssetSettings.kLocalBuildPath : AddressableAssetSettings.kRemoteBuildPath);
@@ -530,14 +543,14 @@ namespace traVRsal.SDK
             return Directory.GetDirectories(Application.dataPath + "/Levels").Where(s => !Path.GetFileName(s).StartsWith("_")).ToArray();
         }
 
-        private async void UploadLevels()
+        private IEnumerator UploadLevels()
         {
-            PackageLevels(true, true);
+            yield return PackageLevels(true, true);
 
             if (!Directory.Exists(GetServerDataPath()))
             {
                 Debug.LogError("Could not find directory to upload: " + GetServerDataPath());
-                return;
+                yield break;
             }
 
             uploadInProgress = true;
@@ -545,7 +558,7 @@ namespace traVRsal.SDK
             uploadStartTime = DateTime.Now;
 
             AWSUtil aws = new AWSUtil();
-            await aws.UploadDirectory(GetServerDataPath(), progress => uploadProgress = progress);
+            yield return aws.UploadDirectory(GetServerDataPath(), progress => uploadProgress = progress).AsCoroutine();
 
             EditorUtility.ClearProgressBar();
             uploadInProgress = false;
