@@ -7,8 +7,6 @@ namespace traVRsal.SDK
 {
     public class SetupUI : BasicEditorUI
     {
-        private string[] REQUIRED_TAGS = { "ExcludeTeleport", "Interactable", "Enemy", "Fire", "Collectible" };
-
         private string levelName;
 
         [MenuItem("traVRsal/Setup", priority = 100)]
@@ -28,31 +26,10 @@ namespace traVRsal.SDK
             if (GUILayout.Button("Create New Level")) CreateSampleLevel();
 
             GUILayout.Space(10);
-            GUILayout.Label("The following actions should be performed once after an update of the SDK was installed, since the framework constantly evolves.", EditorStyles.wordWrappedLabel);
-            if (GUILayout.Button("Setup Tags")) SetupTags();
+            GUILayout.Label("Maintenance Functions", EditorStyles.boldLabel);
             if (GUILayout.Button("Update/Restore Tiled Data")) RestoreTiled();
-        }
 
-        private void SetupTags()
-        {
-            SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
-            SerializedProperty tagsProp = tagManager.FindProperty("tags");
-
-            // delete all tags first
-            for (int i = tagsProp.arraySize - 1; i >= 0; i--)
-            {
-                tagsProp.DeleteArrayElementAtIndex(i);
-            }
-
-            // recreate in exact order required
-            for (int i = 0; i < REQUIRED_TAGS.Length; i++)
-            {
-                tagsProp.InsertArrayElementAtIndex(i);
-                SerializedProperty newTag = tagsProp.GetArrayElementAtIndex(i);
-                newTag.stringValue = REQUIRED_TAGS[i];
-            }
-
-            tagManager.ApplyModifiedProperties();
+            OnGUIDone();
         }
 
         private string GetLevelPath()

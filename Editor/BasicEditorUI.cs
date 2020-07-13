@@ -5,6 +5,8 @@ namespace traVRsal.SDK
 {
     public abstract class BasicEditorUI : EditorWindow
     {
+        private string[] REQUIRED_TAGS = { "ExcludeTeleport", "Interactable", "Enemy", "Fire", "Collectible" };
+
         private static GUIStyle logo;
         private Vector2 scrollPos;
 
@@ -15,6 +17,9 @@ namespace traVRsal.SDK
             if (logoImage == null) logoImage = AssetDatabase.LoadAssetAtPath("Assets/SDK/Editor/Images/travrsal-300.png", typeof(Texture2D)) as Texture2D;
 
             logo = new GUIStyle { normal = { background = logoImage }, fixedWidth = 128, fixedHeight = 64 };
+
+            // perform (cheap) setup tasks
+            SetupTags();
         }
 
         public virtual void OnGUI()
@@ -32,6 +37,28 @@ namespace traVRsal.SDK
         public void OnGUIDone()
         {
             GUILayout.EndScrollView();
+        }
+
+        private void SetupTags()
+        {
+            SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+            SerializedProperty tagsProp = tagManager.FindProperty("tags");
+
+            // delete all tags first
+            for (int i = tagsProp.arraySize - 1; i >= 0; i--)
+            {
+                tagsProp.DeleteArrayElementAtIndex(i);
+            }
+
+            // recreate in exact order required
+            for (int i = 0; i < REQUIRED_TAGS.Length; i++)
+            {
+                tagsProp.InsertArrayElementAtIndex(i);
+                SerializedProperty newTag = tagsProp.GetArrayElementAtIndex(i);
+                newTag.stringValue = REQUIRED_TAGS[i];
+            }
+
+            tagManager.ApplyModifiedProperties();
         }
 
         public string GetLevelsRoot()

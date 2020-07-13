@@ -17,13 +17,17 @@ namespace traVRsal.SDK
     {
         public const string LOCKFILE_NAME = "traVRsal.lock";
 
-        private string[] PACKAGE_OPTIONS = { "Everything", "Intelligent", "Server" };
+        private string[] PACKAGE_OPTIONS = { "Everything", "Intelligent" };
 
         private bool debugMode = false;
         private bool packagingInProgress = false;
         private bool documentationInProgress = false;
         private bool uploadInProgress = false;
         private bool verifyInProgress = false;
+        private bool packagingSuccessful = false;
+        private bool verificationPassed = false;
+        private bool uploadPossible = false;
+
         private DateTime uploadStartTime;
         private float uploadProgress = 1;
         private int packageMode = 1;
@@ -57,11 +61,11 @@ namespace traVRsal.SDK
             GUILayout.Space(10);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Packaging Mode:", EditorStyles.wordWrappedLabel);
-            packageMode = GUILayout.SelectionGrid(packageMode, PACKAGE_OPTIONS, 3, EditorStyles.radioButton);
+            packageMode = GUILayout.SelectionGrid(packageMode, PACKAGE_OPTIONS, 2, EditorStyles.radioButton);
             GUILayout.EndHorizontal();
 
             EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress);
-            string buttonText = "Package";
+            string buttonText = "Package for Testing";
             if (packageMode == 1)
             {
                 string[] levelsToBuild = GetLevelsToBuild().Select(path => Path.GetFileName(path)).ToArray();
@@ -72,10 +76,10 @@ namespace traVRsal.SDK
 
             GUILayout.BeginHorizontal();
             EditorGUI.BeginDisabledGroup(verifyInProgress);
-            if (GUILayout.Button("Verify")) PerformVerifications();
+            if (GUILayout.Button("Prepare Upload")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(), this);
             EditorGUI.EndDisabledGroup();
 
-            EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress);
+            EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || !uploadPossible);
             if (GUILayout.Button("Upload")) EditorCoroutineUtility.StartCoroutine(UploadLevels(), this);
             EditorGUI.EndDisabledGroup();
 
@@ -103,8 +107,16 @@ namespace traVRsal.SDK
                         PrintTableRow("Size (Original)", SDKUtil.BytesToString(v.sourceSize));
                         PrintTableRow("Size (Android)", v.distroExistsAndroid ? SDKUtil.BytesToString(v.distroSizeAndroid) : "not packaged yet");
                         PrintTableRow("Size (PC)", v.distroExistsStandalone ? SDKUtil.BytesToString(v.distroSizeStandalone) : "not packaged yet");
-                        PrintTableRow("Documentation", v.documentationExists ? "OK" : "not created yet");
-                        // Help.BrowseURL(docuPath + "index.html");
+                        if (v.documentationExists)
+                        {
+                            BeginPartialTableRow("Documentation");
+                            if (GUILayout.Button("Open")) Help.BrowseURL(GetDocuPath(levelName) + "index.html");
+                            EndPartialTableRow();
+                        }
+                        else
+                        {
+                            PrintTableRow("Documentation", "not created yet");
+                        }
                     }
                 }
             }
@@ -128,9 +140,30 @@ namespace traVRsal.SDK
             GUILayout.EndHorizontal();
         }
 
-        private void PerformVerifications()
+        private void BeginPartialTableRow(string key)
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("", GUILayout.Width(5));
+            GUILayout.Label(key, GUILayout.Width(100));
+        }
+
+        private void EndPartialTableRow()
+        {
+            GUILayout.EndHorizontal();
+        }
+
+        private IEnumerator PrepareUpload()
+        {
+            yield return PackageLevels(true, true);
+            Verify();
+
+            uploadPossible = packagingSuccessful && verificationPassed;
+        }
+
+        private void Verify()
         {
             verifyInProgress = true;
+            verificationPassed = false;
             verifications.Clear();
 
             foreach (string dir in GetLevelPaths())
@@ -153,6 +186,7 @@ namespace traVRsal.SDK
                 verifications.Add(levelName, result);
             }
             verifyInProgress = false;
+            verificationPassed = true; // TODO: do some actual checks
         }
 
         private string GetServerDataPath()
@@ -181,6 +215,10 @@ namespace traVRsal.SDK
 
         private IEnumerator PackageLevels(bool allLevels, bool allTargets)
         {
+            uploadPossible = false;
+            packagingInProgress = true;
+            packagingSuccessful = false;
+
             try
             {
                 string[] levelsToBuild = allLevels ? GetLevelPaths() : GetLevelsToBuild();
@@ -189,7 +227,7 @@ namespace traVRsal.SDK
                 CreateLockFile();
                 ConvertTileMaps();
                 CreateAddressableSettings(!allTargets);
-                EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ASTC;
+                EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.Generic; // FIXME: ASTC resulting in pink shaders as of 2019.4+
                 AddressableAssetSettings.CleanPlayerContent();
                 if (Directory.Exists(GetServerDataPath()) && (packageMode == 0 || allLevels)) Directory.Delete(GetServerDataPath(), true);
 
@@ -235,6 +273,7 @@ namespace traVRsal.SDK
                 }
                 CreateAddressableSettings(!allTargets); // do again to have clean build state, as some settings were messed with while building
                 RenameCatalogs();
+                packagingSuccessful = true;
             }
             catch (Exception e)
             {
@@ -246,7 +285,7 @@ namespace traVRsal.SDK
             yield return CreateDocumentation();
             dirWatcher.ClearAffected(); // only do at end, since during build might cause false positives
             RemoveLockFile();
-            PerformVerifications();
+            packagingInProgress = false;
 
             Debug.Log("Packaging completed successfully.");
         }
@@ -420,12 +459,12 @@ namespace traVRsal.SDK
 
                 // copy data contents and level descriptor
                 DirectoryUtil.Copy(root + "/Data", docuPath + "/Data");
-                File.Copy(root + "/level.json", docuPath + "/level.json");
+                FileUtil.CopyFileOrDirectory(root + "/level.json", docuPath + "/level.json");
 
                 // remove all meta files
                 foreach (string fileName in Directory.EnumerateFiles(docuPath, "*.meta", SearchOption.AllDirectories))
                 {
-                    File.Delete(fileName);
+                    FileUtil.DeleteFileOrDirectory(fileName);
                 }
 
                 File.WriteAllText(docuPath + "index.html", html);
@@ -440,14 +479,12 @@ namespace traVRsal.SDK
 
         private void CreateLockFile()
         {
-            packagingInProgress = true;
             if (!File.Exists(GetLockFileLocation())) File.Create(GetLockFileLocation());
         }
 
         private void RemoveLockFile()
         {
             if (File.Exists(GetLockFileLocation())) FileUtil.DeleteFileOrDirectory(GetLockFileLocation());
-            packagingInProgress = false;
         }
 
         private void ConvertTileMaps()
@@ -471,7 +508,9 @@ namespace traVRsal.SDK
                         string[] files = Directory.GetFiles(path, "catalog_*." + extension, SearchOption.AllDirectories);
                         foreach (string file in files)
                         {
-                            File.Move(file, Path.GetDirectoryName(file) + "/catalog." + extension);
+                            string targetFile = Path.GetDirectoryName(file) + "/catalog." + extension;
+                            if (File.Exists(targetFile)) FileUtil.DeleteFileOrDirectory(targetFile);
+                            FileUtil.MoveFileOrDirectory(file, targetFile);
                         }
                     }
                 }
@@ -525,7 +564,7 @@ namespace traVRsal.SDK
                 groupSchema.UseAssetBundleCache = true;
                 groupSchema.UseAssetBundleCrc = false;
                 groupSchema.IncludeInBuild = isBase ? true : false;
-                groupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.AppendHash; // hash is needed to disimbiguate identically named files, e.g. standard shaders
+                groupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.NoHash; // hash to disimbiguate identically named files yields same error messages, e.g. standard shaders
                 groupSchema.BundleMode = BundledAssetGroupSchema.BundlePackingMode.PackTogether;
                 groupSchema.Compression = BundledAssetGroupSchema.BundleCompressionMode.LZ4;
                 groupSchema.BuildPath.SetVariableByName(settings, localMode ? AddressableAssetSettings.kLocalBuildPath : AddressableAssetSettings.kRemoteBuildPath);
@@ -545,8 +584,6 @@ namespace traVRsal.SDK
 
         private IEnumerator UploadLevels()
         {
-            yield return PackageLevels(true, true);
-
             if (!Directory.Exists(GetServerDataPath()))
             {
                 Debug.LogError("Could not find directory to upload: " + GetServerDataPath());
