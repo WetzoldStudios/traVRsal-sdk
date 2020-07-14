@@ -155,6 +155,7 @@ namespace traVRsal.SDK
         private IEnumerator PrepareUpload()
         {
             yield return PackageLevels(true, true);
+            yield return CreateDocumentation();
             Verify();
 
             uploadPossible = packagingSuccessful && verificationPassed;
@@ -282,7 +283,6 @@ namespace traVRsal.SDK
                 yield break;
             }
 
-            yield return CreateDocumentation();
             dirWatcher.ClearAffected(); // only do at end, since during build might cause false positives
             RemoveLockFile();
             packagingInProgress = false;
@@ -525,9 +525,15 @@ namespace traVRsal.SDK
             settings.DisableCatalogUpdateOnStartup = true;
 
             // don't include built-in data, causes shader issues
-            PlayerDataGroupSchema schema = settings.groups[0].GetSchema<PlayerDataGroupSchema>();
-            schema.IncludeBuildSettingsScenes = false;
-            schema.IncludeResourcesFolders = false;
+            settings.groups.ForEach(g =>
+            {
+                PlayerDataGroupSchema schema = g.GetSchema<PlayerDataGroupSchema>();
+                if (schema != null)
+                {
+                    schema.IncludeBuildSettingsScenes = false;
+                    schema.IncludeResourcesFolders = false;
+                }
+            });
 
             // setup profiles
             AddressableAssetProfileSettings profile = settings.profileSettings;
