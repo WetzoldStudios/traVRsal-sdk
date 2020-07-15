@@ -54,6 +54,10 @@ namespace traVRsal.SDK
 
         public override void OnGUI()
         {
+            // independent of actual window
+            int timeRemaining = Mathf.Max(1, Mathf.RoundToInt((DateTime.Now.Subtract(uploadStartTime).Seconds / uploadProgress) * (1 - uploadProgress)));
+            if (uploadInProgress) EditorUtility.DisplayProgressBar("Progress", "Uploading levels to server... " + timeRemaining + "s", uploadProgress);
+
             base.OnGUI();
 
             GUILayout.Label("Packaging ensures that the editor shows the most up to date version of your level.", EditorStyles.wordWrappedLabel);
@@ -75,7 +79,7 @@ namespace traVRsal.SDK
             EditorGUI.EndDisabledGroup();
 
             GUILayout.BeginHorizontal();
-            EditorGUI.BeginDisabledGroup(verifyInProgress);
+            EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress);
             if (GUILayout.Button("Prepare Upload")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(), this);
             EditorGUI.EndDisabledGroup();
 
@@ -84,9 +88,6 @@ namespace traVRsal.SDK
             EditorGUI.EndDisabledGroup();
 
             GUILayout.EndHorizontal();
-
-            int timeRemaining = Mathf.Max(1, Mathf.RoundToInt((DateTime.Now.Subtract(uploadStartTime).Seconds / uploadProgress) * (1 - uploadProgress)));
-            if (uploadInProgress) EditorUtility.DisplayProgressBar("Progress", "Uploading levels to server... " + timeRemaining + "s", uploadProgress);
 
             if (verifications.Count() > 0)
             {
@@ -520,7 +521,7 @@ namespace traVRsal.SDK
         private void CreateAddressableSettings(bool localMode)
         {
             AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
-            settings.ActivePlayModeDataBuilderIndex = 2;
+            settings.ActivePlayModeDataBuilderIndex = localMode ? 0 : 2;
             settings.BuildRemoteCatalog = true;
             settings.DisableCatalogUpdateOnStartup = true;
 
