@@ -1,7 +1,8 @@
 {
     "name": "traVRsal.SDK.editor.settings",
     "references": [
-        "Unity.Settings.Editor"
+        "Unity.Settings.Editor",
+        "traVRsal.SDK.runtime"
     ],
     "includePlatforms": [
         "Editor"

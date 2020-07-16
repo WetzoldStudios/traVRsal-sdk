@@ -5,7 +5,10 @@ namespace traVRsal.SDK
 {
     public static class SDKUtil
     {
+        public const string PACKAGE_NAME = "com.wetzold.travrsal.sdk";
         public const string AUTO_GENERATED = "[AUTO]";
+        public const string TILED_PATH_DEFAULT = "C:\\Program Files\\Tiled\\tiled.exe";
+        public const int PERIODIC_REFRESH_DEFAULT = 0;
 
         public enum ColliderType
         {

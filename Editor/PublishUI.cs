@@ -69,7 +69,7 @@ namespace traVRsal.SDK
             GUILayout.EndHorizontal();
 
             EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress);
-            string buttonText = "Package for Testing";
+            string buttonText = "Package";
             if (packageMode == 1)
             {
                 string[] levelsToBuild = GetLevelsToBuild().Select(path => Path.GetFileName(path)).ToArray();
@@ -105,8 +105,8 @@ namespace traVRsal.SDK
 
                     if (v.showDetails)
                     {
-                        PrintTableRow("Size (Original)", SDKUtil.BytesToString(v.sourceSize));
-                        PrintTableRow("Size (Android)", v.distroExistsAndroid ? SDKUtil.BytesToString(v.distroSizeAndroid) : "not packaged yet");
+                        // PrintTableRow("Size (Original)", SDKUtil.BytesToString(v.sourceSize));
+                        PrintTableRow("Size (Quest)", v.distroExistsAndroid ? SDKUtil.BytesToString(v.distroSizeAndroid) : "not packaged yet");
                         PrintTableRow("Size (PC)", v.distroExistsStandalone ? SDKUtil.BytesToString(v.distroSizeStandalone) : "not packaged yet");
                         if (v.documentationExists)
                         {
@@ -236,7 +236,7 @@ namespace traVRsal.SDK
                 // set build targets
                 List<BuildTarget> targets = new List<BuildTarget>();
                 targets.Add(BuildTarget.Android);
-                // targets.Add(BuildTarget.StandaloneWindows64); // set windows last so that we can continue with editor iterations normally right afterwards
+                if (!debugMode) targets.Add(BuildTarget.StandaloneWindows64); // set windows last so that we can continue with editor iterations normally right afterwards
 
                 // build each level individually
                 AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
@@ -300,7 +300,7 @@ namespace traVRsal.SDK
         {
             documentationInProgress = true;
 
-            string converterPath = TravrsalSettingsManager.Get<string>("tiledPath");
+            string converterPath = TravrsalSettingsManager.Get("tiledPath", SDKUtil.TILED_PATH_DEFAULT);
             if (!string.IsNullOrEmpty(converterPath)) converterPath = Path.GetDirectoryName(converterPath) + "/tmxrasterizer.exe";
 
             foreach (string dir in GetLevelPaths())
@@ -493,7 +493,7 @@ namespace traVRsal.SDK
             foreach (string extension in new[] { TileMapUtil.MAP_EXTENSION, TileMapUtil.WORLD_EXTENSION })
             {
                 string[] files = Directory.GetFiles(Application.dataPath, "*." + extension, SearchOption.AllDirectories);
-                TileMapUtil.ConvertTileMaps(files.ToList(), TravrsalSettingsManager.Get<string>("tiledPath"));
+                TileMapUtil.ConvertTileMaps(files.ToList(), TravrsalSettingsManager.Get("tiledPath", SDKUtil.TILED_PATH_DEFAULT));
             }
             AssetDatabase.Refresh();
         }

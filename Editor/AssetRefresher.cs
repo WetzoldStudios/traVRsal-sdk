@@ -22,7 +22,7 @@ namespace traVRsal.SDK
             if (Time.realtimeSinceStartup - lastRefresh > SETTINGS_REFRESH)
             {
                 lastRefresh = Time.realtimeSinceStartup;
-                timeInterval = TravrsalSettingsManager.Get<int>("periodicEditorRefresh");
+                timeInterval = TravrsalSettingsManager.Get("periodicEditorRefresh", SDKUtil.PERIODIC_REFRESH_DEFAULT);
             }
 
             if (timeInterval > 0 && Time.realtimeSinceStartup - lastUpdate > timeInterval)

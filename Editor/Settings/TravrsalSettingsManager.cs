@@ -5,15 +5,13 @@ namespace traVRsal.SDK
 {
     public static class TravrsalSettingsManager
     {
-        public const string packageName = "com.wetzold.travrsal.sdk";
-
         private static Settings sInstance;
 
         internal static Settings instance
         {
             get
             {
-                if (sInstance == null) sInstance = new Settings(packageName);
+                if (sInstance == null) sInstance = new Settings(SDKUtil.PACKAGE_NAME);
 
                 return sInstance;
             }
@@ -24,7 +22,7 @@ namespace traVRsal.SDK
             instance.Save();
         }
 
-        public static T Get<T>(string key, SettingsScope scope = SettingsScope.Project, T fallback = default(T))
+        public static T Get<T>(string key, T fallback = default(T), SettingsScope scope = SettingsScope.Project)
         {
             return instance.Get<T>(key, scope, fallback);
         }

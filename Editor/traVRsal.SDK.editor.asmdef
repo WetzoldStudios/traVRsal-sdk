@@ -1,7 +1,6 @@
 {
     "name": "traVRsal.SDK.editor",
     "references": [
-        "GUID:14d48567ce135a342885fcf881aecad2",
         "GUID:f31202898ebcfb34e91cb967cb9c7ec5",
         "GUID:69448af7b92c7f342b298e06a37122aa",
         "GUID:3771859730d597341ac66e0cfda571af",
