@@ -55,9 +55,11 @@ namespace traVRsal.SDK
         public override void OnGUI()
         {
             // independent of actual window
-            int timeRemaining = Mathf.Max(1, Mathf.RoundToInt((DateTime.Now.Subtract(uploadStartTime).Seconds / uploadProgress) * (1 - uploadProgress)));
-            if (uploadInProgress) EditorUtility.DisplayProgressBar("Progress", "Uploading levels to server... " + timeRemaining + "s", uploadProgress);
-
+            if (uploadInProgress)
+            {
+                int timeRemaining = Mathf.Max(1, Mathf.RoundToInt((DateTime.Now.Subtract(uploadStartTime).Seconds / uploadProgress) * (1 - uploadProgress)));
+                EditorUtility.DisplayProgressBar("Progress", "Uploading levels to server... " + timeRemaining + "s", uploadProgress);
+            }
             base.OnGUI();
 
             GUILayout.Label("Packaging ensures that the editor shows the most up to date version of your level.", EditorStyles.wordWrappedLabel);

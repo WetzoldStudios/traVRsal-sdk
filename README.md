@@ -30,12 +30,9 @@ Join the [Discord server](https://discord.gg/67fNz4F) for all questions and feed
 
 This is an early alpha version to get feedback and steer the direction of future development. Many things are still rough around the edges. It will help tremendously if you report every error you encounter but also every feature you are missing to the Discord SDK channel.
 
-* levels cannot yet be tested in VR, the app will release later in July
 * only very few nodes are available right now and your feedback will help to fill the gaps
 * shaders need to support stencils to be visible through transitions
 * transparent objects are not visible through transitions
-* switching to game mode does not allow to move with cursor keys for some reason (it works in the editor)
-* gizmos are sometimes not easily visible (F5 to reload level works as a mitigation)
 * incorrect JSON files will cause the editor to become stuck
 * auto-refresh sometimes does not load the newest packaged assets, restarting the editor solves this
 * the minimum tile count in a grid right now is 4 due to a limitation with maze generation

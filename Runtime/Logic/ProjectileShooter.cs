@@ -12,5 +12,15 @@ namespace traVRsal.SDK
         public bool byPlayer = false;
         public AudioSource audioSource;
         public DamageInflictor damageInflictor;
+
+        private IProjectileShooter shooter;
+
+        public void Fire()
+        {
+            if (shooter == null) shooter = GetComponent<IProjectileShooter>();
+            if (shooter == null) return;
+
+            shooter.Fire();
+        }
     }
 }
