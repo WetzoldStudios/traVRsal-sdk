@@ -84,14 +84,12 @@ namespace traVRsal.SDK
 
         private void RestoreTiled()
         {
-            string tiledPath = GetLevelsRoot() + "/_Tiled";
+            string tiledPath = "Assets/Levels/_Tiled";
 
-            if (Directory.Exists(tiledPath)) Directory.Delete(tiledPath, true);
+            AssetDatabase.DeleteAsset(tiledPath);
             AssetDatabase.Refresh();
 
-            string id = AssetDatabase.FindAssets("_Tiled")[0];
-            string path = AssetDatabase.GUIDToAssetPath(id);
-            AssetDatabase.CopyAsset(path, tiledPath);
+            AssetDatabase.CopyAsset("Packages/" + SDKUtil.PACKAGE_NAME + "/Editor/_Tiled", tiledPath);
             AssetDatabase.Refresh();
         }
 
@@ -99,16 +97,15 @@ namespace traVRsal.SDK
         {
             if (!Directory.Exists(GetLevelPath()))
             {
-                string id = AssetDatabase.FindAssets("_Level")[0];
-                string path = AssetDatabase.GUIDToAssetPath(id);
-                AssetDatabase.CopyAsset(path, GetLevelPath());
+                AssetDatabase.CopyAsset("Packages/" + SDKUtil.PACKAGE_NAME + "/Editor/_Level", GetLevelPath());
                 AssetDatabase.Refresh();
 
                 return true;
             }
             else
             {
-                Debug.LogError("Level with identical name already exists.");
+                EditorUtility.DisplayDialog("Error", "Level with identical name already exists.", "OK");
+
                 return false;
             }
         }
