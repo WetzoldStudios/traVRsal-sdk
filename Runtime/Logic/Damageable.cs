@@ -14,5 +14,11 @@ namespace traVRsal.SDK
         public List<Behaviour> enabledComponentsOnDestruction;
         public List<Behaviour> disabledComponentsOnDestruction;
         public AudioSource[] breakSounds;
+
+        public Damageable()
+        {
+            enabledComponentsOnDestruction = new List<Behaviour>();
+            disabledComponentsOnDestruction = new List<Behaviour>();
+        }
     }
 }

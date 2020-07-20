@@ -15,6 +15,7 @@ namespace traVRsal.SDK
         [Header("Configuration")]
         public int health = 1;
         public int points = 0;
+        public bool isPlayer = false;
         public bool destructible = true;
         public bool registerAsTarget = true;
         public bool triggerVariable = false;
@@ -38,6 +39,7 @@ namespace traVRsal.SDK
         {
             health = copyFrom.health;
             points = copyFrom.points;
+            isPlayer = copyFrom.isPlayer;
             destructible = copyFrom.destructible;
             registerAsTarget = copyFrom.registerAsTarget;
             triggerVariable = copyFrom.triggerVariable;

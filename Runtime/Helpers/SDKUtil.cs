@@ -10,6 +10,14 @@ namespace traVRsal.SDK
         public const string TILED_PATH_DEFAULT = "C:\\Program Files\\Tiled\\tiled.exe";
         public const int PERIODIC_REFRESH_DEFAULT = 0;
 
+        // Tags
+        public const string INTERACTABLE_TAG = "Interactable";
+        public const string COLLECTIBLE_TAG = "Collectible";
+        public const string PLAYER_TAG = "Player";
+        public const string PLAYER_HEAD_TAG = "Player Head";
+        public const string PLAYER_HELPER_TAG = "Player Helper";
+        public const string ENEMY_TAG = "Enemy";
+
         public enum ColliderType
         {
             NONE, BOX, SPHERE

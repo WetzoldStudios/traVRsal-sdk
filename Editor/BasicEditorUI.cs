@@ -5,7 +5,7 @@ namespace traVRsal.SDK
 {
     public abstract class BasicEditorUI : EditorWindow
     {
-        private string[] REQUIRED_TAGS = { "ExcludeTeleport", "Interactable", "Enemy", "Fire", "Collectible" };
+        private string[] REQUIRED_TAGS = { "ExcludeTeleport", SDKUtil.INTERACTABLE_TAG, SDKUtil.ENEMY_TAG, SDKUtil.PLAYER_HEAD_TAG, SDKUtil.COLLECTIBLE_TAG, SDKUtil.PLAYER_HELPER_TAG };
 
         private static GUIStyle logo;
         private Vector2 scrollPos;
