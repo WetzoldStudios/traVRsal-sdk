@@ -31,11 +31,11 @@ Join the [Discord server](https://discord.gg/67fNz4F) for all questions and feed
 This is an early alpha version to get feedback and steer the direction of future development. Many things are still rough around the edges. It will help tremendously if you report every error you encounter but also every feature you are missing to the Discord SDK channel.
 
 * progress bar during upload not shown anymore (Unity 2020.1 bug)
+* progress for downloads is only shown inside VR, not on screen
 * only very few nodes are available right now and your feedback will help to fill the gaps
 * shaders need to support stencils to be visible through transitions
 * transparent objects are not visible through transitions
 * incorrect JSON files will cause the editor to become stuck
-* auto-refresh sometimes does not load the newest packaged assets, restarting the editor solves this
 * the minimum tile count in a grid right now is 4 due to a limitation with maze generation
 * deleting the Levels folder will spam the Unity console with errors if the Publish UI of the traVRsal SDK is still open
 * custom interactions are not possible yet (only premade Button for now)
