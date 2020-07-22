@@ -232,13 +232,14 @@ namespace traVRsal.SDK
                 ConvertTileMaps();
                 CreateAddressableSettings(!allTargets);
                 EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.Generic; // FIXME: ASTC resulting in pink shaders as of 2019.4+
+                PlayerSettings.SetArchitecture(BuildTargetGroup.Standalone, 1);
                 AddressableAssetSettings.CleanPlayerContent();
                 if (Directory.Exists(GetServerDataPath()) && (packageMode == 0 || allLevels)) Directory.Delete(GetServerDataPath(), true);
 
                 // set build targets
                 List<BuildTarget> targets = new List<BuildTarget>();
-                targets.Add(BuildTarget.Android);
-                if (!debugMode) targets.Add(BuildTarget.StandaloneWindows64); // set windows last so that we can continue with editor iterations normally right afterwards
+                if (!debugMode) targets.Add(BuildTarget.Android);
+                targets.Add(BuildTarget.StandaloneWindows64); // set windows last so that we can continue with editor iterations normally right afterwards
 
                 // build each level individually
                 AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
