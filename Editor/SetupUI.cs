@@ -32,9 +32,9 @@ namespace traVRsal.SDK
             OnGUIDone();
         }
 
-        private string GetLevelPath()
+        private string GetLevelPath(bool relative)
         {
-            return GetLevelsRoot() + "/" + levelName;
+            return GetLevelsRoot(relative) + "/" + levelName;
         }
 
         private void CreateSampleLevel()
@@ -54,7 +54,7 @@ namespace traVRsal.SDK
             CreateSampleWorld();
 
             EditorUtility.FocusProjectWindow();
-            Object obj = AssetDatabase.LoadAssetAtPath<Object>("Assets/Levels/" + levelName);
+            Object obj = AssetDatabase.LoadAssetAtPath<Object>(GetLevelPath(true));
             Selection.activeObject = obj;
             EditorGUIUtility.PingObject(obj);
 
@@ -69,9 +69,9 @@ namespace traVRsal.SDK
 
         private bool CreateLevelsRoot()
         {
-            if (!Directory.Exists(GetLevelsRoot()))
+            if (!Directory.Exists(GetLevelsRoot(false)))
             {
-                Directory.CreateDirectory(GetLevelsRoot());
+                Directory.CreateDirectory(GetLevelsRoot(false));
                 AssetDatabase.Refresh();
 
                 return true;
@@ -84,7 +84,7 @@ namespace traVRsal.SDK
 
         private void RestoreTiled()
         {
-            string tiledPath = "Assets/Levels/_Tiled";
+            string tiledPath = GetLevelsRoot(true) + "/_Tiled";
 
             AssetDatabase.DeleteAsset(tiledPath);
             AssetDatabase.Refresh();
@@ -95,9 +95,9 @@ namespace traVRsal.SDK
 
         private bool CreateSampleWorld()
         {
-            if (!Directory.Exists(GetLevelPath()))
+            if (!Directory.Exists(GetLevelPath(false)))
             {
-                AssetDatabase.CopyAsset("Packages/" + SDKUtil.PACKAGE_NAME + "/Editor/_Level", GetLevelPath());
+                AssetDatabase.CopyAsset("Packages/" + SDKUtil.PACKAGE_NAME + "/Editor/_Level", GetLevelPath(true));
                 AssetDatabase.Refresh();
 
                 return true;

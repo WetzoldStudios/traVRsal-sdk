@@ -64,12 +64,19 @@ namespace traVRsal.SDK
 
             GUILayout.Label("Packaging ensures that the editor shows the most up to date version of your level.", EditorStyles.wordWrappedLabel);
 
-            GUILayout.Space(10);
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Packaging Mode:", EditorStyles.wordWrappedLabel);
-            packageMode = GUILayout.SelectionGrid(packageMode, PACKAGE_OPTIONS, 2, EditorStyles.radioButton);
-            GUILayout.EndHorizontal();
-
+            // TODO: cache
+            if (GetLevelPaths().Length > 1)
+            {
+                GUILayout.Space(10);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Packaging Mode:", EditorStyles.wordWrappedLabel);
+                packageMode = GUILayout.SelectionGrid(packageMode, PACKAGE_OPTIONS, 2, EditorStyles.radioButton);
+                GUILayout.EndHorizontal();
+            }
+            else
+            {
+                packageMode = 0;
+            }
             EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress);
             string buttonText = "Package";
             if (packageMode == 1)
@@ -77,6 +84,7 @@ namespace traVRsal.SDK
                 string[] levelsToBuild = GetLevelsToBuild().Select(path => Path.GetFileName(path)).ToArray();
                 buttonText += " (" + ((dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", levelsToBuild) : "everything") + ")";
             }
+
             if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageLevels(packageMode == 2 ? true : false, packageMode == 2 ? true : false), this);
             EditorGUI.EndDisabledGroup();
 
@@ -238,8 +246,15 @@ namespace traVRsal.SDK
 
                 // set build targets
                 List<BuildTarget> targets = new List<BuildTarget>();
-                if (!debugMode) targets.Add(BuildTarget.Android);
-                targets.Add(BuildTarget.StandaloneWindows64); // set windows last so that we can continue with editor iterations normally right afterwards
+                if (debugMode) // needed only due to strange Unity bug not allowing to automatically switch from PC to Android on some systems (reported)
+                {
+                    targets.Add(EditorUserBuildSettings.activeBuildTarget);
+                }
+                else
+                {
+                    targets.Add(BuildTarget.Android);
+                    targets.Add(BuildTarget.StandaloneWindows64); // set windows last so that we can continue with editor iterations normally right afterwards
+                }
 
                 // build each level individually
                 AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
@@ -527,6 +542,7 @@ namespace traVRsal.SDK
             settings.ActivePlayModeDataBuilderIndex = localMode ? 0 : 2;
             settings.BuildRemoteCatalog = true;
             settings.DisableCatalogUpdateOnStartup = true;
+            settings.ContiguousBundles = true;
 
             // don't include built-in data, causes shader issues
             settings.groups.ForEach(g =>

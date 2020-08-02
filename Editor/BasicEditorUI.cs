@@ -61,9 +61,9 @@ namespace traVRsal.SDK
             tagManager.ApplyModifiedProperties();
         }
 
-        public string GetLevelsRoot()
+        public string GetLevelsRoot(bool relative)
         {
-            return Application.dataPath + "/Levels";
+            return (relative ? "Assets" : Application.dataPath) + "/Levels";
         }
     }
 }

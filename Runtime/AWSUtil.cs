@@ -12,6 +12,7 @@ using Amazon.S3.Transfer;
 using System.Threading;
 using UnityEngine.Scripting;
 
+// force to include all scripts in assembly and don't accidentally strip something as they might be added at runtime
 [assembly: Preserve]
 
 namespace traVRsal.SDK
@@ -27,10 +28,11 @@ namespace traVRsal.SDK
         public static string S3Root = "https://travrsal-live.sfo2.digitaloceanspaces.com/";
 
         // FIXME: only leave in for beta, new mechanism as soon as backend is up and running
-        public static string AccessKey = "56OHHRYAJWSCDODSF6X3";
-        public static string AccessKeySecret = "mNfWLF/J40vn65nQoyCrnU+/g89TM1lIAohiikSxNm8";
-        // Amazon-only: public static string S3BucketName = "eu.west1.travrsal.repo";
-        public static string S3BucketName = "travrsal-live";
+        public static string AccessKey = "TJLL2B73DJSGQPBKJRP7";
+        public static string AccessKeySecret = "H8mxC/akX8W9jqIFXvY+UFOj5zrW0bTsEtz1Bh5HDvg";
+
+        // Amazon-only: private static string S3BucketName = "eu.west1.travrsal.repo";
+        private static string S3BucketName = "travrsal-upload";
 
         public string CognitoIdentityRegion = RegionEndpoint.EUWest1.SystemName;
         private RegionEndpoint _CognitoIdentityRegion
