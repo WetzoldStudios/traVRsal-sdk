@@ -1,8 +1,10 @@
 ﻿using Asyncoroutine;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
@@ -10,6 +12,7 @@ using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEngine;
+using CompressionLevel = System.IO.Compression.CompressionLevel;
 
 namespace traVRsal.SDK
 {
@@ -167,9 +170,33 @@ namespace traVRsal.SDK
         {
             yield return PackageLevels(true, true);
             yield return CreateDocumentation();
+            PrepareCommonFiles();
             Verify();
 
             uploadPossible = packagingSuccessful && verificationPassed;
+        }
+
+        private void PrepareCommonFiles()
+        {
+            foreach (string dir in GetLevelPaths())
+            {
+                string levelName = Path.GetFileName(dir);
+                string commonPath = GetServerDataPath() + "/Levels/" + levelName + "/Common/";
+                string mediaPath = commonPath + "Media/";
+
+                Directory.CreateDirectory(commonPath);
+
+                // documentation
+                File.Copy(GetDocuArchivePath(levelName), commonPath + "docs.zip", true);
+
+                // images
+                Directory.CreateDirectory(mediaPath);
+                Level level = JsonConvert.DeserializeObject<Level>(File.ReadAllText(dir + "/level.json"));
+                if (!string.IsNullOrEmpty(level.coverImage))
+                {
+                    File.Copy(dir + "/Images/" + level.coverImage, mediaPath + level.coverImage, true);
+                }
+            }
         }
 
         private void Verify()
@@ -185,7 +212,8 @@ namespace traVRsal.SDK
                 VerificationResult result = new VerificationResult();
                 result.sourceSize = DirectoryUtil.GetSize(dir);
 
-                result.documentationExists = Directory.Exists(GetDocuPath(levelName));
+                result.documentationPath = GetDocuArchivePath(levelName);
+                result.documentationExists = File.Exists(result.documentationPath);
 
                 result.distroPathAndroid = GetServerDataPath() + "/Levels/" + levelName + "/Android";
                 result.distroExistsAndroid = Directory.Exists(result.distroPathAndroid);
@@ -312,6 +340,11 @@ namespace traVRsal.SDK
         private string GetDocuPath(string levelName)
         {
             return $"{Application.dataPath}/../Documentation/{levelName}/";
+        }
+
+        private string GetDocuArchivePath(string levelName)
+        {
+            return GetDocuPath(levelName) + "../" + levelName + "-docs.zip";
         }
 
         private IEnumerator CreateDocumentation()
@@ -487,7 +520,12 @@ namespace traVRsal.SDK
                 }
 
                 File.WriteAllText(docuPath + "index.html", html);
+
+                // create zip
+                if (File.Exists(GetDocuArchivePath(levelName))) File.Delete(GetDocuArchivePath(levelName));
+                ZipFile.CreateFromDirectory(docuPath, GetDocuArchivePath(levelName), CompressionLevel.Fastest, false);
             }
+
             documentationInProgress = false;
         }
 

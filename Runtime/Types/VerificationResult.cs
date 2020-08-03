@@ -8,6 +8,7 @@ namespace traVRsal.SDK
         public DateTime checkTime;
         public long sourceSize;
         public bool documentationExists;
+        public string documentationPath;
 
         public string distroPathAndroid;
         public bool distroExistsAndroid;
