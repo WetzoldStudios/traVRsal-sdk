@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class World
+    public class TMWorld
     {
         public string type;
         public WorldMap[] maps;
@@ -15,7 +15,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"World {worldName} ({fileName})";
+            return $"TileMap World {worldName} ({fileName})";
         }
     }
 }

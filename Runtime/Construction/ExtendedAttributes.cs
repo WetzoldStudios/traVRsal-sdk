@@ -4,6 +4,7 @@ namespace traVRsal.SDK
 {
     public class ExtendedAttributes : MonoBehaviour
     {
+        public bool environment = false;
         public bool nonBlocking = false;
         public bool climbable = false;
         public bool portalHole = false;
