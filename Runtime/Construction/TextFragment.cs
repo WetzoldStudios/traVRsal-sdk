@@ -8,7 +8,7 @@ namespace traVRsal.SDK
     {
         public enum Event
         {
-            LOADING_DONE, VARIABLE_ON, VARIABLE_OFF, ENTER_ROOM, ENTER_TRANSITION, SEE_OBJECT, HEAR_OBJECT
+            LOADING_DONE, VARIABLE_ON, VARIABLE_OFF, ENTER_ZONE, ENTER_TRANSITION, SEE_OBJECT, HEAR_OBJECT
         }
 
         public enum Repetition

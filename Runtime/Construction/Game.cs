@@ -10,21 +10,21 @@ namespace traVRsal.SDK
         [Header("Configuration")]
         public string key = "game";
         public string name = "Development Mode";
-        public string levelsURL;
-        public List<string> levels;
+        public string worldsURL;
+        public List<string> worlds;
         public string menuScene = "Menu-OoD";
-        public string levelObject = "Level2";
+        public string worldObject = "World2";
         public string pauseScene = "Pause-OoD";
         public bool devMode = false;
 
         public Game()
         {
-            levels = new List<string>();
+            worlds = new List<string>();
         }
 
         public override string ToString()
         {
-            return $"Game {name} ({key}, {levels.Count} levels, " + (devMode ? "Dev-Mode" : "Game-Mode") + ")";
+            return $"Game {name} ({key}, {worlds.Count} worlds, " + (devMode ? "Dev-Mode" : "Game-Mode") + ")";
         }
     }
 }

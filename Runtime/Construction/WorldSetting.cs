@@ -4,7 +4,7 @@ using UnityEngine;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class LevelSetting
+    public class WorldSetting
     {
         public enum SettingsType
         {
@@ -20,9 +20,9 @@ namespace traVRsal.SDK
         [Header("Runtime Data")]
         public string currentValue;
 
-        public LevelSetting() { }
+        public WorldSetting() { }
 
-        public LevelSetting(string key) : this()
+        public WorldSetting(string key) : this()
         {
             this.key = key;
         }
@@ -32,13 +32,13 @@ namespace traVRsal.SDK
             return string.IsNullOrEmpty(currentValue) ? defaultValue : currentValue;
         }
 
-        public LevelSetting WithCurrentValue(string currentValue)
+        public WorldSetting WithCurrentValue(string currentValue)
         {
             this.currentValue = currentValue;
             return this;
         }
 
-        public LevelSetting WithDefaultValue(string defaultValue)
+        public WorldSetting WithDefaultValue(string defaultValue)
         {
             this.defaultValue = defaultValue;
             return this;
@@ -46,7 +46,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"LevelSetting {key} ({type})";
+            return $"WorldSetting {key} ({type})";
         }
     }
 }

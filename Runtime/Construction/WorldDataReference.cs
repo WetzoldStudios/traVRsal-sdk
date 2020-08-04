@@ -3,19 +3,19 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class LevelDataReference
+    public class WorldDataReference
     {
         public enum ImportType
         {
-            TILEMAP, TILEMAP_WORLD, LEVEL
+            TILEMAP, TILEMAP_WORLD, WORLD
         }
 
         public ImportType type = ImportType.TILEMAP_WORLD;
         public string fileName;
 
-        public LevelDataReference() { }
+        public WorldDataReference() { }
 
-        public LevelDataReference(string fileName, ImportType type = ImportType.TILEMAP_WORLD) : this()
+        public WorldDataReference(string fileName, ImportType type = ImportType.TILEMAP_WORLD) : this()
         {
             this.fileName = fileName;
             this.type = type;
@@ -23,7 +23,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"LevelDataReference {fileName} ({type})";
+            return $"WorldDataReference {fileName} ({type})";
         }
     }
 }

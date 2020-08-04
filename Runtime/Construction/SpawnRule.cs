@@ -20,7 +20,7 @@ namespace traVRsal.SDK
         public string layer;
         public bool enabled = true;
         public string[] objectKeys;
-        public string[] validRooms;
+        public string[] validZones;
         public string[] validSockets;
         public AmountType amountType = AmountType.TOTAL;
         public int amount = 10;
@@ -72,9 +72,9 @@ namespace traVRsal.SDK
             return this;
         }
 
-        public SpawnRule WithValidRooms(string[] validRooms)
+        public SpawnRule WithValidZones(string[] validZones)
         {
-            this.validRooms = validRooms;
+            this.validZones = validZones;
             return this;
         }
 

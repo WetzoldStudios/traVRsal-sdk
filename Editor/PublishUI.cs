@@ -50,7 +50,7 @@ namespace traVRsal.SDK
 
             if (dirWatcher == null)
             {
-                dirWatcher = new DirectoryWatcher(new FSWParams(Application.dataPath + "/Levels"));
+                dirWatcher = new DirectoryWatcher(new FSWParams(Application.dataPath + "/Worlds"));
                 dirWatcher.StartFSW();
             }
         }
@@ -61,85 +61,93 @@ namespace traVRsal.SDK
             if (uploadInProgress)
             {
                 int timeRemaining = Mathf.Max(1, Mathf.RoundToInt((DateTime.Now.Subtract(uploadStartTime).Seconds / uploadProgress) * (1 - uploadProgress)));
-                EditorUtility.DisplayProgressBar("Progress", "Uploading levels to server... " + timeRemaining + "s", uploadProgress);
+                EditorUtility.DisplayProgressBar("Progress", "Uploading worlds to server... " + timeRemaining + "s", uploadProgress);
             }
             base.OnGUI();
 
-            GUILayout.Label("Packaging ensures that the editor shows the most up to date version of your level.", EditorStyles.wordWrappedLabel);
+            GUILayout.Label("Packaging ensures that the editor shows the most up to date version of your world.", EditorStyles.wordWrappedLabel);
 
             // TODO: cache
-            if (GetLevelPaths().Length > 1)
+            string[] worlds = GetWorldPaths();
+            if (worlds.Length == 0)
             {
                 GUILayout.Space(10);
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("Packaging Mode:", EditorStyles.wordWrappedLabel);
-                packageMode = GUILayout.SelectionGrid(packageMode, PACKAGE_OPTIONS, 2, EditorStyles.radioButton);
-                GUILayout.EndHorizontal();
+                GUILayout.Label("There are no worlds created yet. Use the Setup tool to create one.", EditorStyles.wordWrappedLabel);
             }
             else
             {
-                packageMode = 0;
-            }
-            EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress);
-            string buttonText = "Package";
-            if (packageMode == 1)
-            {
-                string[] levelsToBuild = GetLevelsToBuild().Select(path => Path.GetFileName(path)).ToArray();
-                buttonText += " (" + ((dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", levelsToBuild) : "everything") + ")";
-            }
-
-            if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageLevels(packageMode == 2 ? true : false, packageMode == 2 ? true : false), this);
-            EditorGUI.EndDisabledGroup();
-
-            GUILayout.BeginHorizontal();
-            EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress);
-            if (GUILayout.Button("Prepare Upload")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(), this);
-            EditorGUI.EndDisabledGroup();
-
-            EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || !uploadPossible);
-            if (GUILayout.Button("Upload")) EditorCoroutineUtility.StartCoroutine(UploadLevels(), this);
-            EditorGUI.EndDisabledGroup();
-
-            GUILayout.EndHorizontal();
-
-            if (verifications.Count() > 0)
-            {
-                GUILayout.Space(10);
-                GUILayout.Label("Verification Results", EditorStyles.boldLabel);
-
-                foreach (string dir in GetLevelPaths())
+                if (worlds.Length > 1)
                 {
-                    string levelName = Path.GetFileName(dir);
-                    if (!verifications.ContainsKey(levelName)) continue;
+                    GUILayout.Space(10);
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Packaging Mode:", EditorStyles.wordWrappedLabel);
+                    packageMode = GUILayout.SelectionGrid(packageMode, PACKAGE_OPTIONS, 2, EditorStyles.radioButton);
+                    GUILayout.EndHorizontal();
+                }
+                else
+                {
+                    packageMode = 0;
+                }
+                EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress);
+                string buttonText = "Package";
+                if (packageMode == 1)
+                {
+                    string[] worldsToBuild = GetWorldsToBuild().Select(path => Path.GetFileName(path)).ToArray();
+                    buttonText += " (" + ((dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", worldsToBuild) : "everything") + ")";
+                }
 
-                    VerificationResult v = verifications[levelName];
+                if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode == 2 ? true : false, packageMode == 2 ? true : false), this);
+                EditorGUI.EndDisabledGroup();
 
-                    v.showDetails = EditorGUILayout.Foldout(v.showDetails, levelName);
+                GUILayout.BeginHorizontal();
+                EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress);
+                if (GUILayout.Button("Prepare Upload")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(), this);
+                EditorGUI.EndDisabledGroup();
 
-                    if (v.showDetails)
+                EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || !uploadPossible);
+                if (GUILayout.Button("Upload")) EditorCoroutineUtility.StartCoroutine(UploadWorlds(), this);
+                EditorGUI.EndDisabledGroup();
+
+                GUILayout.EndHorizontal();
+
+                if (verifications.Count() > 0)
+                {
+                    GUILayout.Space(10);
+                    GUILayout.Label("Verification Results", EditorStyles.boldLabel);
+
+                    foreach (string dir in GetWorldPaths())
                     {
-                        // PrintTableRow("Size (Original)", SDKUtil.BytesToString(v.sourceSize));
-                        PrintTableRow("Size (Quest)", v.distroExistsAndroid ? SDKUtil.BytesToString(v.distroSizeAndroid) : "not packaged yet");
-                        PrintTableRow("Size (PC)", v.distroExistsStandalone ? SDKUtil.BytesToString(v.distroSizeStandalone) : "not packaged yet");
-                        if (v.documentationExists)
+                        string worldName = Path.GetFileName(dir);
+                        if (!verifications.ContainsKey(worldName)) continue;
+
+                        VerificationResult v = verifications[worldName];
+
+                        v.showDetails = EditorGUILayout.Foldout(v.showDetails, worldName);
+
+                        if (v.showDetails)
                         {
-                            BeginPartialTableRow("Documentation");
-                            if (GUILayout.Button("Open")) Help.BrowseURL(GetDocuPath(levelName) + "index.html");
-                            EndPartialTableRow();
-                        }
-                        else
-                        {
-                            PrintTableRow("Documentation", "not created yet");
+                            PrintTableRow("Size (Quest)", v.distroExistsAndroid ? SDKUtil.BytesToString(v.distroSizeAndroid) : "not packaged yet");
+                            PrintTableRow("Size (PC)", v.distroExistsStandalone ? SDKUtil.BytesToString(v.distroSizeStandalone) : "not packaged yet");
+                            if (v.documentationExists)
+                            {
+                                BeginPartialTableRow("Documentation");
+                                if (GUILayout.Button("Open")) Help.BrowseURL(GetDocuPath(worldName) + "index.html");
+                                EndPartialTableRow();
+                            }
+                            else
+                            {
+                                PrintTableRow("Documentation", "not created yet");
+                            }
                         }
                     }
                 }
-            }
 
-            if (debugMode)
-            {
-                EditorGUI.BeginDisabledGroup(documentationInProgress);
-                if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
-                EditorGUI.EndDisabledGroup();
+                if (debugMode)
+                {
+                    EditorGUI.BeginDisabledGroup(documentationInProgress);
+                    if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
+                    EditorGUI.EndDisabledGroup();
+                }
             }
 
             OnGUIDone();
@@ -168,7 +176,7 @@ namespace traVRsal.SDK
 
         private IEnumerator PrepareUpload()
         {
-            yield return PackageLevels(true, true);
+            yield return PackageWorlds(true, true);
             yield return CreateDocumentation();
             PrepareCommonFiles();
             Verify();
@@ -178,23 +186,23 @@ namespace traVRsal.SDK
 
         private void PrepareCommonFiles()
         {
-            foreach (string dir in GetLevelPaths())
+            foreach (string dir in GetWorldPaths())
             {
-                string levelName = Path.GetFileName(dir);
-                string commonPath = GetServerDataPath() + "/Levels/" + levelName + "/Common/";
+                string worldName = Path.GetFileName(dir);
+                string commonPath = GetServerDataPath() + "/Worlds/" + worldName + "/Common/";
                 string mediaPath = commonPath + "Media/";
 
                 Directory.CreateDirectory(commonPath);
 
                 // documentation
-                File.Copy(GetDocuArchivePath(levelName), commonPath + "docs.zip", true);
+                File.Copy(GetDocuArchivePath(worldName), commonPath + "docs.zip", true);
 
                 // images
                 Directory.CreateDirectory(mediaPath);
-                Level level = JsonConvert.DeserializeObject<Level>(File.ReadAllText(dir + "/level.json"));
-                if (!string.IsNullOrEmpty(level.coverImage))
+                World world = JsonConvert.DeserializeObject<World>(File.ReadAllText(dir + "/world.json"));
+                if (!string.IsNullOrEmpty(world.coverImage))
                 {
-                    File.Copy(dir + "/Images/" + level.coverImage, mediaPath + level.coverImage, true);
+                    File.Copy(dir + "/Images/" + world.coverImage, mediaPath + world.coverImage, true);
                 }
             }
         }
@@ -205,25 +213,25 @@ namespace traVRsal.SDK
             verificationPassed = false;
             verifications.Clear();
 
-            foreach (string dir in GetLevelPaths())
+            foreach (string dir in GetWorldPaths())
             {
-                string levelName = Path.GetFileName(dir);
+                string worldName = Path.GetFileName(dir);
 
                 VerificationResult result = new VerificationResult();
                 result.sourceSize = DirectoryUtil.GetSize(dir);
 
-                result.documentationPath = GetDocuArchivePath(levelName);
+                result.documentationPath = GetDocuArchivePath(worldName);
                 result.documentationExists = File.Exists(result.documentationPath);
 
-                result.distroPathAndroid = GetServerDataPath() + "/Levels/" + levelName + "/Android";
+                result.distroPathAndroid = GetServerDataPath() + "/Worlds/" + worldName + "/Android";
                 result.distroExistsAndroid = Directory.Exists(result.distroPathAndroid);
                 result.distroSizeAndroid = DirectoryUtil.GetSize(result.distroPathAndroid);
 
-                result.distroPathStandalone = GetServerDataPath() + "/Levels/" + levelName + "/StandaloneWindows64";
+                result.distroPathStandalone = GetServerDataPath() + "/Worlds/" + worldName + "/StandaloneWindows64";
                 result.distroExistsStandalone = Directory.Exists(result.distroPathStandalone);
                 result.distroSizeStandalone = DirectoryUtil.GetSize(result.distroPathStandalone);
 
-                verifications.Add(levelName, result);
+                verifications.Add(worldName, result);
             }
             verifyInProgress = false;
             verificationPassed = true; // TODO: do some actual checks
@@ -234,26 +242,26 @@ namespace traVRsal.SDK
             return Application.dataPath + "/../ServerData";
         }
 
-        private string[] GetLevelsToBuild()
+        private string[] GetWorldsToBuild()
         {
-            string[] levelsToBuild = GetLevelPaths();
+            string[] worldsToBuild = GetWorldPaths();
             if (packageMode == 1)
             {
                 try
                 {
-                    string[] filteredLevels = levelsToBuild.Where(
-                        levelName => dirWatcher.affectedFiles.Where(
-                            af => af.Contains("/" + Path.GetFileName(levelName) + "/") || af.Contains("\\" + Path.GetFileName(levelName) + "\\")).Any()
+                    string[] filteredWorlds = worldsToBuild.Where(
+                        worldName => dirWatcher.affectedFiles.Where(
+                            af => af.Contains("/" + Path.GetFileName(worldName) + "/") || af.Contains("\\" + Path.GetFileName(worldName) + "\\")).Any()
                         ).ToArray();
-                    if (filteredLevels.Length > 0) levelsToBuild = filteredLevels;
+                    if (filteredWorlds.Length > 0) worldsToBuild = filteredWorlds;
                 }
                 catch { }
             }
 
-            return levelsToBuild;
+            return worldsToBuild;
         }
 
-        private IEnumerator PackageLevels(bool allLevels, bool allTargets)
+        private IEnumerator PackageWorlds(bool allWorlds, bool allTargets)
         {
             uploadPossible = false;
             packagingInProgress = true;
@@ -261,8 +269,8 @@ namespace traVRsal.SDK
 
             try
             {
-                string[] levelsToBuild = allLevels ? GetLevelPaths() : GetLevelsToBuild();
-                if (levelsToBuild.Length == 0) yield break;
+                string[] worldsToBuild = allWorlds ? GetWorldPaths() : GetWorldsToBuild();
+                if (worldsToBuild.Length == 0) yield break;
 
                 CreateLockFile();
                 ConvertTileMaps();
@@ -270,7 +278,7 @@ namespace traVRsal.SDK
                 EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.Generic; // FIXME: ASTC resulting in pink shaders as of 2019.4+
                 EditorUserBuildSettings.selectedStandaloneTarget = BuildTarget.StandaloneWindows64;
                 AddressableAssetSettings.CleanPlayerContent();
-                if (Directory.Exists(GetServerDataPath()) && (packageMode == 0 || allLevels)) Directory.Delete(GetServerDataPath(), true);
+                if (Directory.Exists(GetServerDataPath()) && (packageMode == 0 || allWorlds)) Directory.Delete(GetServerDataPath(), true);
 
                 // set build targets
                 List<BuildTarget> targets = new List<BuildTarget>();
@@ -284,23 +292,23 @@ namespace traVRsal.SDK
                     targets.Add(BuildTarget.StandaloneWindows64); // set windows last so that we can continue with editor iterations normally right afterwards
                 }
 
-                // build each level individually
+                // build each world individually
                 AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
-                foreach (string dir in levelsToBuild)
+                foreach (string dir in worldsToBuild)
                 {
-                    string levelName = Path.GetFileName(dir);
+                    string worldName = Path.GetFileName(dir);
 
-                    string serverDir = GetServerDataPath() + "/Levels/" + Path.GetFileName(dir);
-                    if (packageMode == 1 && !allLevels && Directory.Exists(serverDir)) Directory.Delete(serverDir, true);
+                    string serverDir = GetServerDataPath() + "/Worlds/" + Path.GetFileName(dir);
+                    if (packageMode == 1 && !allWorlds && Directory.Exists(serverDir)) Directory.Delete(serverDir, true);
 
-                    settings.activeProfileId = settings.profileSettings.GetProfileId(levelName);
+                    settings.activeProfileId = settings.profileSettings.GetProfileId(worldName);
                     settings.groups.ForEach(group =>
                     {
                         if (group.ReadOnly) return;
-                        group.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = group.name == levelName;
+                        group.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = group.name == worldName;
                     });
 
-                    BundledAssetGroupSchema schema = settings.groups.Where(group => group.name == levelName).First().GetSchema<BundledAssetGroupSchema>();
+                    BundledAssetGroupSchema schema = settings.groups.Where(group => group.name == worldName).First().GetSchema<BundledAssetGroupSchema>();
                     settings.RemoteCatalogBuildPath = schema.BuildPath;
                     settings.RemoteCatalogLoadPath = schema.LoadPath;
 
@@ -316,6 +324,7 @@ namespace traVRsal.SDK
                     else
                     {
                         // build only for currently active target
+                        // FIXME: will delete folder now in new addressables version so we need to save it out and restore later
                         AddressableAssetSettings.BuildPlayerContent();
                     }
                 }
@@ -337,14 +346,14 @@ namespace traVRsal.SDK
             Debug.Log("Packaging completed successfully.");
         }
 
-        private string GetDocuPath(string levelName)
+        private string GetDocuPath(string worldName)
         {
-            return $"{Application.dataPath}/../Documentation/{levelName}/";
+            return $"{Application.dataPath}/../Documentation/{worldName}/";
         }
 
-        private string GetDocuArchivePath(string levelName)
+        private string GetDocuArchivePath(string worldName)
         {
-            return GetDocuPath(levelName) + "../" + levelName + "-docs.zip";
+            return GetDocuPath(worldName) + "../" + worldName + "-docs.zip";
         }
 
         private IEnumerator CreateDocumentation()
@@ -354,10 +363,10 @@ namespace traVRsal.SDK
             string converterPath = TravrsalSettingsManager.Get("tiledPath", SDKUtil.TILED_PATH_DEFAULT);
             if (!string.IsNullOrEmpty(converterPath)) converterPath = Path.GetDirectoryName(converterPath) + "/tmxrasterizer.exe";
 
-            foreach (string dir in GetLevelPaths())
+            foreach (string dir in GetWorldPaths())
             {
-                string levelName = Path.GetFileName(dir);
-                string docuPath = GetDocuPath(levelName);
+                string worldName = Path.GetFileName(dir);
+                string docuPath = GetDocuPath(worldName);
                 try
                 {
                     if (Directory.Exists(docuPath)) Directory.Delete(docuPath, true);
@@ -369,17 +378,17 @@ namespace traVRsal.SDK
                     continue;
                 }
 
-                string root = $"Assets/Levels/{levelName}/";
+                string root = $"Assets/Worlds/{worldName}/";
 
                 // fill HTML template
-                string id = AssetDatabase.FindAssets("_LevelDocu")[0];
+                string id = AssetDatabase.FindAssets("_WorldDocu")[0];
                 string path = AssetDatabase.GUIDToAssetPath(id);
                 DirectoryUtil.Copy(Application.dataPath + "/../" + path, docuPath);
                 AssetDatabase.Refresh();
 
                 string html = File.ReadAllText(docuPath + "index.html");
-                html = html.Replace("{LevelName}", levelName);
-                html = html.Replace("{LevelKey}", levelName);
+                html = html.Replace("{WorldName}", worldName);
+                html = html.Replace("{WorldKey}", worldName);
                 html = html.Replace("{AppVersion}", Application.version); // FIXME: points to wrong version
                 html = html.Replace("{Date}", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
 
@@ -414,7 +423,7 @@ namespace traVRsal.SDK
                                     if (!assetPath.ToLower().EndsWith(".tmx")) continue;
                                     imageLink = folder + "/" + Path.GetFileName(assetPath) + ".png";
                                     TileMapUtil.TileMapToImage(assetPath, docuPath + imageLink, converterPath);
-                                    variableName = "Rooms";
+                                    variableName = "Zones";
                                     withExtension = false;
                                     break;
 
@@ -500,7 +509,7 @@ namespace traVRsal.SDK
                                 imageLink = File.Exists(docuPath + imageName) ? imageName : "MissingPreview.png";
                             }
                             objects += "<img src=\"" + imageLink + "\" class=\"mr-3\" width=\"128\">";
-                            objects += "<div class=\"media-body\">/" + levelName + "/" + accessKey;
+                            objects += "<div class=\"media-body\">/" + worldName + "/" + accessKey;
                             objects += "</div></div>";
                         }
                         objects += "</table>";
@@ -509,9 +518,9 @@ namespace traVRsal.SDK
                     html = html.Replace($"{{{variableName}Count}}", objCount.ToString());
                 }
 
-                // copy data contents and level descriptor
+                // copy data contents and world descriptor
                 DirectoryUtil.Copy(root + "/Data", docuPath + "/Data");
-                FileUtil.CopyFileOrDirectory(root + "/level.json", docuPath + "/level.json");
+                FileUtil.CopyFileOrDirectory(root + "/world.json", docuPath + "/world.json");
 
                 // remove all meta files
                 foreach (string fileName in Directory.EnumerateFiles(docuPath, "*.meta", SearchOption.AllDirectories))
@@ -522,8 +531,8 @@ namespace traVRsal.SDK
                 File.WriteAllText(docuPath + "index.html", html);
 
                 // create zip
-                if (File.Exists(GetDocuArchivePath(levelName))) File.Delete(GetDocuArchivePath(levelName));
-                ZipFile.CreateFromDirectory(docuPath, GetDocuArchivePath(levelName), CompressionLevel.Fastest, false);
+                if (File.Exists(GetDocuArchivePath(worldName))) File.Delete(GetDocuArchivePath(worldName));
+                ZipFile.CreateFromDirectory(docuPath, GetDocuArchivePath(worldName), CompressionLevel.Fastest, false);
             }
 
             documentationInProgress = false;
@@ -556,7 +565,7 @@ namespace traVRsal.SDK
 
         private void RenameCatalogs()
         {
-            foreach (string path in new[] { GetServerDataPath(), Application.dataPath + "/../Library/com.unity.addressables/aa/Windows/Levels" })
+            foreach (string path in new[] { GetServerDataPath(), Application.dataPath + "/../Library/com.unity.addressables/aa/Windows/Worlds" })
             {
                 if (Directory.Exists(path))
                 {
@@ -597,31 +606,31 @@ namespace traVRsal.SDK
             AddressableAssetProfileSettings profile = settings.profileSettings;
 
             // activate and (re)group assets
-            foreach (string dir in GetLevelPaths())
+            foreach (string dir in GetWorldPaths())
             {
-                string levelName = Path.GetFileName(dir);
-                bool isBase = levelName == "Base";
+                string worldName = Path.GetFileName(dir);
+                bool isBase = worldName == "Base";
 
-                // create one profile per level
-                string profileId = profile.GetProfileId(levelName);
-                if (string.IsNullOrEmpty(profileId)) profileId = profile.AddProfile(levelName, settings.activeProfileId);
+                // create one profile per world
+                string profileId = profile.GetProfileId(worldName);
+                if (string.IsNullOrEmpty(profileId)) profileId = profile.AddProfile(worldName, settings.activeProfileId);
 
-                string guid = AssetDatabase.AssetPathToGUID($"Assets/Levels/{levelName}");
+                string guid = AssetDatabase.AssetPathToGUID($"Assets/Worlds/{worldName}");
 
                 // create group if non-existent
-                AddressableAssetGroup group = settings.groups.Where(g => g.name == levelName).FirstOrDefault();
-                if (group == null) group = CreateAssetGroup<BundledAssetGroupSchema>(settings, levelName);
+                AddressableAssetGroup group = settings.groups.Where(g => g.name == worldName).FirstOrDefault();
+                if (group == null) group = CreateAssetGroup<BundledAssetGroupSchema>(settings, worldName);
 
                 // set correct path
                 AddressableAssetEntry entry = settings.CreateOrMoveEntry(guid, group);
-                entry.SetAddress($"Levels/{levelName}");
+                entry.SetAddress($"Worlds/{worldName}");
 
                 // set variables
-                string localRoot = Application.dataPath + $"/../Library/com.unity.addressables/aa/Windows/Levels/{levelName}/[BuildTarget]";
+                string localRoot = Application.dataPath + $"/../Library/com.unity.addressables/aa/Windows/Worlds/{worldName}/[BuildTarget]";
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalBuildPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalLoadPath, localRoot);
-                profile.SetValue(profileId, AddressableAssetSettings.kRemoteBuildPath, $"ServerData/Levels/{levelName}/[BuildTarget]");
-                profile.SetValue(profileId, AddressableAssetSettings.kRemoteLoadPath, $"{AWSUtil.S3Root}Levels/{levelName}/[BuildTarget]");
+                profile.SetValue(profileId, AddressableAssetSettings.kRemoteBuildPath, $"ServerData/Worlds/{worldName}/[BuildTarget]");
+                profile.SetValue(profileId, AddressableAssetSettings.kRemoteLoadPath, $"{AWSUtil.S3Root}Worlds/{worldName}/[BuildTarget]");
 
                 // ensure correct group settings
                 BundledAssetGroupSchema groupSchema = group.GetSchema<BundledAssetGroupSchema>();
@@ -641,12 +650,19 @@ namespace traVRsal.SDK
             return settings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema> { settings.DefaultGroup.Schemas[0] }, typeof(SchemaType));
         }
 
-        private string[] GetLevelPaths()
+        private string[] GetWorldPaths()
         {
-            return Directory.GetDirectories(Application.dataPath + "/Levels").Where(s => !Path.GetFileName(s).StartsWith("_")).ToArray();
+            if (Directory.Exists(Application.dataPath + "/Worlds"))
+            {
+                return Directory.GetDirectories(Application.dataPath + "/Worlds").Where(s => !Path.GetFileName(s).StartsWith("_")).ToArray();
+            }
+            else
+            {
+                return new string[0];
+            }
         }
 
-        private IEnumerator UploadLevels()
+        private IEnumerator UploadWorlds()
         {
             if (!Directory.Exists(GetServerDataPath()))
             {

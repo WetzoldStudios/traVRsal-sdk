@@ -30,7 +30,7 @@ namespace traVRsal.SDK
         public bool snap = false;
         public bool autoFill = false;
         public bool isVirtual = false;
-        public string targetRoom;
+        public string targetZone;
         public Direction direction = Direction.SOUTH;
 
         public string key;
@@ -72,7 +72,7 @@ namespace traVRsal.SDK
             autoFill = copyFrom.autoFill;
             snap = copyFrom.snap;
             isVirtual = copyFrom.isVirtual;
-            targetRoom = copyFrom.targetRoom;
+            targetZone = copyFrom.targetZone;
             direction = copyFrom.direction;
 
             key = copyFrom.key;

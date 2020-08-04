@@ -5,7 +5,7 @@ using UnityEngine;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class Room
+    public class Zone
     {
         [Header("Configuration")]
         public string name;
@@ -64,10 +64,10 @@ namespace traVRsal.SDK
         public List<Behaviour> portalCache;
         [HideInInspector]
         [NonSerialized]
-        public HashSet<int> reachableRooms;
+        public HashSet<int> reachableZones;
         [HideInInspector]
         [NonSerialized]
-        public HashSet<int> backSortedRooms;
+        public HashSet<int> backSortedZones;
         [HideInInspector]
         [NonSerialized]
         public List<Socket> sockets;
@@ -75,17 +75,17 @@ namespace traVRsal.SDK
         [NonSerialized]
         public List<GameObject> socketItems;
 
-        public Room()
+        public Zone()
         {
             floors = new List<Floor>();
         }
 
-        public Room(string name) : this()
+        public Zone(string name) : this()
         {
             this.name = name;
         }
 
-        public Room(Room copyFrom) : this()
+        public Zone(Zone copyFrom) : this()
         {
             name = copyFrom.name;
             minSize = copyFrom.minSize;
@@ -107,7 +107,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Room {name} (index: {idx})";
+            return $"Zone {name} (index: {idx})";
         }
     }
 

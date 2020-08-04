@@ -10,13 +10,13 @@ namespace traVRsal.SDK
         {
             GameOverDialog = 5,
             SettingsDialog = 1,
-            LevelDetailsDialog = 2,
-            LevelsRoot = 0,
-            NoLevelSettingsHint = 3,
-            LevelSettingsRoot = 4
+            WorldDetailsDialog = 2,
+            WorldsRoot = 0,
+            NoWorldSettingsHint = 3,
+            WorldSettingsRoot = 4
         }
 
-        public IdentifierType type = IdentifierType.LevelsRoot;
+        public IdentifierType type = IdentifierType.WorldsRoot;
 
         public override string ToString()
         {

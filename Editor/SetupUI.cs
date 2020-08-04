@@ -7,7 +7,7 @@ namespace traVRsal.SDK
 {
     public class SetupUI : BasicEditorUI
     {
-        private string levelName;
+        private string worldName;
 
         [MenuItem("traVRsal/Setup", priority = 100)]
         public static void ShowWindow()
@@ -19,11 +19,11 @@ namespace traVRsal.SDK
         {
             base.OnGUI();
 
-            GUILayout.Label("Levels are the basic building block. Single levels can either be shared with others on traVRsal or combined with other levels into your own game.", EditorStyles.wordWrappedLabel);
+            GUILayout.Label("Create your own worlds and amaze other players! A sample world will help you to get started.", EditorStyles.wordWrappedLabel);
 
             GUILayout.Space(10);
-            levelName = EditorGUILayout.TextField("Level Key: ", levelName);
-            if (GUILayout.Button("Create New Level")) CreateSampleLevel();
+            worldName = EditorGUILayout.TextField("World Key: ", worldName);
+            if (GUILayout.Button("Create New World")) CreateSampleWorld();
 
             GUILayout.Space(10);
             GUILayout.Label("Maintenance Functions", EditorStyles.boldLabel);
@@ -32,46 +32,46 @@ namespace traVRsal.SDK
             OnGUIDone();
         }
 
-        private string GetLevelPath(bool relative)
+        private string GetWorldPath(bool relative)
         {
-            return GetLevelsRoot(relative) + "/" + levelName;
+            return GetWorldsRoot(relative) + "/" + worldName;
         }
 
-        private void CreateSampleLevel()
+        private void CreateSampleWorld()
         {
-            if (string.IsNullOrEmpty(levelName))
+            if (string.IsNullOrEmpty(worldName))
             {
-                EditorUtility.DisplayDialog("Invalid Entry", "No level key specified.", "OK");
+                EditorUtility.DisplayDialog("Invalid Entry", "No world key specified.", "OK");
                 return;
             }
-            if (!IsValidLevelName(levelName))
+            if (!IsValidWorldName(worldName))
             {
-                EditorUtility.DisplayDialog("Invalid Entry", "Level key is not valid: must be upper and lower case characters, numbers and undercore only.", "OK");
+                EditorUtility.DisplayDialog("Invalid Entry", "World key is not valid: must be upper and lower case characters, numbers and undercore only.", "OK");
                 return;
             }
 
-            if (CreateLevelsRoot()) RestoreTiled();
-            CreateSampleWorld();
+            if (CreateWorldsRoot()) RestoreTiled();
+            CopySampleWorld();
 
             EditorUtility.FocusProjectWindow();
-            Object obj = AssetDatabase.LoadAssetAtPath<Object>(GetLevelPath(true));
+            Object obj = AssetDatabase.LoadAssetAtPath<Object>(GetWorldPath(true));
             Selection.activeObject = obj;
             EditorGUIUtility.PingObject(obj);
 
-            levelName = "";
+            worldName = "";
         }
 
-        private bool IsValidLevelName(string levelName)
+        private bool IsValidWorldName(string worldName)
         {
             Regex allowed = new Regex("[^a-zA-Z0-9_]");
-            return levelName != "_" && !allowed.IsMatch(levelName);
+            return worldName != "_" && !allowed.IsMatch(worldName);
         }
 
-        private bool CreateLevelsRoot()
+        private bool CreateWorldsRoot()
         {
-            if (!Directory.Exists(GetLevelsRoot(false)))
+            if (!Directory.Exists(GetWorldsRoot(false)))
             {
-                Directory.CreateDirectory(GetLevelsRoot(false));
+                Directory.CreateDirectory(GetWorldsRoot(false));
                 AssetDatabase.Refresh();
 
                 return true;
@@ -84,7 +84,7 @@ namespace traVRsal.SDK
 
         private void RestoreTiled()
         {
-            string tiledPath = GetLevelsRoot(true) + "/_Tiled";
+            string tiledPath = GetWorldsRoot(true) + "/_Tiled";
 
             AssetDatabase.DeleteAsset(tiledPath);
             AssetDatabase.Refresh();
@@ -93,18 +93,18 @@ namespace traVRsal.SDK
             AssetDatabase.Refresh();
         }
 
-        private bool CreateSampleWorld()
+        private bool CopySampleWorld()
         {
-            if (!Directory.Exists(GetLevelPath(false)))
+            if (!Directory.Exists(GetWorldPath(false)))
             {
-                AssetDatabase.CopyAsset("Packages/" + SDKUtil.PACKAGE_NAME + "/Editor/_Level", GetLevelPath(true));
+                AssetDatabase.CopyAsset("Packages/" + SDKUtil.PACKAGE_NAME + "/Editor/_World", GetWorldPath(true));
                 AssetDatabase.Refresh();
 
                 return true;
             }
             else
             {
-                EditorUtility.DisplayDialog("Error", "Level with identical name already exists.", "OK");
+                EditorUtility.DisplayDialog("Error", "World with identical name already exists.", "OK");
 
                 return false;
             }

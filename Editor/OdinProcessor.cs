@@ -140,26 +140,26 @@ namespace traVRsal.SDK
         }
     }
 
-    public class LevelAttributeProcessor<T> : OdinAttributeProcessor<T> where T : Level
+    public class WorldAttributeProcessor<T> : OdinAttributeProcessor<T> where T : World
     {
         public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
         {
-            if (member.Name == "levelData")
+            if (member.Name == "worldData")
             {
                 attributes.Add(new ReadOnlyAttribute());
             }
-            if (member.Name == "rooms")
+            if (member.Name == "zones")
             {
                 attributes.Add(new ReadOnlyAttribute());
             }
-            if (member.Name == "roomTemplates")
+            if (member.Name == "zoneTemplates")
             {
                 attributes.Add(new ReadOnlyAttribute());
             }
         }
     }
 
-    public class RoomAttributeProcessor<T> : OdinAttributeProcessor<T> where T : Room
+    public class ZoneAttributeProcessor<T> : OdinAttributeProcessor<T> where T : Zone
     {
         public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
         {

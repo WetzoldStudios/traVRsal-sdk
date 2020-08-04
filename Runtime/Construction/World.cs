@@ -5,7 +5,7 @@ using UnityEngine;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class Level
+    public class World
     {
         [Header("Configuration")]
         public string key;
@@ -26,46 +26,46 @@ namespace traVRsal.SDK
         public MultiBehaviors behaviors;
         public List<Variable> initialVariables;
         public List<ObjectSpec> objectSpecs;
-        public List<LevelSetting> settings;
+        public List<WorldSetting> settings;
         public List<SpawnRule> spawnRules;
         public List<ReplacementRule> replacements;
         public List<TextFragment> speech;
         public List<Credit> credits;
-        public List<LevelDataReference> levelData;
+        public List<WorldDataReference> worldData;
 
         [Header("Runtime Data")]
         public List<string> dependencies;
-        public List<string> levelDependencies;
-        public List<Room> rooms;
-        public List<Room> roomTemplates;
+        public List<string> worldDependencies;
+        public List<Zone> zones;
+        public List<Zone> zoneTemplates;
 
         [NonSerialized]
-        public Dictionary<string, string> roomTemplateCache;
+        public Dictionary<string, string> zoneTemplateCache;
 
-        public Level()
+        public World()
         {
-            rooms = new List<Room>();
-            roomTemplates = new List<Room>();
+            zones = new List<Zone>();
+            zoneTemplates = new List<Zone>();
             spawnRules = new List<SpawnRule>();
             replacements = new List<ReplacementRule>();
             objectSpecs = new List<ObjectSpec>();
-            roomTemplateCache = new Dictionary<string, string>();
+            zoneTemplateCache = new Dictionary<string, string>();
             speech = new List<TextFragment>();
             initialVariables = new List<Variable>();
-            settings = new List<LevelSetting>();
-            levelData = new List<LevelDataReference>();
+            settings = new List<WorldSetting>();
+            worldData = new List<WorldDataReference>();
             dependencies = new List<string>();
-            levelDependencies = new List<string>();
+            worldDependencies = new List<string>();
         }
 
-        public Level(string key) : this()
+        public World(string key) : this()
         {
             this.key = key;
         }
 
         public override string ToString()
         {
-            return $"Level {name}";
+            return $"World {name}";
         }
     }
 }
