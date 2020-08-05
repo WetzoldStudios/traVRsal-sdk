@@ -16,7 +16,7 @@ traVRsal brings natural walking to VR. It is an engine on top of Unity for creat
 
 * [Experience It](https://sidequestvr.com/app/449/1) - Download the app
 * [Create Levels](https://github.com/WetzoldStudios/traVRsal-sdk/wiki) - Follow the wiki
-* [Levels Repository](https://github.com/WetzoldStudios/traVRsal-levels) - See how existing levels were built and reuse parts
+* [Worlds Repository](https://github.com/WetzoldStudios/traVRsal-worlds) - See how existing worlds were built and reuse parts
 
 # Roadmap
 
@@ -37,8 +37,7 @@ This is an early alpha version to get feedback and steer the direction of future
 * transparent objects are not visible through transitions
 * incorrect JSON files will cause the editor to become stuck
 * the minimum tile count in a grid right now is 4 due to a limitation with maze generation
-* deleting the Levels folder will spam the Unity console with errors if the Publish UI of the traVRsal SDK is still open
-* custom interactions are not possible yet (only premade Button for now)
+* custom interactions are not possible yet (only pre-made Button for now)
 * sky boxes are not yet supported 
 * audio is not assigned to correct mixer channels yet 
 * objects needs to be marked "Enable Read/Write" at import, otherwise NavMesh will fail or might even result in crashes

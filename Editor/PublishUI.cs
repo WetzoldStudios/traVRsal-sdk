@@ -199,7 +199,7 @@ namespace traVRsal.SDK
 
                 // images
                 Directory.CreateDirectory(mediaPath);
-                World world = JsonConvert.DeserializeObject<World>(File.ReadAllText(dir + "/world.json"));
+                World world = JsonConvert.DeserializeObject<World>(File.ReadAllText(dir + "/World.json"));
                 if (!string.IsNullOrEmpty(world.coverImage))
                 {
                     File.Copy(dir + "/Images/" + world.coverImage, mediaPath + world.coverImage, true);
@@ -520,7 +520,7 @@ namespace traVRsal.SDK
 
                 // copy data contents and world descriptor
                 DirectoryUtil.Copy(root + "/Data", docuPath + "/Data");
-                FileUtil.CopyFileOrDirectory(root + "/world.json", docuPath + "/world.json");
+                FileUtil.CopyFileOrDirectory(root + "/World.json", docuPath + "/World.json");
 
                 // remove all meta files
                 foreach (string fileName in Directory.EnumerateFiles(docuPath, "*.meta", SearchOption.AllDirectories))
