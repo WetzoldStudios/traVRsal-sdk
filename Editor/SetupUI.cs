@@ -11,6 +11,7 @@ namespace traVRsal.SDK
     {
         private int worldIdx;
         private string worldName;
+        private bool showMaintenance = false;
 
         [MenuItem("traVRsal/Setup", priority = 100)]
         public static void ShowWindow()
@@ -23,20 +24,9 @@ namespace traVRsal.SDK
             base.OnGUI();
 
             GUILayout.Label("Create your own worlds and amaze other players! A sample world will help you to get started.", EditorStyles.wordWrappedLabel);
-            GUILayout.Space(10);
+            EditorGUILayout.Space();
 
-            if (string.IsNullOrEmpty(GetAPIToken()))
-            {
-                EditorGUILayout.HelpBox("You have not entered your Creator Key yet. Please do so in the Project Settings. You can find your personal key on www.traVRsal.com.", MessageType.Error);
-                if (GUILayout.Button("Visit traVRsal.com")) Help.BrowseURL("https://www.traVRsal.com/home");
-            }
-            else if (invalidAPIToken)
-            {
-                EditorGUILayout.HelpBox("Your Creator Key is invalid or expired. Please update it in the Project Settings. You can find your personal key on www.traVRsal.com.", MessageType.Error);
-                if (GUILayout.Button("Retry")) EditorCoroutineUtility.StartCoroutine(FetchUserWorlds(), this);
-                if (GUILayout.Button("Visit traVRsal.com")) Help.BrowseURL("https://www.traVRsal.com/home");
-            }
-            else
+            if (CheckTokenGUI())
             {
                 if (userWorlds == null || userWorlds.Length == 0)
                 {
@@ -57,9 +47,12 @@ namespace traVRsal.SDK
 
             if (Directory.Exists(GetWorldsRoot(false)))
             {
-                GUILayout.Space(10);
-                GUILayout.Label("Maintenance Functions", EditorStyles.boldLabel);
-                if (GUILayout.Button("Update/Restore Tiled Data")) RestoreTiled();
+                EditorGUILayout.Space();
+                showMaintenance = EditorGUILayout.Foldout(showMaintenance, "Maintenance Functions");
+                if (showMaintenance)
+                {
+                    if (GUILayout.Button("Update/Restore Tiled Data")) RestoreTiled();
+                }
             }
 
             OnGUIDone();
@@ -137,7 +130,7 @@ namespace traVRsal.SDK
             }
             else
             {
-                EditorUtility.DisplayDialog("Error", "World with identical name already exists.", "OK");
+                EditorUtility.DisplayDialog("Error", "This world was already created.", "OK");
 
                 return false;
             }

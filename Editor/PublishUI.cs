@@ -30,9 +30,11 @@ namespace traVRsal.SDK
         private bool packagingSuccessful = false;
         private bool verificationPassed = false;
         private bool uploadPossible = false;
+        private bool worldListMismatch = false;
 
         private DateTime uploadStartTime;
         private float uploadProgress = 1;
+        private int progressId;
         private int packageMode = 1;
         private static DirectoryWatcher dirWatcher;
         private static PublishUI window;
@@ -61,7 +63,7 @@ namespace traVRsal.SDK
             if (uploadInProgress)
             {
                 int timeRemaining = Mathf.Max(1, Mathf.RoundToInt((DateTime.Now.Subtract(uploadStartTime).Seconds / uploadProgress) * (1 - uploadProgress)));
-                EditorUtility.DisplayProgressBar("Progress", "Uploading worlds to server... " + timeRemaining + "s", uploadProgress);
+                Progress.Report(progressId, uploadProgress, "Uploading worlds to server... " + timeRemaining + "s");
             }
             base.OnGUI();
 
@@ -71,14 +73,14 @@ namespace traVRsal.SDK
             string[] worlds = GetWorldPaths();
             if (worlds.Length == 0)
             {
-                GUILayout.Space(10);
+                EditorGUILayout.Space();
                 GUILayout.Label("There are no worlds created yet. Use the Setup tool to create one.", EditorStyles.wordWrappedLabel);
             }
             else
             {
                 if (worlds.Length > 1)
                 {
-                    GUILayout.Space(10);
+                    EditorGUILayout.Space();
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Packaging Mode:", EditorStyles.wordWrappedLabel);
                     packageMode = GUILayout.SelectionGrid(packageMode, PACKAGE_OPTIONS, 2, EditorStyles.radioButton);
@@ -110,9 +112,16 @@ namespace traVRsal.SDK
 
                 GUILayout.EndHorizontal();
 
+                CheckTokenGUI();
+                if (worldListMismatch)
+                {
+                    EditorGUILayout.Space();
+                    EditorGUILayout.HelpBox("The worlds inside your Worlds folder do not match your registered worlds on www.traVRsal.com. You probably need to rename these locally to match exactly.", MessageType.Error);
+                }
+
                 if (verifications.Count() > 0)
                 {
-                    GUILayout.Space(10);
+                    EditorGUILayout.Space();
                     GUILayout.Label("Verification Results", EditorStyles.boldLabel);
 
                     foreach (string dir in GetWorldPaths())
@@ -176,6 +185,7 @@ namespace traVRsal.SDK
 
         private IEnumerator PrepareUpload()
         {
+            yield return FetchUserWorlds();
             yield return PackageWorlds(true, true);
             yield return CreateDocumentation();
             PrepareCommonFiles();
@@ -211,6 +221,7 @@ namespace traVRsal.SDK
         {
             verifyInProgress = true;
             verificationPassed = false;
+            worldListMismatch = false;
             verifications.Clear();
 
             foreach (string dir in GetWorldPaths())
@@ -232,9 +243,15 @@ namespace traVRsal.SDK
                 result.distroSizeStandalone = DirectoryUtil.GetSize(result.distroPathStandalone);
 
                 verifications.Add(worldName, result);
+
+                if (userWorlds != null && userWorlds.Where(w => w.key == worldName).Count() == 0)
+                {
+                    Debug.LogError("Found unregistered world: " + worldName);
+                    worldListMismatch = true;
+                }
             }
             verifyInProgress = false;
-            verificationPassed = true; // TODO: do some actual checks
+            verificationPassed = !worldListMismatch && !invalidAPIToken; // TODO: do some actual checks
         }
 
         private string GetServerDataPath()
@@ -673,11 +690,12 @@ namespace traVRsal.SDK
             uploadInProgress = true;
             uploadProgress = 0;
             uploadStartTime = DateTime.Now;
+            progressId = Progress.Start("Uploading worlds");
 
             AWSUtil aws = new AWSUtil();
             yield return aws.UploadDirectory(GetServerDataPath(), progress => uploadProgress = progress).AsCoroutine();
 
-            EditorUtility.ClearProgressBar();
+            Progress.Remove(progressId);
             uploadInProgress = false;
 
             EditorUtility.DisplayDialog("Success", "Upload completed.", "OK");

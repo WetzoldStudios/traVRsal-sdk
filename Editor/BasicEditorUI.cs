@@ -36,18 +36,39 @@ namespace traVRsal.SDK
         public virtual void OnGUI()
         {
             scrollPos = GUILayout.BeginScrollView(scrollPos, false, false);
-            GUILayout.Space(10);
+            EditorGUILayout.Space();
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.Box("", logo);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
-            GUILayout.Space(10);
+            EditorGUILayout.Space();
         }
 
         public void OnGUIDone()
         {
             GUILayout.EndScrollView();
+        }
+
+        public bool CheckTokenGUI()
+        {
+            if (string.IsNullOrEmpty(GetAPIToken()))
+            {
+                EditorGUILayout.HelpBox("You have not entered your Creator Key yet. Please do so in the Project Settings. You can find your personal key on www.traVRsal.com.", MessageType.Error);
+                if (GUILayout.Button("Visit traVRsal.com")) Help.BrowseURL("https://www.traVRsal.com/home");
+
+                return false;
+            }
+            else if (invalidAPIToken)
+            {
+                EditorGUILayout.HelpBox("Your Creator Key is invalid or expired. Please update it in the Project Settings. You can find your personal key on www.traVRsal.com.", MessageType.Error);
+                if (GUILayout.Button("Retry")) EditorCoroutineUtility.StartCoroutine(FetchUserWorlds(), this);
+                if (GUILayout.Button("Visit traVRsal.com")) Help.BrowseURL("https://www.traVRsal.com/home");
+
+                return false;
+            }
+
+            return true;
         }
 
         private void SetupTags()
@@ -82,7 +103,7 @@ namespace traVRsal.SDK
             return TravrsalSettingsManager.Get("apiKey", "");
         }
 
-        public IEnumerator FetchUserWorlds(bool silent = true)
+        public IEnumerator FetchUserWorlds()
         {
             string uri = API_ENDPOINT + "worlds";
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
