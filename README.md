@@ -15,7 +15,7 @@ traVRsal brings natural walking to VR. It is an engine on top of Unity for creat
 # Getting Started
 
 * [Experience It](https://sidequestvr.com/app/449/1) - Download the app
-* [Create Levels](https://github.com/WetzoldStudios/traVRsal-sdk/wiki) - Follow the wiki
+* [Create Worlds](https://github.com/WetzoldStudios/traVRsal-sdk/wiki) - Follow the wiki
 * [Worlds Repository](https://github.com/WetzoldStudios/traVRsal-worlds) - See how existing worlds were built and reuse parts
 
 # Roadmap
