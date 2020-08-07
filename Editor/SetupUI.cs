@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,6 +9,7 @@ namespace traVRsal.SDK
 {
     public class SetupUI : BasicEditorUI
     {
+        private int worldIdx;
         private string worldName;
 
         [MenuItem("traVRsal/Setup", priority = 100)]
@@ -20,14 +23,44 @@ namespace traVRsal.SDK
             base.OnGUI();
 
             GUILayout.Label("Create your own worlds and amaze other players! A sample world will help you to get started.", EditorStyles.wordWrappedLabel);
-
             GUILayout.Space(10);
-            worldName = EditorGUILayout.TextField("World Key: ", worldName);
-            if (GUILayout.Button("Create New World")) CreateSampleWorld();
 
-            GUILayout.Space(10);
-            GUILayout.Label("Maintenance Functions", EditorStyles.boldLabel);
-            if (GUILayout.Button("Update/Restore Tiled Data")) RestoreTiled();
+            if (string.IsNullOrEmpty(GetAPIToken()))
+            {
+                EditorGUILayout.HelpBox("You have not entered your Creator Key yet. Please do so in the Project Settings. You can find your personal key on www.traVRsal.com.", MessageType.Error);
+                if (GUILayout.Button("Visit traVRsal.com")) Help.BrowseURL("https://www.traVRsal.com/home");
+            }
+            else if (invalidAPIToken)
+            {
+                EditorGUILayout.HelpBox("Your Creator Key is invalid or expired. Please update it in the Project Settings. You can find your personal key on www.traVRsal.com.", MessageType.Error);
+                if (GUILayout.Button("Retry")) EditorCoroutineUtility.StartCoroutine(FetchUserWorlds(), this);
+                if (GUILayout.Button("Visit traVRsal.com")) Help.BrowseURL("https://www.traVRsal.com/home");
+            }
+            else
+            {
+                if (userWorlds == null || userWorlds.Length == 0)
+                {
+                    EditorGUILayout.HelpBox("You have not registerd any worlds yet on www.traVRsal.com.", MessageType.Info);
+                }
+                else
+                {
+                    worldIdx = EditorGUILayout.Popup("Registered Worlds:", worldIdx, userWorlds.Select(w => w.key).ToArray());
+                    worldName = userWorlds[worldIdx].key;
+                    if (GUILayout.Button("Create Selected World")) CreateSampleWorld();
+                }
+
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Refresh List")) EditorCoroutineUtility.StartCoroutine(FetchUserWorlds(), this);
+                if (GUILayout.Button("Register New")) Help.BrowseURL("https://www.traVRsal.com/home");
+                GUILayout.EndHorizontal();
+            }
+
+            if (Directory.Exists(GetWorldsRoot(false)))
+            {
+                GUILayout.Space(10);
+                GUILayout.Label("Maintenance Functions", EditorStyles.boldLabel);
+                if (GUILayout.Button("Update/Restore Tiled Data")) RestoreTiled();
+            }
 
             OnGUIDone();
         }

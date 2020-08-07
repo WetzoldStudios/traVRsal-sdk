@@ -1,11 +1,20 @@
-﻿using UnityEditor;
+﻿using Newtonsoft.Json;
+using System.Collections;
+using System.Net;
+using Unity.EditorCoroutines.Editor;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace traVRsal.SDK
 {
     public abstract class BasicEditorUI : EditorWindow
     {
         private string[] REQUIRED_TAGS = { "ExcludeTeleport", SDKUtil.INTERACTABLE_TAG, SDKUtil.ENEMY_TAG, SDKUtil.PLAYER_HEAD_TAG, SDKUtil.COLLECTIBLE_TAG, SDKUtil.PLAYER_HELPER_TAG };
+        private string API_ENDPOINT = "http://localhost:8000/api/";
+
+        public UserWorld[] userWorlds;
+        public bool invalidAPIToken = false;
 
         private static GUIStyle logo;
         private Vector2 scrollPos;
@@ -20,6 +29,8 @@ namespace traVRsal.SDK
 
             // perform (cheap) setup tasks
             SetupTags();
+
+            EditorCoroutineUtility.StartCoroutine(FetchUserWorlds(), this);
         }
 
         public virtual void OnGUI()
@@ -64,6 +75,44 @@ namespace traVRsal.SDK
         public string GetWorldsRoot(bool relative)
         {
             return (relative ? "Assets" : Application.dataPath) + "/Worlds";
+        }
+
+        public string GetAPIToken()
+        {
+            return TravrsalSettingsManager.Get("apiKey", "");
+        }
+
+        public IEnumerator FetchUserWorlds(bool silent = true)
+        {
+            string uri = API_ENDPOINT + "worlds";
+            using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+            {
+                webRequest.SetRequestHeader("Accept", "application/json");
+                webRequest.SetRequestHeader("Authorization", "Bearer " + GetAPIToken());
+                yield return webRequest.SendWebRequest();
+
+                if (webRequest.isNetworkError)
+                {
+                    Debug.LogError("Could not fetch worlds due to network issues: " + webRequest.error);
+                }
+                else if (webRequest.isHttpError)
+                {
+                    if (webRequest.responseCode == (int)HttpStatusCode.Unauthorized)
+                    {
+                        invalidAPIToken = true;
+                        Debug.LogError("Invalid or expired API Token.");
+                    }
+                    else
+                    {
+                        Debug.LogError("There was an error when fetching worlds: " + webRequest.error);
+                    }
+                }
+                else
+                {
+                    userWorlds = JsonConvert.DeserializeObject<UserWorld[]>(webRequest.downloadHandler.text);
+                    invalidAPIToken = false;
+                }
+            }
         }
     }
 }
