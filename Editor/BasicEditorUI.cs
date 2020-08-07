@@ -10,8 +10,9 @@ namespace traVRsal.SDK
 {
     public abstract class BasicEditorUI : EditorWindow
     {
+        public string API_ENDPOINT = "http://localhost:8000/api/";
+
         private string[] REQUIRED_TAGS = { "ExcludeTeleport", SDKUtil.INTERACTABLE_TAG, SDKUtil.ENEMY_TAG, SDKUtil.PLAYER_HEAD_TAG, SDKUtil.COLLECTIBLE_TAG, SDKUtil.PLAYER_HELPER_TAG };
-        private string API_ENDPOINT = "http://localhost:8000/api/";
 
         public UserWorld[] userWorlds;
         public bool invalidAPIToken = false;
@@ -105,7 +106,7 @@ namespace traVRsal.SDK
 
         public IEnumerator FetchUserWorlds()
         {
-            string uri = API_ENDPOINT + "worlds";
+            string uri = API_ENDPOINT + "userworlds";
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
                 webRequest.SetRequestHeader("Accept", "application/json");
@@ -114,7 +115,7 @@ namespace traVRsal.SDK
 
                 if (webRequest.isNetworkError)
                 {
-                    Debug.LogError("Could not fetch worlds due to network issues: " + webRequest.error);
+                    Debug.LogError($"Could not fetch worlds due to network issues: {webRequest.error}");
                 }
                 else if (webRequest.isHttpError)
                 {
@@ -125,7 +126,7 @@ namespace traVRsal.SDK
                     }
                     else
                     {
-                        Debug.LogError("There was an error when fetching worlds: " + webRequest.error);
+                        Debug.LogError($"There was an error when fetching worlds: {webRequest.error}");
                     }
                 }
                 else

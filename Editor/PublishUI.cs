@@ -6,12 +6,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
+using System.Text;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEngine;
+using UnityEngine.Networking;
 using CompressionLevel = System.IO.Compression.CompressionLevel;
 
 namespace traVRsal.SDK
@@ -694,11 +697,55 @@ namespace traVRsal.SDK
 
             AWSUtil aws = new AWSUtil();
             yield return aws.UploadDirectory(GetServerDataPath(), progress => uploadProgress = progress).AsCoroutine();
+            yield return PublishWorldUpdates();
 
             Progress.Remove(progressId);
             uploadInProgress = false;
 
             EditorUtility.DisplayDialog("Success", "Upload completed.", "OK");
+        }
+
+        private IEnumerator PublishWorldUpdates()
+        {
+            foreach (string dir in GetWorldPaths())
+            {
+                string worldName = Path.GetFileName(dir);
+                string uri = API_ENDPOINT + "userworlds/" + userWorlds.Where(w => w.key == worldName).First().id;
+
+                // extract data from world descriptor
+                string worldJson = File.ReadAllText(dir + "/World.json");
+                World world = JsonConvert.DeserializeObject<World>(worldJson);
+
+                UserWorld userWorld = new UserWorld();
+                userWorld.cover_image = world.coverImage;
+                userWorld.world_json = worldJson;
+
+                byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(userWorld));
+                using (UnityWebRequest webRequest = UnityWebRequest.Put(uri, data))
+                {
+                    webRequest.SetRequestHeader("Accept", "application/json");
+                    webRequest.SetRequestHeader("Authorization", "Bearer " + GetAPIToken());
+                    webRequest.SetRequestHeader("Content-Type", "application/json");
+                    yield return webRequest.SendWebRequest();
+
+                    if (webRequest.isNetworkError)
+                    {
+                        Debug.LogError($"Could not update world {worldName} due to network issues: {webRequest.error}");
+                    }
+                    else if (webRequest.isHttpError)
+                    {
+                        if (webRequest.responseCode == (int)HttpStatusCode.Unauthorized)
+                        {
+                            invalidAPIToken = true;
+                            Debug.LogError("Invalid or expired API Token.");
+                        }
+                        else
+                        {
+                            Debug.LogError($"There was an error updating world {worldName}: {webRequest.error}");
+                        }
+                    }
+                }
+            }
         }
 
         void OnInspectorUpdate()
