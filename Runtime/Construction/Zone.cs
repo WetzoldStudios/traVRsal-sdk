@@ -17,7 +17,9 @@ namespace traVRsal.SDK
         public bool blockAgents = true;
         public Color ambientColor = new Color(0.5f, 0.482f, 0.445f);
         public Color lightColor = Color.white;
+        public Color backgroundColor = Color.black;
         public float lightIntensity = 1f;
+        public string skybox;
         public string music;
         public TMProperty[] properties;
 

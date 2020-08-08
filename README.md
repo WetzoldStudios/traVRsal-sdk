@@ -30,7 +30,7 @@ Join the [Discord server](https://discord.gg/67fNz4F) for all questions and feed
 
 This is an early alpha version to get feedback and steer the direction of future development. Many things are still rough around the edges. It will help tremendously if you report every error you encounter but also every feature you are missing to the Discord SDK channel.
 
-* progress bar during upload not shown anymore (Unity 2020.1 bug)
+* skyboxes are not visible through portals (requires level design mitigation, background color is visible though)
 * progress for downloads is only shown inside VR, not on screen
 * only very few nodes are available right now and your feedback will help to fill the gaps
 * shaders need to support stencils to be visible through transitions
