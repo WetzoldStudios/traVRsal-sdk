@@ -116,10 +116,11 @@ namespace traVRsal.SDK
                 GUILayout.EndHorizontal();
 
                 CheckTokenGUI();
-                if (worldListMismatch)
+                if (worldListMismatch && !networkIssue)
                 {
                     EditorGUILayout.Space();
                     EditorGUILayout.HelpBox("The worlds inside your Worlds folder do not match your registered worlds on www.traVRsal.com. You probably need to rename these locally to match exactly.", MessageType.Error);
+                    if (GUILayout.Button("Refresh")) EditorCoroutineUtility.StartCoroutine(RefreshVerify(), this);
                 }
 
                 if (verifications.Count() > 0)
@@ -163,6 +164,12 @@ namespace traVRsal.SDK
             }
 
             OnGUIDone();
+        }
+
+        private IEnumerator RefreshVerify()
+        {
+            yield return EditorCoroutineUtility.StartCoroutine(FetchUserWorlds(), this);
+            Verify();
         }
 
         private void PrintTableRow(string key, string value)
@@ -254,7 +261,7 @@ namespace traVRsal.SDK
                 }
             }
             verifyInProgress = false;
-            verificationPassed = !worldListMismatch && !invalidAPIToken; // TODO: do some actual checks
+            verificationPassed = !worldListMismatch && !invalidAPIToken && !networkIssue; // TODO: do some actual checks
         }
 
         private string GetServerDataPath()
@@ -719,6 +726,8 @@ namespace traVRsal.SDK
                 UserWorld userWorld = new UserWorld();
                 userWorld.cover_image = world.coverImage;
                 userWorld.world_json = worldJson;
+                userWorld.unity_version = Application.unityVersion;
+                userWorld.is_virtual = world.isVirtual;
 
                 byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(userWorld));
                 using (UnityWebRequest webRequest = UnityWebRequest.Put(uri, data))

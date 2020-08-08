@@ -11,6 +11,7 @@ namespace traVRsal.SDK
         public string key = "game";
         public string name = "Development Mode";
         public string worldsURL;
+        public string userWorldsURL;
         public List<string> worlds;
         public string menuScene = "Menu-OoD";
         public string worldObject = "World2";

@@ -16,6 +16,7 @@ namespace traVRsal.SDK
 
         public UserWorld[] userWorlds;
         public bool invalidAPIToken = false;
+        public bool networkIssue = false;
 
         private static GUIStyle logo;
         private Vector2 scrollPos;
@@ -68,6 +69,13 @@ namespace traVRsal.SDK
 
                 return false;
             }
+            if (networkIssue)
+            {
+                EditorGUILayout.Space();
+                EditorGUILayout.HelpBox("The are issues connecting to the server.", MessageType.Error);
+                if (GUILayout.Button("Retry")) EditorCoroutineUtility.StartCoroutine(FetchUserWorlds(), this);
+                return false;
+            }
 
             return true;
         }
@@ -107,6 +115,8 @@ namespace traVRsal.SDK
         public IEnumerator FetchUserWorlds()
         {
             string uri = API_ENDPOINT + "userworlds";
+            networkIssue = false;
+
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
                 webRequest.SetRequestHeader("Accept", "application/json");
@@ -115,6 +125,7 @@ namespace traVRsal.SDK
 
                 if (webRequest.isNetworkError)
                 {
+                    networkIssue = true;
                     Debug.LogError($"Could not fetch worlds due to network issues: {webRequest.error}");
                 }
                 else if (webRequest.isHttpError)

@@ -15,6 +15,7 @@ namespace traVRsal.SDK
         public string longDescription;
         public string coverImage;
         public int availableTime = 5 * 60;
+        public bool isVirtual = false;
         public bool enablePost = false;
         public string deathSound;
         public string kpis = "0,4"; // TODO: switch to array?
