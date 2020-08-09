@@ -1,16 +1,18 @@
 {
   "name": "com.wetzold.travrsal.sdk",
   "description": "Provides the tools necessary to create custom levels for the traVRsal engine.",
-  "version": "0.1.1",
+  "version": "0.2.5",
   "unity": "2020.1",
   "displayName": "traVRsal SDK",
   "dependencies": {
     "com.unity.addressables": "1.13.1",
-    "com.unity.render-pipelines.universal": "9.0.0-preview.35",
-    "com.unity.xr.management": "3.2.13",
-    "com.unity.xr.oculus": "1.4.0",
     "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.settings-manager": "1.0.3"
+    "com.unity.render-pipelines.universal": "9.0.0-preview.35",
+    "com.unity.settings-manager": "1.0.3",
+    "com.unity.test-framework": "1.1.16",
+    "com.unity.textmeshpro": "3.0.1",
+    "com.unity.xr.management": "3.2.13",
+    "com.unity.xr.oculus": "1.4.0"
   },
   "hideInEditor": false,
   "license": "MIT",
