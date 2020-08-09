@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using UnityEngine;
 
 namespace traVRsal.SDK
@@ -12,6 +13,7 @@ namespace traVRsal.SDK
         }
 
         public string key;
+        [DefaultValue("true")]
         public string defaultValue = "true";
         public string name;
         public string description;

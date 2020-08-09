@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Globalization;
+using System.IO;
+using System.Text;
 using System.Threading;
 
 namespace traVRsal.SDK
@@ -32,6 +36,27 @@ namespace traVRsal.SDK
             double num = Math.Round(bytes / Math.Pow(1024, place), 1);
 
             return (Math.Sign(byteCount) * num).ToString() + suffix[place];
+        }
+
+        // inspired from https://stackoverflow.com/questions/33100164/customize-identation-parameter-in-jsonconvert-serializeobject
+        public static string SerializeObject<T>(T value)
+        {
+            StringBuilder sb = new StringBuilder(256);
+            StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
+
+            JsonSerializer jsonSerializer = JsonSerializer.CreateDefault();
+            jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
+            jsonSerializer.DefaultValueHandling = DefaultValueHandling.Ignore;
+            using (JsonTextWriter jsonWriter = new JsonTextWriter(sw))
+            {
+                jsonWriter.Formatting = Formatting.Indented;
+                jsonWriter.IndentChar = ' ';
+                jsonWriter.Indentation = 4;
+
+                jsonSerializer.Serialize(jsonWriter, value, typeof(T));
+            }
+
+            return sw.ToString();
         }
     }
 

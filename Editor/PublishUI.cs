@@ -324,8 +324,8 @@ namespace traVRsal.SDK
                 foreach (string dir in worldsToBuild)
                 {
                     string worldName = Path.GetFileName(dir);
-
                     string serverDir = GetServerDataPath() + "/Worlds/" + Path.GetFileName(dir);
+
                     if (packageMode == 1 && !allWorlds && Directory.Exists(serverDir)) Directory.Delete(serverDir, true);
 
                     settings.activeProfileId = settings.profileSettings.GetProfileId(worldName);
@@ -338,6 +338,8 @@ namespace traVRsal.SDK
                     BundledAssetGroupSchema schema = settings.groups.Where(group => group.name == worldName).First().GetSchema<BundledAssetGroupSchema>();
                     settings.RemoteCatalogBuildPath = schema.BuildPath;
                     settings.RemoteCatalogLoadPath = schema.LoadPath;
+
+                    CreateObjectLib(worldName);
 
                     if (allTargets)
                     {
@@ -378,6 +380,37 @@ namespace traVRsal.SDK
             return $"{Application.dataPath}/../Documentation/{worldName}/";
         }
 
+        private void CreateObjectLib(string worldName)
+        {
+            string root = GetWorldsRoot(true) + "/" + worldName + "/";
+            string worldJson = File.ReadAllText(root + "World.json");
+            World world = JsonConvert.DeserializeObject<World>(worldJson);
+
+            world.objectSpecs = new List<ObjectSpec>();
+            string[] assets = AssetDatabase.FindAssets("*", new[] { root + "Pieces" });
+            foreach (string asset in assets)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(asset);
+                if (!assetPath.ToLower().EndsWith(".prefab")) continue;
+
+                GameObject prefab = PrefabUtility.LoadPrefabContents(assetPath);
+                if (prefab.TryGetComponent(out ExtendedAttributes ea))
+                {
+                    if (!ea.spec.IsDefault())
+                    {
+                        ea.spec.objectKey = Path.GetFileNameWithoutExtension(assetPath);
+                        world.objectSpecs.Add(ea.spec);
+                    }
+                }
+                if (prefab != null) PrefabUtility.UnloadPrefabContents(prefab);
+            }
+
+            // write back
+            world.NullifyEmpties();
+            worldJson = SDKUtil.SerializeObject(world);
+            File.WriteAllText(root + "World.json", worldJson);
+        }
+
         private string GetDocuArchivePath(string worldName)
         {
             return GetDocuPath(worldName) + "../" + worldName + "-docs.zip";
@@ -405,7 +438,7 @@ namespace traVRsal.SDK
                     continue;
                 }
 
-                string root = $"Assets/Worlds/{worldName}/";
+                string root = GetWorldsRoot(true) + "/{worldName}/";
 
                 // fill HTML template
                 string id = AssetDatabase.FindAssets("_WorldDocu")[0];

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.ComponentModel;
 
 namespace traVRsal.SDK
 {
@@ -21,6 +22,7 @@ namespace traVRsal.SDK
         public Repetition repetition = Repetition.ONCE;
         public string key;
         public string text;
+        [DefaultValue(-1f)]
         public float proximity = -1;
 
         public bool played = false;

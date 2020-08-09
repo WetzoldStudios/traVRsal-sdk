@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using static traVRsal.SDK.BasicEntity;
 
 namespace traVRsal.SDK
@@ -18,18 +19,23 @@ namespace traVRsal.SDK
 
         public string key;
         public string layer;
+        [DefaultValue(true)]
         public bool enabled = true;
         public string[] objectKeys;
         public string[] validZones;
         public string[] validSockets;
         public AmountType amountType = AmountType.TOTAL;
+        [DefaultValue(10)]
         public int amount = 10;
+        [DefaultValue(DistributionType.EVEN)]
         public DistributionType distributionType = DistributionType.EVEN;
+        [DefaultValue(Direction.PATH_AHEAD)]
         public Direction orientation = Direction.PATH_AHEAD;
         public bool flipOrientation = false;
         public string[] restrictions;
         public int damage;
         public int health;
+        [DefaultValue(100f)]
         public float scale = 100f;
         public float y = 0;
         public float[] yRange;
