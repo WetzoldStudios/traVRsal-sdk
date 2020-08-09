@@ -23,7 +23,8 @@ namespace traVRsal.SDK
         public Vector2Int scale = Vector2Int.one;
         public Vector2Int anchor = EMPTY;
         public int height = 1;
-        public int yGrid = 0;
+        public int y = 0;
+        public int maxY = -1;
         public bool flipX = false;
         public bool flipZ = false;
         public bool socket = false;
@@ -65,7 +66,8 @@ namespace traVRsal.SDK
             position = copyFrom.position;
             scale = copyFrom.scale;
             height = copyFrom.height;
-            yGrid = copyFrom.yGrid;
+            y = copyFrom.y;
+            maxY = copyFrom.maxY;
             flipX = copyFrom.flipX;
             flipZ = copyFrom.flipZ;
             socket = copyFrom.socket;
@@ -99,7 +101,7 @@ namespace traVRsal.SDK
                    scale.Equals(entity.scale) &&
                    anchor.Equals(entity.anchor) &&
                    height == entity.height &&
-                   yGrid == entity.yGrid &&
+                   y == entity.y &&
                    flipX == entity.flipX &&
                    flipZ == entity.flipZ &&
                    direction == entity.direction &&
@@ -118,7 +120,7 @@ namespace traVRsal.SDK
             hashCode = hashCode * -1521134295 + EqualityComparer<Vector2Int>.Default.GetHashCode(scale);
             hashCode = hashCode * -1521134295 + EqualityComparer<Vector2Int>.Default.GetHashCode(anchor);
             hashCode = hashCode * -1521134295 + height.GetHashCode();
-            hashCode = hashCode * -1521134295 + yGrid.GetHashCode();
+            hashCode = hashCode * -1521134295 + y.GetHashCode();
             hashCode = hashCode * -1521134295 + flipX.GetHashCode();
             hashCode = hashCode * -1521134295 + flipZ.GetHashCode();
             hashCode = hashCode * -1521134295 + direction.GetHashCode();

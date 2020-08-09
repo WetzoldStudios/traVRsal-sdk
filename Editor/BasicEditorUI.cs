@@ -72,7 +72,7 @@ namespace traVRsal.SDK
             if (networkIssue)
             {
                 EditorGUILayout.Space();
-                EditorGUILayout.HelpBox("The are issues connecting to the server.", MessageType.Error);
+                EditorGUILayout.HelpBox("There are issues connecting to the server.", MessageType.Error);
                 if (GUILayout.Button("Retry")) EditorCoroutineUtility.StartCoroutine(FetchUserWorlds(), this);
                 return false;
             }
