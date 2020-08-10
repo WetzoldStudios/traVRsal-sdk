@@ -710,18 +710,6 @@ namespace traVRsal.SDK
             return settings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema> { settings.DefaultGroup.Schemas[0] }, typeof(SchemaType));
         }
 
-        private string[] GetWorldPaths()
-        {
-            if (Directory.Exists(Application.dataPath + "/Worlds"))
-            {
-                return Directory.GetDirectories(Application.dataPath + "/Worlds").Where(s => !Path.GetFileName(s).StartsWith("_")).ToArray();
-            }
-            else
-            {
-                return new string[0];
-            }
-        }
-
         private IEnumerator UploadWorlds()
         {
             if (!Directory.Exists(GetServerDataPath()))

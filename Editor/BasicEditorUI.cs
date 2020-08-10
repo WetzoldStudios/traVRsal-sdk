@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections;
+using System.IO;
+using System.Linq;
 using System.Net;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
@@ -102,9 +104,21 @@ namespace traVRsal.SDK
             tagManager.ApplyModifiedProperties();
         }
 
-        public string GetWorldsRoot(bool relative)
+        public static string GetWorldsRoot(bool relative = true)
         {
             return (relative ? "Assets" : Application.dataPath) + "/Worlds";
+        }
+
+        public static string[] GetWorldPaths()
+        {
+            if (Directory.Exists(Application.dataPath + "/Worlds"))
+            {
+                return Directory.GetDirectories(Application.dataPath + "/Worlds").Where(s => !Path.GetFileName(s).StartsWith("_")).ToArray();
+            }
+            else
+            {
+                return new string[0];
+            }
         }
 
         public string GetAPIToken()
