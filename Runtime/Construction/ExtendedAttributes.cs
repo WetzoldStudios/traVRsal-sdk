@@ -9,7 +9,7 @@ namespace traVRsal.SDK
         public bool nonBlocking = false;
         public bool climbable = false;
         public bool portalHole = false;
-        public BasicEntity.Direction initialDirection = BasicEntity.Direction.SOUTH;
+        public BasicEntity.Direction initialDirection = BasicEntity.Direction.South;
         public ObjectSpec spec;
     }
 }

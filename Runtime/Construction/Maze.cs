@@ -9,10 +9,10 @@ namespace traVRsal.SDK
     {
         public enum MazeType
         {
-            MAZE, PATH, SPLINE
+            Maze, Path, Spline
         }
 
-        public MazeType type = MazeType.MAZE;
+        public MazeType type = MazeType.Maze;
         public string layerName;
         public List<BasicEntity> exits = new List<BasicEntity>();
         public List<BasicEntity> obstacles = new List<BasicEntity>();

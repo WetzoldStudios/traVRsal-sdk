@@ -9,12 +9,13 @@ namespace traVRsal.SDK
     {
         public enum AmountType
         {
-            TOTAL, PERCENTAGE, PROBABILITY
+            Total = 0,
+            Probability = 1
         }
 
         public enum DistributionType
         {
-            RANDOM, EVEN
+            Random, Even
         }
 
         public string key;
@@ -24,13 +25,13 @@ namespace traVRsal.SDK
         public string[] objectKeys;
         public string[] validZones;
         public string[] validSockets;
-        public AmountType amountType = AmountType.TOTAL;
+        public AmountType amountType = AmountType.Total;
         [DefaultValue(10)]
         public int amount = 10;
-        [DefaultValue(DistributionType.EVEN)]
-        public DistributionType distributionType = DistributionType.EVEN;
-        [DefaultValue(Direction.PATH_AHEAD)]
-        public Direction orientation = Direction.PATH_AHEAD;
+        [DefaultValue(DistributionType.Even)]
+        public DistributionType distributionType = DistributionType.Even;
+        [DefaultValue(Direction.Path_Ahead)]
+        public Direction orientation = Direction.Path_Ahead;
         public bool flipOrientation = false;
         public string[] restrictions;
         public int damage;

@@ -9,6 +9,7 @@ namespace traVRsal.SDK
         {
             initial, preview, released
         }
+
         public int id;
         public string key;
         public string cover_image;

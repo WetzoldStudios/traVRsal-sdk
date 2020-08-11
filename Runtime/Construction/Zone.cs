@@ -109,7 +109,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Zone {name} (index: {idx})";
+            return $"Zone {name} ({idx})";
         }
     }
 

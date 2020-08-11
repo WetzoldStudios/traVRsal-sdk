@@ -7,15 +7,15 @@ namespace traVRsal.SDK
     {
         public enum ImportType
         {
-            TILEMAP, TILEMAP_WORLD, WORLD
+            TileMap, TileMap_World, World
         }
 
-        public ImportType type = ImportType.TILEMAP_WORLD;
+        public ImportType type = ImportType.TileMap_World;
         public string fileName;
 
         public WorldDataReference() { }
 
-        public WorldDataReference(string fileName, ImportType type = ImportType.TILEMAP_WORLD) : this()
+        public WorldDataReference(string fileName, ImportType type = ImportType.TileMap_World) : this()
         {
             this.fileName = fileName;
             this.type = type;

@@ -6,16 +6,16 @@ namespace traVRsal.SDK
     {
         public enum EnemyState
         {
-            SCAN, INVESTIGATE, ENGAGE
+            Scan, Investigate, Engage
         }
 
         public enum Movement
         {
-            NONE, RANDOM
+            None, Random
         }
 
         [Header("General")]
-        public EnemyState state = EnemyState.SCAN;
+        public EnemyState state = EnemyState.Scan;
         public float investigateToEngageDelay = 0.5f;
         public float investigateToScanDelay = 3f;
         public float engageToScanDelay = 3f;
@@ -33,7 +33,7 @@ namespace traVRsal.SDK
         public float proximity = 0.5f;
 
         [Header("Movement")]
-        public Movement movement = Movement.NONE;
+        public Movement movement = Movement.None;
         public float minMoveChangeDelay = 2f;
         public float maxMoveChangeDelay = 5f;
         public Vector2 moveAreaStart = Vector2.zero;

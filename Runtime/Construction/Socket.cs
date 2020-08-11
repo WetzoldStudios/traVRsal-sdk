@@ -4,16 +4,19 @@ namespace traVRsal.SDK
 {
     public class Socket : MonoBehaviour
     {
-        public enum SocketType
-        {
-            INVENTORY, ENEMY_BOTTOM, ENEMY_TOP, ENEMY_SIDE
-        }
+        public string key;
 
-        public SocketType type = SocketType.INVENTORY;
         [HideInInspector]
         public GameObject item;
         [HideInInspector]
         public Rigidbody rigidBody; // cache only
+
+        public Socket() { }
+
+        public Socket(string key) : this()
+        {
+            this.key = key;
+        }
 
         public void AddItem(GameObject item)
         {
@@ -30,7 +33,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"{type} socket ({item})";
+            return $"Socket ({key}, {item})";
         }
     }
 }

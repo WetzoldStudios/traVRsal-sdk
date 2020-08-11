@@ -23,7 +23,7 @@ namespace traVRsal.SDK
 
         public enum ColliderType
         {
-            NONE, BOX, SPHERE
+            None, Box, Sphere
         }
 
         // inspired from https://stackoverflow.com/questions/281640/how-do-i-get-a-human-readable-file-size-in-bytes-abbreviation-using-net

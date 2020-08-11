@@ -9,7 +9,7 @@ namespace traVRsal.SDK
     {
         public enum DestroyAction
         {
-            NONE, MOVE, ROTATE
+            None, Move, Rotate
         }
 
         [Header("Configuration")]
@@ -26,7 +26,7 @@ namespace traVRsal.SDK
         public string stateChange;
 
         [Header("Destruction Effects")]
-        public DestroyAction destroyAction = DestroyAction.NONE;
+        public DestroyAction destroyAction = DestroyAction.None;
         public Vector3 endValue;
         public float duration = 0.2f;
 

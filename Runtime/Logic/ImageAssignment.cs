@@ -7,11 +7,11 @@ namespace traVRsal.SDK
     {
         public enum ImageSource
         {
-            VARIABLE, NAME
+            Variable, Name
         }
 
         public int materialIndex = 0;
-        public ImageSource source = ImageSource.VARIABLE;
+        public ImageSource source = ImageSource.Variable;
         public string variable;
     }
 }

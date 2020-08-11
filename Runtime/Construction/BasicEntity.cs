@@ -11,12 +11,12 @@ namespace traVRsal.SDK
         public static Vector2Int EMPTY = new Vector2Int(int.MinValue, int.MinValue);
 
         // positions must match direction enum
-        public static Direction[] ALL_DIRECTIONS = new Direction[6] { Direction.WEST, Direction.EAST, Direction.SOUTH, Direction.NORTH, Direction.TOP, Direction.BOTTOM };
-        public static Direction[] HORIZONTAL_DIRECTIONS = new Direction[4] { Direction.WEST, Direction.EAST, Direction.SOUTH, Direction.NORTH };
+        public static Direction[] ALL_DIRECTIONS = new Direction[6] { Direction.West, Direction.East, Direction.South, Direction.North, Direction.Top, Direction.Bottom };
+        public static Direction[] HORIZONTAL_DIRECTIONS = new Direction[4] { Direction.West, Direction.East, Direction.South, Direction.North };
 
         public enum Direction
         {
-            WEST, EAST, SOUTH, NORTH, TOP, BOTTOM, RANDOM_SIDE, FREE_SIDE, NONE, PATH_AHEAD, PATH_BACK, SAME, OPPOSITE
+            West, East, South, North, Top, Bottom, Random_Side, Free_Side, None, Path_Ahead, Path_Back, Same, Opposite
         }
 
         public Vector2Int position = EMPTY;
@@ -32,7 +32,7 @@ namespace traVRsal.SDK
         public bool autoFill = false;
         public bool isVirtual = false;
         public string targetZone;
-        public Direction direction = Direction.SOUTH;
+        public Direction direction = Direction.South;
 
         public string key;
         public string lowKey;

@@ -9,13 +9,13 @@ namespace traVRsal.SDK
     {
         public enum Behaviour
         {
-            UNRESTRICTED, CHANGE_HIGHER
+            Unrestricted, Change_Higher
         }
 
         [Header("Configuration")]
         public string key;
         public string value = "0";
-        public Behaviour behaviour = Behaviour.UNRESTRICTED;
+        public Behaviour behaviour = Behaviour.Unrestricted;
         public string imageFolder;
         public int targetCount = 0;
 

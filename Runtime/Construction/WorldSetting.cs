@@ -9,7 +9,7 @@ namespace traVRsal.SDK
     {
         public enum SettingsType
         {
-            BOOLEAN
+            Boolean
         }
 
         public string key;
@@ -17,7 +17,7 @@ namespace traVRsal.SDK
         public string defaultValue = "true";
         public string name;
         public string description;
-        public SettingsType type = SettingsType.BOOLEAN;
+        public SettingsType type = SettingsType.Boolean;
 
         [Header("Runtime Data")]
         public string currentValue;

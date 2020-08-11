@@ -15,7 +15,7 @@ namespace traVRsal.SDK
             CreatePrefab(go.transform.parent.gameObject);
         }
 
-        [MenuItem("traVRsal/Utilities/Convert to Piece - Pivot to lower corner", priority = 501)]
+        [MenuItem("traVRsal/Utilities/Convert to Piece - Pivot to lower corner (Experimental)", priority = 501)]
         public static void ConvertToPieceWithPivot()
         {
             GameObject go = DoConvertToPiece();
@@ -45,7 +45,9 @@ namespace traVRsal.SDK
             go.transform.parent = newGo.transform;
 
             Undo.RecordObject(go.transform, "Adjust position of original object");
+            Vector3 originalPosition = go.transform.localPosition;
             go.transform.localPosition = Vector3.zero;
+            newGo.transform.localPosition = originalPosition;
 
             return go;
         }

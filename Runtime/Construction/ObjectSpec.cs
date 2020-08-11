@@ -10,7 +10,7 @@ namespace traVRsal.SDK
     {
         public enum PivotType
         {
-            BOTTOM_FRONT_LEFT, BOTTOM_FRONT_CENTER, CENTER, BOTTOM_CENTER
+            Bottom_Front_Left, Bottom_Front_Center, Center, Bottom_Center
         }
 
         [HideInInspector]
@@ -29,7 +29,7 @@ namespace traVRsal.SDK
         public bool snapSideways = false;
         [DefaultValue(true)]
         public bool adjustMaterials = true;
-        public PivotType pivotType = PivotType.BOTTOM_FRONT_LEFT;
+        public PivotType pivotType = PivotType.Bottom_Front_Left;
 
         [NonSerialized]
         public SingleBehaviors behaviors;
@@ -51,7 +51,7 @@ namespace traVRsal.SDK
             if (pinToSide) return false;
             if (snapSideways) return false;
             if (!adjustMaterials) return false;
-            if (pivotType != PivotType.BOTTOM_FRONT_LEFT) return false;
+            if (pivotType != PivotType.Bottom_Front_Left) return false;
 
             return true;
         }

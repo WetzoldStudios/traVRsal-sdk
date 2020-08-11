@@ -9,14 +9,14 @@ namespace traVRsal.SDK
     {
         public bool reachable;
         public bool explicitNoSpawn;
-        public Direction transition = Direction.NONE;
+        public Direction transition = Direction.None;
         public bool transitionAhead;
-        public Direction aheadDirection = Direction.NONE;
+        public Direction aheadDirection = Direction.None;
         public int aheadDistance;
-        public Direction backDirection = Direction.NONE;
+        public Direction backDirection = Direction.None;
         public int backDistance;
         public bool[] closedSides; // indexed by BasicEntity.Direction enum
-        public Direction cornerDirection = Direction.NONE;
+        public Direction cornerDirection = Direction.None;
 
         // spawning info
         public bool[] spawnedSides;

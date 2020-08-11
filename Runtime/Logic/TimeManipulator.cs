@@ -7,7 +7,7 @@ namespace traVRsal.SDK
     {
         public enum OperationMode
         {
-            USER_DRIVEN, AUTO_DEACTIVATE
+            User_Driven, Auto_Deactivate
         }
 
         public float slowTimeValue = 0.05f;
@@ -15,7 +15,7 @@ namespace traVRsal.SDK
         public float cooldown = 5f;
 
         [HideInInspector]
-        public OperationMode mode = OperationMode.USER_DRIVEN;
+        public OperationMode mode = OperationMode.User_Driven;
         [HideInInspector]
         public float defaultPhysicsTimeStep;
 
@@ -26,11 +26,11 @@ namespace traVRsal.SDK
         {
             switch (mode)
             {
-                case OperationMode.AUTO_DEACTIVATE:
+                case OperationMode.Auto_Deactivate:
                     StartCoroutine(StartTimeEffect());
                     break;
 
-                case OperationMode.USER_DRIVEN:
+                case OperationMode.User_Driven:
                     defaultPhysicsTimeStep = Time.fixedDeltaTime;
                     audioSource = GetComponent<AudioSource>();
                     if (audioSource != null && !audioSource.enabled) audioSource = null;
@@ -46,7 +46,7 @@ namespace traVRsal.SDK
 
             GameObject go = new GameObject(SDKUtil.AUTO_GENERATED + "TimeReset");
             TimeManipulator tm = go.AddComponent<TimeManipulator>();
-            tm.mode = OperationMode.AUTO_DEACTIVATE;
+            tm.mode = OperationMode.Auto_Deactivate;
             tm.defaultPhysicsTimeStep = defaultPhysicsTimeStep;
             tm.slowTimeValue = slowTimeValue;
             tm.duration = duration;
@@ -65,7 +65,7 @@ namespace traVRsal.SDK
             Time.timeScale = 1f;
             Time.fixedDeltaTime = defaultPhysicsTimeStep; // do not multiplicate back as other scripts might also fumble with time, e.g. moving platform
 
-            if (mode == OperationMode.AUTO_DEACTIVATE) Destroy(gameObject);
+            if (mode == OperationMode.Auto_Deactivate) Destroy(gameObject);
         }
     }
 }

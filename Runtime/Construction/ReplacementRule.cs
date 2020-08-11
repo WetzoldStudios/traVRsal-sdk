@@ -7,11 +7,11 @@ namespace traVRsal.SDK
     {
         public enum ReplacementType
         {
-            OBJECT, MATERIAL
+            Object, Material
         }
 
         public string key;
-        public ReplacementType type = ReplacementType.OBJECT;
+        public ReplacementType type = ReplacementType.Object;
         public string objectKey;
         public string materials;
 

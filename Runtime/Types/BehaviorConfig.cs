@@ -9,6 +9,6 @@ namespace traVRsal.SDK
         [HideInInspector]
         public string[] objectKeys;
         [HideInInspector]
-        public SDKUtil.ColliderType autoAddCollider = SDKUtil.ColliderType.BOX;
+        public SDKUtil.ColliderType autoAddCollider = SDKUtil.ColliderType.Box;
     }
 }
