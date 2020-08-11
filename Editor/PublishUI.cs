@@ -52,10 +52,14 @@ namespace traVRsal.SDK
         public override void OnEnable()
         {
             base.OnEnable();
+            CreateDirWatcher();
+        }
 
+        private void CreateDirWatcher()
+        {
             if (dirWatcher == null)
             {
-                dirWatcher = new DirectoryWatcher(new FSWParams(Application.dataPath + "/Worlds"));
+                dirWatcher = new DirectoryWatcher(new FSWParams(GetWorldsRoot(false)));
                 dirWatcher.StartFSW();
             }
         }
@@ -77,7 +81,7 @@ namespace traVRsal.SDK
             if (worlds.Length == 0)
             {
                 EditorGUILayout.Space();
-                GUILayout.Label("There are no worlds created yet. Use the Setup tool to create one.", EditorStyles.wordWrappedLabel);
+                EditorGUILayout.HelpBox("There are no worlds created yet. Use the Setup tool to create one.", MessageType.Info);
             }
             else
             {
@@ -302,9 +306,11 @@ namespace traVRsal.SDK
                 CreateLockFile();
                 ConvertTileMaps();
                 CreateAddressableSettings(!allTargets);
-                EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.Generic; // FIXME: ASTC resulting in pink shaders as of 2019.4+
+                EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ASTC;
                 EditorUserBuildSettings.selectedStandaloneTarget = BuildTarget.StandaloneWindows64;
                 AddressableAssetSettings.CleanPlayerContent();
+                AssetDatabase.SaveAssets();
+                
                 if (Directory.Exists(GetServerDataPath()) && (packageMode == 0 || allWorlds)) Directory.Delete(GetServerDataPath(), true);
 
                 // set build targets
@@ -368,7 +374,14 @@ namespace traVRsal.SDK
                 yield break;
             }
 
-            dirWatcher.ClearAffected(); // only do at end, since during build might cause false positives
+            if (dirWatcher != null)
+            {
+                dirWatcher.ClearAffected(); // only do at end, since during build might cause false positives
+            }
+            else
+            {
+                CreateDirWatcher(); // can happen after initial project creation
+            }
             RemoveLockFile();
             packagingInProgress = false;
 

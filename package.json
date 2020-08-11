@@ -21,6 +21,7 @@
     "url": "git+https://github.com/WetzoldStudios/traVRsal-sdk.git"
   },
   "homepage": "https://github.com/WetzoldStudios/traVRsal-sdk",
+  "documentationUrl": "https://github.com/WetzoldStudios/traVRsal-sdk/wiki",
   "author": {
     "name": "traVRsal",
     "email": "robert@wetzold.com",
