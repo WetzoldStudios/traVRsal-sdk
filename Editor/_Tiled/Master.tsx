@@ -38,7 +38,7 @@
  <tile id="7" type="/Base/Transition">
   <properties>
    <property name="Snap" type="bool" value="true"/>
-   <property name="TargetRoom" value=""/>
+   <property name="TargetZone" value=""/>
   </properties>
   <image width="50" height="50" source="Master Images/transition.png"/>
  </tile>

@@ -65,7 +65,12 @@ namespace traVRsal.SDK
             }
             else
             {
+                Vector3 oldPos = go.transform.position;
+                go.transform.position = Vector3.zero;
+
                 CreatePrefab(go, Path.GetFileName(worlds[0]));
+
+                go.transform.position = oldPos;
             }
         }
 

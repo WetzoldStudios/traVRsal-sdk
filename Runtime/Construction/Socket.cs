@@ -5,6 +5,7 @@ namespace traVRsal.SDK
     public class Socket : MonoBehaviour
     {
         public string key;
+        public bool cullable = true;
 
         [HideInInspector]
         public GameObject item;
@@ -33,7 +34,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Socket ({key}, {item})";
+            return $"Socket ({key})";
         }
     }
 }
