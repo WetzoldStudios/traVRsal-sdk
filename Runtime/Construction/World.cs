@@ -33,6 +33,7 @@ namespace traVRsal.SDK
         public string outroScenery = "/Base/LightHall-Outro";
         public List<WorldDataReference> worldData;
         public List<WorldSetting> settings;
+        public List<ImageProvider> imageProviders;
         public List<Variable> initialVariables;
         public List<TextFragment> speech;
         public List<ReplacementRule> replacements;
@@ -55,6 +56,7 @@ namespace traVRsal.SDK
             zones = new List<Zone>();
             zoneTemplates = new List<Zone>();
             spawnRules = new List<SpawnRule>();
+            imageProviders = new List<ImageProvider>();
             replacements = new List<ReplacementRule>();
             objectSpecs = new List<ObjectSpec>();
             zoneTemplateCache = new Dictionary<string, string>();
@@ -76,6 +78,7 @@ namespace traVRsal.SDK
             if (zones != null && zones.Count == 0) zones = null;
             if (zoneTemplates != null && zoneTemplates.Count == 0) zoneTemplates = null;
             if (spawnRules != null && spawnRules.Count == 0) spawnRules = null;
+            if (imageProviders != null && imageProviders.Count == 0) imageProviders = null;
             if (replacements != null && replacements.Count == 0) replacements = null;
             if (objectSpecs != null && objectSpecs.Count == 0) objectSpecs = null;
             if (zoneTemplateCache != null && zoneTemplateCache.Count == 0) zoneTemplateCache = null;
