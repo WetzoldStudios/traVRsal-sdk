@@ -80,6 +80,8 @@ namespace traVRsal.SDK
         public Zone()
         {
             floors = new List<Floor>();
+            portalCache = new List<Behaviour>();
+            reachableZones = new HashSet<int>();
         }
 
         public Zone(string name) : this()

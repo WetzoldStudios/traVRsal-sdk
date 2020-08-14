@@ -310,7 +310,7 @@ namespace traVRsal.SDK
                 EditorUserBuildSettings.selectedStandaloneTarget = BuildTarget.StandaloneWindows64;
                 AddressableAssetSettings.CleanPlayerContent();
                 AssetDatabase.SaveAssets();
-                
+
                 if (Directory.Exists(GetServerDataPath()) && (packageMode == 0 || allWorlds)) Directory.Delete(GetServerDataPath(), true);
 
                 // set build targets
@@ -451,7 +451,7 @@ namespace traVRsal.SDK
                     continue;
                 }
 
-                string root = GetWorldsRoot(true) + "/{worldName}/";
+                string root = GetWorldsRoot(true) + $"/{worldName}/";
 
                 // fill HTML template
                 string id = AssetDatabase.FindAssets("_WorldDocu")[0];
@@ -761,7 +761,7 @@ namespace traVRsal.SDK
                 userWorld.cover_image = world.coverImage;
                 userWorld.world_json = worldJson;
                 userWorld.unity_version = Application.unityVersion;
-                userWorld.is_virtual = world.isVirtual;
+                userWorld.is_virtual = world.isVirtual ? "1" : "0";
 
                 byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(userWorld));
                 using (UnityWebRequest webRequest = UnityWebRequest.Put(uri, data))

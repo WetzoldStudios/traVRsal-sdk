@@ -16,8 +16,8 @@ namespace traVRsal.SDK
         public string unity_version;
         public string world_json;
         public WorldState state;
-        public bool is_private;
-        public bool is_virtual;
+        public string is_private;
+        public string is_virtual;
         public string last_uploaded_at;
         public string last_statechange_at;
     }
