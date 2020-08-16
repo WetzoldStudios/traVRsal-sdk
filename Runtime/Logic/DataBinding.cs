@@ -4,6 +4,8 @@ namespace traVRsal.SDK
 {
     public class DataBinding : ExecutorConfig
     {
+        public const int REQUIRE_SOURCE = 1000;
+
         public enum Reference
         {
             OriginalValue = 0,
@@ -58,11 +60,24 @@ namespace traVRsal.SDK
             ShowDetailStatPlayerDamage = 47,
             ShowDetailStatPoints = 48,
             ShowDetailStatTargets = 51,
-            ShowDetailStatTimeOnCriticalPath = 54
+            ShowDetailStatTimeOnCriticalPath = 54,
+
+            ImageName = REQUIRE_SOURCE + 1,
+            ImageDescription = REQUIRE_SOURCE + 2,
+            ImageDate = REQUIRE_SOURCE +3,
+            ImageAuthor = REQUIRE_SOURCE + 4,
+            ImageAuthorLink = REQUIRE_SOURCE + 5,
+            ImageLink = REQUIRE_SOURCE + 6,
+            ImageRatingsCount = REQUIRE_SOURCE + 7
         }
 
+        [Tooltip("Optional source for the data (e.g. image assignment), otherwise using globally available data")]
+        public Behaviour sourceComponent;
         public Behaviour targetComponent;
         public Reference reference;
         public bool oneTimeOnly = false;
+
+        [HideInInspector]
+        public IDataSource dataSource;
     }
 }

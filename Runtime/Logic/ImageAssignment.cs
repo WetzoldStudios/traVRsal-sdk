@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [RequireComponent(typeof(Renderer))]
-    public class ImageAssignment : ExecutorConfig
+    public class ImageAssignment : ExecutorConfig, IDataSource
     {
         public enum ImageSource
         {
@@ -16,5 +16,8 @@ namespace traVRsal.SDK
         public int materialIndex = 0;
         public ImageSource source = ImageSource.Name;
         public string key;
+
+        [HideInInspector]
+        public ImageData imageData;
     }
 }
