@@ -4,6 +4,8 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
+using UnityEngine;
+using Random = System.Random;
 
 namespace traVRsal.SDK
 {
@@ -24,6 +26,27 @@ namespace traVRsal.SDK
         public enum ColliderType
         {
             None, Box, Sphere
+        }
+
+        public static T ReadJSONFile<T>(string fileName)
+        {
+            TextAsset textFile = (TextAsset)Resources.Load(fileName);
+            if (textFile == null) return default;
+
+            T data = JsonConvert.DeserializeObject<T>(textFile.text);
+            Resources.UnloadAsset(textFile);
+
+            return data;
+        }
+
+        public static T ReadJSONFileDirect<T>(string fileName)
+        {
+            if (!File.Exists(fileName)) return default;
+
+            string text = File.ReadAllText(fileName);
+            T data = JsonConvert.DeserializeObject<T>(text);
+
+            return data;
         }
 
         // inspired from https://stackoverflow.com/questions/281640/how-do-i-get-a-human-readable-file-size-in-bytes-abbreviation-using-net

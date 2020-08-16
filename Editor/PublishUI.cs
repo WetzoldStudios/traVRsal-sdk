@@ -223,7 +223,7 @@ namespace traVRsal.SDK
 
                 // images
                 Directory.CreateDirectory(mediaPath);
-                World world = JsonConvert.DeserializeObject<World>(File.ReadAllText(dir + "/World.json"));
+                World world = SDKUtil.ReadJSONFileDirect<World>(dir + "/World.json");
                 if (!string.IsNullOrEmpty(world.coverImage))
                 {
                     File.Copy(dir + "/Images/" + world.coverImage, mediaPath + world.coverImage, true);
@@ -396,8 +396,7 @@ namespace traVRsal.SDK
         private void CreateObjectLib(string worldName)
         {
             string root = GetWorldsRoot(true) + "/" + worldName + "/";
-            string worldJson = File.ReadAllText(root + "World.json");
-            World world = JsonConvert.DeserializeObject<World>(worldJson);
+            World world = SDKUtil.ReadJSONFileDirect<World>(root + "World.json");
 
             world.objectSpecs = new List<ObjectSpec>();
             string[] assets = AssetDatabase.FindAssets("*", new[] { root + "Pieces" });
@@ -420,8 +419,7 @@ namespace traVRsal.SDK
 
             // write back
             world.NullifyEmpties();
-            worldJson = SDKUtil.SerializeObject(world);
-            File.WriteAllText(root + "World.json", worldJson);
+            File.WriteAllText(root + "World.json", SDKUtil.SerializeObject(world));
         }
 
         private string GetDocuArchivePath(string worldName)
@@ -762,6 +760,8 @@ namespace traVRsal.SDK
                 userWorld.world_json = worldJson;
                 userWorld.unity_version = Application.unityVersion;
                 userWorld.is_virtual = world.isVirtual ? "1" : "0";
+                userWorld.android_size = verifications[worldName].distroSizeAndroid;
+                userWorld.pc_size = verifications[worldName].distroSizeStandalone;
 
                 byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(userWorld));
                 using (UnityWebRequest webRequest = UnityWebRequest.Put(uri, data))
