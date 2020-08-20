@@ -18,8 +18,8 @@ namespace traVRsal.SDK
         public List<string> worlds;
         [DefaultValue("Menu-traVRsal")]
         public string menuScene = "Menu-traVRsal";
-        [DefaultValue("/Base/Menu/Level2")]
-        public string worldObject = "/Base/Menu/Level2";
+        [DefaultValue("/Base/Menu/World3")]
+        public string worldObject = "/Base/Menu/World3";
         [DefaultValue("Pause-OoD")]
         public string pauseScene = "Pause-OoD";
         public bool devMode = false;

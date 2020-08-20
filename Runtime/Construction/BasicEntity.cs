@@ -50,6 +50,9 @@ namespace traVRsal.SDK
         public int[] layerNeighbours = new int[4];
         [HideInInspector]
         public bool instantiated = false;
+        [HideInInspector]
+        [NonSerialized]
+        public Transform node;
 
         public BasicEntity() { }
 

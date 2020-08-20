@@ -18,6 +18,7 @@ namespace traVRsal.SDK
         [Header("Runtime Information")]
         public int idx;
         public PositionInfoMarker[,] positionInfoMarker;
+        public Vector3[] shortestPath;
         public Transform node;
         public Bounds bounds;
         public Transform center;

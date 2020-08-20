@@ -76,6 +76,9 @@ namespace traVRsal.SDK
         [HideInInspector]
         [NonSerialized]
         public List<GameObject> socketItems;
+        [HideInInspector]
+        [NonSerialized]
+        public GameObject navBlockerNode;
 
         public Zone()
         {
