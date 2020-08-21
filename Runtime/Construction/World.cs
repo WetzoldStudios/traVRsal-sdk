@@ -50,6 +50,8 @@ namespace traVRsal.SDK
 
         [NonSerialized]
         public Dictionary<string, string> zoneTemplateCache;
+        [NonSerialized]
+        public UserWorld remoteMetaData;
 
         public World()
         {

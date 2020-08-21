@@ -1,16 +1,23 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Networking;
 using Random = System.Random;
 
 namespace traVRsal.SDK
 {
     public static class SDKUtil
     {
+        public const string API_ENDPOINT = "https://www.travrsal.com/api/";
+        // for debugging only
+        // public const string API_ENDPOINT = "http://localhost:8000/api/";
+
         public const string PACKAGE_NAME = "com.wetzold.travrsal.sdk";
         public const string AUTO_GENERATED = "[AUTO]";
         public const string TILED_PATH_DEFAULT = "C:\\Program Files\\Tiled\\tiled.exe";
@@ -23,9 +30,57 @@ namespace traVRsal.SDK
         public const string PLAYER_HELPER_TAG = "Player Helper";
         public const string ENEMY_TAG = "Enemy";
 
+        public static bool invalidAPIToken = false;
+        public static bool networkIssue = false;
+
         public enum ColliderType
         {
             None, Box, Sphere
+        }
+
+        public static IEnumerator FetchAPIData<T>(string api, string token, Action<T> callback)
+        {
+            string uri = API_ENDPOINT + api;
+
+            networkIssue = false;
+            using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+            {
+                webRequest.SetRequestHeader("Accept", "application/json");
+                webRequest.SetRequestHeader("Authorization", "Bearer " + token);
+                yield return webRequest.SendWebRequest();
+
+                if (webRequest.isNetworkError)
+                {
+                    networkIssue = true;
+                    Debug.LogError($"Could not fetch data due to network issues: {webRequest.error}");
+                }
+                else if (webRequest.isHttpError)
+                {
+                    if (webRequest.responseCode == (int)HttpStatusCode.Unauthorized)
+                    {
+                        invalidAPIToken = true;
+                        Debug.LogError("Invalid or expired API Token.");
+                    }
+                    else
+                    {
+                        Debug.LogError($"There was an error fetching data: {webRequest.error}");
+                    }
+                }
+                else
+                {
+                    invalidAPIToken = false;
+                    if (typeof(T) == typeof(string))
+                    {
+                        callback((T)Convert.ChangeType(webRequest.downloadHandler.text, typeof(T)));
+                    }
+                    else
+                    {
+                        callback(JsonConvert.DeserializeObject<T>(webRequest.downloadHandler.text));
+                    }
+                    yield break;
+                }
+            }
+            callback(default);
         }
 
         public static T ReadJSONFile<T>(string fileName)

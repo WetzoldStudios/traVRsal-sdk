@@ -22,5 +22,10 @@ namespace traVRsal.SDK
         public long pc_size;
         public string last_uploaded_at;
         public string last_statechange_at;
+
+        public override string ToString()
+        {
+            return $"Remote World Data {key}";
+        }
     }
 }

@@ -13,8 +13,6 @@ namespace traVRsal.SDK
         public string key = "game";
         [DefaultValue("Development Mode")]
         public string name = "Development Mode";
-        public string worldsURL;
-        public string userWorldsURL;
         public List<string> worlds;
         [DefaultValue("Menu-traVRsal")]
         public string menuScene = "Menu-traVRsal";

@@ -120,7 +120,7 @@ namespace traVRsal.SDK
                 GUILayout.EndHorizontal();
 
                 CheckTokenGUI();
-                if (worldListMismatch && !networkIssue)
+                if (worldListMismatch && !SDKUtil.networkIssue)
                 {
                     EditorGUILayout.Space();
                     EditorGUILayout.HelpBox("The worlds inside your Worlds folder do not match your registered worlds on www.traVRsal.com. You probably need to rename these locally to match exactly.", MessageType.Error);
@@ -265,7 +265,7 @@ namespace traVRsal.SDK
                 }
             }
             verifyInProgress = false;
-            verificationPassed = !worldListMismatch && !invalidAPIToken && !networkIssue; // TODO: do some actual checks
+            verificationPassed = !worldListMismatch && !SDKUtil.invalidAPIToken && !SDKUtil.networkIssue; // TODO: do some actual checks
         }
 
         private string GetServerDataPath()
@@ -749,7 +749,7 @@ namespace traVRsal.SDK
             foreach (string dir in GetWorldPaths())
             {
                 string worldName = Path.GetFileName(dir);
-                string uri = API_ENDPOINT + "userworlds/" + userWorlds.Where(w => w.key == worldName).First().id;
+                string uri = SDKUtil.API_ENDPOINT + "userworlds/" + userWorlds.Where(w => w.key == worldName).First().id;
 
                 // extract data from world descriptor
                 string worldJson = File.ReadAllText(dir + "/World.json");
@@ -763,6 +763,7 @@ namespace traVRsal.SDK
                 userWorld.android_size = verifications[worldName].distroSizeAndroid;
                 userWorld.pc_size = verifications[worldName].distroSizeStandalone;
 
+                // TODO: convert to SDKUtil function as well
                 byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(userWorld));
                 using (UnityWebRequest webRequest = UnityWebRequest.Put(uri, data))
                 {
@@ -779,7 +780,7 @@ namespace traVRsal.SDK
                     {
                         if (webRequest.responseCode == (int)HttpStatusCode.Unauthorized)
                         {
-                            invalidAPIToken = true;
+                            SDKUtil.invalidAPIToken = true;
                             Debug.LogError("Invalid or expired API Token.");
                         }
                         else

@@ -15,7 +15,7 @@ namespace traVRsal.SDK
         public bool isIntro = false;
         public bool invisibleGround = false;
         public bool blockAgents = true;
-        public Color ambientColor = new Color(0.5f, 0.482f, 0.445f);
+        public Color ambientColor = new Color(0.8f, 0.782f, 0.745f);
         public Color lightColor = Color.white;
         public Color backgroundColor = Color.black;
         public float lightIntensity = 1f;

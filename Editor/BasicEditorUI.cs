@@ -12,15 +12,9 @@ namespace traVRsal.SDK
 {
     public abstract class BasicEditorUI : EditorWindow
     {
-        public const string API_ENDPOINT = "https://www.travrsal.com/api/";
-        // for debugging only
-        // public const string API_ENDPOINT = "http://localhost:8000/api/";
-
         private string[] REQUIRED_TAGS = { "ExcludeTeleport", SDKUtil.INTERACTABLE_TAG, SDKUtil.ENEMY_TAG, SDKUtil.PLAYER_HEAD_TAG, SDKUtil.COLLECTIBLE_TAG, SDKUtil.PLAYER_HELPER_TAG };
 
         public UserWorld[] userWorlds;
-        public bool invalidAPIToken = false;
-        public bool networkIssue = false;
 
         private static GUIStyle logo;
         private Vector2 scrollPos;
@@ -66,7 +60,7 @@ namespace traVRsal.SDK
 
                 return false;
             }
-            else if (invalidAPIToken)
+            else if (SDKUtil.invalidAPIToken)
             {
                 EditorGUILayout.HelpBox("Your Creator Key is invalid or expired. Please update it in the Project Settings. You can find your personal key on www.traVRsal.com.", MessageType.Error);
                 if (GUILayout.Button("Retry")) EditorCoroutineUtility.StartCoroutine(FetchUserWorlds(), this);
@@ -74,7 +68,7 @@ namespace traVRsal.SDK
 
                 return false;
             }
-            if (networkIssue)
+            if (SDKUtil.networkIssue)
             {
                 EditorGUILayout.Space();
                 EditorGUILayout.HelpBox("There are issues connecting to the server.", MessageType.Error);
@@ -131,38 +125,10 @@ namespace traVRsal.SDK
 
         public IEnumerator FetchUserWorlds()
         {
-            string uri = API_ENDPOINT + "userworlds";
-            networkIssue = false;
-
-            using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+            yield return SDKUtil.FetchAPIData<UserWorld[]>("userworlds", GetAPIToken(), worlds =>
             {
-                webRequest.SetRequestHeader("Accept", "application/json");
-                webRequest.SetRequestHeader("Authorization", "Bearer " + GetAPIToken());
-                yield return webRequest.SendWebRequest();
-
-                if (webRequest.isNetworkError)
-                {
-                    networkIssue = true;
-                    Debug.LogError($"Could not fetch worlds due to network issues: {webRequest.error}");
-                }
-                else if (webRequest.isHttpError)
-                {
-                    if (webRequest.responseCode == (int)HttpStatusCode.Unauthorized)
-                    {
-                        invalidAPIToken = true;
-                        Debug.LogError("Invalid or expired API Token.");
-                    }
-                    else
-                    {
-                        Debug.LogError($"There was an error when fetching worlds: {webRequest.error}");
-                    }
-                }
-                else
-                {
-                    userWorlds = JsonConvert.DeserializeObject<UserWorld[]>(webRequest.downloadHandler.text);
-                    invalidAPIToken = false;
-                }
-            }
+                if (worlds != null) userWorlds = worlds;
+            });
         }
     }
 }
