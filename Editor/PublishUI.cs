@@ -302,6 +302,7 @@ namespace traVRsal.SDK
             {
                 string[] worldsToBuild = allWorlds ? GetWorldPaths() : GetWorldsToBuild();
                 if (worldsToBuild.Length == 0) yield break;
+                string resultFolder = Application.dataPath + "/../traVRsal/";
 
                 CreateLockFile();
                 ConvertTileMaps();
@@ -331,6 +332,7 @@ namespace traVRsal.SDK
                 {
                     string worldName = Path.GetFileName(dir);
                     string serverDir = GetServerDataPath() + "/Worlds/" + Path.GetFileName(dir);
+                    if (!allTargets && Directory.Exists(resultFolder + worldName)) Directory.Delete(resultFolder + worldName, true);
 
                     if (packageMode == 1 && !allWorlds && Directory.Exists(serverDir)) Directory.Delete(serverDir, true);
 
@@ -339,6 +341,9 @@ namespace traVRsal.SDK
                     {
                         if (group.ReadOnly) return;
                         group.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = group.name == worldName;
+
+                        // default group ensures there is no accidental local default group resulting in local paths being baked into addressable for shaders
+                        if (group.name == worldName && group.CanBeSetAsDefault()) settings.DefaultGroup = group;
                     });
 
                     BundledAssetGroupSchema schema = settings.groups.Where(group => group.name == worldName).First().GetSchema<BundledAssetGroupSchema>();
@@ -643,7 +648,7 @@ namespace traVRsal.SDK
 
         private void RenameCatalogs()
         {
-            foreach (string path in new[] { GetServerDataPath(), Application.dataPath + "/../Library/com.unity.addressables/aa/Windows/Worlds" })
+            foreach (string path in new[] { GetServerDataPath(), Application.dataPath + "/../traVRsal" })
             {
                 if (Directory.Exists(path))
                 {
@@ -705,7 +710,7 @@ namespace traVRsal.SDK
                 entry.SetAddress($"Worlds/{worldName}");
 
                 // set variables
-                string localRoot = Application.dataPath + $"/../Library/com.unity.addressables/aa/Windows/Worlds/{worldName}/[BuildTarget]";
+                string localRoot = Application.dataPath + $"/../traVRsal/{worldName}/[BuildTarget]";
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalBuildPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalLoadPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kRemoteBuildPath, $"ServerData/Worlds/{worldName}/[BuildTarget]");
