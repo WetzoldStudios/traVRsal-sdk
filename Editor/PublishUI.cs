@@ -345,7 +345,7 @@ namespace traVRsal.SDK
                     settings.RemoteCatalogBuildPath = schema.BuildPath;
                     settings.RemoteCatalogLoadPath = schema.LoadPath;
 
-                    CreateObjectLib(worldName);
+                    if (!CreateObjectLib(worldName)) yield break;
 
                     if (allTargets)
                     {
@@ -393,10 +393,15 @@ namespace traVRsal.SDK
             return $"{Application.dataPath}/../Documentation/{worldName}/";
         }
 
-        private void CreateObjectLib(string worldName)
+        private bool CreateObjectLib(string worldName)
         {
             string root = GetWorldsRoot(true) + "/" + worldName + "/";
             World world = SDKUtil.ReadJSONFileDirect<World>(root + "World.json");
+            if (world == null)
+            {
+                EditorUtility.DisplayDialog("Error", $"World.json file for {worldName} seems corrupted and needs to be fixed first.", "OK");
+                return false;
+            }
 
             world.objectSpecs = new List<ObjectSpec>();
             string[] assets = AssetDatabase.FindAssets("*", new[] { root + "Pieces" });
@@ -420,6 +425,8 @@ namespace traVRsal.SDK
             // write back
             world.NullifyEmpties();
             File.WriteAllText(root + "World.json", SDKUtil.SerializeObject(world));
+
+            return true;
         }
 
         private string GetDocuArchivePath(string worldName)
