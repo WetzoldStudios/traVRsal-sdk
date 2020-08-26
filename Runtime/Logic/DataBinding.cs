@@ -35,6 +35,7 @@ namespace traVRsal.SDK
             WorldTime = 4,
             WorldUpdate = 56,
             WorldSize = 55,
+            WorldOwner = 66,
 
             PlayerDistance = 9,
             PlayerName = 3,
