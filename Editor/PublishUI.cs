@@ -691,6 +691,7 @@ namespace traVRsal.SDK
                 // create group if non-existent
                 AddressableAssetGroup group = settings.groups.Where(g => g.name == worldName).FirstOrDefault();
                 if (group == null) group = CreateAssetGroup<BundledAssetGroupSchema>(settings, worldName);
+                if (group.CanBeSetAsDefault()) settings.DefaultGroup = group; // default group ensures there is no accidental local default group resulting in local paths being baked into addressable for shaders
 
                 // set correct path
                 AddressableAssetEntry entry = settings.CreateOrMoveEntry(guid, group);
