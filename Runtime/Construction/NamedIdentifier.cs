@@ -12,6 +12,7 @@ namespace traVRsal.SDK
             SettingsDialog = 1,
             PlayerDialog = 7,
             WorldDetailsDialog = 2,
+            WorldDetailsDialogPosition = 8,
             WorldsListRoot = 0,
             WorldPlacement = 6,
             NoWorldSettingsHint = 3,

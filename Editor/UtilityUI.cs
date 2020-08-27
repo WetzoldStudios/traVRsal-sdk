@@ -15,7 +15,8 @@ namespace traVRsal.SDK
             CreatePrefab(go.transform.parent.gameObject);
         }
 
-        [MenuItem("traVRsal/Utilities/Convert to Piece - Pivot to lower corner (Experimental)", priority = 501)]
+        // FIXME: this is too crude, try to access actual pivot pos somehow
+        // [MenuItem("traVRsal/Utilities/Convert to Piece - Pivot to lower corner (Experimental)", priority = 501)]
         public static void ConvertToPieceWithPivot()
         {
             GameObject go = DoConvertToPiece();

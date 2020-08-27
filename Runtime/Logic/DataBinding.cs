@@ -86,12 +86,19 @@ namespace traVRsal.SDK
         }
 
         [Tooltip("Optional source for the data (e.g. image assignment), otherwise using globally available data")]
-        public Behaviour sourceComponent;
-        public Behaviour targetComponent;
+        public Component sourceComponent;
+        public Component targetComponent;
         public Reference reference;
         public bool oneTimeOnly = false;
 
         [HideInInspector]
         public IDataSource dataSource;
+        [HideInInspector]
+        public bool isTriggered;
+
+        public void Trigger()
+        {
+            isTriggered = true;
+        }
     }
 }
