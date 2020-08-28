@@ -35,7 +35,7 @@ This is an early alpha version to get feedback and steer the direction of future
 * only very few nodes are available right now and your feedback will help to fill the gaps
 * shaders need to support stencils to be visible through transitions
 * transparent objects are not visible through transitions
-* incorrect JSON files will cause the editor to become stuck
+* incorrect JSON files will cause the studio to become stuck
 * the minimum tile count in a grid right now is 4 due to a limitation with maze generation
 * custom interactions are not possible yet (only pre-made Button for now)
 * audio is not assigned to correct mixer channels yet 

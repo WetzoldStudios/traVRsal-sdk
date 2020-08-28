@@ -5,6 +5,7 @@ namespace traVRsal.SDK
     public class DataBinding : ExecutorConfig
     {
         public const int REQUIRE_SOURCE = 1000;
+        public const int ASYNC_RESULT = 2000;
 
         public enum Reference
         {
@@ -20,6 +21,7 @@ namespace traVRsal.SDK
             DoPause = 15,
             DoReturnToMain = 17,
             DoStartWorld = 14,
+            DoStartWorldDownload = 67,
             DoUnpause = 16,
             DoLogOut = 63,
 
@@ -28,7 +30,7 @@ namespace traVRsal.SDK
             EnterPassword = 65,
 
             WorldCategory = 10,
-            WorldCover = 19,
+            WorldCover = ASYNC_RESULT + 3,
             WorldName = 2,
             WorldShortDescription = 11,
             WorldLongDescription = 12,
@@ -75,6 +77,9 @@ namespace traVRsal.SDK
 
             ShowPlayerLogin = 60,
             ShowPlayerLoggedIn = 61,
+
+            ShowWorldDownload = ASYNC_RESULT + 1,
+            ShowWorldStart = ASYNC_RESULT + 2,
 
             ImageName = REQUIRE_SOURCE + 1,
             ImageDescription = REQUIRE_SOURCE + 2,
