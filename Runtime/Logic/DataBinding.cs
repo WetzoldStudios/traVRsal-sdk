@@ -24,6 +24,7 @@ namespace traVRsal.SDK
             DoStartWorldDownload = 67,
             DoUnpause = 16,
             DoLogOut = 63,
+            DoClearCache = 68,
 
             EnterLogin = 64,
             EnterNickname = 62,

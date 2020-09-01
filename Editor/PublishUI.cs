@@ -363,8 +363,8 @@ namespace traVRsal.SDK
                     }
                     else
                     {
-                        // build only for currently active target
-                        // FIXME: will delete folder now in new addressables version so we need to save it out and restore later
+                        // build only for editor, which is PC right now
+                        EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneWindows64);
                         AddressableAssetSettings.BuildPlayerContent();
                     }
                 }

@@ -9,8 +9,12 @@ namespace traVRsal.SDK
 
         [HideInInspector]
         public GameObject item;
+
+        // cache only
         [HideInInspector]
-        public Rigidbody rigidBody; // cache only
+        public Rigidbody rigidBody;
+        [HideInInspector]
+        public bool isKinematic = false;
 
         public Socket() { }
 
@@ -24,6 +28,7 @@ namespace traVRsal.SDK
             this.item = item;
 
             rigidBody = item.GetComponent<Rigidbody>();
+            if (rigidBody != null) isKinematic = rigidBody.isKinematic;
         }
 
         public void RemoveItem()

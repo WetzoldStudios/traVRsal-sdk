@@ -7,5 +7,7 @@ namespace traVRsal.SDK
     {
         public List<GameObject> enabledGameObjects;
         public List<Behaviour> enabledComponents;
+
+        public bool allowInIntro = true;
     }
 }
