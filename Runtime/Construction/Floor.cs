@@ -46,11 +46,39 @@ namespace traVRsal.SDK
             name = copyFrom.name;
             height = copyFrom.height;
             underground = copyFrom.underground;
+            properties = SDKUtil.CopyProperties(copyFrom.properties);
 
+            foreach (string key in copyFrom.layerProps.Keys)
+            {
+                layerProps.Add(key, SDKUtil.CopyProperties(copyFrom.layerProps[key]));
+            }
             foreach (BasicEntity entity in copyFrom.entities)
             {
                 entities.Add(new BasicEntity(entity));
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Floor floor &&
+                   name == floor.name &&
+                   height == floor.height &&
+                   underground == floor.underground &&
+                   EqualityComparer<List<BasicEntity>>.Default.Equals(entities, floor.entities) &&
+                   EqualityComparer<Dictionary<string, TMProperty[]>>.Default.Equals(layerProps, floor.layerProps) &&
+                   EqualityComparer<TMProperty[]>.Default.Equals(properties, floor.properties);
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 1827241312;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
+            hashCode = hashCode * -1521134295 + height.GetHashCode();
+            hashCode = hashCode * -1521134295 + underground.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<List<BasicEntity>>.Default.GetHashCode(entities);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Dictionary<string, TMProperty[]>>.Default.GetHashCode(layerProps);
+            hashCode = hashCode * -1521134295 + EqualityComparer<TMProperty[]>.Default.GetHashCode(properties);
+            return hashCode;
         }
 
         public override string ToString()

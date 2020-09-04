@@ -35,6 +35,7 @@ namespace traVRsal.SDK
         public Transform node;
         public Bounds bounds;
         public Transform center;
+        public string variationOf;
 
         // cache structures
         [HideInInspector]
@@ -98,13 +99,18 @@ namespace traVRsal.SDK
             minSize = copyFrom.minSize;
             curSize = copyFrom.curSize;
             scenePath = copyFrom.scenePath;
-            invisibleGround = copyFrom.invisibleGround;
             ambientColor = copyFrom.ambientColor;
             lightColor = copyFrom.lightColor;
             lightIntensity = copyFrom.lightIntensity;
+            backgroundColor = copyFrom.backgroundColor;
             isExit = copyFrom.isExit;
             isIntro = copyFrom.isIntro;
+            invisibleGround = copyFrom.invisibleGround;
             music = copyFrom.music;
+            skybox = copyFrom.skybox;
+            blockAgents = copyFrom.blockAgents;
+            variationOf = copyFrom.variationOf;
+            properties = SDKUtil.CopyProperties(copyFrom.properties);
 
             foreach (Floor floor in copyFrom.floors)
             {
@@ -112,9 +118,49 @@ namespace traVRsal.SDK
             }
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is Zone zone &&
+                   name == zone.name &&
+                   minSize.Equals(zone.minSize) &&
+                   // FIXME: returns false for some reason
+                   EqualityComparer<List<Floor>>.Default.Equals(floors, zone.floors) &&
+                   isExit == zone.isExit &&
+                   isIntro == zone.isIntro &&
+                   invisibleGround == zone.invisibleGround &&
+                   blockAgents == zone.blockAgents &&
+                   ambientColor.Equals(zone.ambientColor) &&
+                   lightColor.Equals(zone.lightColor) &&
+                   backgroundColor.Equals(zone.backgroundColor) &&
+                   lightIntensity == zone.lightIntensity &&
+                   skybox == zone.skybox &&
+                   music == zone.music &&
+                   EqualityComparer<TMProperty[]>.Default.Equals(properties, zone.properties);
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -1742729958;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
+            hashCode = hashCode * -1521134295 + minSize.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<List<Floor>>.Default.GetHashCode(floors);
+            hashCode = hashCode * -1521134295 + isExit.GetHashCode();
+            hashCode = hashCode * -1521134295 + isIntro.GetHashCode();
+            hashCode = hashCode * -1521134295 + invisibleGround.GetHashCode();
+            hashCode = hashCode * -1521134295 + blockAgents.GetHashCode();
+            hashCode = hashCode * -1521134295 + ambientColor.GetHashCode();
+            hashCode = hashCode * -1521134295 + lightColor.GetHashCode();
+            hashCode = hashCode * -1521134295 + backgroundColor.GetHashCode();
+            hashCode = hashCode * -1521134295 + lightIntensity.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(skybox);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(music);
+            hashCode = hashCode * -1521134295 + EqualityComparer<TMProperty[]>.Default.GetHashCode(properties);
+            return hashCode;
+        }
+
         public override string ToString()
         {
-            return $"Zone {name} ({idx})";
+            return $"Zone {name}";
         }
     }
 

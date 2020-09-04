@@ -83,6 +83,19 @@ namespace traVRsal.SDK
             callback(default);
         }
 
+        public static TMProperty[] CopyProperties(TMProperty[] copyFrom)
+        {
+            if (copyFrom == null) return null;
+
+            TMProperty[] properties = new TMProperty[copyFrom.Length];
+            for (int i = 0; i < properties.Length; i++)
+            {
+                properties[i] = new TMProperty(copyFrom[i].name, copyFrom[i].type, copyFrom[i].value);
+            }
+
+            return properties;
+        }
+
         public static T ReadJSONFile<T>(string fileName)
         {
             TextAsset textFile = (TextAsset)Resources.Load(fileName);

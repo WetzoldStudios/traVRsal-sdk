@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.2" tiledversion="1.3.4" name="Master" tilewidth="50" tileheight="50" tilecount="22" columns="0">
+<tileset version="1.4" tiledversion="1.4.2" name="Master" tilewidth="50" tileheight="50" tilecount="22" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="2" type="/Base/Ceiling">
   <properties>
@@ -39,6 +39,7 @@
   <properties>
    <property name="Snap" type="bool" value="true"/>
    <property name="TargetZone" value=""/>
+   <property name="ZoneExit" type="bool" value="true"/>
   </properties>
   <image width="50" height="50" source="Master Images/transition.png"/>
  </tile>
@@ -91,9 +92,9 @@
   </properties>
   <image width="50" height="50" source="Master Images/maze.png"/>
  </tile>
- <tile id="19" type="/Base/Start">
+ <tile id="19" type="/Base/Transition">
   <properties>
-   <property name="Virtual" type="bool" value="true"/>
+   <property name="ZoneEntry" type="bool" value="true"/>
   </properties>
   <image width="50" height="50" source="Master Images/start.png"/>
  </tile>

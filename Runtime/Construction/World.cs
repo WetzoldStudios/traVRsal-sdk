@@ -32,6 +32,7 @@ namespace traVRsal.SDK
         [DefaultValue("/Base/LightHall-Outro")]
         public string outroScenery = "/Base/LightHall-Outro";
         public List<WorldDataReference> worldData;
+        public List<Journey> journeys;
         public List<WorldSetting> settings;
         public List<ImageProvider> imageProviders;
         public List<Variable> initialVariables;
@@ -42,6 +43,7 @@ namespace traVRsal.SDK
         public List<Credit> credits;
 
         [Header("Runtime Data")]
+        public bool journeyMode = false;
         public List<ObjectSpec> objectSpecs;
         public List<string> dependencies;
         public List<string> worldDependencies;
@@ -52,6 +54,8 @@ namespace traVRsal.SDK
         public Dictionary<string, string> zoneTemplateCache;
         [NonSerialized]
         public UserWorld remoteMetaData;
+        [NonSerialized]
+        public int autoIdx = 1;
 
         public World()
         {
@@ -66,6 +70,7 @@ namespace traVRsal.SDK
             initialVariables = new List<Variable>();
             settings = new List<WorldSetting>();
             worldData = new List<WorldDataReference>();
+            journeys = new List<Journey>();
             dependencies = new List<string>();
             worldDependencies = new List<string>();
         }
@@ -91,6 +96,7 @@ namespace traVRsal.SDK
             if (dependencies != null && dependencies.Count == 0) dependencies = null;
             if (worldDependencies != null && worldDependencies.Count == 0) worldDependencies = null;
             if (credits != null && credits.Count == 0) credits = null;
+            if (journeys != null && journeys.Count == 0) journeys = null;
 
             if (initialVariables != null)
             {

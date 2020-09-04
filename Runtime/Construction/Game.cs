@@ -22,6 +22,9 @@ namespace traVRsal.SDK
         public string pauseScene = "Pause-OoD";
         public bool devMode = false;
 
+        // derived 
+        public bool stickMode = false;
+
         public Game()
         {
             worlds = new List<string>();

@@ -20,8 +20,9 @@ namespace traVRsal.SDK
         }
 
         public Vector2Int position = EMPTY;
-        public Vector2Int scale = Vector2Int.one;
+        public Direction direction = Direction.South;
         public Vector2Int anchor = EMPTY;
+        public Vector2Int scale = Vector2Int.one;
         public int height = 1;
         public int y = 0;
         public int maxY = -1;
@@ -31,8 +32,8 @@ namespace traVRsal.SDK
         public bool snap = false;
         public bool autoFill = false;
         public bool isVirtual = false;
+
         public string targetZone;
-        public Direction direction = Direction.South;
 
         public string key;
         public string lowKey;
@@ -86,15 +87,7 @@ namespace traVRsal.SDK
             name = copyFrom.name;
             layerName = copyFrom.layerName;
             variable = copyFrom.variable;
-
-            if (copyFrom.properties != null)
-            {
-                properties = new TMProperty[copyFrom.properties.Length];
-                for (int i = 0; i < properties.Length; i++)
-                {
-                    properties[i] = new TMProperty(copyFrom.properties[i].name, copyFrom.properties[i].type, copyFrom.properties[i].value);
-                }
-            }
+            properties = SDKUtil.CopyProperties(copyFrom.properties);
         }
 
         public override bool Equals(object obj)
