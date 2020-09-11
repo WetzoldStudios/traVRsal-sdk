@@ -1,7 +1,7 @@
 {
   "name": "com.wetzold.travrsal.sdk",
   "description": "Provides the tools necessary to create custom levels for the traVRsal engine.",
-  "version": "0.2.5",
+  "version": "0.3.1",
   "unity": "2020.1",
   "displayName": "traVRsal SDK",
   "dependencies": {
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/WetzoldStudios/traVRsal-sdk",
   "documentationUrl": "https://github.com/WetzoldStudios/traVRsal-sdk/wiki",
+  "changelogUrl": "https://github.com/WetzoldStudios/traVRsal-sdk/releases",
   "author": {
     "name": "traVRsal",
     "email": "robert@wetzold.com",

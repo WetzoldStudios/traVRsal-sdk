@@ -58,6 +58,11 @@
                                  "name":"TargetZone",
                                  "type":"string",
                                  "value":"[exit]"
+                                }, 
+                                {
+                                 "name":"ZoneExit",
+                                 "type":"bool",
+                                 "value":true
                                 }],
                          "rotation":-90,
                          "type":"\/Base\/Transition",
@@ -69,16 +74,16 @@
                         {
                          "gid":20,
                          "height":50,
-                         "id":55,
+                         "id":64,
                          "name":"",
                          "properties":[
                                 {
-                                 "name":"Virtual",
+                                 "name":"ZoneEntry",
                                  "type":"bool",
                                  "value":true
                                 }],
                          "rotation":-90,
-                         "type":"\/Base\/Start",
+                         "type":"\/Base\/Transition",
                          "visible":true,
                          "width":50,
                          "x":100,
@@ -155,7 +160,7 @@
          "y":0
         }],
  "nextlayerid":27,
- "nextobjectid":63,
+ "nextobjectid":65,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -287,6 +292,11 @@
                          "name":"TargetZone",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"ZoneExit",
+                         "type":"bool",
+                         "value":true
                         }],
                  "type":"\/Base\/Transition"
                 }, 
@@ -415,11 +425,11 @@
                  "imagewidth":50,
                  "properties":[
                         {
-                         "name":"Virtual",
+                         "name":"ZoneEntry",
                          "type":"bool",
                          "value":true
                         }],
-                 "type":"\/Base\/Start"
+                 "type":"\/Base\/Transition"
                 }, 
                 {
                  "id":21,

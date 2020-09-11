@@ -21,7 +21,6 @@ namespace traVRsal.SDK
         public Vector2Int start;
         public Vector2Int end;
         public Vector2Int size;
-        public Vector2Int playSize;
         public float holeProbability = 0;
         public int innerMaxY = -1;
         public int holeCount = 0;
