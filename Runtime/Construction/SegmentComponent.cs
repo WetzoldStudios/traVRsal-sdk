@@ -11,11 +11,11 @@ namespace traVRsal.SDK
 
         public enum ComponentType
         {
-            Zone
+            Zone, Segment
         }
 
         [Header("Configuration")]
-        public ComponentType componentType = ComponentType.Zone;
+        public ComponentType type = ComponentType.Zone;
         public string key;
         [DefaultValue(1)]
         public int min = 1;
@@ -43,6 +43,13 @@ namespace traVRsal.SDK
         public SegmentComponent WithKey(string key)
         {
             this.key = key;
+
+            return this;
+        }
+
+        public SegmentComponent WithType(ComponentType type)
+        {
+            this.type = type;
 
             return this;
         }

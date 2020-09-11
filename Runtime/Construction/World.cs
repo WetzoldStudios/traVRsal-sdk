@@ -49,6 +49,7 @@ namespace traVRsal.SDK
         public List<string> worldDependencies;
         public List<Zone> zones;
         public List<Zone> zoneTemplates;
+        public List<Journey> journeyTemplates;
 
         [NonSerialized]
         public Dictionary<string, string> zoneTemplateCache;
@@ -71,6 +72,7 @@ namespace traVRsal.SDK
             settings = new List<WorldSetting>();
             worldData = new List<WorldDataReference>();
             journeys = new List<Journey>();
+            journeyTemplates = new List<Journey>();
             dependencies = new List<string>();
             worldDependencies = new List<string>();
         }
@@ -97,6 +99,7 @@ namespace traVRsal.SDK
             if (worldDependencies != null && worldDependencies.Count == 0) worldDependencies = null;
             if (credits != null && credits.Count == 0) credits = null;
             if (journeys != null && journeys.Count == 0) journeys = null;
+            if (journeyTemplates != null && journeyTemplates.Count == 0) journeyTemplates = null;
 
             if (initialVariables != null)
             {
