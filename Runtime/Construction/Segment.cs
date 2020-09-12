@@ -14,6 +14,8 @@ namespace traVRsal.SDK
             Random, Fixed
         }
 
+        [DefaultValue(true)]
+        public bool enabled = true;
         public string key;
         [DefaultValue(SUM_OF_COMPONENTS)]
         public int length = SUM_OF_COMPONENTS;
