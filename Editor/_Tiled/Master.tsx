@@ -94,6 +94,7 @@
  </tile>
  <tile id="19" type="/Base/Transition">
   <properties>
+   <property name="Virtual" type="bool" value="true"/>
    <property name="ZoneEntry" type="bool" value="true"/>
   </properties>
   <image width="50" height="50" source="Master Images/start.png"/>

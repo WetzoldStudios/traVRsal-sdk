@@ -16,7 +16,8 @@ namespace traVRsal.SDK
             WorldsListRoot = 0,
             WorldPlacement = 6,
             NoWorldSettingsHint = 3,
-            WorldSettingsRoot = 4
+            WorldSettingsRoot = 4,
+            Pivot = 9
         }
 
         public IdentifierType type = IdentifierType.WorldsListRoot;
