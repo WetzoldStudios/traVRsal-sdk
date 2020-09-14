@@ -18,6 +18,13 @@ namespace traVRsal.SDK
             Random, Even
         }
 
+        public enum SpaceRequirement
+        {
+            SingleSide = 0,
+            AllSides = 1,
+            All = 2
+        }
+
         public string key;
         public string layer;
         [DefaultValue(true)]
@@ -32,6 +39,7 @@ namespace traVRsal.SDK
         public DistributionType distributionType = DistributionType.Even;
         [DefaultValue(Direction.Path_Ahead)]
         public Direction orientation = Direction.Path_Ahead;
+        public SpaceRequirement occupy = SpaceRequirement.SingleSide;
         public bool flipOrientation = false;
         public string[] restrictions;
         public int damage;
