@@ -21,6 +21,7 @@ namespace traVRsal.SDK
         public float lightIntensity = 1f;
         public string skybox;
         public string music;
+        public string randomMusic;
         public TMProperty[] properties;
 
         [Header("Runtime Information")]
@@ -35,6 +36,7 @@ namespace traVRsal.SDK
         public Transform node;
         public Bounds bounds;
         public Transform center;
+        public string originalName;
         public string variationOf;
 
         // cache structures
@@ -91,6 +93,7 @@ namespace traVRsal.SDK
         public Zone(string name) : this()
         {
             this.name = name;
+            originalName = name;
         }
 
         public Zone(Zone copyFrom) : this()
@@ -107,9 +110,11 @@ namespace traVRsal.SDK
             isIntro = copyFrom.isIntro;
             invisibleGround = copyFrom.invisibleGround;
             music = copyFrom.music;
+            randomMusic = copyFrom.randomMusic;
             skybox = copyFrom.skybox;
             blockAgents = copyFrom.blockAgents;
             variationOf = copyFrom.variationOf;
+            originalName = copyFrom.originalName;
             properties = SDKUtil.CopyProperties(copyFrom.properties);
 
             foreach (Floor floor in copyFrom.floors)
@@ -135,6 +140,7 @@ namespace traVRsal.SDK
                    lightIntensity == zone.lightIntensity &&
                    skybox == zone.skybox &&
                    music == zone.music &&
+                   randomMusic == zone.randomMusic &&
                    EqualityComparer<TMProperty[]>.Default.Equals(properties, zone.properties);
         }
 
@@ -154,6 +160,7 @@ namespace traVRsal.SDK
             hashCode = hashCode * -1521134295 + lightIntensity.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(skybox);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(music);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(randomMusic);
             hashCode = hashCode * -1521134295 + EqualityComparer<TMProperty[]>.Default.GetHashCode(properties);
             return hashCode;
         }
