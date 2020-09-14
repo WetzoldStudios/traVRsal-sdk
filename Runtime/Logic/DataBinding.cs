@@ -18,6 +18,7 @@ namespace traVRsal.SDK
             DoCloseSettingsDialog = 21,
             DoOpenPlayerDialog = 58,
             DoClosePlayerDialog = 59,
+            DoCloseInfoDialog = 69,
             DoPause = 15,
             DoReturnToMain = 17,
             DoStartWorld = 14,

@@ -11,6 +11,8 @@ namespace traVRsal.SDK
             GameOverDialog = 5,
             SettingsDialog = 1,
             PlayerDialog = 7,
+            InfoDialog = 10,
+            InfoDialogText = 11,
             WorldDetailsDialog = 2,
             WorldDetailsDialogPosition = 8,
             WorldsListRoot = 0,
