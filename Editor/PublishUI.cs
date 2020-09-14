@@ -39,6 +39,7 @@ namespace traVRsal.SDK
         private float uploadProgress = 1;
         private int progressId;
         private int packageMode = 1;
+        private int uncompressedTextures = 0;
         private static DirectoryWatcher dirWatcher;
         private static PublishUI window;
         private static Dictionary<string, VerificationResult> verifications = new Dictionary<string, VerificationResult>();
@@ -125,6 +126,15 @@ namespace traVRsal.SDK
                     EditorGUILayout.Space();
                     EditorGUILayout.HelpBox("The worlds inside your Worlds folder do not match your registered worlds on www.traVRsal.com. You probably need to rename these locally to match exactly.", MessageType.Error);
                     if (GUILayout.Button("Refresh")) EditorCoroutineUtility.StartCoroutine(RefreshVerify(), this);
+                }
+
+                if (uncompressedTextures > 0)
+                {
+                    EditorGUILayout.Space();
+                    GUILayout.BeginHorizontal();
+                    EditorGUILayout.HelpBox("Uncompressed Textures in Project: " + uncompressedTextures, MessageType.Warning);
+                    if (GUILayout.Button("Fix")) EditorCoroutineUtility.StartCoroutine(CompressTextures(), this);
+                    GUILayout.EndHorizontal();
                 }
 
                 if (verifications.Count() > 0)
@@ -231,12 +241,45 @@ namespace traVRsal.SDK
             }
         }
 
+        private IEnumerator CompressTextures()
+        {
+            IEnumerable<TextureImporter> uncompressed = AssetDatabase.FindAssets("t:texture", null)
+                .Select(guid => AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid)) as TextureImporter)
+                .Where(ti => ti != null)
+                .Where(ti => ti.textureCompression == TextureImporterCompression.Uncompressed || !ti.crunchedCompression);
+
+            int progressId = Progress.Start("Compressing project textures");
+            int current = 0;
+            int total = uncompressed.Count();
+            foreach (TextureImporter textureImporter in uncompressed)
+            {
+                current++;
+                Progress.Report(progressId, (float)current / total, textureImporter.assetPath);
+
+                if (textureImporter.textureCompression == TextureImporterCompression.Uncompressed) 
+                    textureImporter.textureCompression = TextureImporterCompression.Compressed;
+                textureImporter.crunchedCompression = true;
+                textureImporter.compressionQuality = 50;
+                AssetDatabase.ImportAsset(textureImporter.assetPath);
+
+                yield return null;
+            }
+            uncompressedTextures = 0;
+
+            Progress.Remove(progressId);
+            EditorUtility.DisplayDialog("Done", "Texture compression completed", "OK");
+        }
+
         private void Verify()
         {
             verifyInProgress = true;
             verificationPassed = false;
             worldListMismatch = false;
             verifications.Clear();
+
+            IEnumerable<TextureImporter> assets = AssetDatabase.FindAssets("t:texture", null).Select(guid => AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid)) as TextureImporter);
+            IEnumerable<TextureImporter> uncompressed = assets.Where(ti => ti != null).Where(ti => ti.textureCompression == TextureImporterCompression.Uncompressed || !ti.crunchedCompression);
+            uncompressedTextures = uncompressed.Count();
 
             foreach (string dir in GetWorldPaths())
             {
@@ -264,6 +307,7 @@ namespace traVRsal.SDK
                     worldListMismatch = true;
                 }
             }
+
             verifyInProgress = false;
             verificationPassed = !worldListMismatch && !SDKUtil.invalidAPIToken && !SDKUtil.networkIssue; // TODO: do some actual checks
         }

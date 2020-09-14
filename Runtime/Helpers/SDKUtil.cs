@@ -14,7 +14,8 @@ namespace traVRsal.SDK
 {
     public static class SDKUtil
     {
-        public const string API_ENDPOINT = "https://www.travrsal.com/api/";
+        public const string SERVER_ENDPOINT = "https://www.travrsal.com";
+        public const string API_ENDPOINT = SERVER_ENDPOINT + "/api/";
         // for debugging only
         // public const string API_ENDPOINT = "http://localhost:8000/api/";
 

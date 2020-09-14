@@ -6,7 +6,7 @@ namespace traVRsal.SDK
 {
     public class UtilityUI : BasicEditorUI
     {
-        [MenuItem("traVRsal/Utilities/Convert to Piece", priority = 500)]
+        [MenuItem("traVRsal/Utilities/Convert Selected to Piece", priority = 500)]
         public static void ConvertToPiece()
         {
             GameObject go = DoConvertToPiece();
