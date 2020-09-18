@@ -35,7 +35,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Maze {layerName} ({type})";
+            return $"Maze {layerName} (type {type}, {autoSeed})";
         }
     }
 }

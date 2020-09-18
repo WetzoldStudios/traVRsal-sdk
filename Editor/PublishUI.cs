@@ -37,7 +37,7 @@ namespace traVRsal.SDK
 
         private DateTime uploadStartTime;
         private float uploadProgress = 1;
-        private int progressId;
+        private int uploadProgressId;
         private int packageMode = 1;
         private int uncompressedTextures = 0;
         private static DirectoryWatcher dirWatcher;
@@ -71,7 +71,8 @@ namespace traVRsal.SDK
             if (uploadInProgress)
             {
                 int timeRemaining = Mathf.Max(1, Mathf.RoundToInt((DateTime.Now.Subtract(uploadStartTime).Seconds / uploadProgress) * (1 - uploadProgress)));
-                Progress.Report(progressId, uploadProgress, "Uploading worlds to server... " + timeRemaining + "s");
+                Progress.SetRemainingTime(uploadProgressId, timeRemaining);
+                Progress.Report(uploadProgressId, uploadProgress, "Uploading worlds to server...");
             }
             base.OnGUI();
 
@@ -256,8 +257,7 @@ namespace traVRsal.SDK
                 current++;
                 Progress.Report(progressId, (float)current / total, textureImporter.assetPath);
 
-                if (textureImporter.textureCompression == TextureImporterCompression.Uncompressed) 
-                    textureImporter.textureCompression = TextureImporterCompression.Compressed;
+                if (textureImporter.textureCompression == TextureImporterCompression.Uncompressed) textureImporter.textureCompression = TextureImporterCompression.Compressed;
                 textureImporter.crunchedCompression = true;
                 textureImporter.compressionQuality = 50;
                 AssetDatabase.ImportAsset(textureImporter.assetPath);
@@ -758,7 +758,7 @@ namespace traVRsal.SDK
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalBuildPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalLoadPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kRemoteBuildPath, $"ServerData/Worlds/{worldName}/[BuildTarget]");
-                profile.SetValue(profileId, AddressableAssetSettings.kRemoteLoadPath, $"{AWSUtil.S3Root}Worlds/{worldName}/[BuildTarget]");
+                profile.SetValue(profileId, AddressableAssetSettings.kRemoteLoadPath, $"{AWSUtil.S3CDNRoot}Worlds/{worldName}/[BuildTarget]");
 
                 // ensure correct group settings
                 BundledAssetGroupSchema groupSchema = group.GetSchema<BundledAssetGroupSchema>();
@@ -789,13 +789,13 @@ namespace traVRsal.SDK
             uploadInProgress = true;
             uploadProgress = 0;
             uploadStartTime = DateTime.Now;
-            progressId = Progress.Start("Uploading worlds");
+            uploadProgressId = Progress.Start("Uploading worlds");
 
             AWSUtil aws = new AWSUtil();
             yield return aws.UploadDirectory(GetServerDataPath(), progress => uploadProgress = progress).AsCoroutine();
             yield return PublishWorldUpdates();
 
-            Progress.Remove(progressId);
+            Progress.Remove(uploadProgressId);
             uploadInProgress = false;
 
             EditorUtility.DisplayDialog("Success", "Upload completed.", "OK");

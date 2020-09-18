@@ -14,6 +14,7 @@ namespace traVRsal.SDK
 {
     public static class SDKUtil
     {
+        public const string PING_ENDPOINT = "www.travrsal.com";
         public const string SERVER_ENDPOINT = "https://www.travrsal.com";
         public const string API_ENDPOINT = SERVER_ENDPOINT + "/api/";
         // for debugging only
