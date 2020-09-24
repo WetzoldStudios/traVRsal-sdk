@@ -11,12 +11,24 @@ namespace traVRsal.SDK
         public static Vector2Int EMPTY = new Vector2Int(int.MinValue, int.MinValue);
 
         // positions must match direction enum
-        public static Direction[] ALL_DIRECTIONS = new Direction[6] { Direction.West, Direction.East, Direction.South, Direction.North, Direction.Top, Direction.Bottom };
-        public static Direction[] HORIZONTAL_DIRECTIONS = new Direction[4] { Direction.West, Direction.East, Direction.South, Direction.North };
+        public static Direction[] ALL_DIRECTIONS = new Direction[6] {Direction.West, Direction.East, Direction.South, Direction.North, Direction.Top, Direction.Bottom};
+        public static Direction[] HORIZONTAL_DIRECTIONS = new Direction[4] {Direction.West, Direction.East, Direction.South, Direction.North};
 
         public enum Direction
         {
-            West, East, South, North, Top, Bottom, Random_Side, Free_Side, None, Path_Ahead, Path_Back, Same, Opposite
+            West,
+            East,
+            South,
+            North,
+            Top,
+            Bottom,
+            Random_Side,
+            Free_Side,
+            None,
+            Path_Ahead,
+            Path_Back,
+            Same,
+            Opposite
         }
 
         public Vector2Int position = EMPTY;
@@ -43,25 +55,21 @@ namespace traVRsal.SDK
         public string variable;
         public TMProperty[] properties;
 
-        [HideInInspector]
-        public int autoIdx;
-        [HideInInspector]
-        public Vector2Int originalPosition;
-        [HideInInspector]
-        public int[] layerNeighbours = new int[4];
-        [HideInInspector]
-        public bool instantiated = false;
-        [HideInInspector]
-        [NonSerialized]
-        public Transform node;
+        [HideInInspector] public int autoIdx;
+        [HideInInspector] public Vector2Int originalPosition;
+        [HideInInspector] public int[] layerNeighbours = new int[4];
+        [HideInInspector] public bool instantiated = false;
+        [HideInInspector] [NonSerialized] public Transform node;
 
-        public BasicEntity() { }
+        public BasicEntity()
+        {
+        }
 
         public BasicEntity(string name)
         {
             this.name = Path.GetFileNameWithoutExtension(name);
-            this.key = name;
-            this.lowKey = this.key.ToLower();
+            key = name;
+            lowKey = key.ToLower();
         }
 
         public BasicEntity(BasicEntity copyFrom)

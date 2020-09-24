@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using static traVRsal.SDK.BasicEntity;
 
 namespace traVRsal.SDK
@@ -8,15 +9,14 @@ namespace traVRsal.SDK
     public class PositionInfoMarker
     {
         public bool reachable;
-        public bool explicitNoSpawn;
         public Direction transition = Direction.None;
         public bool transitionAhead;
         public Direction aheadDirection = Direction.None;
         public int aheadDistance;
         public Direction backDirection = Direction.None;
         public int backDistance;
+        public bool[] explicitNoSpawn; // indexed by BasicEntity.Direction enum
         public bool[] closedSides; // indexed by BasicEntity.Direction enum
-        public Direction cornerDirection = Direction.None;
 
         // spawning info
         public bool[] spawnedSides;
@@ -25,21 +25,34 @@ namespace traVRsal.SDK
 
         public PositionInfoMarker()
         {
+            explicitNoSpawn = new bool[6];
             closedSides = new bool[6];
             spawnedSides = new bool[6];
             spawnedObjects = new List<string>();
             spawnedLayers = new List<string>();
         }
 
-        public PositionInfoMarker(bool reachable, bool explicitNoSpawn) : this()
+        public PositionInfoMarker(bool reachable) : this()
         {
             this.reachable = reachable;
-            this.explicitNoSpawn = explicitNoSpawn;
+        }
+
+        public void MarkAllSidesNoSpawn()
+        {
+            for (int i = 0; i < explicitNoSpawn.Length; i++)
+            {
+                explicitNoSpawn[i] = true;
+            }
+        }
+
+        public bool HasNoSpawningSides()
+        {
+            return explicitNoSpawn.All(e => e);
         }
 
         public override string ToString()
         {
-            return $"PIM (reachable: {reachable}, no-spawn: {explicitNoSpawn})";
+            return $"PIM (reachable: {reachable}, ahead distance: {aheadDistance})";
         }
     }
 }

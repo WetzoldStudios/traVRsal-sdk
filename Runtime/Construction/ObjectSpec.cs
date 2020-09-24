@@ -10,31 +10,41 @@ namespace traVRsal.SDK
     {
         public enum PivotType
         {
-            Bottom_Front_Left, Bottom_Front_Center, Center, Bottom_Center
+            Bottom_Front_Left,
+            Bottom_Front_Center,
+            Center,
+            Bottom_Center
         }
 
-        [HideInInspector]
-        public string objectKey;
-        [JsonIgnore]
-        [HideInInspector]
-        public GameObject gameObject;
+        [HideInInspector] public string objectKey;
+        [JsonIgnore] [HideInInspector] public GameObject gameObject;
         public Vector3 position;
         public Vector3 rotation;
-        [DefaultValue("Vector3.one")]
-        public Vector3 scale = Vector3.one;
-        [DefaultValue(1)]
-        public int height = 1;
+        [DefaultValue("Vector3.one")] public Vector3 scale = Vector3.one;
+        [DefaultValue(1)] public int width = 1;
+        [DefaultValue(1)] public int height = 1;
+
+        [Tooltip("Moves object to the ceiling.")]
         public bool atCeiling = false;
+
         public bool pinToSide = false;
+
+        [Tooltip("Snaps an object to the side and not to the front, e.g. when attaching directional arrows to the wall.")]
         public bool snapSideways = false;
-        [DefaultValue(true)]
+
+        [Tooltip("Disables spawning on top of the object.")]
+        public bool standalone = false;
+
+        [Tooltip("Replaces shaders with included ones that support stencil operations.")] [DefaultValue(true)]
         public bool adjustMaterials = true;
+
         public PivotType pivotType = PivotType.Bottom_Front_Left;
 
-        [NonSerialized]
-        public SingleBehaviors behaviors;
+        [NonSerialized] public SingleBehaviors behaviors;
 
-        public ObjectSpec() { }
+        public ObjectSpec()
+        {
+        }
 
         public ObjectSpec(string objectKey) : this()
         {
@@ -47,6 +57,7 @@ namespace traVRsal.SDK
             if (rotation != Vector3.zero) return false;
             if (scale != Vector3.one) return false;
             if (height != 1) return false;
+            if (width != 1) return false;
             if (atCeiling) return false;
             if (pinToSide) return false;
             if (snapSideways) return false;

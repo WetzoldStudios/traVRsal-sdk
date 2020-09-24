@@ -23,6 +23,7 @@ namespace traVRsal.SDK
         public const string PACKAGE_NAME = "com.wetzold.travrsal.sdk";
         public const string AUTO_GENERATED = "[AUTO]";
         public const string TILED_PATH_DEFAULT = "C:\\Program Files\\Tiled\\tiled.exe";
+        public const string LOCKFILE_NAME = "traVRsal.lock";
 
         // Tags
         public const string INTERACTABLE_TAG = "Interactable";
