@@ -21,8 +21,6 @@ namespace traVRsal.SDK
 {
     public class PublishUI : BasicEditorUI
     {
-        public const string LOCKFILE_NAME = "traVRsal.lock";
-
         private string[] PACKAGE_OPTIONS = { "Everything", "Intelligent" };
 
         private bool debugMode = false;
@@ -242,12 +240,19 @@ namespace traVRsal.SDK
             }
         }
 
-        private IEnumerator CompressTextures()
+        private IEnumerable<TextureImporter> GetUncompressedTextures()
         {
-            IEnumerable<TextureImporter> uncompressed = AssetDatabase.FindAssets("t:texture", null)
+            return AssetDatabase.FindAssets("t:texture", null)
                 .Select(guid => AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid)) as TextureImporter)
                 .Where(ti => ti != null)
+                .Where(ti => !ti.assetPath.StartsWith("Packages/"))
+                .Where(ti => !ti.assetPath.Contains("/Editor/"))
                 .Where(ti => ti.textureCompression == TextureImporterCompression.Uncompressed || !ti.crunchedCompression);
+        }
+        
+        private IEnumerator CompressTextures()
+        {
+            IEnumerable<TextureImporter> uncompressed = GetUncompressedTextures();
 
             int progressId = Progress.Start("Compressing project textures");
             int current = 0;
@@ -277,8 +282,7 @@ namespace traVRsal.SDK
             worldListMismatch = false;
             verifications.Clear();
 
-            IEnumerable<TextureImporter> assets = AssetDatabase.FindAssets("t:texture", null).Select(guid => AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid)) as TextureImporter);
-            IEnumerable<TextureImporter> uncompressed = assets.Where(ti => ti != null).Where(ti => ti.textureCompression == TextureImporterCompression.Uncompressed || !ti.crunchedCompression);
+            IEnumerable<TextureImporter> uncompressed = GetUncompressedTextures();
             uncompressedTextures = uncompressed.Count();
 
             foreach (string dir in GetWorldPaths())
@@ -301,7 +305,7 @@ namespace traVRsal.SDK
 
                 verifications.Add(worldName, result);
 
-                if (userWorlds != null && userWorlds.Where(w => w.key == worldName).Count() == 0)
+                if (userWorlds != null && userWorlds.Count(w => w.key == worldName) == 0)
                 {
                     Debug.LogError("Found unregistered world: " + worldName);
                     worldListMismatch = true;
@@ -325,9 +329,8 @@ namespace traVRsal.SDK
                 try
                 {
                     string[] filteredWorlds = worldsToBuild.Where(
-                        worldName => dirWatcher.affectedFiles.Where(
-                            af => af.Contains("/" + Path.GetFileName(worldName) + "/") || af.Contains("\\" + Path.GetFileName(worldName) + "\\")).Any()
-                        ).ToArray();
+                        worldName => dirWatcher.affectedFiles.Any(af => af.Contains("/" + Path.GetFileName(worldName) + "/") || af.Contains("\\" + Path.GetFileName(worldName) + "\\"))
+                    ).ToArray();
                     if (filteredWorlds.Length > 0) worldsToBuild = filteredWorlds;
                 }
                 catch { }
@@ -390,7 +393,7 @@ namespace traVRsal.SDK
                         if (group.name == worldName && group.CanBeSetAsDefault()) settings.DefaultGroup = group;
                     });
 
-                    BundledAssetGroupSchema schema = settings.groups.Where(group => group.name == worldName).First().GetSchema<BundledAssetGroupSchema>();
+                    BundledAssetGroupSchema schema = settings.groups.First(group => @group.name == worldName).GetSchema<BundledAssetGroupSchema>();
                     settings.RemoteCatalogBuildPath = schema.BuildPath;
                     settings.RemoteCatalogLoadPath = schema.LoadPath;
 
@@ -667,7 +670,7 @@ namespace traVRsal.SDK
 
         public static string GetLockFileLocation()
         {
-            return Application.dataPath + "/../" + LOCKFILE_NAME;
+            return Application.dataPath + "/../" + SDKUtil.LOCKFILE_NAME;
         }
 
         private void CreateLockFile()
@@ -745,7 +748,7 @@ namespace traVRsal.SDK
                 string guid = AssetDatabase.AssetPathToGUID($"Assets/Worlds/{worldName}");
 
                 // create group if non-existent
-                AddressableAssetGroup group = settings.groups.Where(g => g.name == worldName).FirstOrDefault();
+                AddressableAssetGroup group = settings.groups.FirstOrDefault(g => g.name == worldName);
                 if (group == null) group = CreateAssetGroup<BundledAssetGroupSchema>(settings, worldName);
                 if (group.CanBeSetAsDefault()) settings.DefaultGroup = group; // default group ensures there is no accidental local default group resulting in local paths being baked into addressable for shaders
 
@@ -765,7 +768,7 @@ namespace traVRsal.SDK
                 groupSchema.UseAssetBundleCache = true;
                 groupSchema.UseAssetBundleCrc = false;
                 groupSchema.IncludeInBuild = isBase ? true : false;
-                groupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.NoHash; // hash to disimbiguate identically named files yields same error messages, e.g. standard shaders
+                groupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.NoHash; // hash to disambiguate identically named files yields same error messages, e.g. standard shaders
                 groupSchema.BundleMode = BundledAssetGroupSchema.BundlePackingMode.PackTogether;
                 groupSchema.Compression = BundledAssetGroupSchema.BundleCompressionMode.LZ4;
                 groupSchema.BuildPath.SetVariableByName(settings, localMode ? AddressableAssetSettings.kLocalBuildPath : AddressableAssetSettings.kRemoteBuildPath);
@@ -806,7 +809,7 @@ namespace traVRsal.SDK
             foreach (string dir in GetWorldPaths())
             {
                 string worldName = Path.GetFileName(dir);
-                string uri = SDKUtil.API_ENDPOINT + "userworlds/" + userWorlds.Where(w => w.key == worldName).First().id;
+                string uri = SDKUtil.API_ENDPOINT + "userworlds/" + userWorlds.First(w => w.key == worldName).id;
 
                 // extract data from world descriptor
                 string worldJson = File.ReadAllText(dir + "/World.json");
