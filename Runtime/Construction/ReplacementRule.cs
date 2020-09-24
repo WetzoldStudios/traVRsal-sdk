@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace traVRsal.SDK
 {
@@ -7,15 +8,22 @@ namespace traVRsal.SDK
     {
         public enum ReplacementType
         {
-            Object, Material
+            Object,
+            Material
         }
 
         public string key;
         public ReplacementType type = ReplacementType.Object;
         public string objectKey;
         public string materials;
+        public string[] randomMaterials;
+        public string[] randomObjects;
+        [DefaultValue(BasicEntity.Direction.Same)]
+        public BasicEntity.Direction orientation = BasicEntity.Direction.Same;
 
-        public ReplacementRule() { }
+        public ReplacementRule()
+        {
+        }
 
         public ReplacementRule(string key, string objectKey, string materials = null) : this()
         {
@@ -32,7 +40,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"ReplacementRule {key} ({type})";
+            return $"Replacement Rule {key} ({type})";
         }
     }
 }

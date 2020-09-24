@@ -27,10 +27,12 @@ namespace traVRsal.SDK
         public string detailKPIs = "0,4"; // TODO: switch to array?
         public string initialItemLeft;
         public string initialItemRight;
+        public Vector2Int maxSize = Vector2Int.zero;
         [DefaultValue("/Base/LightHall")]
         public string introScenery = "/Base/LightHall";
         [DefaultValue("/Base/LightHall-Outro")]
         public string outroScenery = "/Base/LightHall-Outro";
+        public string defaultScenery;
         public List<WorldDataReference> worldData;
         public List<Journey> journeys;
         public List<WorldSetting> settings;
