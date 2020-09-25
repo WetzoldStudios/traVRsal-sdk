@@ -32,7 +32,6 @@ This is an early alpha version to get feedback and steer the direction of future
 
 * skyboxes are not visible through all portals (requires level design mitigation, background color is visible though)
 * TextMeshPro is not yet visible through portals and will suddenly pop into view
-* progress for downloads is only shown inside VR, not on screen
 * only very few nodes are available right now and your feedback will help to fill the gaps
 * shaders need to support stencils to be visible through transitions
 * transparent objects are not visible through transitions
