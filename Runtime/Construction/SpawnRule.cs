@@ -15,7 +15,8 @@ namespace traVRsal.SDK
 
         public enum DistributionType
         {
-            Random, Even
+            Random,
+            Even
         }
 
         public enum SpaceRequirement
@@ -27,34 +28,29 @@ namespace traVRsal.SDK
 
         public string key;
         public string layer;
-        [DefaultValue(true)]
-        public bool enabled = true;
+        [DefaultValue(true)] public bool enabled = true;
         public string[] objectKeys;
         public string[] validZones;
         public string[] validSockets;
         public AmountType amountType = AmountType.Total;
-        [DefaultValue(10)]
-        public int amount = 10;
-        [DefaultValue(DistributionType.Even)]
-        public DistributionType distributionType = DistributionType.Even;
-        [DefaultValue(Direction.Path_Ahead)]
-        public Direction orientation = Direction.Path_Ahead;
+        [DefaultValue(10)] public int amount = 10;
+        [DefaultValue(DistributionType.Even)] public DistributionType distributionType = DistributionType.Even;
+        [DefaultValue(Direction.Path_Ahead)] public Direction orientation = Direction.Path_Ahead;
         public SpaceRequirement occupy = SpaceRequirement.SingleSide;
-        public bool flipOrientation = false;
+        public bool flipOrientation;
         public string[] restrictions;
         public int damage;
         public int health;
-        [DefaultValue(100f)]
-        public float scale = 100f;
-        public float y = 0;
+        [DefaultValue(100f)] public float scale = 100f;
+        public float y;
         public float[] yRange;
-        public int minDistance = 0;
-        public bool snap = false;
-        public bool atCeiling = false;
-        public bool connectToCeiling = false;
-        public bool stretchToCeiling = false;
-        public bool dontCountAsTarget = false;
-        public bool dontCountAsObstacle = false;
+        public int minDistance;
+        public bool snap;
+        public bool atCeiling;
+        public bool connectToCeiling;
+        public bool stretchToCeiling;
+        public bool dontCountAsTarget;
+        public bool dontCountAsObstacle;
 
         // FIXME: will cause "recursive serialization is not supported" warning
         public SpawnRule[] companions;
@@ -62,7 +58,9 @@ namespace traVRsal.SDK
         // Formulas
         public string enabledFormula;
 
-        public SpawnRule() { }
+        public SpawnRule()
+        {
+        }
 
         public SpawnRule(string key) : this()
         {
