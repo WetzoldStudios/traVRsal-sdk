@@ -21,23 +21,23 @@ namespace traVRsal.SDK
 {
     public class PublishUI : BasicEditorUI
     {
-        private string[] PACKAGE_OPTIONS = { "Everything", "Intelligent" };
+        private string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};
 
-        private bool debugMode = false;
-        private bool packagingInProgress = false;
-        private bool documentationInProgress = false;
-        private bool uploadInProgress = false;
-        private bool verifyInProgress = false;
-        private bool packagingSuccessful = false;
-        private bool verificationPassed = false;
-        private bool uploadPossible = false;
-        private bool worldListMismatch = false;
+        private bool debugMode = true;
+        private bool packagingInProgress;
+        private bool documentationInProgress;
+        private bool uploadInProgress;
+        private bool verifyInProgress;
+        private bool packagingSuccessful;
+        private bool verificationPassed;
+        private bool uploadPossible;
+        private bool worldListMismatch;
 
         private DateTime uploadStartTime;
         private float uploadProgress = 1;
         private int uploadProgressId;
         private int packageMode = 1;
-        private int uncompressedTextures = 0;
+        private int uncompressedTextures;
         private static DirectoryWatcher dirWatcher;
         private static PublishUI window;
         private static Dictionary<string, VerificationResult> verifications = new Dictionary<string, VerificationResult>();
@@ -105,7 +105,7 @@ namespace traVRsal.SDK
                     buttonText += " (" + ((dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", worldsToBuild) : "everything") + ")";
                 }
 
-                if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode == 2 ? true : false, packageMode == 2 ? true : false), this);
+                if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode == 2, packageMode == 2), this);
                 EditorGUI.EndDisabledGroup();
 
                 GUILayout.BeginHorizontal();
@@ -136,7 +136,7 @@ namespace traVRsal.SDK
                     GUILayout.EndHorizontal();
                 }
 
-                if (verifications.Count() > 0)
+                if (verifications.Count > 0)
                 {
                     EditorGUILayout.Space();
                     GUILayout.Label("Verification Results", EditorStyles.boldLabel);
@@ -170,7 +170,11 @@ namespace traVRsal.SDK
 
                 if (debugMode)
                 {
+                    EditorGUILayout.Space();
+                    EditorGUILayout.HelpBox("Debug mode is enabled. No build platform switches will be done. Worlds need to be uploaded for each platform separately.", MessageType.Warning);
+
                     EditorGUI.BeginDisabledGroup(documentationInProgress);
+                    if (GUILayout.Button("Prepare Upload (all targets)")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(true), this);
                     if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
                     EditorGUI.EndDisabledGroup();
                 }
@@ -206,10 +210,10 @@ namespace traVRsal.SDK
             GUILayout.EndHorizontal();
         }
 
-        private IEnumerator PrepareUpload()
+        private IEnumerator PrepareUpload(bool force = false)
         {
             yield return FetchUserWorlds();
-            yield return PackageWorlds(true, true);
+            yield return PackageWorlds(true, true, force);
             yield return CreateDocumentation();
             PrepareCommonFiles();
             Verify();
@@ -249,7 +253,7 @@ namespace traVRsal.SDK
                 .Where(ti => !ti.assetPath.Contains("/Editor/"))
                 .Where(ti => ti.textureCompression == TextureImporterCompression.Uncompressed || !ti.crunchedCompression);
         }
-        
+
         private IEnumerator CompressTextures()
         {
             IEnumerable<TextureImporter> uncompressed = GetUncompressedTextures();
@@ -260,7 +264,7 @@ namespace traVRsal.SDK
             foreach (TextureImporter textureImporter in uncompressed)
             {
                 current++;
-                Progress.Report(progressId, (float)current / total, textureImporter.assetPath);
+                Progress.Report(progressId, (float) current / total, textureImporter.assetPath);
 
                 if (textureImporter.textureCompression == TextureImporterCompression.Uncompressed) textureImporter.textureCompression = TextureImporterCompression.Compressed;
                 textureImporter.crunchedCompression = true;
@@ -272,7 +276,7 @@ namespace traVRsal.SDK
             uncompressedTextures = 0;
 
             Progress.Remove(progressId);
-            EditorUtility.DisplayDialog("Done", "Texture compression completed", "OK");
+            EditorUtility.DisplayDialog("Done", "Texture compression completed. Prepare the upload again.", "OK");
         }
 
         private void Verify()
@@ -333,13 +337,15 @@ namespace traVRsal.SDK
                     ).ToArray();
                     if (filteredWorlds.Length > 0) worldsToBuild = filteredWorlds;
                 }
-                catch { }
+                catch
+                {
+                }
             }
 
             return worldsToBuild;
         }
 
-        private IEnumerator PackageWorlds(bool allWorlds, bool allTargets)
+        private IEnumerator PackageWorlds(bool allWorlds, bool allTargets, bool force = false)
         {
             uploadPossible = false;
             packagingInProgress = true;
@@ -363,7 +369,7 @@ namespace traVRsal.SDK
 
                 // set build targets
                 List<BuildTarget> targets = new List<BuildTarget>();
-                if (debugMode) // needed only due to strange Unity bug not allowing to automatically switch from PC to Android on some systems (reported)
+                if (debugMode && !force) // needed only due to strange Unity bug not allowing to automatically switch from PC to Android on some systems (reported)
                 {
                     targets.Add(EditorUserBuildSettings.activeBuildTarget);
                 }
@@ -447,7 +453,7 @@ namespace traVRsal.SDK
 
         private bool CreateObjectLib(string worldName)
         {
-            string root = GetWorldsRoot(true) + "/" + worldName + "/";
+            string root = GetWorldsRoot() + "/" + worldName + "/";
             World world = SDKUtil.ReadJSONFileDirect<World>(root + "World.json");
             if (world == null)
             {
@@ -456,7 +462,7 @@ namespace traVRsal.SDK
             }
 
             world.objectSpecs = new List<ObjectSpec>();
-            string[] assets = AssetDatabase.FindAssets("*", new[] { root + "Pieces" });
+            string[] assets = AssetDatabase.FindAssets("*", new[] {root + "Pieces"});
             foreach (string asset in assets)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(asset);
@@ -508,7 +514,7 @@ namespace traVRsal.SDK
                     continue;
                 }
 
-                string root = GetWorldsRoot(true) + $"/{worldName}/";
+                string root = GetWorldsRoot() + $"/{worldName}/";
 
                 // fill HTML template
                 string id = AssetDatabase.FindAssets("_WorldDocu")[0];
@@ -522,7 +528,7 @@ namespace traVRsal.SDK
                 html = html.Replace("{AppVersion}", Application.version); // FIXME: points to wrong version
                 html = html.Replace("{Date}", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
 
-                foreach (string folder in new[] { "Data", "Images", "Logic", "Materials", "Pieces", "Sceneries", "Audio/Effects", "Audio/Music" })
+                foreach (string folder in new[] {"Data", "Images", "Logic", "Materials", "Pieces", "Sceneries", "Audio/Effects", "Audio/Music"})
                 {
                     HashSet<string> doneAlready = new HashSet<string>();
                     string[] assets = new string[0];
@@ -534,7 +540,7 @@ namespace traVRsal.SDK
                     {
                         Directory.CreateDirectory(docuPath + folder);
 
-                        assets = AssetDatabase.FindAssets("*", new[] { $"{root}{folder}" });
+                        assets = AssetDatabase.FindAssets("*", new[] {$"{root}{folder}"});
                         foreach (string asset in assets)
                         {
                             string assetPath = AssetDatabase.GUIDToAssetPath(asset);
@@ -685,7 +691,7 @@ namespace traVRsal.SDK
 
         private void ConvertTileMaps()
         {
-            foreach (string extension in new[] { TileMapUtil.MAP_EXTENSION, TileMapUtil.WORLD_EXTENSION })
+            foreach (string extension in new[] {TileMapUtil.MAP_EXTENSION, TileMapUtil.WORLD_EXTENSION})
             {
                 string[] files = Directory.GetFiles(Application.dataPath, "*." + extension, SearchOption.AllDirectories);
                 TileMapUtil.ConvertTileMaps(files.ToList(), TravrsalSettingsManager.Get("tiledPath", SDKUtil.TILED_PATH_DEFAULT));
@@ -695,11 +701,11 @@ namespace traVRsal.SDK
 
         private void RenameCatalogs()
         {
-            foreach (string path in new[] { GetServerDataPath(), Application.dataPath + "/../traVRsal" })
+            foreach (string path in new[] {GetServerDataPath(), Application.dataPath + "/../traVRsal"})
             {
                 if (Directory.Exists(path))
                 {
-                    foreach (string extension in new[] { "hash", "json" })
+                    foreach (string extension in new[] {"hash", "json"})
                     {
                         string[] files = Directory.GetFiles(path, "catalog_*." + extension, SearchOption.AllDirectories);
                         foreach (string file in files)
@@ -778,7 +784,7 @@ namespace traVRsal.SDK
 
         private AddressableAssetGroup CreateAssetGroup<SchemaType>(AddressableAssetSettings settings, string groupName)
         {
-            return settings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema> { settings.DefaultGroup.Schemas[0] }, typeof(SchemaType));
+            return settings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema> {settings.DefaultGroup.Schemas[0]}, typeof(SchemaType));
         }
 
         private IEnumerator UploadWorlds()
@@ -838,7 +844,7 @@ namespace traVRsal.SDK
                     }
                     else if (webRequest.isHttpError)
                     {
-                        if (webRequest.responseCode == (int)HttpStatusCode.Unauthorized)
+                        if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
                         {
                             SDKUtil.invalidAPIToken = true;
                             Debug.LogError("Invalid or expired API Token.");
