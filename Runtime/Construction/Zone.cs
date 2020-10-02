@@ -7,13 +7,12 @@ namespace traVRsal.SDK
     [Serializable]
     public class Zone
     {
-        [Header("Configuration")]
-        public string name;
+        [Header("Configuration")] public string name;
         public Vector2Int minSize = new Vector2Int(4, 4);
         public List<Floor> floors;
-        public bool isExit = false;
-        public bool isIntro = false;
-        public bool invisibleGround = false;
+        public bool isExit;
+        public bool isIntro;
+        public bool invisibleGround;
         public bool blockAgents = true;
         public Color ambientColor = new Color(0.8f, 0.782f, 0.745f);
         public Color lightColor = Color.white;
@@ -21,17 +20,17 @@ namespace traVRsal.SDK
         public float lightIntensity = 1f;
         public string skybox;
         public string music;
+        public string randomAmbience;
         public string randomMusic;
         public TMProperty[] properties;
 
-        [Header("Runtime Information")]
-        public Vector2Int curSize = BasicEntity.EMPTY;
+        [Header("Runtime Information")] public Vector2Int curSize = BasicEntity.EMPTY;
         public string scenePath;
-        public bool musicPlayed = false;
-        public int agentCount = 0;
+        public bool musicPlayed;
+        public int agentCount;
         public int idx;
-        public byte stencilId = 0;
-        public int layerIdx = 0;
+        public byte stencilId;
+        public int layerIdx;
         public int navAgentId;
         public Transform node;
         public Bounds bounds;
@@ -40,48 +39,20 @@ namespace traVRsal.SDK
         public string variationOf;
 
         // cache structures
-        [HideInInspector]
-        [NonSerialized]
-        public Dictionary<string, Material> materialsCache;
-        [HideInInspector]
-        [NonSerialized]
-        public List<Renderer> rendererCache;
-        [HideInInspector]
-        [NonSerialized]
-        public List<Renderer> transparentRendererCache;
-        [HideInInspector]
-        [NonSerialized]
-        public List<Renderer> untouchedRendererCache;
-        [HideInInspector]
-        [NonSerialized]
-        public List<Renderer> sceneryRendererCache;
-        [HideInInspector]
-        [NonSerialized]
-        public List<Renderer> movingRendererCache;
-        [HideInInspector]
-        [NonSerialized]
-        public List<Light> lightCache;
-        [HideInInspector]
-        [NonSerialized]
-        public Dictionary<int, List<Renderer>> portalVisibleRendererCache;
-        [HideInInspector]
-        [NonSerialized]
-        public List<Behaviour> portalCache;
-        [HideInInspector]
-        [NonSerialized]
-        public HashSet<int> reachableZones;
-        [HideInInspector]
-        [NonSerialized]
-        public HashSet<int> backSortedZones;
-        [HideInInspector]
-        [NonSerialized]
-        public List<Socket> sockets;
-        [HideInInspector]
-        [NonSerialized]
-        public List<GameObject> socketItems;
-        [HideInInspector]
-        [NonSerialized]
-        public GameObject navBlockerNode;
+        [NonSerialized] public Dictionary<string, Material> materialsCache;
+        [NonSerialized] public List<Renderer> rendererCache;
+        [NonSerialized] public List<Renderer> transparentRendererCache;
+        [NonSerialized] public List<Renderer> untouchedRendererCache;
+        [NonSerialized] public List<Renderer> sceneryRendererCache;
+        [NonSerialized] public List<Renderer> movingRendererCache;
+        [NonSerialized] public List<Light> lightCache;
+        [NonSerialized] public Dictionary<int, List<Renderer>> portalVisibleRendererCache;
+        [NonSerialized] public List<Behaviour> portalCache;
+        [NonSerialized] public HashSet<int> reachableZones;
+        [NonSerialized] public HashSet<int> backSortedZones;
+        [NonSerialized] public List<Socket> sockets;
+        [NonSerialized] public List<GameObject> socketItems;
+        [NonSerialized] public GameObject navBlockerNode;
 
         public Zone()
         {
@@ -170,5 +141,4 @@ namespace traVRsal.SDK
             return $"Zone {name}";
         }
     }
-
 }
