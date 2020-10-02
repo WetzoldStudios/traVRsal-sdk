@@ -5,9 +5,11 @@ namespace traVRsal.SDK
 {
     public class AnimatorTrigger : MonoBehaviour
     {
-        [Header("Configuration")] public string triggerKey;
-        public float interval = 5f;
-        public float initialRandomDelay = 3f;
+        [Header("Configuration")] public float initialRandomDelay = 3f;
+        public float interval = 6f;
+        public string triggerKey1;
+        public string triggerKey2;
+        public float trigger2Offset = 2f;
 
         [Header("Sounds")] public AudioSource sound1;
         public float sound1Delay;
@@ -29,12 +31,19 @@ namespace traVRsal.SDK
         {
             if (Time.time > nextTrigger)
             {
-                animator.SetTrigger(triggerKey);
                 nextTrigger = Time.time + interval;
+                if (!string.IsNullOrEmpty(triggerKey1)) StartCoroutine(TriggerAnimation(triggerKey1, 0));
+                if (!string.IsNullOrEmpty(triggerKey2)) StartCoroutine(TriggerAnimation(triggerKey2, trigger2Offset));
 
                 if (sound1 != null) StartCoroutine(PlaySound(sound1, sound1Delay, sound1Duration));
                 if (sound2 != null) StartCoroutine(PlaySound(sound2, sound2Delay, sound2Duration));
             }
+        }
+
+        private IEnumerator TriggerAnimation(string key, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            animator.SetTrigger(key);
         }
 
         private IEnumerator PlaySound(AudioSource sound, float delay, float duration)
