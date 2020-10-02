@@ -45,12 +45,14 @@ namespace traVRsal.SDK
         public float y;
         public float[] yRange;
         public int minDistance;
+        public float maxScale;
         public bool snap;
         public bool atCeiling;
         public bool connectToCeiling;
         public bool stretchToCeiling;
         public bool dontCountAsTarget;
         public bool dontCountAsObstacle;
+        public bool debug;
 
         // FIXME: will cause "recursive serialization is not supported" warning
         public SpawnRule[] companions;

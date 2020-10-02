@@ -8,6 +8,8 @@ namespace traVRsal.SDK
     [Serializable]
     public class PositionInfoMarker
     {
+        public int x;
+        public int y;
         public bool reachable;
         public Direction transition = Direction.None;
         public bool transitionAhead;
@@ -32,8 +34,10 @@ namespace traVRsal.SDK
             spawnedLayers = new List<string>();
         }
 
-        public PositionInfoMarker(bool reachable) : this()
+        public PositionInfoMarker(int x, int y, bool reachable) : this()
         {
+            this.x = x;
+            this.y = y;
             this.reachable = reachable;
         }
 
@@ -52,7 +56,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"PIM (reachable: {reachable}, ahead distance: {aheadDistance})";
+            return $"PIM ({x},{y}) (reachable: {reachable}, ahead distance: {aheadDistance})";
         }
     }
 }

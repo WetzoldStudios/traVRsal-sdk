@@ -11,7 +11,9 @@ namespace traVRsal.SDK
         public string type = "auto";
         public string value;
 
-        public TMProperty() { }
+        public TMProperty()
+        {
+        }
 
         public TMProperty(string name, string type, string value)
         {
@@ -57,6 +59,14 @@ namespace traVRsal.SDK
                 if (valueLC == "true" || valueLC == "false")
                 {
                     type = "bool";
+                }
+                else if (value.Contains(".") && float.TryParse(value, out _))
+                {
+                    type = "float";
+                }
+                else if (int.TryParse(value, out _))
+                {
+                    type = "int";
                 }
                 else
                 {

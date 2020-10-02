@@ -9,17 +9,21 @@ namespace traVRsal.SDK
         public enum ReplacementType
         {
             Object,
-            Material
+            Material,
+            Property
         }
 
-        public string key;
         public ReplacementType type = ReplacementType.Object;
+        public string key;
         public string objectKey;
         public string materials;
         public string[] randomMaterials;
         public string[] randomObjects;
+
         [DefaultValue(BasicEntity.Direction.Same)]
         public BasicEntity.Direction orientation = BasicEntity.Direction.Same;
+
+        public TMProperty[] properties;
 
         public ReplacementRule()
         {
