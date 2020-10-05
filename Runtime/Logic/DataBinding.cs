@@ -94,14 +94,18 @@ namespace traVRsal.SDK
 
         [Tooltip("Optional source for the data (e.g. image assignment), otherwise using globally available data")]
         public Component sourceComponent;
+
         public Component targetComponent;
         public Reference reference;
-        public bool oneTimeOnly = false;
+        [Tooltip("Maximum number of characters to be returned (... added if longer)")]
+        public int maxLength;
+        [Tooltip("Maximum number of lines to be returned (... added if longer)")]
+        public int maxLines;
+        [Tooltip("Indicator if result should be calculated only once")]
+        public bool oneTimeOnly;
 
-        [HideInInspector]
-        public IDataSource dataSource;
-        [HideInInspector]
-        public bool isTriggered;
+        [HideInInspector] public IDataSource dataSource;
+        [HideInInspector] public bool isTriggered;
 
         public void Trigger()
         {

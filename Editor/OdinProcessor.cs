@@ -19,6 +19,10 @@ namespace traVRsal.SDK
             {
                 attributes.Add(new ReadOnlyAttribute());
             }
+            if (member.Name == "lastHit")
+            {
+                attributes.Add(new ReadOnlyAttribute());
+            }
         }
     }
 

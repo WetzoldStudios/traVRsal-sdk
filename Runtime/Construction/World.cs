@@ -8,30 +8,26 @@ namespace traVRsal.SDK
     [Serializable]
     public class World
     {
-        [Header("Configuration")]
-        public string key;
+        [Header("Configuration")] public string key;
         public string name;
-        [DefaultValue("Experience")]
-        public string category = "Experience";
+        [DefaultValue("Experience")] public string category = "Experience";
         public string shortDescription;
         public string longDescription;
         public string coverImage;
-        [DefaultValue(300)]
-        public int availableTime = 5 * 60;
-        public bool isVirtual = false;
-        public bool enablePost = false;
+        [DefaultValue(300)] public int availableTime = 5 * 60;
+        public bool isVirtual;
         public string deathSound;
-        [DefaultValue("0,4")]
-        public string kpis = "0,4"; // TODO: switch to array?
-        [DefaultValue("0,4")]
-        public string detailKPIs = "0,4"; // TODO: switch to array?
+        [DefaultValue("0,4")] public string kpis = "0,4"; // TODO: switch to array?
+        [DefaultValue("0,4")] public string detailKPIs = "0,4"; // TODO: switch to array?
         public string initialItemLeft;
         public string initialItemRight;
         public Vector2Int maxSize = Vector2Int.zero;
-        [DefaultValue("/Base/LightHall")]
+        [DefaultValue("/Base/LightHall")] 
         public string introScenery = "/Base/LightHall";
+
         [DefaultValue("/Base/LightHall-Outro")]
         public string outroScenery = "/Base/LightHall-Outro";
+
         public string defaultScenery;
         public List<WorldDataReference> worldData;
         public List<Journey> journeys;
@@ -44,8 +40,8 @@ namespace traVRsal.SDK
         public MultiBehaviors behaviors;
         public List<Credit> credits;
 
-        [Header("Runtime Data")]
-        public bool journeyMode = false;
+        [Header("Runtime Data")] 
+        public bool journeyMode;
         public List<ObjectSpec> objectSpecs;
         public List<string> dependencies;
         public List<string> worldDependencies;
@@ -53,12 +49,9 @@ namespace traVRsal.SDK
         public List<Zone> zoneTemplates;
         public List<Journey> journeyTemplates;
 
-        [NonSerialized]
-        public Dictionary<string, string> zoneTemplateCache;
-        [NonSerialized]
-        public UserWorld remoteMetaData;
-        [NonSerialized]
-        public int autoIdx = 1;
+        [NonSerialized] public Dictionary<string, string> zoneTemplateCache;
+        [NonSerialized] public UserWorld remoteMetaData;
+        [NonSerialized] public int autoIdx = 1;
 
         public World()
         {

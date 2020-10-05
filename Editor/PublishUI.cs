@@ -109,7 +109,7 @@ namespace traVRsal.SDK
                 EditorGUI.EndDisabledGroup();
 
                 GUILayout.BeginHorizontal();
-                EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress);
+                EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);
                 if (GUILayout.Button("Prepare Upload")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(), this);
                 EditorGUI.EndDisabledGroup();
 
@@ -173,7 +173,7 @@ namespace traVRsal.SDK
                     EditorGUILayout.Space();
                     EditorGUILayout.HelpBox("Debug mode is enabled. No build platform switches will be done. Worlds need to be uploaded for each platform separately.", MessageType.Warning);
 
-                    EditorGUI.BeginDisabledGroup(documentationInProgress);
+                    EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);
                     if (GUILayout.Button("Prepare Upload (all targets)")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(true), this);
                     if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
                     EditorGUI.EndDisabledGroup();

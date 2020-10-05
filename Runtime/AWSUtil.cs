@@ -36,16 +36,20 @@ namespace traVRsal.SDK
         private static string S3BucketName = "travrsal-upload";
 
         public string CognitoIdentityRegion = RegionEndpoint.EUWest1.SystemName;
+
         private RegionEndpoint _CognitoIdentityRegion
         {
             get { return RegionEndpoint.GetBySystemName(CognitoIdentityRegion); }
         }
+
         public string S3Region = RegionEndpoint.EUWest1.SystemName;
+
         private RegionEndpoint _S3Region
         {
             get { return RegionEndpoint.GetBySystemName(S3Region); }
         }
 
+        public bool LastActionSuccessful;
         private IAmazonS3 _s3Client;
         private AWSCredentials _credentials;
 
@@ -64,7 +68,7 @@ namespace traVRsal.SDK
             get
             {
                 // Amazon-only: if (_s3Client == null) _s3Client = new AmazonS3Client(Credentials, _S3Region);
-                if (_s3Client == null) _s3Client = new AmazonS3Client(Credentials, new AmazonS3Config { ServiceURL = S3LoginRoot });
+                if (_s3Client == null) _s3Client = new AmazonS3Client(Credentials, new AmazonS3Config {ServiceURL = S3LoginRoot});
                 return _s3Client;
             }
         }
@@ -95,8 +99,9 @@ namespace traVRsal.SDK
             }, "listing objects");
         }
 
-        public async void UploadFile(string fileName)
+        public async Task UploadFile(string fileName, string remoteName, string bucket)
         {
+            LastActionSuccessful = true;
             await CarryOutAWSTask(async () =>
             {
                 var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -105,18 +110,18 @@ namespace traVRsal.SDK
                 var uploadRequest = new TransferUtilityUploadRequest()
                 {
                     InputStream = stream,
-                    Key = fileName,
-                    BucketName = S3BucketName,
+                    Key = remoteName,
+                    BucketName = bucket,
                     CannedACL = S3CannedACL.PublicRead
                 };
 
                 await fileTransferUtility.UploadAsync(uploadRequest);
-                Debug.Log($"File upload of {fileName} completed");
             }, "storing file");
         }
 
         public async Task UploadDirectory(string path, Action<float> progressCallback)
         {
+            LastActionSuccessful = true;
             await CarryOutAWSTask(async () =>
             {
                 var fileTransferUtility = new TransferUtility(Client);
@@ -127,13 +132,9 @@ namespace traVRsal.SDK
                     // Amazon-only: StorageClass = S3StorageClass.StandardInfrequentAccess,
                     CannedACL = S3CannedACL.PublicRead,
                     SearchOption = SearchOption.AllDirectories,
-
                 };
 
-                uploadRequest.UploadDirectoryProgressEvent += new EventHandler<UploadDirectoryProgressArgs>((sender, e) =>
-                {
-                    progressCallback((float)e.TransferredBytes / e.TotalBytes);
-                });
+                uploadRequest.UploadDirectoryProgressEvent += (sender, e) => { progressCallback((float) e.TransferredBytes / e.TotalBytes); };
                 await fileTransferUtility.UploadDirectoryAsync(uploadRequest);
                 progressCallback(1);
             }, "storing directory");
@@ -150,7 +151,6 @@ namespace traVRsal.SDK
                 };
 
                 await Client.DeleteObjectAsync(request);
-
             }, "delete object");
         }
 
@@ -185,6 +185,7 @@ namespace traVRsal.SDK
             }
             catch (AmazonS3Exception amazonS3Exception)
             {
+                LastActionSuccessful = false;
                 if (amazonS3Exception.ErrorCode != null && (amazonS3Exception.ErrorCode.Equals("InvalidAccessKeyId") || amazonS3Exception.ErrorCode.Equals("InvalidSecurity")))
                 {
                     Debug.LogError("Please check the provided AWS credentials.");

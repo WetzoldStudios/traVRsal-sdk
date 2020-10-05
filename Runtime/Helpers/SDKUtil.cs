@@ -17,8 +17,7 @@ namespace traVRsal.SDK
         public const string PING_ENDPOINT = "www.travrsal.com";
         public const string SERVER_ENDPOINT = "https://www.travrsal.com";
         public const string API_ENDPOINT = SERVER_ENDPOINT + "/api/";
-        // for debugging only
-        // public const string API_ENDPOINT = "http://localhost:8000/api/";
+        public const string DEBUG_API_ENDPOINT = "http://localhost:8000/api/";
 
         public const string PACKAGE_NAME = "com.wetzold.travrsal.sdk";
         public const string AUTO_GENERATED = "[AUTO]";
