@@ -21,6 +21,7 @@ namespace traVRsal.SDK
             DoCloseInfoDialog = 69,
             DoPause = 15,
             DoReturnToMain = 17,
+            DoReturnToMainInterstitial = 70,
             DoStartWorld = 14,
             DoStartWorldDownload = 67,
             DoUnpause = 16,
@@ -97,10 +98,13 @@ namespace traVRsal.SDK
 
         public Component targetComponent;
         public Reference reference;
+
         [Tooltip("Maximum number of characters to be returned (... added if longer)")]
         public int maxLength;
+
         [Tooltip("Maximum number of lines to be returned (... added if longer)")]
         public int maxLines;
+
         [Tooltip("Indicator if result should be calculated only once")]
         public bool oneTimeOnly;
 

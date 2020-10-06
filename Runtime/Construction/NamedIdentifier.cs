@@ -19,6 +19,7 @@ namespace traVRsal.SDK
             WorldPlacement = 6,
             NoWorldSettingsHint = 3,
             WorldSettingsRoot = 4,
+            InterstitialDialog = 12,
             Pivot = 9
         }
 
