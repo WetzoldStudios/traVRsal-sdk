@@ -17,6 +17,8 @@ namespace traVRsal.SDK
             WorldDetailsDialogPosition = 8,
             WorldsListRoot = 0,
             WorldPlacement = 6,
+            ChallengesDialog = 13,
+            ChallengesListRoot = 14,
             NoWorldSettingsHint = 3,
             WorldSettingsRoot = 4,
             InterstitialDialog = 12,

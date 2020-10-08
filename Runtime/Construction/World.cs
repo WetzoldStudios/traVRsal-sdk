@@ -18,7 +18,6 @@ namespace traVRsal.SDK
         public bool isVirtual;
         public string deathSound;
         [DefaultValue("0,4")] public string kpis = "0,4"; // TODO: switch to array?
-        [DefaultValue("0,4")] public string detailKPIs = "0,4"; // TODO: switch to array?
         public string initialItemLeft;
         public string initialItemRight;
         public Vector2Int maxSize = Vector2Int.zero;
@@ -49,6 +48,7 @@ namespace traVRsal.SDK
         public List<Zone> zoneTemplates;
         public List<Journey> journeyTemplates;
 
+        [NonSerialized] public Texture2D cover;
         [NonSerialized] public Dictionary<string, string> zoneTemplateCache;
         [NonSerialized] public UserWorld remoteMetaData;
         [NonSerialized] public int autoIdx = 1;

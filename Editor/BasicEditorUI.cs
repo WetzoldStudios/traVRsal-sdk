@@ -1,12 +1,9 @@
-﻿using Newtonsoft.Json;
-using System.Collections;
+﻿using System.Collections;
 using System.IO;
 using System.Linq;
-using System.Net;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace traVRsal.SDK
 {
@@ -21,9 +18,9 @@ namespace traVRsal.SDK
 
         public virtual void OnEnable()
         {
-            Texture2D logoImage = null;
             string logoName = EditorGUIUtility.isProSkin ? "travrsal-white-300.png" : "travrsal-300.png";
-            if (logoImage == null) logoImage = AssetDatabase.LoadAssetAtPath($"Packages/com.wetzold.travrsal.sdk/Editor/Images/{logoName}", typeof(Texture2D)) as Texture2D;
+            
+            Texture2D logoImage = AssetDatabase.LoadAssetAtPath($"Packages/com.wetzold.travrsal.sdk/Editor/Images/{logoName}", typeof(Texture2D)) as Texture2D;
             if (logoImage == null) logoImage = AssetDatabase.LoadAssetAtPath($"Assets/SDK/Editor/Images/{logoName}", typeof(Texture2D)) as Texture2D;
 
             logo = new GUIStyle { normal = { background = logoImage }, fixedWidth = 128, fixedHeight = 64 };
@@ -51,7 +48,7 @@ namespace traVRsal.SDK
             GUILayout.EndScrollView();
         }
 
-        public bool CheckTokenGUI()
+        protected bool CheckTokenGUI()
         {
             if (string.IsNullOrEmpty(GetAPIToken()))
             {
@@ -60,7 +57,7 @@ namespace traVRsal.SDK
 
                 return false;
             }
-            else if (SDKUtil.invalidAPIToken)
+            if (SDKUtil.invalidAPIToken)
             {
                 EditorGUILayout.HelpBox("Your Creator Key is invalid or expired. Please update it in the Project Settings. You can find your personal key on www.traVRsal.com.", MessageType.Error);
                 if (GUILayout.Button("Retry")) EditorCoroutineUtility.StartCoroutine(FetchUserWorlds(), this);
@@ -101,29 +98,26 @@ namespace traVRsal.SDK
             tagManager.ApplyModifiedProperties();
         }
 
-        public static string GetWorldsRoot(bool relative = true)
+        protected static string GetWorldsRoot(bool relative = true)
         {
             return (relative ? "Assets" : Application.dataPath) + "/Worlds";
         }
 
-        public static string[] GetWorldPaths()
+        protected static string[] GetWorldPaths()
         {
             if (Directory.Exists(Application.dataPath + "/Worlds"))
             {
                 return Directory.GetDirectories(Application.dataPath + "/Worlds").Where(s => !Path.GetFileName(s).StartsWith("_")).ToArray();
             }
-            else
-            {
-                return new string[0];
-            }
+            return new string[0];
         }
 
-        public string GetAPIToken()
+        protected string GetAPIToken()
         {
             return TravrsalSettingsManager.Get("apiKey", "");
         }
 
-        public IEnumerator FetchUserWorlds()
+        protected IEnumerator FetchUserWorlds()
         {
             yield return SDKUtil.FetchAPIData<UserWorld[]>("userworlds", GetAPIToken(), worlds =>
             {

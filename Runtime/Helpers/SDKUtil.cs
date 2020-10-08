@@ -32,17 +32,19 @@ namespace traVRsal.SDK
         public const string PLAYER_HELPER_TAG = "Player Helper";
         public const string ENEMY_TAG = "Enemy";
 
-        public static bool invalidAPIToken = false;
-        public static bool networkIssue = false;
+        public static bool invalidAPIToken;
+        public static bool networkIssue;
 
         public enum ColliderType
         {
-            None, Box, Sphere
+            None,
+            Box,
+            Sphere
         }
 
-        public static IEnumerator FetchAPIData<T>(string api, string token, Action<T> callback)
+        public static IEnumerator FetchAPIData<T>(string api, string token, Action<T> callback, string endPoint = API_ENDPOINT)
         {
-            string uri = API_ENDPOINT + api;
+            string uri = endPoint + api;
 
             networkIssue = false;
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
@@ -58,7 +60,7 @@ namespace traVRsal.SDK
                 }
                 else if (webRequest.isHttpError)
                 {
-                    if (webRequest.responseCode == (int)HttpStatusCode.Unauthorized)
+                    if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
                     {
                         invalidAPIToken = true;
                         Debug.LogError("Invalid or expired API Token.");
@@ -73,11 +75,14 @@ namespace traVRsal.SDK
                     invalidAPIToken = false;
                     if (typeof(T) == typeof(string))
                     {
-                        callback((T)Convert.ChangeType(webRequest.downloadHandler.text, typeof(T)));
+                        callback((T) Convert.ChangeType(webRequest.downloadHandler.text, typeof(T)));
                     }
                     else
                     {
-                        callback(JsonConvert.DeserializeObject<T>(webRequest.downloadHandler.text));
+                        callback(JsonConvert.DeserializeObject<T>(webRequest.downloadHandler.text, new JsonSerializerSettings
+                        {
+                            NullValueHandling = NullValueHandling.Ignore
+                        }));
                     }
                     yield break;
                 }
@@ -100,7 +105,7 @@ namespace traVRsal.SDK
 
         public static T ReadJSONFile<T>(string fileName)
         {
-            TextAsset textFile = (TextAsset)Resources.Load(fileName);
+            TextAsset textFile = (TextAsset) Resources.Load(fileName);
             if (textFile == null) return default;
 
             T data = JsonConvert.DeserializeObject<T>(textFile.text);
@@ -122,13 +127,13 @@ namespace traVRsal.SDK
         // inspired from https://stackoverflow.com/questions/281640/how-do-i-get-a-human-readable-file-size-in-bytes-abbreviation-using-net
         public static string BytesToString(long byteCount)
         {
-            string[] suffix = { "B", "KB", "MB", "GB", "TB", "PB", "EB" };
+            string[] suffix = {"B", "KB", "MB", "GB", "TB", "PB", "EB"};
             if (byteCount == 0) return "0" + suffix[0];
             long bytes = Math.Abs(byteCount);
             int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
             double num = Math.Round(bytes / Math.Pow(1024, place), 1);
 
-            return (Math.Sign(byteCount) * num).ToString() + suffix[place];
+            return (Math.Sign(byteCount) * num).ToString(CultureInfo.InvariantCulture) + suffix[place];
         }
 
         // inspired from https://stackoverflow.com/questions/33100164/customize-identation-parameter-in-jsonconvert-serializeobject
@@ -157,9 +162,6 @@ namespace traVRsal.SDK
     {
         [ThreadStatic] private static Random Local;
 
-        public static Random ThisThreadsRandom
-        {
-            get { return Local ?? (Local = new Random(unchecked(Environment.TickCount * 31 + Thread.CurrentThread.ManagedThreadId))); }
-        }
+        public static Random ThisThreadsRandom => Local ?? (Local = new Random(unchecked(Environment.TickCount * 31 + Thread.CurrentThread.ManagedThreadId)));
     }
 }

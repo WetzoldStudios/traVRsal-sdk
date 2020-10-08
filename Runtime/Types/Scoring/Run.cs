@@ -7,26 +7,38 @@ namespace traVRsal.SDK
     {
         public int id;
         public string player_id;
+        public string player_name;
         public string world;
         public string world_file;
         public string world_date;
-        public long tile_count;
+        public int run_reference;
+        public int rank;
+
+        public int tile_count;
         public float tile_size;
         public string app_version;
         public string unity_version;
+
         public float time_taken;
         public float distance;
-        public long shots_fired;
-        public long shots_hit;
-        public long melee_hits;
-        public long melee_kills;
-        public long points;
-        public long deaths;
-        public long player_damage;
-        public long targets_total;
-        public long targets_destroyed;
+        public float accuracy;
+        public int shots_fired;
+        public int shots_hit;
+        public int melee_hits;
+        public int melee_kills;
+        public int points;
+        public int deaths;
+        public int player_damage;
+        public int targets_total;
+        public int targets_destroyed;
         public string custom_kpis;
         public float score;
+
+        public string created_at;
+
+        public Run()
+        {
+        }
 
         public override string ToString()
         {
