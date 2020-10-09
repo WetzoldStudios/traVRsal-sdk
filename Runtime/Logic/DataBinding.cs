@@ -72,6 +72,7 @@ namespace traVRsal.SDK
             ShowStatPoints = 40,
             ShowStatTargets = 37,
             ShowStatTimeOnCriticalPath = 33,
+            ShowPostChallenge = 74,
 
             ShowPlayerLogin = 60,
             ShowPlayerLoggedIn = 61,

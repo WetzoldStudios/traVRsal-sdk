@@ -20,6 +20,7 @@ namespace traVRsal.SDK
             ChallengesDialog = 13,
             ChallengesListRoot = 14,
             NoWorldSettingsHint = 3,
+            NoChallengesHint = 15,
             WorldSettingsRoot = 4,
             InterstitialDialog = 12,
             Pivot = 9

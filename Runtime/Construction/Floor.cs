@@ -7,28 +7,22 @@ namespace traVRsal.SDK
     [Serializable]
     public class Floor
     {
-        [Header("Configuration")]
-        public string name;
+        [Header("Configuration")] public string name;
         public float height = 2.5f;
-        public bool underground = false;
+        public bool underground;
         public List<BasicEntity> entities;
         public Dictionary<string, TMProperty[]> layerProps;
         public TMProperty[] properties;
 
-        [Header("Runtime Information")]
-        public int idx;
+        [Header("Runtime Information")] public int idx;
         public PositionInfoMarker[,] positionInfoMarker;
         public Vector3[] shortestPath;
-        public Transform node;
-        public Bounds bounds;
-        public Transform center;
 
-        [HideInInspector]
-        [NonSerialized]
-        public Maze maze;
-        [HideInInspector]
-        [NonSerialized]
-        public List<Behaviour> portalCache;
+        [NonSerialized] public Transform node;
+        [NonSerialized] public Bounds bounds;
+        [NonSerialized] public Transform center;
+        [NonSerialized] public Maze maze;
+        [NonSerialized] public List<Behaviour> portalCache;
 
         public Floor()
         {

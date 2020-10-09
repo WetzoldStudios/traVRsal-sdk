@@ -767,7 +767,7 @@ namespace traVRsal.SDK
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalBuildPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalLoadPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kRemoteBuildPath, $"ServerData/Worlds/{worldName}/[BuildTarget]");
-                profile.SetValue(profileId, AddressableAssetSettings.kRemoteLoadPath, $"{AWSUtil.S3CDNRoot}Worlds/{worldName}/[BuildTarget]");
+                profile.SetValue(profileId, AddressableAssetSettings.kRemoteLoadPath, $"{AWSUtil.S3CDNRoot_Live}Worlds/{worldName}/[BuildTarget]");
 
                 // ensure correct group settings
                 BundledAssetGroupSchema groupSchema = group.GetSchema<BundledAssetGroupSchema>();

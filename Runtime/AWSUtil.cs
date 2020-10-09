@@ -25,8 +25,9 @@ namespace traVRsal.SDK
 
         // Digital Ocean settings
         public static string S3LoginRoot = "https://sfo2.digitaloceanspaces.com/";
-        public static string S3Root = "https://travrsal-live.sfo2.digitaloceanspaces.com/";
-        public static string S3CDNRoot = "https://travrsal-live.sfo2.cdn.digitaloceanspaces.com/";
+        public static string S3Root_Live = "https://travrsal-live.sfo2.digitaloceanspaces.com/";
+        public static string S3CDNRoot_Live = "https://travrsal-live.sfo2.cdn.digitaloceanspaces.com/";
+        public static string S3CDNRoot_Runs = "https://travrsal-runs.sfo2.cdn.digitaloceanspaces.com/";
 
         // FIXME: only leave in for beta, new mechanism as soon as backend is up and running
         public static string AccessKey = "TJLL2B73DJSGQPBKJRP7";

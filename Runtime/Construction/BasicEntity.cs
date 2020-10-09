@@ -11,8 +11,8 @@ namespace traVRsal.SDK
         public static Vector2Int EMPTY = new Vector2Int(int.MinValue, int.MinValue);
 
         // positions must match direction enum
-        public static Direction[] ALL_DIRECTIONS = new Direction[6] {Direction.West, Direction.East, Direction.South, Direction.North, Direction.Top, Direction.Bottom};
-        public static Direction[] HORIZONTAL_DIRECTIONS = new Direction[4] {Direction.West, Direction.East, Direction.South, Direction.North};
+        public static Direction[] ALL_DIRECTIONS = {Direction.West, Direction.East, Direction.South, Direction.North, Direction.Top, Direction.Bottom};
+        public static Direction[] HORIZONTAL_DIRECTIONS = {Direction.West, Direction.East, Direction.South, Direction.North};
 
         public enum Direction
         {
@@ -36,14 +36,14 @@ namespace traVRsal.SDK
         public Vector2Int anchor = EMPTY;
         public Vector2Int scale = Vector2Int.one;
         public int height = 1;
-        public int y = 0;
+        public int y;
         public int maxY = -1;
-        public bool flipX = false;
-        public bool flipZ = false;
-        public bool socket = false;
-        public bool snap = false;
-        public bool autoFill = false;
-        public bool isVirtual = false;
+        public bool flipX;
+        public bool flipZ;
+        public bool socket;
+        public bool snap;
+        public bool autoFill;
+        public bool isVirtual;
 
         public string targetZone;
 
@@ -55,11 +55,13 @@ namespace traVRsal.SDK
         public string variable;
         public TMProperty[] properties;
 
+        [HideInInspector] public bool isSpawned;
         [HideInInspector] public int autoIdx;
         [HideInInspector] public Vector2Int originalPosition;
         [HideInInspector] public int[] layerNeighbours = new int[4];
-        [HideInInspector] public bool instantiated = false;
-        [HideInInspector] [NonSerialized] public Transform node;
+        [HideInInspector] public bool instantiated;
+
+        [NonSerialized] public Transform node;
 
         public BasicEntity()
         {

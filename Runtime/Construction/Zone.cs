@@ -32,13 +32,13 @@ namespace traVRsal.SDK
         public byte stencilId;
         public int layerIdx;
         public int navAgentId;
-        public Transform node;
-        public Bounds bounds;
-        public Transform center;
         public string originalName;
         public string variationOf;
 
         // cache structures
+        [NonSerialized] public Transform node;
+        [NonSerialized] public Bounds bounds;
+        [NonSerialized] public Transform center;
         [NonSerialized] public Dictionary<string, Material> materialsCache;
         [NonSerialized] public List<Renderer> rendererCache;
         [NonSerialized] public List<Renderer> transparentRendererCache;

@@ -11,10 +11,13 @@ namespace traVRsal.SDK
         public string world;
         public string world_file;
         public string world_date;
+        public string kpis;
+
         public int run_reference;
         public int rank;
 
-        public int tile_count;
+        public int tile_count_x;
+        public int tile_count_y;
         public float tile_size;
         public string app_version;
         public string unity_version;

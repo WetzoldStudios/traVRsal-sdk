@@ -12,6 +12,7 @@ namespace traVRsal.SDK
 
         void Start()
         {
+            transform.localScale = Vector3.one * startScale;
             transform.DOScale(endScale, duration).SetLoops(999, loopType);
         }
     }
