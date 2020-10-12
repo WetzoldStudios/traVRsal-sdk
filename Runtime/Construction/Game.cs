@@ -8,22 +8,18 @@ namespace traVRsal.SDK
     [Serializable]
     public class Game
     {
-        [Header("Configuration")]
-        [DefaultValue("game")]
+        [Header("Configuration")] [DefaultValue("game")]
         public string key = "game";
-        [DefaultValue("Development Mode")]
-        public string name = "Development Mode";
+
+        [DefaultValue("Development Mode")] public string name = "Development Mode";
         public List<string> worlds;
-        [DefaultValue("Menu-traVRsal")]
-        public string menuScene = "Menu-traVRsal";
-        [DefaultValue("/Base/Menu/World3")]
-        public string worldObject = "/Base/Menu/World3";
-        [DefaultValue("Pause-OoD")]
-        public string pauseScene = "Pause-OoD";
-        public bool devMode = false;
+        [DefaultValue("Menu-traVRsal")] public string menuScene = "Menu-traVRsal";
+        [DefaultValue("/Base/Menu/World3")] public string worldObject = "/Base/Menu/World3";
+        [DefaultValue("Pause-OoD")] public string pauseScene = "Pause-OoD";
+        public bool devMode;
 
         // derived 
-        public bool stickMode = false;
+        public bool stickMode;
 
         public Game()
         {

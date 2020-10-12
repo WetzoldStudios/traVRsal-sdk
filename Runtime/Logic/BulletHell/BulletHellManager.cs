@@ -10,7 +10,7 @@ namespace traVRsal.SDK
         public Transform objectToRotate;
         public AudioSource audioSource;
         public string spawnFrequency;
-        public float initialDelayMin = 0f;
+        public float initialDelayMin;
         public float initialDelayMax = 1f;
 
         private float nextRotateAction = float.MaxValue;
@@ -20,7 +20,7 @@ namespace traVRsal.SDK
         private IProjectileShooter shooter;
         private float delayPassedTime;
 
-        void Start()
+        private void Start()
         {
             if (objectToRotate == null) objectToRotate = transform;
             shooter = gameObject.GetComponentInChildren<IProjectileShooter>();
@@ -31,7 +31,7 @@ namespace traVRsal.SDK
             delayPassedTime = Time.time + Random.Range(initialDelayMin, initialDelayMax);
         }
 
-        void Update()
+        private void Update()
         {
             if (Time.time < delayPassedTime) return;
             if (Time.time >= nextRotateAction)
@@ -45,7 +45,7 @@ namespace traVRsal.SDK
                 {
                     if (rotatePattern.Next() != null)
                     {
-                        nextRotateDelay = (float)rotatePattern.GetNextExecution() / 1000f;
+                        nextRotateDelay = (float) rotatePattern.GetNextExecution() / 1000f;
                         nextRotateAction = Time.time + nextRotateDelay;
                     }
                     else
@@ -85,12 +85,11 @@ namespace traVRsal.SDK
                     default:
                         shooter.Fire();
                         break;
-
                 }
 
                 if (spawnPattern.Next() != null)
                 {
-                    nextSpawnAction = Time.time + (float)spawnPattern.GetNextExecution() / 1000f;
+                    nextSpawnAction = Time.time + (float) spawnPattern.GetNextExecution() / 1000f;
                 }
                 else
                 {
@@ -104,7 +103,7 @@ namespace traVRsal.SDK
             spawnPattern = new PatternParser(pattern, true);
             if (spawnPattern.GetNextExecution() != null)
             {
-                nextSpawnAction = Time.time + (float)spawnPattern.GetNextExecution() / 1000f;
+                nextSpawnAction = Time.time + (float) spawnPattern.GetNextExecution() / 1000f;
             }
         }
 
@@ -113,7 +112,7 @@ namespace traVRsal.SDK
             rotatePattern = new PatternParser(pattern, true);
             if (rotatePattern.GetNextExecution() != null)
             {
-                nextRotateAction = Time.time + (float)rotatePattern.GetNextExecution() / 1000f;
+                nextRotateAction = Time.time + (float) rotatePattern.GetNextExecution() / 1000f;
             }
         }
     }

@@ -2,22 +2,22 @@
 {
     public class PatternParser
     {
-        private string[] pattern = new string[] { };
-        private bool globalLoop = false;
+        private string[] pattern = { };
+        private bool globalLoop;
         private int currentStep;
         private int remainingLoops = -1;
-        private int loopCount = 0;
-        private int loopLength = 0;
-        private int loopStart = 0;
-        private int loopStep = 0;
+        private int loopCount;
+        private int loopLength;
+        private int loopStart;
+        private int loopStep;
 
         public PatternParser(string pattern, bool globalLoop = false)
         {
             this.globalLoop = globalLoop;
-            if (pattern != null && pattern.Length > 0)
+            if (!string.IsNullOrEmpty(pattern))
             {
                 this.pattern = pattern.Split(',');
-                for (var i = 0; i < this.pattern.Length; i++)
+                for (int i = 0; i < this.pattern.Length; i++)
                 {
                     this.pattern[i] = this.pattern[i].Trim().ToLower();
                 }
@@ -26,10 +26,7 @@
 
         public int? GetNextExecution()
         {
-            if (pattern.Length == 0 || currentStep >= pattern.Length)
-            {
-                return null;
-            }
+            if (pattern.Length == 0 || currentStep >= pattern.Length) return null;
 
             int idx = GetCalculatedIdx();
             return int.Parse(pattern[idx]);
@@ -88,28 +85,14 @@
                 loopLength = int.Parse(arr[1].Trim());
 
                 string loopCountStr = pattern[currentStep + 1];
-                if (loopCountStr == "*")
-                {
-                    loopCount = int.MaxValue;
-                }
-                else
-                {
-                    loopCount = int.Parse(loopCountStr);
-                }
+                loopCount = loopCountStr == "*" ? int.MaxValue : int.Parse(loopCountStr);
                 loopStep = 0;
                 loopStart = currentStep - 2 * loopLength;
                 remainingLoops = loopCount;
             }
+            if (remainingLoops > 0) return loopStart + loopStep * 2;
 
-            if (remainingLoops > 0)
-            {
-                return loopStart + loopStep * 2;
-            }
-            else
-            {
-                return currentStep;
-            }
-
+            return currentStep;
         }
     }
 }

@@ -31,6 +31,11 @@ namespace traVRsal.SDK
             DoUnpause = 16,
             DoLogOut = 63,
             DoClearCache = 68,
+            DoChallengeFilterMine = 94,
+            DoChallengeFilterOthers = 95,
+            DoChallengeFilterNotBeaten = 97,
+            DoChallengeFilterBeaten = 96,
+            DoChallengeFilterBest = 98,
 
             EnterLogin = 64,
             EnterNickname = 62,
@@ -55,7 +60,7 @@ namespace traVRsal.SDK
             SettingPadding = 6,
             SettingTileCount = 5,
             SettingTileSizeHint = 8,
-
+            
             StatAccuracy = 23,
             StatDeaths = 25,
             StatDistanceWalked = 26,
