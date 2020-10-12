@@ -67,7 +67,7 @@ namespace traVRsal.SDK
                     }
                     else
                     {
-                        Debug.LogError($"There was an error fetching data: {webRequest.error}");
+                        Debug.LogError($"There was an error fetching data: {webRequest.downloadHandler.text}");
                     }
                 }
                 else

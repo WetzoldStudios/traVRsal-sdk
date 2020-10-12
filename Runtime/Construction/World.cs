@@ -17,12 +17,12 @@ namespace traVRsal.SDK
         [DefaultValue(300)] public int availableTime = 5 * 60;
         public bool isVirtual;
         public string deathSound;
+        [DefaultValue(true)] public bool enableChallenges = true;
         [DefaultValue("0,4")] public string kpis = "0,4"; // TODO: switch to array?
         public string initialItemLeft;
         public string initialItemRight;
         public Vector2Int maxSize = Vector2Int.zero;
-        [DefaultValue("/Base/LightHall")] 
-        public string introScenery = "/Base/LightHall";
+        [DefaultValue("/Base/LightHall")] public string introScenery = "/Base/LightHall";
 
         [DefaultValue("/Base/LightHall-Outro")]
         public string outroScenery = "/Base/LightHall-Outro";
@@ -39,8 +39,7 @@ namespace traVRsal.SDK
         public MultiBehaviors behaviors;
         public List<Credit> credits;
 
-        [Header("Runtime Data")] 
-        public bool journeyMode;
+        [Header("Runtime Data")] public bool journeyMode;
         public List<ObjectSpec> objectSpecs;
         public List<string> dependencies;
         public List<string> worldDependencies;

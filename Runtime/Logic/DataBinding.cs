@@ -21,6 +21,7 @@ namespace traVRsal.SDK
             DoCloseInfoDialog = 69,
             DoOpenChallengesDialog = 71,
             DoCloseChallengesDialog = 73,
+            DoCloseCreateWorldsDialog = 93,
             DoPause = 15,
             DoReturnToMain = 17,
             DoReturnToMainInterstitial = 70,
@@ -42,6 +43,7 @@ namespace traVRsal.SDK
             WorldLongDescription = 12,
             WorldTime = 4,
             WorldUpdate = 56,
+            WorldUpdateRelative = 92,
             WorldSize = 55,
             WorldOwner = 66,
 
@@ -66,6 +68,18 @@ namespace traVRsal.SDK
             StatTargetsDestroyedRatio = 24,
             StatTimeOnCriticalPath = 22,
 
+            ChallengeStatAccuracy = 81,
+            ChallengeStatDeaths = 82,
+            ChallengeStatDistanceWalked = 83,
+            ChallengeStatPlayerDamage = 84,
+            ChallengeStatPoints = 85,
+            ChallengeStatShotsFired = 86,
+            ChallengeStatShotsHit = 87,
+            ChallengeStatTargets = 88,
+            ChallengeStatTargetsDestroyed = 89,
+            ChallengeStatTargetsDestroyedRatio = 90,
+            ChallengeStatTimeOnCriticalPath = 91,
+
             ShowStatAccuracy = 34,
             ShowStatDeaths = 38,
             ShowStatDistanceWalked = 39,
@@ -74,11 +88,18 @@ namespace traVRsal.SDK
             ShowStatTimeOnCriticalPath = 33,
             ShowPostChallenge = 74,
 
+            ShowIfChallengeMode = 79,
+            ShowIfChallengeWonNormal = 77,
+            ShowIfChallengeWonBest = 78,
+            ShowIfChallengeWon = 80,
+
             ShowPlayerLogin = 60,
             ShowPlayerLoggedIn = 61,
 
             ShowWorldDownload = ASYNC_RESULT + 1,
             ShowWorldStart = ASYNC_RESULT + 2,
+            ShowWorldChallenges = 76,
+            ShowWorldStatistics = 75,
 
             ImageName = REQUIRE_SOURCE + 1,
             ImageDescription = REQUIRE_SOURCE + 2,
@@ -94,6 +115,9 @@ namespace traVRsal.SDK
 
         public Component targetComponent;
         public Reference reference;
+
+        [Tooltip("Indicator if boolean result should be checked for false instead of true")]
+        public bool invert;
 
         [Tooltip("Maximum number of characters to be returned (... added if longer)")]
         public int maxLength;

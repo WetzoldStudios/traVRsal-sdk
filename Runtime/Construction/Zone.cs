@@ -20,6 +20,7 @@ namespace traVRsal.SDK
         public float lightIntensity = 1f;
         public string skybox;
         public string music;
+        public float musicVolume = 100f;
         public string randomAmbience;
         public string randomMusic;
         public TMProperty[] properties;
