@@ -4,7 +4,8 @@ namespace traVRsal.SDK
 {
     public class DamageInflictor : MonoBehaviour
     {
-        [Header("Configuration")] public bool instantKill;
+        [Header("Configuration")] 
+        public bool instantKill;
         public int damage = 1;
         public bool melee;
         public bool byPlayer;
@@ -24,7 +25,7 @@ namespace traVRsal.SDK
 
         public bool IsActive()
         {
-            return Time.time > lastHit + cooldown;
+            return enabled && Time.time > lastHit + cooldown;
         }
     }
 }

@@ -33,12 +33,14 @@ namespace traVRsal.SDK
             DoClearCache = 68,
             DoChallengeFilterMine = 94,
             DoChallengeFilterOthers = 95,
+            DoChallengeFilterPlayspace = 100,
             DoChallengeFilterNotBeaten = 97,
             DoChallengeFilterBeaten = 96,
             DoChallengeFilterBest = 98,
 
             EnterLogin = 64,
             EnterNickname = 62,
+            EnterNicknameWithTerms = 99,
             EnterPassword = 65,
 
             WorldCategory = 10,
