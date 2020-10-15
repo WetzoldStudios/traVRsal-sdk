@@ -28,6 +28,7 @@ namespace traVRsal.SDK
             DoPostChallenge = 72,
             DoStartWorld = 14,
             DoStartWorldDownload = 67,
+            DoStartRandomChallenge = 109,
             DoUnpause = 16,
             DoLogOut = 63,
             DoClearCache = 68,
@@ -75,6 +76,7 @@ namespace traVRsal.SDK
             StatTargetsDestroyedRatio = 24,
             StatTimeOnCriticalPath = 22,
 
+            ChallengePlayer = 110,
             ChallengeStatAccuracy = 81,
             ChallengeStatDeaths = 82,
             ChallengeStatDistanceWalked = 83,
