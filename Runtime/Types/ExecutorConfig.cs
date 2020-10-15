@@ -8,7 +8,7 @@ namespace traVRsal.SDK
     {
         private int uniqueId = 0;
 
-        void Start() { }
+        private void Start() { }
 
         public int GetUniqueId()
         {
