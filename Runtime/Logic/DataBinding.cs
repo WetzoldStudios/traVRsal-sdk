@@ -62,7 +62,7 @@ namespace traVRsal.SDK
             SettingPadding = 6,
             SettingTileCount = 5,
             SettingTileSizeHint = 8,
-            
+
             StatAccuracy = 23,
             StatDeaths = 25,
             StatDistanceWalked = 26,
@@ -86,6 +86,15 @@ namespace traVRsal.SDK
             ChallengeStatTargetsDestroyed = 89,
             ChallengeStatTargetsDestroyedRatio = 90,
             ChallengeStatTimeOnCriticalPath = 91,
+
+            ChallengesPosted = 101,
+            ChallengesPostedBeaten = 102,
+            ChallengesPostedBeatenPercentage = 106,
+            ChallengesPostedTries = 108,
+            ChallengesBeaten = 103,
+            ChallengesBeatenBest = 104,
+            ChallengesRemaining = 105,
+            ChallengesBeatenRemainingPercentage = 107,
 
             ShowStatAccuracy = 34,
             ShowStatDeaths = 38,
