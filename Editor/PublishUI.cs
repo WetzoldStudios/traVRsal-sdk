@@ -22,6 +22,7 @@ namespace traVRsal.SDK
     public class PublishUI : BasicEditorUI
     {
         private string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};
+        private string[] RELEASE_CHANNELS = {"Beta", "Live"};
 
         private bool debugMode = true;
         private bool packagingInProgress;
@@ -36,11 +37,13 @@ namespace traVRsal.SDK
         private DateTime uploadStartTime;
         private float uploadProgress = 1;
         private int uploadProgressId;
+        private int releaseChannel = 1;
         private int packageMode = 1;
         private int uncompressedTextures;
         private static DirectoryWatcher dirWatcher;
         private static PublishUI window;
         private static Dictionary<string, VerificationResult> verifications = new Dictionary<string, VerificationResult>();
+        private int preparedReleaseChannel;
 
         [MenuItem("traVRsal/Publisher", priority = 110)]
         public static void ShowWindow()
@@ -90,13 +93,14 @@ namespace traVRsal.SDK
                     EditorGUILayout.Space();
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Packaging Mode:", EditorStyles.wordWrappedLabel);
-                    packageMode = GUILayout.SelectionGrid(packageMode, PACKAGE_OPTIONS, 2, EditorStyles.radioButton);
+                    packageMode = EditorGUILayout.Popup(packageMode, PACKAGE_OPTIONS);
                     GUILayout.EndHorizontal();
                 }
                 else
                 {
                     packageMode = 0;
                 }
+
                 EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress);
                 string buttonText = "Package";
                 if (packageMode == 1)
@@ -107,6 +111,12 @@ namespace traVRsal.SDK
 
                 if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode == 2, packageMode == 2), this);
                 EditorGUI.EndDisabledGroup();
+
+                EditorGUILayout.Space();
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Release Channel:", EditorStyles.wordWrappedLabel);
+                releaseChannel = EditorGUILayout.Popup(releaseChannel, RELEASE_CHANNELS);
+                GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);
@@ -212,6 +222,8 @@ namespace traVRsal.SDK
 
         private IEnumerator PrepareUpload(bool force = false)
         {
+            preparedReleaseChannel = releaseChannel;
+
             yield return FetchUserWorlds();
             yield return PackageWorlds(true, true, force);
             yield return CreateDocumentation();
@@ -764,16 +776,17 @@ namespace traVRsal.SDK
 
                 // set variables
                 string localRoot = Application.dataPath + $"/../traVRsal/{worldName}/[BuildTarget]";
+                string remoteTarget = releaseChannel == 0 ? AWSUtil.S3CDNRoot_Beta : AWSUtil.S3CDNRoot_Live;
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalBuildPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalLoadPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kRemoteBuildPath, $"ServerData/Worlds/{worldName}/[BuildTarget]");
-                profile.SetValue(profileId, AddressableAssetSettings.kRemoteLoadPath, $"{AWSUtil.S3CDNRoot_Live}Worlds/{worldName}/[BuildTarget]");
+                profile.SetValue(profileId, AddressableAssetSettings.kRemoteLoadPath, $"{remoteTarget}Worlds/{worldName}/[BuildTarget]");
 
                 // ensure correct group settings
                 BundledAssetGroupSchema groupSchema = group.GetSchema<BundledAssetGroupSchema>();
                 groupSchema.UseAssetBundleCache = true;
                 groupSchema.UseAssetBundleCrc = false;
-                groupSchema.IncludeInBuild = isBase ? true : false;
+                groupSchema.IncludeInBuild = isBase;
                 groupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.NoHash; // hash to disambiguate identically named files yields same error messages, e.g. standard shaders
                 groupSchema.BundleMode = BundledAssetGroupSchema.BundlePackingMode.PackTogether;
                 groupSchema.Compression = BundledAssetGroupSchema.BundleCompressionMode.LZ4;
@@ -815,7 +828,7 @@ namespace traVRsal.SDK
             foreach (string dir in GetWorldPaths())
             {
                 string worldName = Path.GetFileName(dir);
-                string uri = SDKUtil.API_ENDPOINT + "userworlds/" + userWorlds.First(w => w.key == worldName).id;
+                string uri = SDKUtil.API_ENDPOINT + "userworlds/" + userWorlds.First(w => w.key == worldName).id + "?channel=" + (preparedReleaseChannel == 0 ? "beta" : "live");
 
                 // extract data from world descriptor
                 string worldJson = File.ReadAllText(dir + "/World.json");

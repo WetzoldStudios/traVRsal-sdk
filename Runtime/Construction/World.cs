@@ -27,6 +27,9 @@ namespace traVRsal.SDK
         [DefaultValue("/Base/LightHall-Outro")]
         public string outroScenery = "/Base/LightHall-Outro";
 
+        [DefaultValue("/Base/FutureWorld_Resolution_Loop.ogg")]
+        public string outroMusic = "/Base/FutureWorld_Resolution_Loop.ogg";
+
         public string defaultScenery;
         public List<WorldDataReference> worldData;
         public List<Journey> journeys;
@@ -52,6 +55,7 @@ namespace traVRsal.SDK
         [NonSerialized] public UserWorld remoteMetaData;
         [NonSerialized] public Challenge challenge;
         [NonSerialized] public int autoIdx = 1;
+        [NonSerialized] public float tileSize;
 
         public World()
         {

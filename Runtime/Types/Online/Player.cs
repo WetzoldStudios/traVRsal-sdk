@@ -7,6 +7,7 @@ namespace traVRsal.SDK
     {
         public int id;
         public int user_id;
+        public string login;
         public int accepted_terms_version;
         public string accepted_terms_date;
         public string player_id;
@@ -16,7 +17,7 @@ namespace traVRsal.SDK
         public string device;
         public string app_version;
         public string unity_version;
-
+        
         public string created_at;
         public string updated_at;
 
