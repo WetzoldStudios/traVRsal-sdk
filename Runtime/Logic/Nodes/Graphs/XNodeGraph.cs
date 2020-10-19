@@ -6,5 +6,9 @@ namespace traVRsal.SDK
     public class XNodeGraph : MonoBehaviour
     {
         public NodeGraph logicGraph;
+
+        private void Start()
+        {
+        }
     }
 }
