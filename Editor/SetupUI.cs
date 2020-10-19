@@ -102,15 +102,13 @@ namespace traVRsal.SDK
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         private void RestoreTiled()
         {
-            string tiledPath = GetWorldsRoot(true) + "/_Tiled";
+            string tiledPath = GetWorldsRoot() + "/_Tiled";
 
             AssetDatabase.DeleteAsset(tiledPath);
             AssetDatabase.Refresh();
@@ -128,12 +126,9 @@ namespace traVRsal.SDK
 
                 return true;
             }
-            else
-            {
-                EditorUtility.DisplayDialog("Error", "This world was already created.", "OK");
 
-                return false;
-            }
+            EditorUtility.DisplayDialog("Error", "This world was already created.", "OK");
+            return false;
         }
     }
 }

@@ -9,28 +9,25 @@ namespace traVRsal.SDK
     {
         public enum Behaviour
         {
-            Unrestricted, Change_Higher
+            Unrestricted,
+            Change_Higher
         }
 
-        [Header("Configuration")]
-        public string key;
+        [Header("Configuration")] public string key;
         public string value = "0";
         public Behaviour behaviour = Behaviour.Unrestricted;
         public string imageFolder;
-        public int targetCount = 0;
+        public int targetCount;
 
-        [Header("Runtime")]
-        public bool runtimeCreated = false;
+        [Header("Runtime")] public bool runtimeCreated = false;
         public bool isComboPart = false;
         public List<string> targetOrder = new List<string>();
         public List<string> currentOrder = new List<string>();
         public List<IVariableListener> listeners = new List<IVariableListener>();
-        public int currentAutoIndex = 0;
+        public int currentAutoIndex;
 
-        [NonSerialized]
-        public Variable parent;
-        [NonSerialized]
-        public List<Variable> children;
+        [NonSerialized] public Variable parent;
+        [NonSerialized] public List<Variable> children;
 
         public Variable(string key)
         {

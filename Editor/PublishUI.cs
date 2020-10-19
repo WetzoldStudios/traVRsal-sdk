@@ -45,7 +45,7 @@ namespace traVRsal.SDK
         private static Dictionary<string, VerificationResult> verifications = new Dictionary<string, VerificationResult>();
         private int preparedReleaseChannel;
 
-        [MenuItem("traVRsal/Publisher", priority = 110)]
+        [MenuItem("traVRsal/Publisher", priority = 120)]
         public static void ShowWindow()
         {
             window = GetWindow<PublishUI>("traVRsal Publisher");
