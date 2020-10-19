@@ -112,11 +112,14 @@ namespace traVRsal.SDK
                 if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode == 2, packageMode == 2), this);
                 EditorGUI.EndDisabledGroup();
 
-                EditorGUILayout.Space();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("Release Channel:", EditorStyles.wordWrappedLabel);
-                releaseChannel = EditorGUILayout.Popup(releaseChannel, RELEASE_CHANNELS);
-                GUILayout.EndHorizontal();
+                if (debugMode)
+                {
+                    EditorGUILayout.Space();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Release Channel:", EditorStyles.wordWrappedLabel);
+                    releaseChannel = EditorGUILayout.Popup(releaseChannel, RELEASE_CHANNELS);
+                    GUILayout.EndHorizontal();
+                }
 
                 GUILayout.BeginHorizontal();
                 EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);

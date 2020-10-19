@@ -10,5 +10,10 @@ namespace traVRsal.SDK
         private void Start()
         {
         }
+
+        public override string ToString()
+        {
+            return $"XNode Logic Graph ({logicGraph}))";
+        }
     }
 }
