@@ -9,20 +9,21 @@ namespace traVRsal.SDK
     {
         public enum SettingsType
         {
-            Boolean
+            Boolean = 0,
+            ImageProvider = 1
         }
 
         public string key;
-        [DefaultValue("true")]
-        public string defaultValue = "true";
+        [DefaultValue("true")] public string defaultValue = "true";
         public string name;
         public string description;
         public SettingsType type = SettingsType.Boolean;
 
-        [Header("Runtime Data")]
-        public string currentValue;
+        [Header("Runtime Data")] public string currentValue;
 
-        public WorldSetting() { }
+        public WorldSetting()
+        {
+        }
 
         public WorldSetting(string key) : this()
         {
@@ -48,7 +49,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"WorldSetting {key} ({type})";
+            return $"World Setting {key} ({type})";
         }
     }
 }

@@ -8,7 +8,8 @@ namespace traVRsal.SDK
     {
         public enum Provider
         {
-            Unsplash
+            Unsplash = 0,
+            Device = 1
         }
 
         public enum Order
@@ -20,19 +21,22 @@ namespace traVRsal.SDK
         public string key;
         public Provider provider = Provider.Unsplash;
         public Order order = Order.Random;
+        public bool repeatWhenDepleted = true;
 
-        [HideInInspector]
-        public object catalog;
-        [HideInInspector]
-        public bool fetchingCatalog = false;
-        [HideInInspector]
-        public int currentIndex = 0;
+        // Formulas
+        public string providerFormula;
 
-        public ImageProvider() { }
+        [HideInInspector] [NonSerialized] public object catalog;
+        [HideInInspector] [NonSerialized] public bool fetchingCatalog;
+        [HideInInspector] [NonSerialized] public int currentIndex;
+
+        public ImageProvider()
+        {
+        }
 
         public override string ToString()
         {
-            return $"Image provider ({provider})";
+            return $"Image Provider ({provider})";
         }
     }
 }

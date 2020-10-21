@@ -120,6 +120,7 @@ namespace traVRsal.SDK
             ShowWorldChallenges = 76,
             ShowWorldStatistics = 75,
 
+            ImageOrigin = REQUIRE_SOURCE + 8,
             ImageName = REQUIRE_SOURCE + 1,
             ImageDescription = REQUIRE_SOURCE + 2,
             ImageDate = REQUIRE_SOURCE + 3,
