@@ -22,7 +22,7 @@ namespace traVRsal.SDK
     public class PublishUI : BasicEditorUI
     {
         private string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};
-        private string[] RELEASE_CHANNELS = {"Beta", "Live"};
+        private string[] RELEASE_CHANNELS = {"Live", "Beta"};
 
         private bool debugMode = true;
         private bool packagingInProgress;
@@ -105,21 +105,18 @@ namespace traVRsal.SDK
                 string buttonText = "Package";
                 if (packageMode == 1)
                 {
-                    string[] worldsToBuild = GetWorldsToBuild().Select(path => Path.GetFileName(path)).ToArray();
+                    string[] worldsToBuild = GetWorldsToBuild().Select(Path.GetFileName).ToArray();
                     buttonText += " (" + ((dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", worldsToBuild) : "everything") + ")";
                 }
 
                 if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode == 2, packageMode == 2), this);
                 EditorGUI.EndDisabledGroup();
 
-                if (debugMode)
-                {
-                    EditorGUILayout.Space();
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label("Release Channel:", EditorStyles.wordWrappedLabel);
-                    releaseChannel = EditorGUILayout.Popup(releaseChannel, RELEASE_CHANNELS);
-                    GUILayout.EndHorizontal();
-                }
+                EditorGUILayout.Space();
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Release Channel:", EditorStyles.wordWrappedLabel);
+                releaseChannel = EditorGUILayout.Popup(releaseChannel, RELEASE_CHANNELS);
+                GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);
@@ -779,7 +776,7 @@ namespace traVRsal.SDK
 
                 // set variables
                 string localRoot = Application.dataPath + $"/../traVRsal/{worldName}/[BuildTarget]";
-                string remoteTarget = releaseChannel == 0 ? AWSUtil.S3CDNRoot_Beta : AWSUtil.S3CDNRoot_Live;
+                string remoteTarget = releaseChannel == 0 ? AWSUtil.S3CDNRoot_Live : AWSUtil.S3CDNRoot_Beta;
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalBuildPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalLoadPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kRemoteBuildPath, $"ServerData/Worlds/{worldName}/[BuildTarget]");
@@ -831,7 +828,8 @@ namespace traVRsal.SDK
             foreach (string dir in GetWorldPaths())
             {
                 string worldName = Path.GetFileName(dir);
-                string uri = SDKUtil.API_ENDPOINT + "userworlds/" + userWorlds.First(w => w.key == worldName).id + "?channel=" + (preparedReleaseChannel == 0 ? "beta" : "live");
+                string uri = SDKUtil.API_ENDPOINT + "userworlds/" +
+                             userWorlds.First(w => w.key == worldName).id + "?channel=" + (preparedReleaseChannel == 0 ? "live" : "beta");
 
                 // extract data from world descriptor
                 string worldJson = File.ReadAllText(dir + "/World.json");

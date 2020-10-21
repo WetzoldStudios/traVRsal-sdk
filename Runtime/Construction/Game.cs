@@ -8,8 +8,16 @@ namespace traVRsal.SDK
     [Serializable]
     public class Game
     {
+        public enum ReleaseChannel
+        {
+            Live = 0,
+            Beta = 1
+        }
+
         [Header("Configuration")] [DefaultValue("game")]
         public string key = "game";
+
+        public ReleaseChannel channel = ReleaseChannel.Live;
 
         [DefaultValue("Development Mode")] public string name = "Development Mode";
         public List<string> worlds;

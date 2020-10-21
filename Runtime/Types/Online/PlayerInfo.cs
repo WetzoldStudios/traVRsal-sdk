@@ -22,7 +22,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Remote player info data ({runs_total} runs)";
+            return $"Remote Player Info Data ({runs_total} runs)";
         }
     }
 }

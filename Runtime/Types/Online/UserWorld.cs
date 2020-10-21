@@ -7,11 +7,15 @@ namespace traVRsal.SDK
     {
         public enum WorldState
         {
-            initial, preview, released
+            initial,
+            preview,
+            released
         }
 
         public int id;
         public string key;
+        public string channel;
+        public string min_app_version;
         public string cover_image;
         public string unity_version;
         public string world_json;

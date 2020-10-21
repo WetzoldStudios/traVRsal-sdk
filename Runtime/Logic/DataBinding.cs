@@ -112,6 +112,7 @@ namespace traVRsal.SDK
             ShowIfChallengeWonBest = 78,
             ShowIfChallengeWon = 80,
 
+            ShowIfBeta = 112,
             ShowPlayerLogin = 60,
             ShowPlayerLoggedIn = 61,
 

@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace traVRsal.SDK
 {
-    public class BuilderUI : BasicEditorUI
+    public class ConstructorUI : BasicEditorUI
     {
         private string varName;
 
-        [MenuItem("traVRsal/Builder", priority = 110)]
+        [MenuItem("traVRsal/Constructor", priority = 110)]
         public static void ShowWindow()
         {
-            GetWindow<BuilderUI>("traVRsal Builder");
+            GetWindow<ConstructorUI>("traVRsal Constructor");
         }
 
         public override void OnGUI()
