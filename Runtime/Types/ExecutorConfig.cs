@@ -6,9 +6,17 @@ namespace traVRsal.SDK
     [Serializable]
     public class ExecutorConfig : MonoBehaviour, IExecutorConfig
     {
-        private int uniqueId = 0;
+        public enum UserAction
+        {
+            Touch = 0,
+            Trigger = 1
+        }
 
-        private void Start() { }
+        private int uniqueId;
+
+        private void Start()
+        {
+        }
 
         public int GetUniqueId()
         {
