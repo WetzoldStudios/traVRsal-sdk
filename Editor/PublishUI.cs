@@ -24,7 +24,7 @@ namespace traVRsal.SDK
         private string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};
         private string[] RELEASE_CHANNELS = {"Live", "Beta"};
 
-        private bool debugMode = true;
+        private bool debugMode = false;
         private bool packagingInProgress;
         private bool documentationInProgress;
         private bool uploadInProgress;
