@@ -14,7 +14,7 @@ namespace traVRsal.SDK
         public UserWorld[] userWorlds;
 
         private static GUIStyle logo;
-        private Vector2 scrollPos;
+        private Vector2 windowScrollPos;
 
         public virtual void OnEnable()
         {
@@ -33,7 +33,7 @@ namespace traVRsal.SDK
 
         public virtual void OnGUI()
         {
-            scrollPos = GUILayout.BeginScrollView(scrollPos, false, false);
+            windowScrollPos = GUILayout.BeginScrollView(windowScrollPos, false, false);
             EditorGUILayout.Space();
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();

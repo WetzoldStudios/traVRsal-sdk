@@ -66,7 +66,7 @@ namespace traVRsal.SDK
                     if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
                     {
                         invalidAPIToken = true;
-                        Debug.LogError("Invalid or expired API Token.");
+                        Debug.LogError($"Invalid or expired API Token when contacting {uri}");
                     }
                     else
                     {
