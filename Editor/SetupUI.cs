@@ -11,7 +11,7 @@ namespace traVRsal.SDK
     {
         private int worldIdx;
         private string worldName;
-        private bool showMaintenance = false;
+        private bool showMaintenance;
 
         [MenuItem("traVRsal/Setup", priority = 100)]
         public static void ShowWindow()
@@ -30,7 +30,7 @@ namespace traVRsal.SDK
             {
                 if (userWorlds == null || userWorlds.Length == 0)
                 {
-                    EditorGUILayout.HelpBox("You have not registerd any worlds yet on www.traVRsal.com.", MessageType.Info);
+                    EditorGUILayout.HelpBox("You have not registered any worlds yet on www.traVRsal.com.", MessageType.Info);
                 }
                 else
                 {
@@ -72,7 +72,7 @@ namespace traVRsal.SDK
             }
             if (!IsValidWorldName(worldName))
             {
-                EditorUtility.DisplayDialog("Invalid Entry", "World key is not valid: must be upper and lower case characters, numbers and undercore only.", "OK");
+                EditorUtility.DisplayDialog("Invalid Entry", "World key is not valid: must be upper and lower case characters, numbers and underscore only.", "OK");
                 return;
             }
 
@@ -113,7 +113,7 @@ namespace traVRsal.SDK
             AssetDatabase.DeleteAsset(tiledPath);
             AssetDatabase.Refresh();
 
-            AssetDatabase.CopyAsset("Packages/" + SDKUtil.PACKAGE_NAME + "/Editor/_Tiled", tiledPath);
+            AssetDatabase.CopyAsset("Packages/" + SDKUtil.PACKAGE_NAME + "/Editor/CopyTemplates/Tiled", tiledPath);
             AssetDatabase.Refresh();
         }
 
@@ -121,7 +121,7 @@ namespace traVRsal.SDK
         {
             if (!Directory.Exists(GetWorldPath(false)))
             {
-                AssetDatabase.CopyAsset("Packages/" + SDKUtil.PACKAGE_NAME + "/Editor/_World", GetWorldPath(true));
+                AssetDatabase.CopyAsset("Packages/" + SDKUtil.PACKAGE_NAME + "/Editor/CopyTemplates/SampleWorld", GetWorldPath(true));
                 AssetDatabase.Refresh();
 
                 return true;

@@ -529,7 +529,7 @@ namespace traVRsal.SDK
                 string root = GetWorldsRoot() + $"/{worldName}/";
 
                 // fill HTML template
-                string id = AssetDatabase.FindAssets("_WorldDocu")[0];
+                string id = AssetDatabase.FindAssets("WorldDocu")[0];
                 string path = AssetDatabase.GUIDToAssetPath(id);
                 DirectoryUtil.Copy(Application.dataPath + "/../" + path, docuPath);
                 AssetDatabase.Refresh();
@@ -610,7 +610,7 @@ namespace traVRsal.SDK
                             if (generatePreview)
                             {
                                 GameObject prefab = null;
-                                UnityEngine.Object obj = null;
+                                UnityEngine.Object obj;
                                 if (type != null)
                                 {
                                     obj = AssetDatabase.LoadAssetAtPath(assetPath, type);
