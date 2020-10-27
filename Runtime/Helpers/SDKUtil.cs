@@ -19,6 +19,7 @@ namespace traVRsal.SDK
         public const string SERVER_ENDPOINT = "https://www.travrsal.com";
 
         public const string API_ENDPOINT = SERVER_ENDPOINT + "/api/";
+
         // public const string API_ENDPOINT = "http://localhost:8000/api/";
         public const string DEBUG_API_ENDPOINT = "http://localhost:8000/api/";
 
@@ -45,7 +46,7 @@ namespace traVRsal.SDK
             Sphere
         }
 
-        public static IEnumerator FetchAPIData<T>(string api, string token, Action<T> callback, string endPoint = API_ENDPOINT)
+        public static IEnumerator FetchAPIData<T>(string api, string player, string token, Action<T> callback, string endPoint = API_ENDPOINT)
         {
             string uri = endPoint + api;
 
@@ -54,6 +55,7 @@ namespace traVRsal.SDK
             {
                 webRequest.SetRequestHeader("Accept", "application/json");
                 webRequest.SetRequestHeader("Authorization", "Bearer " + token);
+                if (!string.IsNullOrEmpty(player)) webRequest.SetRequestHeader("X-Player", player);
                 yield return webRequest.SendWebRequest();
 
                 if (webRequest.isNetworkError)

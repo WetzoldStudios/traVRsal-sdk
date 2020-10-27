@@ -28,6 +28,7 @@ namespace traVRsal.SDK
 
         // derived 
         public bool stickMode;
+        public bool offlineMode;
 
         public Game()
         {

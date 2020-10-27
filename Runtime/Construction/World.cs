@@ -49,10 +49,10 @@ namespace traVRsal.SDK
         public List<Zone> zones;
         public List<Zone> zoneTemplates;
         public List<Journey> journeyTemplates;
+        public UserWorld remoteMetaData;
 
         [NonSerialized] public Texture2D cover;
         [NonSerialized] public Dictionary<string, string> zoneTemplateCache;
-        [NonSerialized] public UserWorld remoteMetaData;
         [NonSerialized] public Challenge challenge;
         [NonSerialized] public int autoIdx = 1;
         [NonSerialized] public float tileSize;

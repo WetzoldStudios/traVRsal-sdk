@@ -119,7 +119,7 @@ namespace traVRsal.SDK
 
         protected IEnumerator FetchUserWorlds()
         {
-            yield return SDKUtil.FetchAPIData<UserWorld[]>("userworlds", GetAPIToken(), worlds =>
+            yield return SDKUtil.FetchAPIData<UserWorld[]>("userworlds", null, GetAPIToken(), worlds =>
             {
                 if (worlds != null) userWorlds = worlds;
             });
