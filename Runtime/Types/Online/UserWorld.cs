@@ -26,7 +26,7 @@ namespace traVRsal.SDK
         public long pc_size;
         public string last_uploaded_at;
         public string last_statechange_at;
-        public string owner;
+        public string creator;
 
         public override string ToString()
         {

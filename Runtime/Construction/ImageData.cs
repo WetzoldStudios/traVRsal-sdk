@@ -6,7 +6,7 @@ namespace traVRsal.SDK
     [Serializable]
     public class ImageData
     {
-        public Texture texture;
+        public Texture2D texture;
         public string name;
         public string description;
         public DateTime date;

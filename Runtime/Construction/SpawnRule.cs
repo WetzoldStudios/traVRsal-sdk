@@ -30,6 +30,7 @@ namespace traVRsal.SDK
         public string layer;
         [DefaultValue(true)] public bool enabled = true;
         public string[] objectKeys;
+        public ConditionalValues[] objectKeysIf;
         public string[] validZones;
         public string[] validSockets;
         public AmountType amountType = AmountType.Total;

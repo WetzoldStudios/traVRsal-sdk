@@ -76,7 +76,11 @@ namespace traVRsal.SDK
                 return;
             }
 
-            if (CreateWorldsRoot()) RestoreTiled();
+            if (CreateWorldsRoot())
+            {
+                RestoreTiled();
+                SetupGitIgnore();
+            }
             CopySampleWorld();
 
             EditorUtility.FocusProjectWindow();
@@ -85,6 +89,15 @@ namespace traVRsal.SDK
             EditorGUIUtility.PingObject(obj);
 
             worldName = "";
+        }
+
+        private void SetupGitIgnore()
+        {
+            if (!File.Exists(Application.dataPath + "/../.gitignore"))
+            {
+                AssetDatabase.CopyAsset("Packages/" + SDKUtil.PACKAGE_NAME + "/Editor/CopyTemplates/gitignore", ".gitignore");
+                File.Delete(Application.dataPath + "/../.gitignore.meta");
+            }
         }
 
         private bool IsValidWorldName(string worldName)

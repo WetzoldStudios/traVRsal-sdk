@@ -8,6 +8,7 @@ namespace traVRsal.SDK
     public class ConstructorUI : BasicEditorUI
     {
         private string varName;
+        private string worldSetting;
 
         [MenuItem("traVRsal/Constructor", priority = 110)]
         public static void ShowWindow()
@@ -20,28 +21,45 @@ namespace traVRsal.SDK
             base.OnGUI();
 
             GUILayout.Label("Use the following quick-actions to create often needed entities.", EditorStyles.wordWrappedLabel);
+
             EditorGUILayout.Space();
-
             GUILayout.BeginHorizontal();
-
             GUILayout.Label("New Variable:", EditorStyles.wordWrappedLabel);
             varName = GUILayout.TextField(varName);
             GUILayout.EndHorizontal();
-            if (GUILayout.Button("Create Variable")) CreateVariable();
+            if (GUILayout.Button("Create Variable")) ManipulateWorld("AddVariable");
+
+            EditorGUILayout.Space();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("New World Setting:", EditorStyles.wordWrappedLabel);
+            worldSetting = GUILayout.TextField(worldSetting);
+            GUILayout.EndHorizontal();
+            if (GUILayout.Button("Create World Setting")) ManipulateWorld("AddSetting");
 
             OnGUIDone();
         }
 
-
-        private void CreateVariable()
+        private void ManipulateWorld(string command)
         {
-            if (string.IsNullOrEmpty(varName)) return;
             World world = LoadWorld();
             if (world == null) return;
 
-            if (world.initialVariables == null) world.initialVariables = new List<Variable>();
-            world.initialVariables.Add(new Variable(varName));
-            varName = "";
+            switch (command)
+            {
+                case "AddVariable":
+                    if (string.IsNullOrEmpty(varName)) return;
+                    if (world.initialVariables == null) world.initialVariables = new List<Variable>();
+                    world.initialVariables.Add(new Variable(varName));
+                    varName = "";
+                    break;
+
+                case "AddSetting":
+                    if (string.IsNullOrEmpty(worldSetting)) return;
+                    if (world.settings == null) world.settings = new List<WorldSetting>();
+                    world.settings.Add(new WorldSetting(worldSetting));
+                    worldSetting = "";
+                    break;
+            }
 
             SaveWorld(world);
         }

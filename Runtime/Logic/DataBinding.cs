@@ -12,6 +12,9 @@ namespace traVRsal.SDK
             OriginalValue = 0,
             AppVersion = 1,
 
+            measurementBig = 114,
+            measurementSmall = 115,
+
             DoOpenWorldDetailsDialog = 18,
             DoCloseWorldDetailsDialog = 13,
             DoOpenSettingsDialog = 20,
@@ -29,6 +32,8 @@ namespace traVRsal.SDK
             DoStartWorld = 14,
             DoStartWorldDownload = 67,
             DoStartRandomChallenge = 109,
+            DoSetDebugMode = 7,
+            DoSetMetricSystem = 116,
             DoUnpause = 16,
             DoLogOut = 63,
             DoClearCache = 68,
@@ -60,7 +65,6 @@ namespace traVRsal.SDK
             PlayerName = 3,
             PlayerLogin = 57,
 
-            SettingDebugMode = 7,
             SettingPadding = 6,
             SettingTileCount = 5,
             SettingTileSizeHint = 8,

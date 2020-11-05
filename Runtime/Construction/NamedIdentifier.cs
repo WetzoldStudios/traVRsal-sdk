@@ -19,6 +19,7 @@ namespace traVRsal.SDK
             WorldPlacement = 6,
             ChallengesDialog = 13,
             ChallengesListRoot = 14,
+            HighscoreListRoot = 18,
             NoWorldSettingsHint = 3,
             NoChallengesHint = 15,
             WorldSettingsRoot = 4,
