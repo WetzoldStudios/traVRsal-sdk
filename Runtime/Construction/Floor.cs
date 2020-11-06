@@ -50,6 +50,17 @@ namespace traVRsal.SDK
             {
                 entities.Add(new BasicEntity(entity));
             }
+            if (copyFrom.positionInfoMarker != null)
+            {
+                positionInfoMarker = new PositionInfoMarker[copyFrom.positionInfoMarker.GetLength(0), copyFrom.positionInfoMarker.GetLength(1)];
+                for (int x = 0; x < copyFrom.positionInfoMarker.GetLength(0); x++)
+                {
+                    for (int y = 0; y < copyFrom.positionInfoMarker.GetLength(1); y++)
+                    {
+                        positionInfoMarker[x, y] = new PositionInfoMarker(copyFrom.positionInfoMarker[x, y]);
+                    }
+                }
+            }
         }
 
         public override bool Equals(object obj)

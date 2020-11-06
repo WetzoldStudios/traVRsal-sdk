@@ -91,7 +91,10 @@ namespace traVRsal.SDK
 
             foreach (Floor floor in copyFrom.floors)
             {
-                floors.Add(new Floor(floor));
+                Floor copy = new Floor(floor);
+                copy.positionInfoMarker = floor.positionInfoMarker; // FIXME: quick-fix for retaining challenge mode correctly until copy-constructor for position info exists
+
+                floors.Add(copy);
             }
         }
 

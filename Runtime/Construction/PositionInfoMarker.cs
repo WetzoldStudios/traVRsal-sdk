@@ -41,6 +41,21 @@ namespace traVRsal.SDK
             this.reachable = reachable;
         }
 
+        public PositionInfoMarker(PositionInfoMarker copyFrom) : this()
+        {
+            x = copyFrom.x;
+            y = copyFrom.y;
+            reachable = copyFrom.reachable;
+            transition = copyFrom.transition;
+            transitionAhead = copyFrom.transitionAhead;
+            aheadDirection = copyFrom.aheadDirection;
+            aheadDistance = copyFrom.aheadDistance;
+            backDirection = copyFrom.backDirection;
+            backDistance = copyFrom.backDistance;
+
+            // TODO: incomplete
+        }
+
         public void MarkAllSidesNoSpawn()
         {
             for (int i = 0; i < explicitNoSpawn.Length; i++)
