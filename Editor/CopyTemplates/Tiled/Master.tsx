@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.4" tiledversion="1.4.2" name="Master" tilewidth="50" tileheight="50" tilecount="22" columns="0">
+<tileset version="1.4" tiledversion="1.4.2" name="Master" tilewidth="50" tileheight="50" tilecount="23" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="2" type="/Base/Ceiling">
   <properties>
@@ -143,5 +143,11 @@
  </tile>
  <tile id="27" type="/Base/StoneCorridorEnd">
   <image width="50" height="50" source="Master Images/stonecorridor-end.png"/>
+ </tile>
+ <tile id="28" type="/Base/Redirection">
+  <properties>
+   <property name="TargetZone" value=""/>
+  </properties>
+  <image width="50" height="50" source="Master Images/redirection.png"/>
  </tile>
 </tileset>
