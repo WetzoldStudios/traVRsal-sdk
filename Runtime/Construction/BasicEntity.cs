@@ -46,6 +46,8 @@ namespace traVRsal.SDK
         public bool isVirtual;
 
         public string targetZone;
+        public string targetLocation;
+        public string locationId;
 
         public string key;
         public string lowKey;
@@ -89,6 +91,8 @@ namespace traVRsal.SDK
             snap = copyFrom.snap;
             isVirtual = copyFrom.isVirtual;
             targetZone = copyFrom.targetZone;
+            targetLocation = copyFrom.targetLocation;
+            locationId = copyFrom.locationId;
             direction = copyFrom.direction;
 
             key = copyFrom.key;
@@ -111,6 +115,9 @@ namespace traVRsal.SDK
                    flipX == entity.flipX &&
                    flipZ == entity.flipZ &&
                    direction == entity.direction &&
+                   targetZone == entity.targetZone &&
+                   targetLocation == entity.targetLocation &&
+                   locationId == entity.locationId &&
                    key == entity.key &&
                    name == entity.name &&
                    layerName == entity.layerName &&
@@ -130,6 +137,9 @@ namespace traVRsal.SDK
             hashCode = hashCode * -1521134295 + flipX.GetHashCode();
             hashCode = hashCode * -1521134295 + flipZ.GetHashCode();
             hashCode = hashCode * -1521134295 + direction.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(targetZone);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(targetLocation);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(locationId);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(key);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(layerName);

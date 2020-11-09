@@ -9,6 +9,7 @@ namespace traVRsal.SDK
     {
         [Header("Configuration")] public string name;
         public Vector2Int minSize = new Vector2Int(4, 4);
+        public Vector3 offset = Vector3.zero;
         public List<Floor> floors;
         public bool isExit;
         public bool isIntro;
@@ -73,6 +74,7 @@ namespace traVRsal.SDK
             name = copyFrom.name;
             minSize = copyFrom.minSize;
             curSize = copyFrom.curSize;
+            offset = copyFrom.offset;
             scenePath = copyFrom.scenePath;
             ambientColor = copyFrom.ambientColor;
             lightColor = copyFrom.lightColor;
@@ -103,6 +105,7 @@ namespace traVRsal.SDK
             return obj is Zone zone &&
                    name == zone.name &&
                    minSize.Equals(zone.minSize) &&
+                   offset.Equals(zone.offset) &&
                    // FIXME: returns false for some reason
                    EqualityComparer<List<Floor>>.Default.Equals(floors, zone.floors) &&
                    isExit == zone.isExit &&
@@ -124,6 +127,7 @@ namespace traVRsal.SDK
             int hashCode = -1742729958;
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
             hashCode = hashCode * -1521134295 + minSize.GetHashCode();
+            hashCode = hashCode * -1521134295 + offset.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<List<Floor>>.Default.GetHashCode(floors);
             hashCode = hashCode * -1521134295 + isExit.GetHashCode();
             hashCode = hashCode * -1521134295 + isIntro.GetHashCode();

@@ -52,8 +52,11 @@ namespace traVRsal.SDK
         public List<Journey> journeyTemplates;
         public UserWorld remoteMetaData;
 
+        // cache structures
         [NonSerialized] public Texture2D cover;
         [NonSerialized] public Dictionary<string, string> zoneTemplateCache;
+        [NonSerialized] public Dictionary<string, string> locationCache;
+        [NonSerialized] public Dictionary<int, HashSet<int>> zoneVisibility;
         [NonSerialized] public Challenge challenge;
         [NonSerialized] public int autoIdx = 1;
         [NonSerialized] public float tileSize;
@@ -67,6 +70,8 @@ namespace traVRsal.SDK
             replacements = new List<ReplacementRule>();
             objectSpecs = new List<ObjectSpec>();
             zoneTemplateCache = new Dictionary<string, string>();
+            locationCache = new Dictionary<string, string>();
+            zoneVisibility = new Dictionary<int, HashSet<int>>();
             speech = new List<TextFragment>();
             initialVariables = new List<Variable>();
             settings = new List<WorldSetting>();
@@ -91,6 +96,8 @@ namespace traVRsal.SDK
             if (replacements != null && replacements.Count == 0) replacements = null;
             if (objectSpecs != null && objectSpecs.Count == 0) objectSpecs = null;
             if (zoneTemplateCache != null && zoneTemplateCache.Count == 0) zoneTemplateCache = null;
+            if (locationCache != null && locationCache.Count == 0) locationCache = null;
+            if (zoneVisibility != null && zoneVisibility.Count == 0) zoneVisibility = null;
             if (speech != null && speech.Count == 0) speech = null;
             if (initialVariables != null && initialVariables.Count == 0) initialVariables = null;
             if (settings != null && settings.Count == 0) settings = null;
