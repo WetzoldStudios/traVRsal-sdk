@@ -4,6 +4,14 @@ namespace traVRsal.SDK
 {
     public class ProjectileShooter : ExecutorConfig
     {
+        public enum ReloadType
+        {
+            Never = 0,
+            PointDown = 1
+        }
+
+        public ReloadType reloadType = ReloadType.Never;
+        public int bulletCount = 0;
         public GameObject bullet;
         public Transform firePoint;
         public GameObject layerRef;
@@ -18,9 +26,8 @@ namespace traVRsal.SDK
         public void Fire()
         {
             if (shooter == null) shooter = GetComponent<IProjectileShooter>();
-            if (shooter == null) return;
 
-            shooter.Fire();
+            shooter?.Fire();
         }
     }
 }

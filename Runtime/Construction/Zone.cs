@@ -10,6 +10,7 @@ namespace traVRsal.SDK
         [Header("Configuration")] public string name;
         public Vector2Int minSize = new Vector2Int(4, 4);
         public Vector3 offset = Vector3.zero;
+        public Vector3 offsetRaw = Vector3.zero;
         public List<Floor> floors;
         public bool isExit;
         public bool isIntro;
@@ -75,6 +76,7 @@ namespace traVRsal.SDK
             minSize = copyFrom.minSize;
             curSize = copyFrom.curSize;
             offset = copyFrom.offset;
+            offsetRaw = copyFrom.offsetRaw;
             scenePath = copyFrom.scenePath;
             ambientColor = copyFrom.ambientColor;
             lightColor = copyFrom.lightColor;

@@ -55,6 +55,7 @@ namespace traVRsal.SDK
             {
                 webRequest.SetRequestHeader("Accept", "application/json");
                 webRequest.SetRequestHeader("Authorization", "Bearer " + token);
+                webRequest.SetRequestHeader("X-NoTrack", Application.isEditor ? "True" : "False");
                 if (!string.IsNullOrEmpty(player)) webRequest.SetRequestHeader("X-Player", player);
                 yield return webRequest.SendWebRequest();
 

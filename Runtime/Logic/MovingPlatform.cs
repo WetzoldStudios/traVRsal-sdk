@@ -6,39 +6,41 @@ namespace traVRsal.SDK
     {
         public enum Trigger
         {
-            Manual,
-            Automatic
+            Manual = 0,
+            Automatic = 1
         }
 
         public enum State
         {
-            Home,
-            Moving_To_Target,
-            Target,
-            Moving_To_Home
+            Home = 0,
+            MovingToTarget = 1,
+            Target = 2,
+            MovingToHome = 3
         }
 
         public enum AutoMovement
         {
-            None,
-            Auto_Return,
-            Move_To_Player
+            None = 0,
+            AutoReturn = 1,
+            MoveToPlayer = 2,
+            PingPong = 3
         }
 
         public enum TargetPositionMode
         {
-            Automatic,
-            Manual,
-            Location
+            Automatic = 0,
+            Manual = 1,
+            Location = 2
         }
 
         public TargetPositionMode targetPositionMode = TargetPositionMode.Automatic;
         public Vector3 targetPosition;
-        public string locationId;
+        public string targetLocation;
         public float duration = 2f;
-        public float physicsMultiplier = 1f;
-        public float playerCheckInterval = 2f;
+        public float initialPause = 2f;
+        public float stationPause = 2f;
         public Trigger trigger = Trigger.Manual;
         public AutoMovement autoMovement = AutoMovement.None;
+        public float playerCheckInterval = 2f;
     }
 }

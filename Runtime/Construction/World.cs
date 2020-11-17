@@ -14,6 +14,8 @@ namespace traVRsal.SDK
         public string shortDescription;
         public string longDescription;
         public string coverImage;
+        public string minVersion;
+        public Vector2Int maxSize = Vector2Int.zero;
         [DefaultValue(300)] public int availableTime = 5 * 60;
         public bool isVirtual;
         public string deathSound;
@@ -21,7 +23,6 @@ namespace traVRsal.SDK
         [DefaultValue("0,4")] public string kpis = "0,4"; // TODO: switch to array?
         public string initialItemLeft;
         public string initialItemRight;
-        public Vector2Int maxSize = Vector2Int.zero;
         [DefaultValue("/Base/LightHall")] public string introScenery = "/Base/LightHall";
 
         [DefaultValue("/Base/LightHall-Outro")]
