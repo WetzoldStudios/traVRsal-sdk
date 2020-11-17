@@ -6,14 +6,15 @@ namespace traVRsal.SDK
     {
         public const int REQUIRE_SOURCE = 1000;
         public const int ASYNC_RESULT = 2000;
+        public const int PERIODIC = 3000;
 
         public enum Reference
         {
             OriginalValue = 0,
             AppVersion = 1,
 
-            measurementBig = 114,
-            measurementSmall = 115,
+            unitLong = 114,
+            unitShort = 115,
 
             DoOpenWorldDetailsDialog = 18,
             DoCloseWorldDetailsDialog = 13,
@@ -62,8 +63,14 @@ namespace traVRsal.SDK
             WorldOwner = 66,
 
             PlayerDistance = 9,
+            PlayerDistanceNoUnit = 119,
             PlayerName = 3,
+            PlayerNameWithAnonHint = 117,
             PlayerLogin = 57,
+
+            AmmunitionLeft = 120,
+
+            TimeElapsed = PERIODIC + 1,
 
             SettingPadding = 6,
             SettingTileCount = 5,
@@ -72,6 +79,7 @@ namespace traVRsal.SDK
             StatAccuracy = 23,
             StatDeaths = 25,
             StatDistanceWalked = 26,
+            StatDistanceWalkedNoUnit = 118,
             StatPlayerDamage = 30,
             StatPoints = 27,
             StatShotsFired = 29,
