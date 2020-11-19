@@ -7,22 +7,21 @@ namespace traVRsal.SDK
     {
         public enum OperationMode
         {
-            User_Driven, Auto_Deactivate
+            User_Driven,
+            Auto_Deactivate
         }
 
         public float slowTimeValue = 0.05f;
         public float duration = 3f;
         public float cooldown = 5f;
 
-        [HideInInspector]
-        public OperationMode mode = OperationMode.User_Driven;
-        [HideInInspector]
-        public float defaultPhysicsTimeStep;
+        [HideInInspector] public OperationMode mode = OperationMode.User_Driven;
+        [HideInInspector] public float defaultPhysicsTimeStep;
 
         private float lastUsage;
         private AudioSource audioSource;
 
-        void Start()
+        private void Start()
         {
             switch (mode)
             {

@@ -6,12 +6,18 @@ namespace traVRsal.SDK
     {
         public enum Action
         {
-            Activate_Object, Activate_Component, Activate_Emission, Call_Reactors, GameState_Game, GameState_Menu
+            Activate_Object,
+            Activate_Component,
+            Activate_Emission,
+            Call_Reactors,
+            GameState_Game,
+            GameState_Menu
         }
+
         public string variable;
         public Action action = Action.Activate_Object;
         public GameObject targetObject;
         public Behaviour component;
-        public bool invert = false;
+        public bool invert;
     }
 }

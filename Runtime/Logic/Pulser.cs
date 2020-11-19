@@ -10,7 +10,7 @@ namespace traVRsal.SDK
         public float startScale = 1.5f;
         public float endScale = 0.15f;
 
-        void Start()
+        private void Start()
         {
             transform.localScale = Vector3.one * startScale;
             transform.DOScale(endScale, duration).SetLoops(999, loopType);

@@ -11,7 +11,7 @@ namespace traVRsal.SDK
         }
 
         public ReloadType reloadType = ReloadType.Never;
-        public int bulletCount = 0;
+        public int bulletCount;
         public GameObject bullet;
         public Transform firePoint;
         public GameObject layerRef;
@@ -19,6 +19,7 @@ namespace traVRsal.SDK
         public bool countIntoStatistics = false;
         public bool byPlayer;
         public AudioSource audioSource;
+        public AudioSource reloadAudio;
         public DamageInflictor damageInflictor;
 
         private IProjectileShooter shooter;

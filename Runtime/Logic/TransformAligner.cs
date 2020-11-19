@@ -7,7 +7,7 @@ namespace traVRsal.SDK
         public Transform source;
         public Vector3 positionOffset;
 
-        void Update()
+        private void Update()
         {
             transform.position = source.position + positionOffset;
             transform.rotation = source.rotation;

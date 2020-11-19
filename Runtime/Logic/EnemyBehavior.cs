@@ -6,16 +6,18 @@ namespace traVRsal.SDK
     {
         public enum EnemyState
         {
-            Scan, Investigate, Engage
+            Scan,
+            Investigate,
+            Engage
         }
 
         public enum Movement
         {
-            None, Random
+            None,
+            Random
         }
 
-        [Header("General")]
-        public EnemyState state = EnemyState.Scan;
+        [Header("General")] public EnemyState state = EnemyState.Scan;
         public float investigateToEngageDelay = 0.5f;
         public float investigateToScanDelay = 3f;
         public float engageToScanDelay = 3f;
@@ -23,17 +25,14 @@ namespace traVRsal.SDK
         public BulletHellManager investigateBehavior;
         public BulletHellManager engageBehavior;
 
-        [Header("Tracking")]
-        public bool trackPlayer = true;
+        [Header("Tracking")] public bool trackPlayer = true;
         public Transform tracker;
         public float trackSpeed = 1f;
 
-        [Header("Attack")]
-        public bool proximityDamage = false;
+        [Header("Attack")] public bool proximityDamage;
         public float proximity = 0.5f;
 
-        [Header("Movement")]
-        public Movement movement = Movement.None;
+        [Header("Movement")] public Movement movement = Movement.None;
         public float minMoveChangeDelay = 2f;
         public float maxMoveChangeDelay = 5f;
         public Vector2 moveAreaStart = Vector2.zero;

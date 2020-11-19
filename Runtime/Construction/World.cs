@@ -17,6 +17,7 @@ namespace traVRsal.SDK
         public string minVersion;
         public Vector2Int maxSize = Vector2Int.zero;
         [DefaultValue(300)] public int availableTime = 5 * 60;
+        [DefaultValue(true)] public bool showHandHud = true;
         public bool isVirtual;
         public string deathSound;
         [DefaultValue(true)] public bool enableChallenges = true;

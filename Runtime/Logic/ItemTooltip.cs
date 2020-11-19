@@ -10,7 +10,7 @@ namespace traVRsal.SDK
         private Transform actor;
         private Vector3 originalScale;
 
-        void Start()
+        private void Start()
         {
             actor = transform.GetChild(0);
             originalScale = actor.localScale;
@@ -28,6 +28,5 @@ namespace traVRsal.SDK
             seq.Append(actor.DOScale(0, duration / 8f).SetDelay((duration / 8f) * 6f));
             seq.OnComplete(() => actor.gameObject.SetActive(false));
         }
-
     }
 }

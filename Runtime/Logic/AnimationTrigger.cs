@@ -10,7 +10,7 @@ namespace traVRsal.SDK
 
         private Vector3 originalPosition;
 
-        void Start()
+        private void Start()
         {
             originalPosition = transform.localPosition;
         }
@@ -26,6 +26,5 @@ namespace traVRsal.SDK
                 transform.DOLocalMove(originalPosition, duration);
             }
         }
-
     }
 }

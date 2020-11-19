@@ -9,31 +9,31 @@ namespace traVRsal.SDK
     {
         public enum DestroyAction
         {
-            None, Move, Rotate
+            None,
+            Move,
+            Rotate
         }
 
-        [Header("Configuration")]
-        public int health = 1;
-        public int points = 0;
-        public bool isPlayer = false;
+        [Header("Configuration")] public int health = 1;
+        public int points;
+        public bool isPlayer;
         public bool destructible = true;
         public bool registerAsTarget = true;
-        public bool triggerVariable = false;
+        public bool triggerVariable;
 
-        [Header("Destruction")]
-        public bool allowMelee = false;
+        [Header("Destruction")] public bool allowMelee;
         public bool hideWhenDestroyed = true;
         public string stateChange;
 
-        [Header("Destruction Effects")]
-        public DestroyAction destroyAction = DestroyAction.None;
+        [Header("Destruction Effects")] public DestroyAction destroyAction = DestroyAction.None;
         public Vector3 endValue;
         public float duration = 0.2f;
 
-        [HideInInspector]
-        public List<string> breakSounds;
+        [HideInInspector] public List<string> breakSounds;
 
-        public DamageableConfig() { }
+        public DamageableConfig()
+        {
+        }
 
         public DamageableConfig(DamageableConfig copyFrom)
         {

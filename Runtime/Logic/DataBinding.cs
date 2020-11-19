@@ -68,9 +68,10 @@ namespace traVRsal.SDK
             PlayerNameWithAnonHint = 117,
             PlayerLogin = 57,
 
-            AmmunitionLeft = 120,
-
+            AmmunitionRemaining = 120,
+            
             TimeElapsed = PERIODIC + 1,
+            SlowMotionCooldownRemaining = PERIODIC + 2,
 
             SettingPadding = 6,
             SettingTileCount = 5,

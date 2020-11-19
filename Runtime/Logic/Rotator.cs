@@ -7,7 +7,7 @@ namespace traVRsal.SDK
         public float degreesPerSecond = 10f;
         public Vector3 axis = Vector3.up;
 
-        void Update()
+        private void Update()
         {
             transform.Rotate(axis, degreesPerSecond * Time.deltaTime);
         }

@@ -19,8 +19,8 @@ namespace traVRsal.SDK
         public string imageFolder;
         public int targetCount;
 
-        [Header("Runtime")] public bool runtimeCreated = false;
-        public bool isComboPart = false;
+        [Header("Runtime")] public bool runtimeCreated;
+        public bool isComboPart;
         public List<string> targetOrder = new List<string>();
         public List<string> currentOrder = new List<string>();
         public List<IVariableListener> listeners = new List<IVariableListener>();

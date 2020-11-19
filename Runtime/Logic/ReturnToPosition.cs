@@ -5,21 +5,21 @@ namespace traVRsal.SDK
     public class ReturnToPosition : MonoBehaviour
     {
         public float speed = 10f;
-        public bool resetLayer = false;
+        public bool resetLayer;
 
         private Vector3 originalPosition;
         private Quaternion originalRotation;
         private int originalLayer;
-        private bool doReturn = false;
+        private bool doReturn;
 
-        void Start()
+        private void Start()
         {
             originalPosition = transform.position;
             originalRotation = transform.rotation;
             originalLayer = gameObject.layer;
         }
 
-        void Update()
+        private void Update()
         {
             if (doReturn)
             {
