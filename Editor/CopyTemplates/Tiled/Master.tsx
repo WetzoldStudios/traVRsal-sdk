@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.4" tiledversion="1.4.2" name="Master" tilewidth="50" tileheight="50" tilecount="24" columns="0">
+<tileset version="1.4" tiledversion="1.4.2" name="Master" tilewidth="50" tileheight="50" tilecount="25" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="2" type="/Base/Ceiling">
   <properties>
@@ -155,5 +155,8 @@
    <property name="LocationId" value=""/>
   </properties>
   <image width="50" height="50" source="Master Images/location.png"/>
+ </tile>
+ <tile id="30" type="/Base/Trigger">
+  <image width="50" height="50" source="Master Images/trigger.png"/>
  </tile>
 </tileset>
