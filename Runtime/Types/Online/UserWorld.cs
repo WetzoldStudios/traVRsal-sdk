@@ -22,6 +22,7 @@ namespace traVRsal.SDK
         public WorldState state;
         public string is_private;
         public string is_virtual;
+        public string is_featured;
         public long android_size;
         public long pc_size;
         public string last_uploaded_at;

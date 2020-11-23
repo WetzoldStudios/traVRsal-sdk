@@ -2,20 +2,20 @@
 	"name": "My Game",
 	"shortDescription": "My game description.",
 	"replacements": [
-		{
-			"key": "[walls]",
-			"type": "MATERIAL",
-			"materials": "/Base/Bricks"
-		},
-		{
-			"key": "[ceiling]",
-			"type": "MATERIAL",
-			"materials": "/Base/Concrete"
-		},
-		{
-			"key": "[ground]",
-			"type": "MATERIAL",
-			"materials": "/Base/Metal"
-		}
-	]
+        {
+            "type": "Material",
+            "key": "[walls]",
+            "materials": "/Base/Proto/Blue"
+        },
+        {
+            "type": "Material",
+            "key": "[ceiling]",
+            "materials": "/Base/Proto/White"
+        },
+        {
+            "type": "Material",
+            "key": "[ground]",
+            "materials": "/Base/Proto/Green"
+        }
+    ]
 }

@@ -15,8 +15,11 @@ namespace traVRsal.SDK
             InfoDialogText = 11,
             WorldDetailsDialog = 2,
             WorldDetailsDialogPosition = 8,
-            WorldsListRoot = 0,
+            WorldsListRoot = 19,
+            FeaturedWorldsListRoot = 0,
             WorldPlacement = 6,
+            WorldBrowserDialog = 20,
+            WorldBrowserDialogPosition = 21,
             ChallengesDialog = 13,
             ChallengesListRoot = 14,
             HighscoreListRoot = 18,
@@ -24,17 +27,16 @@ namespace traVRsal.SDK
             NoChallengesHint = 15,
             WorldSettingsRoot = 4,
             InterstitialDialog = 12,
-            CreateWorldsAd = 17,
             CreateWorldsDialog = 16,
             Pivot = 9
         }
 
-        public IdentifierType type = IdentifierType.WorldsListRoot;
+        public IdentifierType type = IdentifierType.FeaturedWorldsListRoot;
         public string optionalData;
 
         public override string ToString()
         {
-            return $"Named identifier ({type})";
+            return $"Named Identifier ({type})";
         }
     }
 }
