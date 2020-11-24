@@ -787,6 +787,7 @@ namespace traVRsal.SDK
                 groupSchema.UseAssetBundleCache = true;
                 groupSchema.UseAssetBundleCrc = false;
                 groupSchema.IncludeInBuild = isBase;
+                groupSchema.RetryCount = 3;
                 groupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.NoHash; // hash to disambiguate identically named files yields same error messages, e.g. standard shaders
                 groupSchema.BundleMode = BundledAssetGroupSchema.BundlePackingMode.PackTogether;
                 groupSchema.Compression = BundledAssetGroupSchema.BundleCompressionMode.LZ4;
