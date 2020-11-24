@@ -7,6 +7,7 @@ namespace traVRsal.SDK
     {
         public Reference text;
         public string textWhenZero;
+        public bool hideTextWhenZero;
         public string subText;
         public string subTextWhenZero;
         public bool hideSubTextWhenZero;
