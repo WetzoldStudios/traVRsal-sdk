@@ -7,13 +7,17 @@ namespace traVRsal.SDK
     {
         public enum ImportType
         {
-            TileMap, TileMap_World, World
+            TileMap,
+            TileMap_World,
+            World
         }
 
         public ImportType type = ImportType.TileMap_World;
         public string fileName;
 
-        public WorldDataReference() { }
+        public WorldDataReference()
+        {
+        }
 
         public WorldDataReference(string fileName, ImportType type = ImportType.TileMap_World) : this()
         {
@@ -23,7 +27,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"WorldDataReference {fileName} ({type})";
+            return $"World Data Reference {fileName} ({type})";
         }
     }
 }

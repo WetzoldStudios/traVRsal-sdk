@@ -9,9 +9,18 @@ namespace traVRsal.SDK
         public int x;
         public int y;
 
+        public WorldMap()
+        {
+        }
+
+        public WorldMap(string fileName) : this()
+        {
+            this.fileName = fileName;
+        }
+
         public override string ToString()
         {
-            return $"WorldMap {fileName}";
+            return $"World Map {fileName}";
         }
     }
 }

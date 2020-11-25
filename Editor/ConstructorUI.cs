@@ -7,6 +7,7 @@ namespace traVRsal.SDK
 {
     public class ConstructorUI : BasicEditorUI
     {
+        private string zoneName;
         private string varName;
         private string worldSetting;
 
@@ -21,6 +22,13 @@ namespace traVRsal.SDK
             base.OnGUI();
 
             GUILayout.Label("Use the following quick-actions to create often needed entities.", EditorStyles.wordWrappedLabel);
+
+            EditorGUILayout.Space();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("New Zone:", EditorStyles.wordWrappedLabel);
+            zoneName = GUILayout.TextField(zoneName);
+            GUILayout.EndHorizontal();
+            if (GUILayout.Button("Create Zone")) ManipulateWorld("AddZone");
 
             EditorGUILayout.Space();
             GUILayout.BeginHorizontal();
@@ -46,6 +54,41 @@ namespace traVRsal.SDK
 
             switch (command)
             {
+                case "AddZone":
+                    if (string.IsNullOrEmpty(zoneName)) return;
+                    string root = GetWorldPaths()[0];
+                    string path = $"{root}/Data/{zoneName}.tmx";
+                    if (File.Exists(path))
+                    {
+                        EditorUtility.DisplayDialog("Error", "A zone with that name already exists.", "OK");
+                        return;
+                    }
+                    AssetDatabase.CopyAsset($"Packages/{SDKUtil.PACKAGE_NAME}/Editor/CopyTemplates/EmptyZone.copy", $"Assets/Worlds/{world.key}/Data/{zoneName}.tmx");
+                    
+                    // two cases: either world explicitly lists files already or default is used with config.world mechanism 
+                    if (world.worldData != null && world.worldData.Count > 0)
+                    {
+                        world.worldData.Add(new WorldDataReference(path, WorldDataReference.ImportType.TileMap));
+                    }
+                    else
+                    {
+                        string mapFile = root + "/Data/Config.world";
+                        TMWorld worldMap = SDKUtil.ReadJSONFileDirect<TMWorld>(mapFile);
+                        if (worldMap != null)
+                        {
+                            worldMap.maps = worldMap.maps.Append(new WorldMap(Path.GetFileName(path)));
+                            
+                            File.WriteAllText(mapFile, SDKUtil.SerializeObject(worldMap));
+                        }
+                        else
+                        {
+                            EditorUtility.DisplayDialog("Error", $"Data/Config.world file for {world.key} does not exist. New zone was created but needs to be manually linked.", "OK");
+                        }
+                    }
+                    zoneName = "";
+                    AssetDatabase.Refresh();
+                    break;
+
                 case "AddVariable":
                     if (string.IsNullOrEmpty(varName)) return;
                     if (world.initialVariables == null) world.initialVariables = new List<Variable>();
@@ -74,7 +117,7 @@ namespace traVRsal.SDK
             }
             if (paths.Length > 1)
             {
-                EditorUtility.DisplayDialog("Error", "There is more than one world in the project. The builder does not support multi-world projects yet.", "OK");
+                EditorUtility.DisplayDialog("Error", "There is more than one world in the project. The constructor does not support multi-world projects yet.", "OK");
                 return null;
             }
 
@@ -86,6 +129,7 @@ namespace traVRsal.SDK
                 EditorUtility.DisplayDialog("Error", $"World.json file for {worldName} seems corrupted and needs to be fixed first.", "OK");
                 return null;
             }
+            world.key = worldName;
 
             return world;
         }

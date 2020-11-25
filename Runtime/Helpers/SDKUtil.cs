@@ -46,6 +46,21 @@ namespace traVRsal.SDK
             Sphere
         }
 
+        public static T[] Resize<T>(this T[] data, int newSize)
+        {
+            Array.Resize(ref data, data.Length + 1);
+
+            return data;
+        }
+
+        public static T[] Append<T>(this T[] data, T element)
+        {
+            Array.Resize(ref data, data.Length + 1);
+            data[data.Length - 1] = element;
+
+            return data;
+        }
+
         public static IEnumerator FetchAPIData<T>(string api, string player, string token, Action<T> callback, string endPoint = API_ENDPOINT)
         {
             string uri = endPoint + api;
