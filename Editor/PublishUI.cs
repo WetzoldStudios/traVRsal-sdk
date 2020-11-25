@@ -27,6 +27,7 @@ namespace traVRsal.SDK
         private bool debugMode = false;
         private bool packagingInProgress;
         private bool documentationInProgress;
+        private bool uploadErrors;
         private bool uploadInProgress;
         private bool verifyInProgress;
         private bool packagingSuccessful;
@@ -809,6 +810,7 @@ namespace traVRsal.SDK
                 yield break;
             }
 
+            uploadErrors = false;
             uploadInProgress = true;
             uploadProgress = 0;
             uploadStartTime = DateTime.Now;
@@ -821,7 +823,14 @@ namespace traVRsal.SDK
             Progress.Remove(uploadProgressId);
             uploadInProgress = false;
 
-            EditorUtility.DisplayDialog("Success", "Upload completed.", "OK");
+            if (uploadErrors)
+            {
+                EditorUtility.DisplayDialog("Error", "Upload could not be completed due to errors. Check the console for details.", "OK");
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("Success", "Upload completed.", "OK");
+            }
         }
 
         private IEnumerator PublishWorldUpdates()
@@ -856,6 +865,7 @@ namespace traVRsal.SDK
                     if (webRequest.isNetworkError)
                     {
                         Debug.LogError($"Could not update world {worldName} due to network issues: {webRequest.error}");
+                        uploadErrors = true;
                     }
                     else if (webRequest.isHttpError)
                     {
@@ -866,8 +876,9 @@ namespace traVRsal.SDK
                         }
                         else
                         {
-                            Debug.LogError($"There was an error updating world {worldName}: {webRequest.error}");
+                            Debug.LogError($"There was an error updating world {worldName}: {webRequest.downloadHandler.text}");
                         }
+                        uploadErrors = true;
                     }
                 }
             }

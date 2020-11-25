@@ -28,6 +28,7 @@ namespace traVRsal.SDK
         public string last_uploaded_at;
         public string last_statechange_at;
         public string creator;
+        public string creators;
 
         public override string ToString()
         {
