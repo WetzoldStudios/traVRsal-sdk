@@ -63,6 +63,7 @@ namespace traVRsal.SDK
             WorldUpdateRelative = 92,
             WorldSize = 55,
             WorldOwner = 66,
+            WorldCreators = 123,
 
             PlayerDistance = 9,
             PlayerDistanceNoUnit = 119,

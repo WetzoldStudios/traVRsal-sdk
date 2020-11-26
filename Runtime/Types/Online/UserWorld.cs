@@ -25,6 +25,11 @@ namespace traVRsal.SDK
         public string is_featured;
         public long android_size;
         public long pc_size;
+        public long stats_started;
+        public long stats_aborted;
+        public long stats_finished;
+        public float stats_time_spent;
+        public float stats_distance;
         public string last_uploaded_at;
         public string last_statechange_at;
         public string creator;
