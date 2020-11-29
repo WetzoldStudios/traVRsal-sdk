@@ -12,7 +12,7 @@
     "com.unity.test-framework": "1.1.19",
     "com.unity.textmeshpro": "3.0.3",
     "com.unity.xr.management": "3.2.16",
-    "com.unity.xr.oculus": "1.5.0"
+    "com.unity.xr.oculus": "1.6.1"
   },
   "hideInEditor": false,
   "license": "MIT",

@@ -10,6 +10,7 @@ namespace traVRsal.SDK
         private string zoneName;
         private string varName;
         private string worldSetting;
+        private string customShader;
 
         [MenuItem("traVRsal/Constructor", priority = 110)]
         public static void ShowWindow()
@@ -24,25 +25,20 @@ namespace traVRsal.SDK
             GUILayout.Label("Use the following quick-actions to create often needed entities.", EditorStyles.wordWrappedLabel);
 
             EditorGUILayout.Space();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("New Zone:", EditorStyles.wordWrappedLabel);
-            zoneName = GUILayout.TextField(zoneName);
-            GUILayout.EndHorizontal();
+            zoneName = EditorGUILayout.TextField("New Zone:", zoneName);
             if (GUILayout.Button("Create Zone")) ManipulateWorld("AddZone");
 
             EditorGUILayout.Space();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("New Variable:", EditorStyles.wordWrappedLabel);
-            varName = GUILayout.TextField(varName);
-            GUILayout.EndHorizontal();
+            varName = EditorGUILayout.TextField("New Variable:", varName);
             if (GUILayout.Button("Create Variable")) ManipulateWorld("AddVariable");
 
             EditorGUILayout.Space();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("New World Setting:", EditorStyles.wordWrappedLabel);
-            worldSetting = GUILayout.TextField(worldSetting);
-            GUILayout.EndHorizontal();
+            worldSetting = EditorGUILayout.TextField("New World Setting:", worldSetting);
             if (GUILayout.Button("Create World Setting")) ManipulateWorld("AddSetting");
+
+            EditorGUILayout.Space();
+            customShader = EditorGUILayout.TextField("Shader Name:", customShader);
+            if (GUILayout.Button("Add Custom Shader")) ManipulateWorld("AddCustomShader");
 
             OnGUIDone();
         }
@@ -64,7 +60,7 @@ namespace traVRsal.SDK
                         return;
                     }
                     AssetDatabase.CopyAsset($"Packages/{SDKUtil.PACKAGE_NAME}/Editor/CopyTemplates/EmptyZone.copy", $"Assets/Worlds/{world.key}/Data/{zoneName}.tmx");
-                    
+
                     // two cases: either world explicitly lists files already or default is used with config.world mechanism 
                     if (world.worldData != null && world.worldData.Count > 0)
                     {
@@ -77,7 +73,7 @@ namespace traVRsal.SDK
                         if (worldMap != null)
                         {
                             worldMap.maps = worldMap.maps.Append(new WorldMap(Path.GetFileName(path)));
-                            
+
                             File.WriteAllText(mapFile, SDKUtil.SerializeObject(worldMap));
                         }
                         else
@@ -101,6 +97,13 @@ namespace traVRsal.SDK
                     if (world.settings == null) world.settings = new List<WorldSetting>();
                     world.settings.Add(new WorldSetting(worldSetting));
                     worldSetting = "";
+                    break;
+
+                case "AddCustomShader":
+                    if (string.IsNullOrEmpty(customShader)) return;
+                    if (world.customShaders == null) world.customShaders = new List<string>();
+                    world.customShaders.Add(customShader);
+                    customShader = "";
                     break;
             }
 
