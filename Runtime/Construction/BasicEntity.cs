@@ -47,6 +47,7 @@ namespace traVRsal.SDK
 
         public string targetZone;
         public string targetLocation;
+        public int targetFloor = int.MinValue;
         public string locationId;
 
         public string key;

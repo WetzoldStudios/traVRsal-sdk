@@ -30,12 +30,14 @@ namespace traVRsal.SDK
         {
             Automatic = 0,
             Manual = 1,
-            Location = 2
+            Location = 2,
+            Floor = 3
         }
 
         public TargetPositionMode targetPositionMode = TargetPositionMode.Automatic;
         public Vector3 targetPosition;
         public string targetLocation;
+        public int targetFloor;
         public float duration = 2f;
         public float initialPause = 2f;
         public float stationPause = 2f;
