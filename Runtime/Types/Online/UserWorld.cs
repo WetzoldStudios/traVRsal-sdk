@@ -20,9 +20,9 @@ namespace traVRsal.SDK
         public string unity_version;
         public string world_json;
         public WorldState state;
-        public string is_private;
-        public string is_virtual;
-        public string is_featured;
+        public byte is_private;
+        public byte is_virtual;
+        public byte is_featured;
         public long android_size;
         public long pc_size;
         public long stats_started;

@@ -49,7 +49,7 @@ namespace traVRsal.SDK
         [NonSerialized] public List<Renderer> sceneryRendererCache;
         [NonSerialized] public List<Renderer> movingRendererCache;
         [NonSerialized] public List<Light> lightCache;
-        [NonSerialized] public Dictionary<int, List<Renderer>> portalVisibleRendererCache;
+        [NonSerialized] public Dictionary<int, List<Renderer>> foreignVisibleRendererCache;
         [NonSerialized] public List<Behaviour> portalCache;
         [NonSerialized] public HashSet<int> reachableZones;
         [NonSerialized] public HashSet<int> backSortedZones;

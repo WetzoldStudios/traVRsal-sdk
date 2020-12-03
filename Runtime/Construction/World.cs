@@ -58,7 +58,7 @@ namespace traVRsal.SDK
         // cache structures
         [NonSerialized] public Texture2D cover;
         [NonSerialized] public Dictionary<string, string> zoneTemplateCache;
-        [NonSerialized] public Dictionary<string, string> locationCache;
+        [NonSerialized] public Dictionary<string, Tuple<string, BasicEntity>> locationCache;
         [NonSerialized] public Dictionary<int, HashSet<int>> zoneVisibility;
         [NonSerialized] public Challenge challenge;
         [NonSerialized] public int autoIdx = 1;
@@ -73,7 +73,7 @@ namespace traVRsal.SDK
             replacements = new List<ReplacementRule>();
             objectSpecs = new List<ObjectSpec>();
             zoneTemplateCache = new Dictionary<string, string>();
-            locationCache = new Dictionary<string, string>();
+            locationCache = new Dictionary<string, Tuple<string, BasicEntity>>();
             zoneVisibility = new Dictionary<int, HashSet<int>>();
             speech = new List<TextFragment>();
             initialVariables = new List<Variable>();

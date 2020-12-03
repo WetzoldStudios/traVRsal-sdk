@@ -849,7 +849,7 @@ namespace traVRsal.SDK
                 userWorld.cover_image = world.coverImage;
                 userWorld.world_json = worldJson;
                 userWorld.unity_version = Application.unityVersion;
-                userWorld.is_virtual = world.isVirtual ? "1" : "0";
+                userWorld.is_virtual = (byte) (world.isVirtual ? 1 : 0);
                 userWorld.android_size = verifications[worldName].distroSizeAndroid;
                 userWorld.pc_size = verifications[worldName].distroSizeStandalone;
 

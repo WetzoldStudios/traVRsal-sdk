@@ -46,21 +46,6 @@ namespace traVRsal.SDK
             Sphere
         }
 
-        public static T[] Resize<T>(this T[] data, int newSize)
-        {
-            Array.Resize(ref data, data.Length + 1);
-
-            return data;
-        }
-
-        public static T[] Append<T>(this T[] data, T element)
-        {
-            Array.Resize(ref data, data.Length + 1);
-            data[data.Length - 1] = element;
-
-            return data;
-        }
-
         public static IEnumerator FetchAPIData<T>(string api, string player, string token, Action<T> callback, string endPoint = API_ENDPOINT)
         {
             string uri = endPoint + api;
@@ -68,9 +53,8 @@ namespace traVRsal.SDK
             networkIssue = false;
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
-                webRequest.SetRequestHeader("Accept", "application/json");
+                SetStandardHeaders(webRequest);
                 webRequest.SetRequestHeader("Authorization", "Bearer " + token);
-                webRequest.SetRequestHeader("X-NoTrack", Application.isEditor ? "True" : "False");
                 if (!string.IsNullOrEmpty(player)) webRequest.SetRequestHeader("X-Player", player);
                 yield return webRequest.SendWebRequest();
 
@@ -109,6 +93,14 @@ namespace traVRsal.SDK
                 }
             }
             callback(default);
+        }
+
+        public static void SetStandardHeaders(UnityWebRequest webRequest)
+        {
+            webRequest.SetRequestHeader("Accept", "application/json");
+            webRequest.SetRequestHeader("Content-Type", "application/json");
+            webRequest.SetRequestHeader("X-Version", Application.version);
+            webRequest.SetRequestHeader("X-Do-Not-Track", Application.isEditor ? "True" : "False");
         }
 
         public static TMProperty[] CopyProperties(TMProperty[] copyFrom)
@@ -176,6 +168,14 @@ namespace traVRsal.SDK
             }
 
             return sw.ToString();
+        }
+
+        public static T[] Append<T>(this T[] data, T element)
+        {
+            Array.Resize(ref data, data.Length + 1);
+            data[data.Length - 1] = element;
+
+            return data;
         }
     }
 
