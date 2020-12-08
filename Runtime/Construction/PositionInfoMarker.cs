@@ -19,6 +19,7 @@ namespace traVRsal.SDK
         public int backDistance;
         public bool[] explicitNoSpawn; // indexed by BasicEntity.Direction enum
         public bool[] closedSides; // indexed by BasicEntity.Direction enum
+        public bool containsTrigger;
 
         // spawning info
         public bool[] spawnedSides;
@@ -52,6 +53,7 @@ namespace traVRsal.SDK
             aheadDistance = copyFrom.aheadDistance;
             backDirection = copyFrom.backDirection;
             backDistance = copyFrom.backDistance;
+            containsTrigger = copyFrom.containsTrigger;
 
             // TODO: incomplete
         }

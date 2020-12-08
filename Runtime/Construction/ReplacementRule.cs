@@ -19,6 +19,7 @@ namespace traVRsal.SDK
         public string materials;
         public string[] randomMaterials;
         public string[] randomObjects;
+        public string[] validZones;
 
         [DefaultValue(BasicEntity.Direction.Same)]
         public BasicEntity.Direction orientation = BasicEntity.Direction.Same;

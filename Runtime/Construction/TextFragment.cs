@@ -9,25 +9,32 @@ namespace traVRsal.SDK
     {
         public enum Event
         {
-            Loading_Done, Variable_On, Variable_Off, Enter_Zone, Enter_Transition, See_Object, Hear_Object
+            Loading_Done,
+            Variable_On,
+            Variable_Off,
+            Enter_Zone,
+            Enter_Transition,
+            See_Object,
+            Hear_Object
         }
 
         public enum Repetition
         {
-            Once, Always
+            Once,
+            Always
         }
 
-        [JsonProperty("event")]
-        public Event worldEvent = Event.Loading_Done;
+        [JsonProperty("event")] public Event worldEvent = Event.Loading_Done;
         public Repetition repetition = Repetition.Once;
         public string key;
         public string text;
-        [DefaultValue(-1f)]
-        public float proximity = -1;
+        [DefaultValue(-1f)] public float proximity = -1;
 
-        public bool played = false;
+        public bool played;
 
-        public TextFragment() { }
+        public TextFragment()
+        {
+        }
 
         public TextFragment(Event worldEvent, string text) : this()
         {
@@ -42,7 +49,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"TextFragment {worldEvent} ({key}, {repetition})";
+            return $"Text Fragment {worldEvent} ({key}, {repetition})";
         }
     }
 }
