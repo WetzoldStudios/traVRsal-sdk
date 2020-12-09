@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,7 +8,7 @@ namespace traVRsal.SDK
 {
     public class UtilityUI : BasicEditorUI
     {
-        [MenuItem("traVRsal/Utilities/Convert Selected to Piece", priority = 500)]
+        [MenuItem("traVRsal/Utilities/Convert Selected to Piece")]
         public static void ConvertToPiece()
         {
             GameObject go = DoConvertToPiece();
@@ -15,17 +17,30 @@ namespace traVRsal.SDK
             CreatePrefab(go.transform.parent.gameObject);
         }
 
-        // FIXME: this is too crude, try to access actual pivot pos somehow
-        // [MenuItem("traVRsal/Utilities/Convert to Piece - Pivot to lower corner (Experimental)", priority = 501)]
-        public static void ConvertToPieceWithPivot()
+        [MenuItem("traVRsal/Utilities/Create or Update Folder Image List")]
+        public static void CreateImageList()
         {
-            GameObject go = DoConvertToPiece();
-            if (go == null) return;
+            string path = EditorUtility.OpenFolderPanel("Select Image Folder", "", "");
+            // string path = "C:\\Users\\rwetz\\AppData\\LocalLow\\Wetzold Studios\\traVRsal\\UserImages";
+            if (string.IsNullOrEmpty(path)) return;
 
-            Undo.RecordObject(go.transform, "Align pivot");
-            go.transform.localPosition = new Vector3(go.transform.localScale.x / 2f, go.transform.localScale.y / 2f, go.transform.localScale.z / 2f);
+            // read existing mod file if existent
+            ModdingData md = new ModdingData();
+            string modFile = path + "/" + SDKUtil.MODFILE_NAME;
+            if (File.Exists(modFile)) md = SDKUtil.ReadJSONFileDirect<ModdingData>(modFile);
+            if (md.imageData == null) md.imageData = new List<ImageData>();
 
-            CreatePrefab(go.transform.parent.gameObject);
+            // gather images
+            IEnumerable<string> files = DirectoryUtil.GetFiles(path, new[] {"*.png", "*.jpg"});
+            foreach (string file in files)
+            {
+                string fileName = Path.GetFileName(file);
+                if (md.imageData.Any(id => id.imageLink == fileName)) continue;
+
+                md.imageData.Add(new ImageData(fileName, Path.GetFileNameWithoutExtension(fileName)));
+            }
+
+            File.WriteAllText(modFile, SDKUtil.SerializeObject(md));
         }
 
         private static GameObject DoConvertToPiece()

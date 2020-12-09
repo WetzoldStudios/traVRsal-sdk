@@ -6,22 +6,46 @@ namespace traVRsal.SDK
     [Serializable]
     public class ImageData
     {
-        public Texture2D texture;
+        [Header("Metadata")] public string imageLink;
         public string name;
         public string description;
         public DateTime date;
         public string author;
         public string authorLink;
-        public string imageLink;
         public int ratingCount;
 
-        [Header("Runtime Data")]
+        [Header("Runtime Data")] [NonSerialized]
         public int index;
-        public ImageProvider config;
+
+        [NonSerialized] public ImageProvider config;
+        [NonSerialized] public Texture2D texture;
+
+        public ImageData()
+        {
+        }
+
+        public ImageData(string imageLink, string name = null) : this()
+        {
+            this.imageLink = imageLink;
+            this.name = name;
+        }
+
+        public ImageData Merge(ImageData data)
+        {
+            if (data == null) return this;
+
+            if (!string.IsNullOrEmpty(data.author)) author = data.author;
+            if (!string.IsNullOrEmpty(data.authorLink)) authorLink = data.authorLink;
+            if (!string.IsNullOrEmpty(data.description)) description = data.description;
+            if (!string.IsNullOrEmpty(data.name)) name = data.name;
+            if (data.ratingCount > 0) ratingCount = data.ratingCount;
+
+            return this;
+        }
 
         public override string ToString()
         {
-            return $"Image data ({name})";
+            return $"Image Data ({name})";
         }
     }
 }

@@ -15,9 +15,7 @@ namespace traVRsal.SDK
     public static class SDKUtil
     {
         public const string PING_ENDPOINT = "www.travrsal.com";
-
         public const string SERVER_ENDPOINT = "https://www.travrsal.com";
-
         public const string API_ENDPOINT = SERVER_ENDPOINT + "/api/";
 
         // public const string API_ENDPOINT = "http://localhost:8000/api/";
@@ -27,6 +25,7 @@ namespace traVRsal.SDK
         public const string AUTO_GENERATED = "[AUTO]";
         public const string TILED_PATH_DEFAULT = "C:\\Program Files\\Tiled\\tiled.exe";
         public const string LOCKFILE_NAME = "traVRsal.lock";
+        public const string MODFILE_NAME = "modding.json";
 
         // Tags
         public const string INTERACTABLE_TAG = "Interactable";
