@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.4" tiledversion="1.4.2" name="Master" tilewidth="50" tileheight="50" tilecount="25" columns="0">
+<tileset version="1.4" tiledversion="1.4.3" name="Master" tilewidth="50" tileheight="50" tilecount="25" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="2" type="/Base/Ceiling">
   <properties>
@@ -15,6 +15,7 @@
  </tile>
  <tile id="4" type="/Base/Wall">
   <properties>
+   <property name="Anchor" value=""/>
    <property name="AutoFill" type="bool" value="true"/>
    <property name="CheckOccupiedNeighbor" type="bool" value="true"/>
    <property name="FillHoles" type="bool" value="true"/>
@@ -37,7 +38,14 @@
  </tile>
  <tile id="7" type="/Base/Transition">
   <properties>
+   <property name="Anchor" value=""/>
+   <property name="MazeTransitions" type="int" value="0"/>
+   <property name="Music" value=""/>
+   <property name="OneWay" type="bool" value="false"/>
+   <property name="RandomMusic" value=""/>
+   <property name="ScaleY" type="float" value="100"/>
    <property name="Snap" type="bool" value="true"/>
+   <property name="Speak" value=""/>
    <property name="TargetZone" value=""/>
    <property name="ZoneExit" type="bool" value="true"/>
   </properties>
@@ -45,6 +53,7 @@
  </tile>
  <tile id="8" type="Elevator">
   <properties>
+   <property name="Anchor" value=""/>
    <property name="Variable" value="[auto]"/>
   </properties>
   <image width="50" height="50" source="Master Images/elevator.png"/>
@@ -54,6 +63,7 @@
  </tile>
  <tile id="12" type="/Base/Door">
   <properties>
+   <property name="Anchor" value=""/>
    <property name="Variable" value=""/>
   </properties>
   <image width="50" height="50" source="Master Images/door.png"/>
@@ -67,13 +77,14 @@
  </tile>
  <tile id="14" type="/Base/Signal">
   <properties>
+   <property name="Anchor" value=""/>
    <property name="Y" type="int" value="0"/>
   </properties>
   <image width="50" height="50" source="Master Images/signal.png"/>
  </tile>
  <tile id="16" type="/Base/maze-exit">
   <properties>
-   <property name="Anchor" value="0,0"/>
+   <property name="Anchor" value=""/>
    <property name="Virtual" type="bool" value="true"/>
   </properties>
   <image width="50" height="50" source="Master Images/maze-exit.png"/>
@@ -94,6 +105,7 @@
  </tile>
  <tile id="19" type="/Base/Transition">
   <properties>
+   <property name="Anchor" value=""/>
    <property name="Virtual" type="bool" value="true"/>
    <property name="ZoneEntry" type="bool" value="true"/>
   </properties>
@@ -108,6 +120,7 @@
  <tile id="22">
   <properties>
    <property name="Socket" type="bool" value="true"/>
+   <property name="ValidSockets" value=""/>
   </properties>
   <image width="50" height="50" source="Master Images/item.png"/>
  </tile>
@@ -121,6 +134,7 @@
  </tile>
  <tile id="24" type="/Base/StoneWall">
   <properties>
+   <property name="Anchor" value=""/>
    <property name="AutoFill" type="bool" value="true"/>
    <property name="CheckOccupiedNeighbor" type="bool" value="true"/>
    <property name="FillHoles" type="bool" value="true"/>
@@ -146,17 +160,25 @@
  </tile>
  <tile id="28" type="/Base/Redirection">
   <properties>
+   <property name="Anchor" value=""/>
    <property name="TargetLocation" value=""/>
   </properties>
   <image width="50" height="50" source="Master Images/redirection.png"/>
  </tile>
  <tile id="29" type="/Base/Location">
   <properties>
+   <property name="Anchor" value=""/>
    <property name="LocationId" value=""/>
   </properties>
   <image width="50" height="50" source="Master Images/location.png"/>
  </tile>
  <tile id="30" type="/Base/Trigger">
+  <properties>
+   <property name="Anchor" value=""/>
+   <property name="AudioEffect" value=""/>
+   <property name="Speak" value=""/>
+   <property name="Variable" value=""/>
+  </properties>
   <image width="50" height="50" source="Master Images/trigger.png"/>
  </tile>
 </tileset>
