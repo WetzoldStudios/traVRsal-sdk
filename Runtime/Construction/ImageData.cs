@@ -15,10 +15,13 @@ namespace traVRsal.SDK
         public int ratingCount;
 
         [Header("Runtime Data")] [NonSerialized]
-        public int index;
+        public int originalIndex;
+
+        [NonSerialized] public int index;
 
         [NonSerialized] public ImageProvider config;
         [NonSerialized] public Texture2D texture;
+        [NonSerialized] public object originalData;
 
         public ImageData()
         {

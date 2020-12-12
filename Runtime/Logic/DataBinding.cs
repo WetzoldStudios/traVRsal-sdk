@@ -13,8 +13,8 @@ namespace traVRsal.SDK
             OriginalValue = 0,
             AppVersion = 1,
 
-            unitLong = 114,
-            unitShort = 115,
+            UnitLong = 114,
+            UnitShort = 115,
 
             DoOpenWorldDetailsDialog = 18,
             DoCloseWorldDetailsDialog = 13,
@@ -29,6 +29,7 @@ namespace traVRsal.SDK
             DoCloseCreateWorldsDialog = 93,
             DoCloseWorldBrowserDialog = 121,
             DoPause = 15,
+            DoUnpause = 16,
             DoReturnToMain = 17,
             DoReturnToMainInterstitial = 70,
             DoPostChallenge = 72,
@@ -37,7 +38,6 @@ namespace traVRsal.SDK
             DoStartRandomChallenge = 109,
             DoSetDebugMode = 7,
             DoSetMetricSystem = 116,
-            DoUnpause = 16,
             DoLogOut = 63,
             DoClearCache = 68,
             DoResetSettings = 111,

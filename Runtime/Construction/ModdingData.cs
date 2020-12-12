@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using static traVRsal.SDK.ImageProvider;
 
 namespace traVRsal.SDK
 {
     [Serializable]
     public class ModdingData
     {
+        public Order imageOrder = Order.List; 
+        public Filter imageFilter = Filter.None;
         public List<ImageData> imageData;
 
         public ModdingData()
@@ -30,6 +33,8 @@ namespace traVRsal.SDK
                     imageData.AddRange(mod.imageData);
                 }
             }
+            imageOrder = mod.imageOrder;
+            imageFilter = mod.imageFilter;
         }
 
         public override string ToString()

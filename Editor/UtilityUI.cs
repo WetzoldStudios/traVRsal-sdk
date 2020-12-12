@@ -17,11 +17,10 @@ namespace traVRsal.SDK
             CreatePrefab(go.transform.parent.gameObject);
         }
 
-        [MenuItem("traVRsal/Utilities/Create or Update Folder Image List")]
+        [MenuItem("traVRsal/Utilities/Create or Update Folder Image List...")]
         public static void CreateImageList()
         {
             string path = EditorUtility.OpenFolderPanel("Select Image Folder", "", "");
-            // string path = "C:\\Users\\rwetz\\AppData\\LocalLow\\Wetzold Studios\\traVRsal\\UserImages";
             if (string.IsNullOrEmpty(path)) return;
 
             // read existing mod file if existent
@@ -41,6 +40,8 @@ namespace traVRsal.SDK
             }
 
             File.WriteAllText(modFile, SDKUtil.SerializeObject(md));
+
+            EditorUtility.DisplayDialog("Done", $"Found {md.imageData.Count} images.", "OK");
         }
 
         private static GameObject DoConvertToPiece()
