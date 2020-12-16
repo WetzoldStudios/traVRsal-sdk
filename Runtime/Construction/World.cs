@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
+using static traVRsal.SDK.DataBinding;
 
 namespace traVRsal.SDK
 {
@@ -18,12 +19,15 @@ namespace traVRsal.SDK
         public Vector2Int maxSize = Vector2Int.zero;
         [DefaultValue(300)] public int availableTime = 5 * 60;
         [DefaultValue(true)] public bool showHandHud = true;
+        public HUDConfig defaultHandHud;
+        public HUDConfig defaultHandHudMain;
+        public HUDConfig defaultHandHudSecondary;
         public bool isVirtual;
         public string deathSound;
         [DefaultValue(true)] public bool enableChallenges = true;
         [DefaultValue("0,4")] public string kpis = "0,4"; // TODO: switch to array?
-        public string initialItemLeft;
-        public string initialItemRight;
+        public string initialItemMain;
+        public string initialItemSecondary;
         [DefaultValue("/Base/LightHall")] public string introScenery = "/Base/LightHall";
 
         [DefaultValue("/Base/LightHall-Outro")]

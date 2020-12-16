@@ -27,6 +27,7 @@ namespace traVRsal.SDK
             NoChallengesHint = 15,
             WorldSettingsRoot = 4,
             InterstitialDialog = 12,
+            IntroductionDialog = 22,
             CreateWorldsDialog = 16,
             Pivot = 9
         }

@@ -72,7 +72,8 @@ namespace traVRsal.SDK
             PlayerLogin = 57,
 
             AmmunitionRemaining = 120,
-            
+            Points = 124,
+
             TimeElapsed = PERIODIC + 1,
             SlowMotionCooldownRemaining = PERIODIC + 2,
 
@@ -141,10 +142,14 @@ namespace traVRsal.SDK
             ImageOrigin = REQUIRE_SOURCE + 8,
             ImageName = REQUIRE_SOURCE + 1,
             ImageDescription = REQUIRE_SOURCE + 2,
+            ImageDescriptionOrName = REQUIRE_SOURCE + 9,
             ImageDate = REQUIRE_SOURCE + 3,
             ImageAuthor = REQUIRE_SOURCE + 4,
             ImageAuthorLink = REQUIRE_SOURCE + 5,
             ImageLink = REQUIRE_SOURCE + 6,
+            ImageAudio = REQUIRE_SOURCE + 10,
+            ImageSpeech = REQUIRE_SOURCE + 11,
+            ImageSpeechOrDescription = REQUIRE_SOURCE + 12,
             ImageRatingsCount = REQUIRE_SOURCE + 7
         }
 

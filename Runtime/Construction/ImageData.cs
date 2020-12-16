@@ -12,6 +12,8 @@ namespace traVRsal.SDK
         public DateTime date;
         public string author;
         public string authorLink;
+        public string audio;
+        public string speak;
         public int ratingCount;
 
         [Header("Runtime Data")] [NonSerialized]
@@ -41,6 +43,8 @@ namespace traVRsal.SDK
             if (!string.IsNullOrEmpty(data.authorLink)) authorLink = data.authorLink;
             if (!string.IsNullOrEmpty(data.description)) description = data.description;
             if (!string.IsNullOrEmpty(data.name)) name = data.name;
+            if (!string.IsNullOrEmpty(data.audio)) audio = data.audio;
+            if (!string.IsNullOrEmpty(data.speak)) speak = data.speak;
             if (data.ratingCount > 0) ratingCount = data.ratingCount;
 
             return this;

@@ -16,6 +16,7 @@ namespace traVRsal.SDK
 
         private void Start()
         {
+            // in to enable activation/deactivation
         }
     }
 }
