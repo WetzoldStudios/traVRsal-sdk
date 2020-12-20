@@ -28,7 +28,8 @@ namespace traVRsal.SDK
             Path_Ahead,
             Path_Back,
             Same,
-            Opposite
+            Opposite,
+            Corner
         }
 
         public Vector2Int position = EMPTY;

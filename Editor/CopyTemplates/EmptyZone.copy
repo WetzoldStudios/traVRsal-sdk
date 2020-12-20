@@ -21,7 +21,7 @@
 4,4,4
 </data>
   </layer>
-  <layer id="28" name="Ceiling" width="3" height="3">
+  <layer id="28" name="Ceiling" width="3" height="3" visible="0">
    <properties>
     <property name="AtCeiling" type="bool" value="true"/>
     <property name="Materials" value="[ceiling]"/>

@@ -15,8 +15,9 @@ namespace traVRsal.SDK
 
         public enum DistributionType
         {
-            Random,
-            Even
+            Random = 0,
+            Even = 1,
+            Object = 2
         }
 
         public enum SpaceRequirement
@@ -33,6 +34,7 @@ namespace traVRsal.SDK
         public ConditionalValues[] objectKeysIf;
         public string[] validZones;
         public string[] validSockets;
+        public string[] validObjects;
         public AmountType amountType = AmountType.Total;
         [DefaultValue(10)] public int amount = 10;
         [DefaultValue(DistributionType.Even)] public DistributionType distributionType = DistributionType.Even;
@@ -42,11 +44,11 @@ namespace traVRsal.SDK
         public string[] restrictions;
         public int damage;
         public int health;
-        [DefaultValue(100f)] public float scale = 100f;
+        public string scale;
+        public float maxScale;
         public float y;
         public float[] yRange;
         public int minDistance;
-        public float maxScale;
         public bool snap;
         public bool atCeiling;
         public bool connectToCeiling;
@@ -85,6 +87,12 @@ namespace traVRsal.SDK
         public SpawnRule WithValidSockets(string[] validSockets)
         {
             this.validSockets = validSockets;
+            return this;
+        }
+
+        public SpawnRule WithValidObjects(string[] validObjects)
+        {
+            this.validObjects = validObjects;
             return this;
         }
 
@@ -132,7 +140,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"SpawnRule {key} ({amount} {amountType}, {distributionType})";
+            return $"Spawn Rule {key} ({amount} {amountType}, {distributionType})";
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using static traVRsal.SDK.BasicEntity;
 
 namespace traVRsal.SDK
 {
@@ -21,8 +22,8 @@ namespace traVRsal.SDK
         public string[] randomObjects;
         public string[] validZones;
 
-        [DefaultValue(BasicEntity.Direction.Same)]
-        public BasicEntity.Direction orientation = BasicEntity.Direction.Same;
+        [DefaultValue(Direction.Same)]
+        public Direction orientation = Direction.Same;
 
         public TMProperty[] properties;
 

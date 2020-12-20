@@ -52,7 +52,8 @@ namespace traVRsal.SDK
                 {
                     Process process = new Process();
                     process.StartInfo.FileName = tiledExe;
-                    process.StartInfo.Arguments = "--export-map JSON --embed-tilesets --resolve-types-and-properties \"" + file + "\" \"" + targetName + "\"";
+                    // do not use --resolve-types-and-properties to have full control over declaration chain
+                    process.StartInfo.Arguments = "--export-map JSON --embed-tilesets \"" + file + "\" \"" + targetName + "\"";
                     process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     process.Start();
                     process.WaitForExit();

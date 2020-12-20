@@ -3,7 +3,7 @@
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="3" type="/Base/MultiDisplay">
   <properties>
-   <property name="Images" value=""/>
+   <property name="ImagePool" value=""/>
    <property name="Materials" value=""/>
    <property name="Snap" type="bool" value="true"/>
    <property name="Variable" value=""/>
@@ -27,15 +27,13 @@
  </tile>
  <tile id="6">
   <properties>
-   <property name="MoveForward" type="int" value="0"/>
-   <property name="MoveRight" type="int" value="0"/>
-   <property name="RotateY" type="float" value="0"/>
-   <property name="Scale" type="float" value="100"/>
+   <property name="Move" value=""/>
+   <property name="Offset" value=""/>
+   <property name="Rotate" value=""/>
+   <property name="Scale" value=""/>
    <property name="Snap" type="bool" value="false"/>
    <property name="Text" value=""/>
-   <property name="XOffset" type="float" value="0"/>
    <property name="Y" type="int" value="0"/>
-   <property name="ZOffset" type="float" value="0"/>
   </properties>
   <image width="50" height="50" source="Master Images/object.png"/>
  </tile>

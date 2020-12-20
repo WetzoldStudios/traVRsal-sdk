@@ -3,13 +3,19 @@
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="2" type="/Base/Ceiling">
   <properties>
+   <property name="Anchor" value=""/>
    <property name="AutoFill" type="bool" value="true"/>
+   <property name="DontPropagate-Virtual" type="bool" value="false"/>
+   <property name="Virtual" type="bool" value="false"/>
   </properties>
   <image width="50" height="50" source="Master Images/ceiling.png"/>
  </tile>
  <tile id="3" type="/Base/Ground">
   <properties>
+   <property name="Anchor" value=""/>
    <property name="AutoFill" type="bool" value="true"/>
+   <property name="DontPropagate-Virtual" type="bool" value="false"/>
+   <property name="Virtual" type="bool" value="false"/>
   </properties>
   <image width="50" height="50" source="Master Images/ground.png"/>
  </tile>
@@ -43,7 +49,6 @@
    <property name="Music" value=""/>
    <property name="OneWay" type="bool" value="false"/>
    <property name="RandomMusic" value=""/>
-   <property name="ScaleY" type="float" value="100"/>
    <property name="Snap" type="bool" value="true"/>
    <property name="Speak" value=""/>
    <property name="TargetZone" value=""/>
@@ -71,6 +76,7 @@
  <tile id="13" type="/Base/Button">
   <properties>
    <property name="Anchor" value=""/>
+   <property name="Snap" type="bool" value="false"/>
    <property name="Variable" value=""/>
   </properties>
   <image width="50" height="50" source="Master Images/button.png"/>
