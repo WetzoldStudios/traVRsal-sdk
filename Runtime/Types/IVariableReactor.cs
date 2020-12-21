@@ -2,6 +2,6 @@
 {
     public interface IVariableReactor
     {
-        void VariableChanged(Variable variable, bool condition);
+        void VariableChanged(Variable variable, bool condition, bool initialCall = false);
     }
 }

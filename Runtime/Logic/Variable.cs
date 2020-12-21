@@ -28,6 +28,7 @@ namespace traVRsal.SDK
 
         [NonSerialized] public Variable parent;
         [NonSerialized] public List<Variable> children;
+        [NonSerialized] public int changeFrame;
 
         public Variable(string key)
         {

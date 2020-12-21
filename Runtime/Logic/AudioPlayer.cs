@@ -13,7 +13,7 @@ namespace traVRsal.SDK
         private bool activeTriggered;
         private bool inactiveTriggered;
 
-        public void VariableChanged(Variable variable, bool condition)
+        public void VariableChanged(Variable variable, bool condition, bool initialCall = false)
         {
             if (condition)
             {
