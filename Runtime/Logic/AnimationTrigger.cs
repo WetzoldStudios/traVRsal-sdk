@@ -30,7 +30,7 @@ namespace traVRsal.SDK
                 transform.DOLocalMove(originalPosition, duration).SetDelay(offDelay + (changedOnce ? 0f : initialDelay));
             }
 
-            if (!initialCall) changedOnce = true;
+            if (!initialCall && variable.everChanged) changedOnce = true;
         }
     }
 }
