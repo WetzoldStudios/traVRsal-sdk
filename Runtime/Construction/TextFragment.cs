@@ -27,6 +27,7 @@ namespace traVRsal.SDK
         [JsonProperty("event")] public Event worldEvent = Event.Loading_Done;
         public Repetition repetition = Repetition.Once;
         public string key;
+        public string audioEffect;
         public string text;
         [DefaultValue(-1f)] public float proximity = -1;
 
@@ -36,9 +37,13 @@ namespace traVRsal.SDK
         {
         }
 
-        public TextFragment(Event worldEvent, string text) : this()
+        public TextFragment(Event worldEvent) : this()
         {
             this.worldEvent = worldEvent;
+        }
+
+        public TextFragment(Event worldEvent, string text) : this(worldEvent)
+        {
             this.text = text;
         }
 
