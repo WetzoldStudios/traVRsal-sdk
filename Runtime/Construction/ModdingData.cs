@@ -7,8 +7,11 @@ namespace traVRsal.SDK
     [Serializable]
     public class ModdingData
     {
-        public Order imageOrder = Order.List; 
+        public Order imageOrder = Order.List;
         public Filter imageFilter = Filter.None;
+        public bool speakNames;
+        public string speakLanguage;
+        public string speakVoice;
         public List<ImageData> imageData;
 
         public ModdingData()
