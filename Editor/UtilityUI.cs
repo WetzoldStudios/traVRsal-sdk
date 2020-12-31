@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -36,12 +38,17 @@ namespace traVRsal.SDK
                 string fileName = Path.GetFileName(file);
                 if (md.imageData.Any(id => id.imageLink == fileName)) continue;
 
-                md.imageData.Add(new ImageData(fileName, Path.GetFileNameWithoutExtension(fileName)));
+                string name = Path.GetFileNameWithoutExtension(fileName);
+                if (DateTime.TryParseExact(SDKUtil.MaxLength(name, 19), "yyyy-MM-dd HH.mm.ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
+                {
+                    name = dateTime.ToLongDateString() + " " + dateTime.ToShortTimeString();
+                }
+                md.imageData.Add(new ImageData(fileName, name));
             }
 
             File.WriteAllText(modFile, SDKUtil.SerializeObject(md));
 
-            EditorUtility.DisplayDialog("Done", $"Found {md.imageData.Count} images.", "OK");
+            EditorUtility.DisplayDialog("Done", $"Found {md.imageData.Count} images. Check modding.json in target folder.", "OK");
         }
 
         private static GameObject DoConvertToPiece()

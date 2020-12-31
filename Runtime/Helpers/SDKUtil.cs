@@ -148,6 +148,11 @@ namespace traVRsal.SDK
             return (Math.Sign(byteCount) * num).ToString(CultureInfo.InvariantCulture) + suffix[place];
         }
 
+        public static string MaxLength(string text, int maxLength)
+        {
+            return text.Length < maxLength ? text : text.Substring(0, maxLength);
+        }
+
         // inspired from https://stackoverflow.com/questions/33100164/customize-identation-parameter-in-jsonconvert-serializeobject
         public static string SerializeObject<T>(T value)
         {
