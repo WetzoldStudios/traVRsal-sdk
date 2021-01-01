@@ -14,9 +14,13 @@ namespace traVRsal.SDK
         public bool distroExistsAndroid;
         public long distroSizeAndroid;
 
-        public string distroPathStandalone;
-        public bool distroExistsStandalone;
-        public long distroSizeStandalone;
+        public string distroPathStandaloneWin;
+        public bool distroExistsStandaloneWin;
+        public long distroSizeStandaloneWin;
+
+        public string distroPathStandaloneLinux;
+        public bool distroExistsStandaloneLinux;
+        public long distroSizeStandaloneLinux;
 
         public bool showDetails = true;
 

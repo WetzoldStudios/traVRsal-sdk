@@ -24,7 +24,9 @@ namespace traVRsal.SDK
         private string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};
         private string[] RELEASE_CHANNELS = {"Live", "Beta"};
 
+        private bool linuxSupport = false;
         private bool debugMode = false;
+
         private bool packagingInProgress;
         private bool documentationInProgress;
         private bool uploadErrors;
@@ -164,7 +166,8 @@ namespace traVRsal.SDK
                         if (v.showDetails)
                         {
                             PrintTableRow("Size (Quest)", v.distroExistsAndroid ? SDKUtil.BytesToString(v.distroSizeAndroid) : "not packaged yet");
-                            PrintTableRow("Size (PC)", v.distroExistsStandalone ? SDKUtil.BytesToString(v.distroSizeStandalone) : "not packaged yet");
+                            PrintTableRow("Size (Windows)", v.distroExistsStandaloneWin ? SDKUtil.BytesToString(v.distroSizeStandaloneWin) : "not packaged yet");
+                            if (linuxSupport) PrintTableRow("Size (Linux)", v.distroExistsStandaloneLinux ? SDKUtil.BytesToString(v.distroSizeStandaloneLinux) : "not packaged yet");
                             if (v.documentationExists)
                             {
                                 BeginPartialTableRow("Documentation");
@@ -316,15 +319,19 @@ namespace traVRsal.SDK
                 result.distroExistsAndroid = Directory.Exists(result.distroPathAndroid);
                 result.distroSizeAndroid = DirectoryUtil.GetSize(result.distroPathAndroid);
 
-                result.distroPathStandalone = GetServerDataPath() + "/Worlds/" + worldName + "/StandaloneWindows64";
-                result.distroExistsStandalone = Directory.Exists(result.distroPathStandalone);
-                result.distroSizeStandalone = DirectoryUtil.GetSize(result.distroPathStandalone);
+                result.distroPathStandaloneWin = GetServerDataPath() + "/Worlds/" + worldName + "/StandaloneWindows64";
+                result.distroExistsStandaloneWin = Directory.Exists(result.distroPathStandaloneWin);
+                result.distroSizeStandaloneWin = DirectoryUtil.GetSize(result.distroPathStandaloneWin);
+
+                result.distroPathStandaloneLinux = GetServerDataPath() + "/Worlds/" + worldName + "/StandaloneLinux64";
+                result.distroExistsStandaloneLinux = Directory.Exists(result.distroPathStandaloneLinux);
+                result.distroSizeStandaloneLinux = DirectoryUtil.GetSize(result.distroPathStandaloneLinux);
 
                 verifications.Add(worldName, result);
 
                 if (userWorlds != null && userWorlds.Count(w => w.key == worldName) == 0)
                 {
-                    Debug.LogError("Found unregistered world: " + worldName);
+                    Debug.LogError($"Found unregistered world: {worldName}");
                     worldListMismatch = true;
                 }
             }
@@ -369,27 +376,41 @@ namespace traVRsal.SDK
                 string[] worldsToBuild = allWorlds ? GetWorldPaths() : GetWorldsToBuild();
                 if (worldsToBuild.Length == 0) yield break;
                 string resultFolder = Application.dataPath + "/../traVRsal/";
+                BuildTarget mainTarget = Application.platform == RuntimePlatform.LinuxEditor ? BuildTarget.StandaloneLinux64 : BuildTarget.StandaloneWindows64;
 
                 CreateLockFile();
                 ConvertTileMaps();
                 CreateAddressableSettings(!allTargets);
                 EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ASTC;
-                EditorUserBuildSettings.selectedStandaloneTarget = BuildTarget.StandaloneWindows64;
+                EditorUserBuildSettings.selectedStandaloneTarget = mainTarget;
+                PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x); // Linux can only be built with Mono on Windows
+
                 AddressableAssetSettings.CleanPlayerContent();
                 AssetDatabase.SaveAssets();
 
                 if (Directory.Exists(GetServerDataPath()) && (packageMode == 0 || allWorlds)) Directory.Delete(GetServerDataPath(), true);
 
                 // set build targets
-                List<BuildTarget> targets = new List<BuildTarget>();
+                List<Tuple<BuildTargetGroup, BuildTarget>> targets = new List<Tuple<BuildTargetGroup, BuildTarget>>();
                 if (debugMode && !force) // needed only due to strange Unity bug not allowing to automatically switch from PC to Android on some systems (reported)
                 {
-                    targets.Add(EditorUserBuildSettings.activeBuildTarget);
+                    targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(EditorUserBuildSettings.selectedBuildTargetGroup, EditorUserBuildSettings.activeBuildTarget));
                 }
                 else
                 {
-                    targets.Add(BuildTarget.Android);
-                    targets.Add(BuildTarget.StandaloneWindows64); // set windows last so that we can continue with editor iterations normally right afterwards
+                    targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Android, BuildTarget.Android));
+
+                    // set windows/linux last so that we can continue with editor iterations normally right afterwards
+                    if (Application.platform == RuntimePlatform.LinuxEditor)
+                    {
+                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
+                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
+                    }
+                    else
+                    {
+                        if (linuxSupport) targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
+                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
+                    }
                 }
 
                 // build each world individually
@@ -421,16 +442,16 @@ namespace traVRsal.SDK
                     if (allTargets)
                     {
                         // iterate over all supported platforms
-                        foreach (BuildTarget target in targets)
+                        foreach (Tuple<BuildTargetGroup, BuildTarget> target in targets)
                         {
-                            EditorUserBuildSettings.SwitchActiveBuildTarget(target);
+                            EditorUserBuildSettings.SwitchActiveBuildTarget(target.Item1, target.Item2);
                             AddressableAssetSettings.BuildPlayerContent();
                         }
                     }
                     else
                     {
                         // build only for editor, which is PC right now
-                        EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneWindows64);
+                        EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, mainTarget);
                         AddressableAssetSettings.BuildPlayerContent();
                     }
                 }
@@ -441,7 +462,7 @@ namespace traVRsal.SDK
             catch (Exception e)
             {
                 packagingInProgress = false;
-                EditorUtility.DisplayDialog("Error", "Packaging could not be completed. Error: " + e.Message, "Close");
+                EditorUtility.DisplayDialog("Error", $"Packaging could not be completed. Error: {e.Message}", "Close");
                 yield break;
             }
 
@@ -851,7 +872,7 @@ namespace traVRsal.SDK
                 userWorld.unity_version = Application.unityVersion;
                 userWorld.is_virtual = (byte) (world.isVirtual ? 1 : 0);
                 userWorld.android_size = verifications[worldName].distroSizeAndroid;
-                userWorld.pc_size = verifications[worldName].distroSizeStandalone;
+                userWorld.pc_size = verifications[worldName].distroSizeStandaloneWin;
 
                 // TODO: convert to SDKUtil function as well
                 byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(userWorld));
