@@ -13,6 +13,7 @@ namespace traVRsal.SDK
         }
 
         public int materialIndex = 0;
+        public int order = 0;
         public ImageSource source = ImageSource.Name;
         public string key;
         public bool adjustAspectRatio;
