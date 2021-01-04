@@ -24,7 +24,7 @@ namespace traVRsal.SDK
         private string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};
         private string[] RELEASE_CHANNELS = {"Live", "Beta"};
 
-        private bool linuxSupport = false;
+        private bool linuxSupport = true;
         private bool debugMode = false;
 
         private bool packagingInProgress;
@@ -112,7 +112,7 @@ namespace traVRsal.SDK
                     buttonText += " (" + ((dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", worldsToBuild) : "everything") + ")";
                 }
 
-                if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode == 2, packageMode == 2), this);
+                if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode == 2, packageMode == 2, false, debugMode), this);
                 EditorGUI.EndDisabledGroup();
 
                 EditorGUILayout.Space();
@@ -188,7 +188,8 @@ namespace traVRsal.SDK
                     EditorGUILayout.HelpBox("Debug mode is enabled. No build platform switches will be done. Worlds need to be uploaded for each platform separately.", MessageType.Warning);
 
                     EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);
-                    if (GUILayout.Button("Prepare Upload (all targets)")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(true), this);
+                    if (GUILayout.Button("Prepare Upload (All Targets)")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(true), this);
+                    if (GUILayout.Button("Prepare Upload (Linux)")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(false, true), this);
                     if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
                     EditorGUI.EndDisabledGroup();
                 }
@@ -224,12 +225,12 @@ namespace traVRsal.SDK
             GUILayout.EndHorizontal();
         }
 
-        private IEnumerator PrepareUpload(bool force = false)
+        private IEnumerator PrepareUpload(bool force = false, bool linuxOnly = false)
         {
             preparedReleaseChannel = releaseChannel;
 
             yield return FetchUserWorlds();
-            yield return PackageWorlds(true, true, force);
+            yield return PackageWorlds(true, true, force, linuxOnly);
             yield return CreateDocumentation();
             PrepareCommonFiles();
             Verify();
@@ -365,7 +366,7 @@ namespace traVRsal.SDK
             return worldsToBuild;
         }
 
-        private IEnumerator PackageWorlds(bool allWorlds, bool allTargets, bool force = false)
+        private IEnumerator PackageWorlds(bool allWorlds, bool allTargets, bool force = false, bool linuxOnly = false)
         {
             uploadPossible = false;
             packagingInProgress = true;
@@ -376,7 +377,7 @@ namespace traVRsal.SDK
                 string[] worldsToBuild = allWorlds ? GetWorldPaths() : GetWorldsToBuild();
                 if (worldsToBuild.Length == 0) yield break;
                 string resultFolder = Application.dataPath + "/../traVRsal/";
-                BuildTarget mainTarget = Application.platform == RuntimePlatform.LinuxEditor ? BuildTarget.StandaloneLinux64 : BuildTarget.StandaloneWindows64;
+                BuildTarget mainTarget = (linuxOnly || Application.platform == RuntimePlatform.LinuxEditor) ? BuildTarget.StandaloneLinux64 : BuildTarget.StandaloneWindows64;
 
                 CreateLockFile();
                 ConvertTileMaps();
