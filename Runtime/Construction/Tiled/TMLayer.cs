@@ -16,8 +16,8 @@ namespace traVRsal.SDK
         public TMLayer[] layers;
         public string name;
         public TMObject[] objects;
-        public int offsetx;
-        public int offsety;
+        public float offsetx;
+        public float offsety;
         public float opacity;
         public TMProperty[] properties;
         public string transparentcolor;
