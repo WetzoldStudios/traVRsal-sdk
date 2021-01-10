@@ -31,10 +31,10 @@ namespace traVRsal.SDK
         public int melee_kills;
         public int points;
         public int deaths;
-        public int player_damage;
         public int targets_total;
         public int targets_destroyed;
         public string custom_kpis;
+        public float player_damage;
         public float score;
 
         public string created_at;

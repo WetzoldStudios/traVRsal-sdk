@@ -29,7 +29,8 @@ namespace traVRsal.SDK
             InterstitialDialog = 12,
             IntroductionDialog = 22,
             CreateWorldsDialog = 16,
-            Pivot = 9
+            Pivot = 9,
+            Object = 23
         }
 
         public IdentifierType type = IdentifierType.FeaturedWorldsListRoot;

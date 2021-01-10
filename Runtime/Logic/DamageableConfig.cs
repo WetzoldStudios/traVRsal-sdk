@@ -7,6 +7,17 @@ namespace traVRsal.SDK
     [Serializable]
     public class DamageableConfig : BehaviorConfig
     {
+        public enum ObjectType
+        {
+            Enemy = 0,
+            Environment = 1,
+            PlayerHead = 2,
+            PlayerLeftArm = 3,
+            PlayerRightArm = 4,
+            PlayerBody = 5,
+            Player = 6
+        }
+
         public enum DestroyAction
         {
             None,
@@ -14,7 +25,9 @@ namespace traVRsal.SDK
             Rotate
         }
 
-        [Header("Configuration")] public int health = 1;
+        [Header("Configuration")] public ObjectType type = ObjectType.Enemy;
+        public int health = 1;
+        public float damageMultiplier = 1f;
         public int points;
         public bool isPlayer;
         public bool destructible = true;
@@ -37,7 +50,9 @@ namespace traVRsal.SDK
 
         public DamageableConfig(DamageableConfig copyFrom)
         {
+            type = copyFrom.type;
             health = copyFrom.health;
+            damageMultiplier = copyFrom.damageMultiplier;
             points = copyFrom.points;
             isPlayer = copyFrom.isPlayer;
             destructible = copyFrom.destructible;
