@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be2d301f70d94fc45bc83bb6e4f13b39, type: 3}
+  m_Name: WidgetSetting
+  m_EditorClassIdentifier: 
+  SettingTactot:
+    pairImage: {fileID: 21300000, guid: 595a5d045a1a1474bb2a06a22cb2d318, type: 3}
+    unpairImage: {fileID: 21300000, guid: 28fd9eddbbf167c4a8d7a26c5790f489, type: 3}
+    scanImage: {fileID: 21300000, guid: a85932d5f0af7454ea69ea3be3f09732, type: 3}
+  SettingTactal:
+    pairImage: {fileID: 21300000, guid: 3f75f305ae72b0247adb2dc0f8fc6177, type: 3}
+    unpairImage: {fileID: 21300000, guid: 62cf8845c8b2332498df3a2a5c237700, type: 3}
+    scanImage: {fileID: 21300000, guid: 83de7be95fb2b6a4eb70ec09e059de5f, type: 3}
+  SettingTactosyArm:
+    pairImage: {fileID: 21300000, guid: 6b00fd26dbc493c4192d4b6c2223106a, type: 3}
+    unpairImage: {fileID: 21300000, guid: feb2b6c794330554e881d916c7c62b8a, type: 3}
+    scanImage: {fileID: 21300000, guid: 33091e66183f8204b9c6bc27fb1dd269, type: 3}
+  SettingTactosyFoot:
+    pairImage: {fileID: 21300000, guid: c03deb77a81abf340814b694be5fc0e1, type: 3}
+    unpairImage: {fileID: 21300000, guid: 0cfb6d617c80e104d82b9f764c5c697d, type: 3}
+    scanImage: {fileID: 21300000, guid: e36fbc55b70866c46bfb2394e4472229, type: 3}
+  SettingTactosyHand:
+    pairImage: {fileID: 21300000, guid: da2f87dcf13e2b14aa53c2f3a18f45dd, type: 3}
+    unpairImage: {fileID: 21300000, guid: 45bc64d745c3abd4aa3185583538bce6, type: 3}
+    scanImage: {fileID: 21300000, guid: 5594f0c53e4690346b618a6ef6f92ff4, type: 3}

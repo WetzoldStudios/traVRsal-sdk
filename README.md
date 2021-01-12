@@ -39,3 +39,15 @@ This is an early alpha version to get feedback and steer the direction of future
 * custom interactions are not possible yet (only pre-made Button for now)
 * audio is not assigned to correct mixer channels yet 
 * objects needs to be marked "Enable Read/Write" at import, otherwise NavMesh will fail or might even result in crashes
+
+# Licenses
+
+This SDK is licensed under the MIT license except for all contents in "Third-Party" folders which follows its original licenses. This includes:
+
+* Async Coroutine
+* AWS SDK
+* bhaptics SDK
+* DOTween
+* Unity NavMeshComponents
+* JSONnet
+* XNode

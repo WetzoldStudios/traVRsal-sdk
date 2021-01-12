@@ -62,7 +62,7 @@ namespace traVRsal.SDK
             yield return new WaitForSecondsRealtime(duration);
 
             Time.timeScale = 1f;
-            Time.fixedDeltaTime = defaultPhysicsTimeStep; // do not multiplicate back as other scripts might also fumble with time, e.g. moving platform
+            Time.fixedDeltaTime = defaultPhysicsTimeStep; // do not multiply back as other scripts might also fumble with time, e.g. moving platform
 
             if (mode == OperationMode.Auto_Deactivate) Destroy(gameObject);
         }

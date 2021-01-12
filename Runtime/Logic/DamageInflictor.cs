@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Bhaptics.Tact.Unity;
+using UnityEngine;
 
 namespace traVRsal.SDK
 {
@@ -19,6 +20,9 @@ namespace traVRsal.SDK
         public bool killAfterAttack;
         public float lifeTime = 5f; // only relevant for bullets right now
         public float cooldown = 2f;
+
+        [Header("When Dealing Damage")] public string haptics;
+        public HapticClip[] customHaptics;
         public GameObject hitAnimation; // only relevant for bullets right now
 
         [Header("Runtime")] public string originTag;

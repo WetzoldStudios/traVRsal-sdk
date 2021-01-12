@@ -38,6 +38,7 @@ namespace traVRsal.SDK
             DoStartRandomChallenge = 109,
             DoSetDebugMode = 7,
             DoSetMetricSystem = 116,
+            DoSetHaptics = 125,
             DoLogOut = 63,
             DoClearCache = 68,
             DoResetSettings = 111,
