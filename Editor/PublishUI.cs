@@ -40,7 +40,7 @@ namespace traVRsal.SDK
         private DateTime uploadStartTime;
         private float uploadProgress = 1;
         private int uploadProgressId;
-        private int releaseChannel = 1;
+        private int releaseChannel;
         private int packageMode = 1;
         private int uncompressedTextures;
         private static DirectoryWatcher dirWatcher;
@@ -116,20 +116,15 @@ namespace traVRsal.SDK
                 EditorGUI.EndDisabledGroup();
 
                 EditorGUILayout.Space();
+                GUILayout.Label("To test inside the Quest or to make the world accessible to others, upload it to the traVRsal server.", EditorStyles.wordWrappedLabel);
+
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Release Channel:", EditorStyles.wordWrappedLabel);
                 releaseChannel = EditorGUILayout.Popup(releaseChannel, RELEASE_CHANNELS);
-                GUILayout.EndHorizontal();
 
-                GUILayout.BeginHorizontal();
                 EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);
                 if (GUILayout.Button("Prepare Upload")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(), this);
                 EditorGUI.EndDisabledGroup();
-
-                EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || !uploadPossible);
-                if (GUILayout.Button("Upload")) EditorCoroutineUtility.StartCoroutine(UploadWorlds(), this);
-                EditorGUI.EndDisabledGroup();
-
                 GUILayout.EndHorizontal();
 
                 CheckTokenGUI();
@@ -178,6 +173,11 @@ namespace traVRsal.SDK
                             {
                                 PrintTableRow("Documentation", "not created yet");
                             }
+                            BeginPartialTableRow("Actions");
+                            EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || !uploadPossible);
+                            if (GUILayout.Button("Upload")) EditorCoroutineUtility.StartCoroutine(UploadWorld(worldName), this);
+                            EditorGUI.EndDisabledGroup();
+                            EndPartialTableRow();
                         }
                     }
                 }
@@ -377,7 +377,7 @@ namespace traVRsal.SDK
                 string[] worldsToBuild = allWorlds ? GetWorldPaths() : GetWorldsToBuild();
                 if (worldsToBuild.Length == 0) yield break;
                 string resultFolder = Application.dataPath + "/../traVRsal/";
-                BuildTarget mainTarget = (linuxOnly || Application.platform == RuntimePlatform.LinuxEditor) ? BuildTarget.StandaloneLinux64 : BuildTarget.StandaloneWindows64;
+                BuildTarget mainTarget = linuxOnly || Application.platform == RuntimePlatform.LinuxEditor ? BuildTarget.StandaloneLinux64 : BuildTarget.StandaloneWindows64;
 
                 CreateLockFile();
                 ConvertTileMaps();
@@ -393,66 +393,65 @@ namespace traVRsal.SDK
 
                 // set build targets
                 List<Tuple<BuildTargetGroup, BuildTarget>> targets = new List<Tuple<BuildTargetGroup, BuildTarget>>();
-                if (debugMode && !force) // needed only due to strange Unity bug not allowing to automatically switch from PC to Android on some systems (reported)
+                if (allTargets)
                 {
-                    targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(EditorUserBuildSettings.selectedBuildTargetGroup, EditorUserBuildSettings.activeBuildTarget));
+                    if (debugMode && !force) // needed only due to strange Unity bug not allowing to automatically switch from PC to Android on some systems (reported)
+                    {
+                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(EditorUserBuildSettings.selectedBuildTargetGroup, EditorUserBuildSettings.activeBuildTarget));
+                    }
+                    else
+                    {
+                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Android, BuildTarget.Android));
+
+                        // set windows/linux last so that we can continue with editor iterations normally right afterwards
+                        if (Application.platform == RuntimePlatform.LinuxEditor)
+                        {
+                            targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
+                            targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
+                        }
+                        else
+                        {
+                            if (linuxSupport) targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
+                            targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
+                        }
+                    }
                 }
                 else
                 {
-                    targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Android, BuildTarget.Android));
-
-                    // set windows/linux last so that we can continue with editor iterations normally right afterwards
-                    if (Application.platform == RuntimePlatform.LinuxEditor)
-                    {
-                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
-                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
-                    }
-                    else
-                    {
-                        if (linuxSupport) targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
-                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
-                    }
+                    targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, mainTarget));
                 }
 
-                // build each world individually
-                AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
-                foreach (string dir in worldsToBuild)
+                // iterate over all supported platforms
+                foreach (Tuple<BuildTargetGroup, BuildTarget> target in targets)
                 {
-                    string worldName = Path.GetFileName(dir);
-                    string serverDir = GetServerDataPath() + "/Worlds/" + Path.GetFileName(dir);
-                    if (!allTargets && Directory.Exists(resultFolder + worldName)) Directory.Delete(resultFolder + worldName, true);
+                    EditorUserBuildSettings.SwitchActiveBuildTarget(target.Item1, target.Item2);
 
-                    if (packageMode == 1 && !allWorlds && Directory.Exists(serverDir)) Directory.Delete(serverDir, true);
-
-                    settings.activeProfileId = settings.profileSettings.GetProfileId(worldName);
-                    settings.groups.ForEach(group =>
+                    // build each world individually
+                    AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
+                    foreach (string dir in worldsToBuild)
                     {
-                        if (group.ReadOnly) return;
-                        group.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = group.name == worldName;
+                        string worldName = Path.GetFileName(dir);
+                        string serverDir = GetServerDataPath() + "/Worlds/" + Path.GetFileName(dir);
+                        if (!allTargets && Directory.Exists(resultFolder + worldName)) Directory.Delete(resultFolder + worldName, true);
 
-                        // default group ensures there is no accidental local default group resulting in local paths being baked into addressable for shaders
-                        if (group.name == worldName && group.CanBeSetAsDefault()) settings.DefaultGroup = group;
-                    });
+                        if (packageMode == 1 && !allWorlds && Directory.Exists(serverDir)) Directory.Delete(serverDir, true);
 
-                    BundledAssetGroupSchema schema = settings.groups.First(group => @group.name == worldName).GetSchema<BundledAssetGroupSchema>();
-                    settings.RemoteCatalogBuildPath = schema.BuildPath;
-                    settings.RemoteCatalogLoadPath = schema.LoadPath;
-
-                    if (!CreateObjectLib(worldName)) yield break;
-
-                    if (allTargets)
-                    {
-                        // iterate over all supported platforms
-                        foreach (Tuple<BuildTargetGroup, BuildTarget> target in targets)
+                        settings.activeProfileId = settings.profileSettings.GetProfileId(worldName);
+                        settings.groups.ForEach(group =>
                         {
-                            EditorUserBuildSettings.SwitchActiveBuildTarget(target.Item1, target.Item2);
-                            AddressableAssetSettings.BuildPlayerContent();
-                        }
-                    }
-                    else
-                    {
-                        // build only for editor, which is PC right now
-                        EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, mainTarget);
+                            if (group.ReadOnly) return;
+                            group.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = group.name == worldName;
+
+                            // default group ensures there is no accidental local default group resulting in local paths being baked into addressable for shaders
+                            if (group.name == worldName && group.CanBeSetAsDefault()) settings.DefaultGroup = group;
+                        });
+
+                        BundledAssetGroupSchema schema = settings.groups.First(group => @group.name == worldName).GetSchema<BundledAssetGroupSchema>();
+                        settings.RemoteCatalogBuildPath = schema.BuildPath;
+                        settings.RemoteCatalogLoadPath = schema.LoadPath;
+
+                        if (!CreateObjectLib(worldName)) yield break;
+
                         AddressableAssetSettings.BuildPlayerContent();
                     }
                 }
@@ -824,11 +823,12 @@ namespace traVRsal.SDK
             return settings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema> {settings.DefaultGroup.Schemas[0]}, typeof(SchemaType));
         }
 
-        private IEnumerator UploadWorlds()
+        private IEnumerator UploadWorld(string worldName)
         {
-            if (!Directory.Exists(GetServerDataPath()))
+            string path = GetServerDataPath() + "/Worlds/" + worldName;
+            if (!Directory.Exists(path))
             {
-                Debug.LogError("Could not find directory to upload: " + GetServerDataPath());
+                Debug.LogError($"Could not find directory to upload: {path}");
                 yield break;
             }
 
@@ -836,11 +836,11 @@ namespace traVRsal.SDK
             uploadInProgress = true;
             uploadProgress = 0;
             uploadStartTime = DateTime.Now;
-            uploadProgressId = Progress.Start("Uploading worlds");
+            uploadProgressId = Progress.Start("Uploading world");
 
             AWSUtil aws = new AWSUtil();
-            yield return aws.UploadDirectory(GetServerDataPath(), progress => uploadProgress = progress).AsCoroutine();
-            yield return PublishWorldUpdates();
+            yield return aws.UploadDirectory(GetServerDataPath(), progress => uploadProgress = progress, "Worlds/" + worldName + "/*").AsCoroutine();
+            yield return PublishWorldUpdates(worldName);
 
             Progress.Remove(uploadProgressId);
             uploadInProgress = false;
@@ -851,57 +851,53 @@ namespace traVRsal.SDK
             }
             else
             {
-                EditorUtility.DisplayDialog("Success", "Upload completed.", "OK");
+                EditorUtility.DisplayDialog("Success", $"Upload of /{worldName} completed. Use the " + (preparedReleaseChannel == 0 ? "LIVE" : "BETA") + " app to test.", "OK");
             }
         }
 
-        private IEnumerator PublishWorldUpdates()
+        private IEnumerator PublishWorldUpdates(string worldName)
         {
-            foreach (string dir in GetWorldPaths())
+            string uri = SDKUtil.API_ENDPOINT + "userworlds/" +
+                         userWorlds.First(w => w.key == worldName).id + "?channel=" + (preparedReleaseChannel == 0 ? "live" : "beta");
+
+            // extract data from world descriptor
+            string worldJson = File.ReadAllText(GetWorldsRoot() + "/" + worldName + "/World.json");
+            World world = JsonConvert.DeserializeObject<World>(worldJson);
+
+            UserWorld userWorld = new UserWorld();
+            userWorld.cover_image = world.coverImage;
+            userWorld.world_json = worldJson;
+            userWorld.unity_version = Application.unityVersion;
+            userWorld.is_virtual = (byte) (world.isVirtual ? 1 : 0);
+            userWorld.android_size = verifications[worldName].distroSizeAndroid;
+            userWorld.pc_size = verifications[worldName].distroSizeStandaloneWin;
+
+            // TODO: convert to SDKUtil function as well
+            byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(userWorld));
+            using (UnityWebRequest webRequest = UnityWebRequest.Put(uri, data))
             {
-                string worldName = Path.GetFileName(dir);
-                string uri = SDKUtil.API_ENDPOINT + "userworlds/" +
-                             userWorlds.First(w => w.key == worldName).id + "?channel=" + (preparedReleaseChannel == 0 ? "live" : "beta");
+                webRequest.SetRequestHeader("Accept", "application/json");
+                webRequest.SetRequestHeader("Authorization", "Bearer " + GetAPIToken());
+                webRequest.SetRequestHeader("Content-Type", "application/json");
+                yield return webRequest.SendWebRequest();
 
-                // extract data from world descriptor
-                string worldJson = File.ReadAllText(dir + "/World.json");
-                World world = JsonConvert.DeserializeObject<World>(worldJson);
-
-                UserWorld userWorld = new UserWorld();
-                userWorld.cover_image = world.coverImage;
-                userWorld.world_json = worldJson;
-                userWorld.unity_version = Application.unityVersion;
-                userWorld.is_virtual = (byte) (world.isVirtual ? 1 : 0);
-                userWorld.android_size = verifications[worldName].distroSizeAndroid;
-                userWorld.pc_size = verifications[worldName].distroSizeStandaloneWin;
-
-                // TODO: convert to SDKUtil function as well
-                byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(userWorld));
-                using (UnityWebRequest webRequest = UnityWebRequest.Put(uri, data))
+                if (webRequest.isNetworkError)
                 {
-                    webRequest.SetRequestHeader("Accept", "application/json");
-                    webRequest.SetRequestHeader("Authorization", "Bearer " + GetAPIToken());
-                    webRequest.SetRequestHeader("Content-Type", "application/json");
-                    yield return webRequest.SendWebRequest();
-
-                    if (webRequest.isNetworkError)
+                    Debug.LogError($"Could not update world {worldName} due to network issues: {webRequest.error}");
+                    uploadErrors = true;
+                }
+                else if (webRequest.isHttpError)
+                {
+                    if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
                     {
-                        Debug.LogError($"Could not update world {worldName} due to network issues: {webRequest.error}");
-                        uploadErrors = true;
+                        SDKUtil.invalidAPIToken = true;
+                        Debug.LogError("Invalid or expired API Token.");
                     }
-                    else if (webRequest.isHttpError)
+                    else
                     {
-                        if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
-                        {
-                            SDKUtil.invalidAPIToken = true;
-                            Debug.LogError("Invalid or expired API Token.");
-                        }
-                        else
-                        {
-                            Debug.LogError($"There was an error updating world {worldName}: {webRequest.downloadHandler.text}");
-                        }
-                        uploadErrors = true;
+                        Debug.LogError($"There was an error updating world {worldName}: {webRequest.downloadHandler.text}");
                     }
+                    uploadErrors = true;
                 }
             }
         }

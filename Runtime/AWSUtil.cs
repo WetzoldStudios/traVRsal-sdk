@@ -106,10 +106,10 @@ namespace traVRsal.SDK
             LastActionSuccessful = true;
             await CarryOutAWSTask(async () =>
             {
-                var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
-                var fileTransferUtility = new TransferUtility(Client);
-                var uploadRequest = new TransferUtilityUploadRequest()
+                TransferUtility fileTransferUtility = new TransferUtility(Client);
+                TransferUtilityUploadRequest uploadRequest = new TransferUtilityUploadRequest()
                 {
                     InputStream = stream,
                     Key = remoteName,
@@ -121,18 +121,19 @@ namespace traVRsal.SDK
             }, "storing file");
         }
 
-        public async Task UploadDirectory(string path, Action<float> progressCallback)
+        public async Task UploadDirectory(string path, Action<float> progressCallback, string pattern = "*")
         {
             LastActionSuccessful = true;
             await CarryOutAWSTask(async () =>
             {
-                var fileTransferUtility = new TransferUtility(Client);
-                var uploadRequest = new TransferUtilityUploadDirectoryRequest
+                TransferUtility fileTransferUtility = new TransferUtility(Client);
+                TransferUtilityUploadDirectoryRequest uploadRequest = new TransferUtilityUploadDirectoryRequest
                 {
                     BucketName = S3BucketName,
                     Directory = path,
                     // Amazon-only: StorageClass = S3StorageClass.StandardInfrequentAccess,
                     CannedACL = S3CannedACL.PublicRead,
+                    SearchPattern = pattern,
                     SearchOption = SearchOption.AllDirectories,
                 };
 
