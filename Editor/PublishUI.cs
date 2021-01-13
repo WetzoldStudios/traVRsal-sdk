@@ -871,6 +871,7 @@ namespace traVRsal.SDK
             userWorld.is_virtual = (byte) (world.isVirtual ? 1 : 0);
             userWorld.android_size = verifications[worldName].distroSizeAndroid;
             userWorld.pc_size = verifications[worldName].distroSizeStandaloneWin;
+            userWorld.linux_size = verifications[worldName].distroSizeStandaloneLinux;
 
             // TODO: convert to SDKUtil function as well
             byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(userWorld));

@@ -25,6 +25,7 @@ namespace traVRsal.SDK
         public byte is_featured;
         public long android_size;
         public long pc_size;
+        public long linux_size;
         public long stats_started;
         public long stats_aborted;
         public long stats_finished;
@@ -37,7 +38,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Remote World Data {key}";
+            return $"Remote World Data ({key})";
         }
     }
 }
