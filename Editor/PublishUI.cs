@@ -851,7 +851,7 @@ namespace traVRsal.SDK
             }
             else
             {
-                EditorUtility.DisplayDialog("Success", $"Upload of /{worldName} completed. Use the " + (preparedReleaseChannel == 0 ? "LIVE" : "BETA") + " app to test.", "OK");
+                EditorUtility.DisplayDialog("Success", $"Upload of {worldName} completed. Use the " + (preparedReleaseChannel == 0 ? "LIVE" : "BETA") + " app to test.", "OK");
             }
         }
 
