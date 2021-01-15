@@ -1,7 +1,7 @@
 {
   "name": "com.wetzold.travrsal.sdk",
   "description": "Provides the tools necessary to create custom worlds for traVRsal.",
-  "version": "0.5.2",
+  "version": "0.5.42",
   "unity": "2020.1",
   "displayName": "traVRsal SDK",
   "dependencies": {
