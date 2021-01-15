@@ -112,7 +112,7 @@ namespace traVRsal.SDK
                     buttonText += " (" + ((dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", worldsToBuild) : "everything") + ")";
                 }
 
-                if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode == 2, packageMode == 2, false, debugMode), this);
+                if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode == 2, packageMode == 2), this);
                 EditorGUI.EndDisabledGroup();
 
                 EditorGUILayout.Space();
@@ -176,6 +176,7 @@ namespace traVRsal.SDK
                             BeginPartialTableRow("Actions");
                             EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || !uploadPossible);
                             if (GUILayout.Button("Upload")) EditorCoroutineUtility.StartCoroutine(UploadWorld(worldName), this);
+                            if (debugMode && GUILayout.Button("Register")) EditorCoroutineUtility.StartCoroutine(PublishWorldUpdates(worldName), this);
                             EditorGUI.EndDisabledGroup();
                             EndPartialTableRow();
                         }
@@ -185,10 +186,9 @@ namespace traVRsal.SDK
                 if (debugMode)
                 {
                     EditorGUILayout.Space();
-                    EditorGUILayout.HelpBox("Debug mode is enabled. No build platform switches will be done. Worlds need to be uploaded for each platform separately.", MessageType.Warning);
+                    EditorGUILayout.HelpBox("Debug mode is enabled.", MessageType.Warning);
 
                     EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);
-                    if (GUILayout.Button("Prepare Upload (All Targets)")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(true), this);
                     if (GUILayout.Button("Prepare Upload (Linux)")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(false, true), this);
                     if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
                     EditorGUI.EndDisabledGroup();
@@ -395,25 +395,18 @@ namespace traVRsal.SDK
                 List<Tuple<BuildTargetGroup, BuildTarget>> targets = new List<Tuple<BuildTargetGroup, BuildTarget>>();
                 if (allTargets)
                 {
-                    if (debugMode && !force) // needed only due to strange Unity bug not allowing to automatically switch from PC to Android on some systems (reported)
+                    targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Android, BuildTarget.Android));
+
+                    // set windows/linux last so that we can continue with editor iterations normally right afterwards
+                    if (Application.platform == RuntimePlatform.LinuxEditor)
                     {
-                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(EditorUserBuildSettings.selectedBuildTargetGroup, EditorUserBuildSettings.activeBuildTarget));
+                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
+                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
                     }
                     else
                     {
-                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Android, BuildTarget.Android));
-
-                        // set windows/linux last so that we can continue with editor iterations normally right afterwards
-                        if (Application.platform == RuntimePlatform.LinuxEditor)
-                        {
-                            targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
-                            targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
-                        }
-                        else
-                        {
-                            if (linuxSupport) targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
-                            targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
-                        }
+                        if (linuxSupport) targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
+                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
                     }
                 }
                 else
