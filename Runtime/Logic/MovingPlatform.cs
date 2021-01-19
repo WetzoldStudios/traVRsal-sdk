@@ -38,7 +38,7 @@ namespace traVRsal.SDK
         public Vector3 targetPosition;
         public string targetLocation;
         public int targetFloor;
-        public float duration = 2f;
+        public float duration = 3f;
         public float initialPause = 2f;
         public float stationPause = 2f;
         public Trigger trigger = Trigger.Manual;

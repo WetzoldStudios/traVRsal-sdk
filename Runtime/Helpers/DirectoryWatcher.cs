@@ -87,6 +87,11 @@ namespace traVRsal.SDK
         {
             watcher.EnableRaisingEvents = false;
         }
+
+        public override string ToString()
+        {
+            return $"Directory Watched ({watcher.Path})";
+        }
     }
 
     public class FSWParams

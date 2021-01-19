@@ -167,6 +167,7 @@
  <tile id="28" type="/Base/Redirection">
   <properties>
    <property name="Anchor" value=""/>
+   <property name="Duration" type="float" value="3"/>
    <property name="TargetLocation" value=""/>
   </properties>
   <image width="50" height="50" source="Master Images/redirection.png"/>
