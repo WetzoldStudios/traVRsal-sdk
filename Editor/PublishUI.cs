@@ -753,6 +753,7 @@ namespace traVRsal.SDK
             settings.BuildRemoteCatalog = true;
             settings.DisableCatalogUpdateOnStartup = true;
             settings.ContiguousBundles = true;
+            settings.IgnoreUnsupportedFilesInBuild = true;
 
             // don't include built-in data, causes shader issues
             settings.groups.ForEach(g =>
