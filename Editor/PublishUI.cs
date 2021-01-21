@@ -488,6 +488,7 @@ namespace traVRsal.SDK
                 return false;
             }
 
+            string worldBasePath = Path.GetDirectoryName(AssetDatabase.GUIDToAssetPath(AssetDatabase.AssetPathToGUID(root + "World.json"))) + "/Pieces";
             world.objectSpecs = new List<ObjectSpec>();
             string[] assets = AssetDatabase.FindAssets("*", new[] {root + "Pieces"});
             foreach (string asset in assets)
@@ -500,7 +501,19 @@ namespace traVRsal.SDK
                 {
                     if (!ea.spec.IsDefault())
                     {
-                        ea.spec.objectKey = Path.GetFileNameWithoutExtension(assetPath);
+                        string prefix = Path.GetDirectoryName(assetPath);
+                        if (prefix != null && prefix.Length > worldBasePath.Length)
+                        {
+                            prefix = prefix.Substring(worldBasePath.Length + 1) + "/";
+                            prefix = prefix.Replace('\\', '/');
+                        }
+                        else
+                        {
+                            prefix = "";
+                        }
+
+                        string fileName = Path.GetFileNameWithoutExtension(assetPath);
+                        ea.spec.objectKey = prefix + fileName;
                         world.objectSpecs.Add(ea.spec);
                     }
                 }
