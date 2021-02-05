@@ -16,14 +16,14 @@ namespace traVRsal.SDK
 
         public ReplacementType type = ReplacementType.Object;
         public string key;
+        public string[] keys;
         public string objectKey;
         public string materials;
         public string[] randomMaterials;
         public string[] randomObjects;
         public string[] validZones;
 
-        [DefaultValue(Direction.Same)]
-        public Direction orientation = Direction.Same;
+        [DefaultValue(Direction.Same)] public Direction orientation = Direction.Same;
 
         public TMProperty[] properties;
 
@@ -36,6 +36,19 @@ namespace traVRsal.SDK
             this.key = key;
             this.objectKey = objectKey;
             this.materials = materials;
+        }
+
+        public ReplacementRule(ReplacementRule copyFrom) : this()
+        {
+            type = copyFrom.type;
+            key = copyFrom.key;
+            keys = copyFrom.keys;
+            objectKey = copyFrom.objectKey;
+            randomMaterials = copyFrom.randomMaterials;
+            randomObjects = copyFrom.randomObjects;
+            validZones = copyFrom.validZones;
+            orientation = copyFrom.orientation;
+            properties = SDKUtil.CopyProperties(copyFrom.properties);
         }
 
         public ReplacementRule WithType(ReplacementType type)
