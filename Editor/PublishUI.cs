@@ -21,32 +21,34 @@ namespace traVRsal.SDK
 {
     public class PublishUI : BasicEditorUI
     {
+        private const bool linuxSupport = true;
+
         private string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};
-        private string[] RELEASE_CHANNELS = {"Live", "Beta"};
+        private string[] RELEASE_CHANNELS = {"Production", "Beta"};
 
-        private bool linuxSupport = true;
-        private bool debugMode = false;
+        private static bool debugMode = false;
 
-        private bool packagingInProgress;
-        private bool documentationInProgress;
-        private bool uploadErrors;
-        private bool uploadInProgress;
-        private bool verifyInProgress;
-        private bool packagingSuccessful;
-        private bool verificationPassed;
-        private bool uploadPossible;
-        private bool worldListMismatch;
+        private static bool packagingInProgress;
+        private static bool documentationInProgress;
+        private static bool uploadErrors;
+        private static bool uploadInProgress;
+        private static bool verifyInProgress;
+        private static bool packagingSuccessful;
+        private static bool verificationPassed;
+        private static bool uploadPossible;
+        private static bool worldListMismatch;
 
-        private DateTime uploadStartTime;
-        private float uploadProgress = 1;
-        private int uploadProgressId;
         private int releaseChannel;
         private int packageMode = 1;
-        private int uncompressedTextures;
+
+        private static DateTime uploadStartTime;
+        private static float uploadProgress = 1;
+        private static int uploadProgressId;
+        private static int uncompressedTextures;
         private static DirectoryWatcher dirWatcher;
         private static PublishUI window;
         private static Dictionary<string, VerificationResult> verifications = new Dictionary<string, VerificationResult>();
-        private int preparedReleaseChannel;
+        private static int preparedReleaseChannel;
 
         [MenuItem("traVRsal/Publisher", priority = 120)]
         public static void ShowWindow()
@@ -60,7 +62,7 @@ namespace traVRsal.SDK
             CreateDirWatcher();
         }
 
-        private void CreateDirWatcher()
+        private static void CreateDirWatcher()
         {
             if (dirWatcher == null)
             {
@@ -108,11 +110,11 @@ namespace traVRsal.SDK
                 string buttonText = "Package";
                 if (packageMode == 1)
                 {
-                    string[] worldsToBuild = GetWorldsToBuild().Select(Path.GetFileName).ToArray();
+                    string[] worldsToBuild = GetWorldsToBuild(packageMode).Select(Path.GetFileName).ToArray();
                     buttonText += " (" + ((dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", worldsToBuild) : "everything") + ")";
                 }
 
-                if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode == 2, packageMode == 2), this);
+                if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode, releaseChannel, packageMode == 2, packageMode == 2), this);
                 EditorGUI.EndDisabledGroup();
 
                 EditorGUILayout.Space();
@@ -230,7 +232,7 @@ namespace traVRsal.SDK
             preparedReleaseChannel = releaseChannel;
 
             yield return FetchUserWorlds();
-            yield return PackageWorlds(true, true, force, linuxOnly);
+            yield return PackageWorlds(packageMode, releaseChannel, true, true, force, linuxOnly);
             yield return CreateDocumentation();
             PrepareCommonFiles();
             Verify();
@@ -341,12 +343,12 @@ namespace traVRsal.SDK
             verificationPassed = !worldListMismatch && !SDKUtil.invalidAPIToken && !SDKUtil.networkIssue; // TODO: do some actual checks
         }
 
-        private string GetServerDataPath()
+        private static string GetServerDataPath()
         {
             return Application.dataPath + "/../ServerData";
         }
 
-        private string[] GetWorldsToBuild()
+        private static string[] GetWorldsToBuild(int packageMode)
         {
             string[] worldsToBuild = GetWorldPaths();
             if (packageMode == 1)
@@ -366,7 +368,7 @@ namespace traVRsal.SDK
             return worldsToBuild;
         }
 
-        private IEnumerator PackageWorlds(bool allWorlds, bool allTargets, bool force = false, bool linuxOnly = false)
+        public static IEnumerator PackageWorlds(int packageMode, int releaseChannel, bool allWorlds, bool allTargets, bool force = false, bool linuxOnly = false)
         {
             uploadPossible = false;
             packagingInProgress = true;
@@ -374,14 +376,14 @@ namespace traVRsal.SDK
 
             try
             {
-                string[] worldsToBuild = allWorlds ? GetWorldPaths() : GetWorldsToBuild();
+                string[] worldsToBuild = allWorlds ? GetWorldPaths() : GetWorldsToBuild(packageMode);
                 if (worldsToBuild.Length == 0) yield break;
                 string resultFolder = Application.dataPath + "/../traVRsal/";
                 BuildTarget mainTarget = linuxOnly || Application.platform == RuntimePlatform.LinuxEditor ? BuildTarget.StandaloneLinux64 : BuildTarget.StandaloneWindows64;
 
                 CreateLockFile();
                 ConvertTileMaps();
-                CreateAddressableSettings(!allTargets);
+                CreateAddressableSettings(!allTargets, releaseChannel);
                 EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ASTC;
                 EditorUserBuildSettings.selectedStandaloneTarget = mainTarget;
                 PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x); // Linux can only be built with Mono on Windows
@@ -448,7 +450,7 @@ namespace traVRsal.SDK
                         AddressableAssetSettings.BuildPlayerContent();
                     }
                 }
-                CreateAddressableSettings(!allTargets); // do again to have clean build state, as some settings were messed with while building
+                CreateAddressableSettings(!allTargets, releaseChannel); // do again to have clean build state, as some settings were messed with while building
                 RenameCatalogs();
                 packagingSuccessful = true;
             }
@@ -478,7 +480,7 @@ namespace traVRsal.SDK
             return $"{Application.dataPath}/../Documentation/{worldName}/";
         }
 
-        private bool CreateObjectLib(string worldName)
+        private static bool CreateObjectLib(string worldName)
         {
             string root = GetWorldsRoot() + "/" + worldName + "/";
             World world = SDKUtil.ReadJSONFileDirect<World>(root + "World.json");
@@ -719,17 +721,17 @@ namespace traVRsal.SDK
             return Application.dataPath + "/../" + SDKUtil.LOCKFILE_NAME;
         }
 
-        private void CreateLockFile()
+        private static void CreateLockFile()
         {
             if (!File.Exists(GetLockFileLocation())) File.Create(GetLockFileLocation());
         }
 
-        private void RemoveLockFile()
+        private static void RemoveLockFile()
         {
             if (File.Exists(GetLockFileLocation())) FileUtil.DeleteFileOrDirectory(GetLockFileLocation());
         }
 
-        private void ConvertTileMaps()
+        private static void ConvertTileMaps()
         {
             foreach (string extension in new[] {TileMapUtil.MAP_EXTENSION, TileMapUtil.WORLD_EXTENSION})
             {
@@ -739,7 +741,7 @@ namespace traVRsal.SDK
             AssetDatabase.Refresh();
         }
 
-        private void RenameCatalogs()
+        private static void RenameCatalogs()
         {
             foreach (string path in new[] {GetServerDataPath(), Application.dataPath + "/../traVRsal"})
             {
@@ -759,7 +761,7 @@ namespace traVRsal.SDK
             }
         }
 
-        private void CreateAddressableSettings(bool localMode)
+        private static void CreateAddressableSettings(bool localMode, int releaseChannel)
         {
             AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
             settings.ActivePlayModeDataBuilderIndex = localMode ? 0 : 2;
@@ -825,7 +827,7 @@ namespace traVRsal.SDK
             }
         }
 
-        private AddressableAssetGroup CreateAssetGroup<SchemaType>(AddressableAssetSettings settings, string groupName)
+        private static AddressableAssetGroup CreateAssetGroup<SchemaType>(AddressableAssetSettings settings, string groupName)
         {
             return settings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema> {settings.DefaultGroup.Schemas[0]}, typeof(SchemaType));
         }
@@ -858,7 +860,7 @@ namespace traVRsal.SDK
             }
             else
             {
-                EditorUtility.DisplayDialog("Success", $"Upload of {worldName} completed. Use the " + (preparedReleaseChannel == 0 ? "LIVE" : "BETA") + " app to test.", "OK");
+                EditorUtility.DisplayDialog("Success", $"Upload of {worldName} completed. Use the " + (preparedReleaseChannel == 0 ? "PRODUCTION" : "BETA") + " app to test.", "OK");
             }
         }
 
