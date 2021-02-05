@@ -90,7 +90,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Directory Watched ({watcher.Path})";
+            return $"Directory Watcher ({watcher.Path})";
         }
     }
 
