@@ -755,6 +755,13 @@ namespace traVRsal.SDK
                             string targetFile = Path.GetDirectoryName(file) + "/catalog." + extension;
                             if (File.Exists(targetFile)) FileUtil.DeleteFileOrDirectory(targetFile);
                             FileUtil.MoveFileOrDirectory(file, targetFile);
+
+                            // FIXME: temporary fix for addressables 1.17+ using incorrect Id and adding backslashes
+                            string content = File.ReadAllText(targetFile);
+                            string prefix = preparedReleaseChannel == 0 ? AWSUtil.S3CDNRoot_Live : AWSUtil.S3CDNRoot_Beta;
+                            content = content.Replace("ServerData/", prefix);
+                            content = content.Replace("\\\\", "/");
+                            File.WriteAllText(targetFile, content);
                         }
                     }
                 }
