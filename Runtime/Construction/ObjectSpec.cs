@@ -25,15 +25,18 @@ namespace traVRsal.SDK
         [DefaultValue(1)] public int height = 1;
 
         [Tooltip("Moves object to the ceiling.")]
-        public bool atCeiling = false;
+        public bool atCeiling;
 
-        public bool pinToSide = false;
+        public bool pinToSide;
 
         [Tooltip("Snaps an object to the side and not to the front, e.g. when attaching directional arrows to the wall.")]
-        public bool snapSideways = false;
+        public bool snapSideways;
 
-        [Tooltip("Disables spawning on top of the object.")]
-        public bool standalone = false;
+        [Tooltip("Disables spawning on top of the object at the main orientation side.")]
+        public bool standalone;
+
+        [Tooltip("Disables spawning on top of the object on all sides.")]
+        public bool standaloneAllSides;
 
         [Tooltip("Replaces shaders with included ones that support stencil operations.")] [DefaultValue(true)]
         public bool adjustMaterials = true;
