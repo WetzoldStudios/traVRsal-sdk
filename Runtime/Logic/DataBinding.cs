@@ -72,6 +72,7 @@ namespace traVRsal.SDK
             PlayerName = 3,
             PlayerNameWithAnonHint = 117,
             PlayerLogin = 57,
+            PlayerImage = ASYNC_RESULT + 4,
 
             AmmunitionRemaining = 120,
             Points = 124,
@@ -135,6 +136,8 @@ namespace traVRsal.SDK
             ShowIfOffline = 113,
             ShowPlayerLogin = 60,
             ShowPlayerLoggedIn = 61,
+            ShowCustomPlayerImage = 127,
+            ShowIfPlatformPlayer = 128,
 
             ShowWorldDownload = ASYNC_RESULT + 1,
             ShowWorldStart = ASYNC_RESULT + 2,
