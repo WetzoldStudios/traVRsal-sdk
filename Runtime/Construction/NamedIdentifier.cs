@@ -29,6 +29,8 @@ namespace traVRsal.SDK
             InterstitialDialog = 12,
             IntroductionDialog = 22,
             CreateWorldsDialog = 16,
+            FailedEntitlementCheckDialog = 24,
+            MainMenuRoot = 25,
             Pivot = 9,
             Object = 23
         }

@@ -28,6 +28,7 @@ namespace traVRsal.SDK
             DoOpenCreateWorldsDialog = 122,
             DoCloseCreateWorldsDialog = 93,
             DoCloseWorldBrowserDialog = 121,
+            DoQuit = 126,
             DoPause = 15,
             DoUnpause = 16,
             DoReturnToMain = 17,

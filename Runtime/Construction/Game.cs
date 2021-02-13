@@ -25,6 +25,7 @@ namespace traVRsal.SDK
         [DefaultValue("Pause-traVRsal")] public string pauseScene = "Pause-traVRsal";
         [DefaultValue("/Base/Menu/World3")] public string worldObject = "/Base/Menu/World3";
         public bool devMode;
+        public bool checkEntitlements;
 
         // derived 
         public bool stickMode;
