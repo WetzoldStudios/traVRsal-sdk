@@ -10,6 +10,7 @@ namespace traVRsal.SDK
     public class World
     {
         [Header("Configuration")] public string key;
+        public string version;
         public string name;
         [DefaultValue("Experience")] public string category = "Experience";
         public string shortDescription;

@@ -416,6 +416,13 @@ namespace traVRsal.SDK
                     targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, mainTarget));
                 }
 
+                // update world content
+                foreach (string dir in worldsToBuild)
+                {
+                    string worldName = Path.GetFileName(dir);
+                    if (!UpdateWorldData(worldName)) yield break;
+                }
+
                 // iterate over all supported platforms
                 foreach (Tuple<BuildTargetGroup, BuildTarget> target in targets)
                 {
@@ -444,8 +451,6 @@ namespace traVRsal.SDK
                         BundledAssetGroupSchema schema = settings.groups.First(group => @group.name == worldName).GetSchema<BundledAssetGroupSchema>();
                         settings.RemoteCatalogBuildPath = schema.BuildPath;
                         settings.RemoteCatalogLoadPath = schema.LoadPath;
-
-                        if (!CreateObjectLib(worldName)) yield break;
 
                         AddressableAssetSettings.BuildPlayerContent();
                     }
@@ -480,7 +485,7 @@ namespace traVRsal.SDK
             return $"{Application.dataPath}/../Documentation/{worldName}/";
         }
 
-        private static bool CreateObjectLib(string worldName)
+        private static bool UpdateWorldData(string worldName)
         {
             string root = GetWorldsRoot() + "/" + worldName + "/";
             World world = SDKUtil.ReadJSONFileDirect<World>(root + "World.json");
@@ -520,6 +525,24 @@ namespace traVRsal.SDK
                     }
                 }
                 if (prefab != null) PrefabUtility.UnloadPrefabContents(prefab);
+            }
+
+            // increase version
+            if (string.IsNullOrEmpty(world.version))
+            {
+                world.version = "0.0.1";
+            }
+            else
+            {
+                if (Version.TryParse(world.version, out Version version))
+                {
+                    world.version = $"{version.Major}.{version.Minor}.{version.Build + 1}";
+                }
+                else
+                {
+                    world.version = "0.0.1";
+                    Debug.LogError($"World.json of {worldName} contained an unreadable version. Resetting to {world.version}.");
+                }
             }
 
             // write back
@@ -757,11 +780,13 @@ namespace traVRsal.SDK
                             FileUtil.MoveFileOrDirectory(file, targetFile);
 
                             // FIXME: temporary fix for addressables 1.17+ using incorrect Id and adding backslashes
+                            /*
                             string content = File.ReadAllText(targetFile);
                             string prefix = preparedReleaseChannel == 0 ? AWSUtil.S3CDNRoot_Live : AWSUtil.S3CDNRoot_Beta;
                             content = content.Replace("ServerData/", prefix);
                             content = content.Replace("\\\\", "/");
                             File.WriteAllText(targetFile, content);
+                            */
                         }
                     }
                 }
@@ -775,7 +800,7 @@ namespace traVRsal.SDK
             settings.BuildRemoteCatalog = true;
             settings.DisableCatalogUpdateOnStartup = true;
             settings.ContiguousBundles = true;
-            settings.IgnoreUnsupportedFilesInBuild = true;
+            // settings.IgnoreUnsupportedFilesInBuild = true;
 
             // don't include built-in data, causes shader issues
             settings.groups.ForEach(g =>
