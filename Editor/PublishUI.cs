@@ -600,7 +600,12 @@ namespace traVRsal.SDK
                     string objects = "";
                     int objCount = 0;
                     string variableName = Path.GetFileName(folder);
-
+                    switch (folder)
+                    {
+                        case "Data":
+                            variableName = "Zones";
+                            break;
+                    }
                     if (Directory.Exists($"{root}{folder}"))
                     {
                         Directory.CreateDirectory(docuPath + folder);
@@ -624,7 +629,6 @@ namespace traVRsal.SDK
                                     if (!assetPath.ToLower().EndsWith(".tmx")) continue;
                                     imageLink = folder + "/" + Path.GetFileName(assetPath) + ".png";
                                     TileMapUtil.TileMapToImage(assetPath, docuPath + imageLink, converterPath);
-                                    variableName = "Zones";
                                     withExtension = false;
                                     break;
 
