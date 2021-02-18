@@ -12,13 +12,14 @@ namespace traVRsal.SDK
             Variable = 1
         }
 
-        public int materialIndex = 0;
-        public int order = 0;
+        public int materialIndex;
+        public bool random;
+        public int order;
         public ImageSource source = ImageSource.Name;
         public string key;
         public bool adjustAspectRatio;
 
-        [HideInInspector]
-        public ImageData imageData;
+        // Runtime
+        [HideInInspector] public ImageData imageData;
     }
 }
