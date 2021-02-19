@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,7 +12,7 @@ namespace traVRsal.SDK
 {
     public class UtilityUI : BasicEditorUI
     {
-        [MenuItem("traVRsal/Utilities/Convert Selected to Piece")]
+        [MenuItem("traVRsal/Utilities/Convert Selected to Piece", false, 0)]
         public static void ConvertToPiece()
         {
             GameObject go = DoConvertToPiece();
@@ -19,7 +21,110 @@ namespace traVRsal.SDK
             CreatePrefab(go.transform.parent.gameObject);
         }
 
-        [MenuItem("traVRsal/Utilities/Create or Update Folder Image List...")]
+        [MenuItem("traVRsal/Utilities/Replace Project Shaders with traVRsal Shaders", false, 100)]
+        public static void ReplaceProjectShaders()
+        {
+            EditorCoroutineUtility.StartCoroutineOwnerless(DoReplaceProjectShaders());
+        }
+
+        private static IEnumerator DoReplaceProjectShaders()
+        {
+            IEnumerable<string> paths = AssetDatabase.FindAssets("t:Material")
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Where(path => !string.IsNullOrEmpty(path))
+                .Where(path => path.ToLowerInvariant().EndsWith(".mat"))
+                .Where(path => !path.StartsWith("Packages/"))
+                .Where(path => !path.Contains("/Editor/"));
+
+            Shader litShader = Shader.Find("MazeVR/StencilObject");
+            Shader simpleLitShader = Shader.Find("MazeVR/StencilObjectSimple");
+            Shader unlitShader = Shader.Find("MazeVR/StencilObjectUnlit");
+
+            if (litShader == null || simpleLitShader == null || unlitShader == null)
+            {
+                Debug.LogError("Required shaders not found. Check SDK integrity.");
+                yield break;
+            }
+
+            int progressId = Progress.Start("Swapping shaders");
+            int current = 0;
+            int lit = 0;
+            int doneLit = 0;
+            int simpleLit = 0;
+            int doneSimpleLit = 0;
+            int unlit = 0;
+            int doneUnlit = 0;
+            int transparent = 0;
+            int total = paths.Count();
+
+            foreach (string path in paths)
+            {
+                current++;
+
+                Material m = AssetDatabase.LoadAssetAtPath<Material>(path);
+                Progress.Report(progressId, (float) current / total, m.name);
+                if (IsTransparent(m))
+                {
+                    transparent++;
+                    continue;
+                }
+
+                bool adjustMaterial = false;
+                switch (m.shader.name)
+                {
+                    case "MazeVR/StencilObject":
+                        doneLit++;
+                        break;
+
+                    case "MazeVR/StencilObjectSimple":
+                        doneSimpleLit++;
+                        break;
+
+                    case "MazeVR/StencilObjectUnlit":
+                        doneUnlit++;
+                        break;
+
+                    case "Universal Render Pipeline/Lit":
+                        m.shader = litShader;
+                        adjustMaterial = true;
+                        lit++;
+                        break;
+
+                    case "Universal Render Pipeline/Simple Lit":
+                        m.shader = simpleLitShader;
+                        adjustMaterial = true;
+                        simpleLit++;
+                        break;
+
+                    case "Universal Render Pipeline/Unlit":
+                        m.shader = unlitShader;
+                        adjustMaterial = true;
+                        unlit++;
+                        break;
+                }
+                if (adjustMaterial)
+                {
+                    // m.renderQueue = 1500; // not needed anymore if stencil disabled per default
+                    m.SetInt("_StencilComparison", 0); // disabled
+                    m.SetInt("_StencilReference", 0); // always visible initially
+                }
+
+                yield return null;
+            }
+            int alreadyDone = doneLit + doneSimpleLit + doneUnlit;
+            int remainder = total - lit - simpleLit - unlit - alreadyDone;
+
+            AssetDatabase.Refresh();
+            Progress.Remove(progressId);
+            EditorUtility.DisplayDialog("Done", $"Material converted: {lit} lit, {simpleLit} simple lit, {unlit} unlit.\n\n{remainder} unsupported materials, with {transparent} being transparent. {alreadyDone} were already converted.", "OK");
+        }
+
+        private static bool IsTransparent(Material m)
+        {
+            return m.HasProperty("_Surface") && m.GetFloat("_Surface") == 1f;
+        }
+
+        [MenuItem("traVRsal/Utilities/Create or Update Folder Image List...", false, 101)]
         public static void CreateImageList()
         {
             string path = EditorUtility.OpenFolderPanel("Select Image Folder", "", "");
