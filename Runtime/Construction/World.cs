@@ -17,7 +17,7 @@ namespace traVRsal.SDK
         public string longDescription;
         public string coverImage;
         public string minVersion;
-        public Vector2Int maxSize = Vector2Int.zero;
+        public string maxSize;
         [DefaultValue(300)] public int availableTime = 5 * 60;
         [DefaultValue(true)] public bool showHandHud = true;
         public HUDConfig defaultHandHud;
@@ -68,6 +68,7 @@ namespace traVRsal.SDK
         [NonSerialized] public Challenge challenge;
         [NonSerialized] public int autoIdx = 1;
         [NonSerialized] public float tileSize;
+        [NonSerialized] public Vector2Int maxSizeV = Vector2Int.zero;
 
         public World()
         {
