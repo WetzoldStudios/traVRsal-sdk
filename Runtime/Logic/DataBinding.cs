@@ -49,6 +49,7 @@ namespace traVRsal.SDK
             DoChallengeFilterNotBeaten = 97,
             DoChallengeFilterBeaten = 96,
             DoChallengeFilterBest = 98,
+            DoOpenSDKWebsite = 129,
 
             EnterLogin = 64,
             EnterNickname = 62,
