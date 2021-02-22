@@ -77,6 +77,8 @@ namespace traVRsal.SDK
 
             AmmunitionRemaining = 120,
             Points = 124,
+            AllTargets = 130,
+            RemainingTargets = 131,
 
             TimeElapsed = PERIODIC + 1,
             SlowMotionCooldownRemaining = PERIODIC + 2,

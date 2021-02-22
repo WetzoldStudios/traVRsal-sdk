@@ -7,6 +7,7 @@ namespace traVRsal.SDK
     public class ImageData
     {
         [Header("Metadata")] public string imageLink;
+        public string animationLink;
         public string name;
         public string description;
         public DateTime date;

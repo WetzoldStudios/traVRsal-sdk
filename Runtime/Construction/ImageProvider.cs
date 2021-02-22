@@ -10,7 +10,8 @@ namespace traVRsal.SDK
         public enum Provider
         {
             Unsplash = 0,
-            Device = 1
+            Giphy = 1,
+            Device = 2
         }
 
         public enum Order

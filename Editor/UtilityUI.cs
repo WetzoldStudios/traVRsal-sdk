@@ -12,7 +12,7 @@ namespace traVRsal.SDK
 {
     public class UtilityUI : BasicEditorUI
     {
-        [MenuItem("traVRsal/Utilities/Convert Selected to Piece", false, 0)]
+        [MenuItem("traVRsal/Utilities/Convert Selected to Piece", false, 1000)]
         public static void ConvertToPiece()
         {
             GameObject go = DoConvertToPiece();
@@ -21,7 +21,7 @@ namespace traVRsal.SDK
             CreatePrefab(go.transform.parent.gameObject);
         }
 
-        [MenuItem("traVRsal/Utilities/Replace Project Shaders with traVRsal Shaders", false, 100)]
+        [MenuItem("traVRsal/Utilities/Replace Project Shaders with traVRsal Shaders", false, 1100)]
         public static void ReplaceProjectShaders()
         {
             EditorCoroutineUtility.StartCoroutineOwnerless(DoReplaceProjectShaders());
@@ -116,7 +116,7 @@ namespace traVRsal.SDK
 
             AssetDatabase.Refresh();
             Progress.Remove(progressId);
-            EditorUtility.DisplayDialog("Done", $"Material converted: {lit} lit, {simpleLit} simple lit, {unlit} unlit.\n\n{remainder} unsupported materials, with {transparent} being transparent. {alreadyDone} were already converted.", "OK");
+            EditorUtility.DisplayDialog("Done", $"Materials converted: {lit} lit, {simpleLit} simple lit, {unlit} unlit.\n\n{remainder} unsupported materials, with {transparent} being transparent. {alreadyDone} were already converted.", "OK");
         }
 
         private static bool IsTransparent(Material m)
@@ -124,7 +124,7 @@ namespace traVRsal.SDK
             return m.HasProperty("_Surface") && m.GetFloat("_Surface") == 1f;
         }
 
-        [MenuItem("traVRsal/Utilities/Create or Update Folder Image List...", false, 101)]
+        [MenuItem("traVRsal/Utilities/Create or Update Folder Image List...", false, 1101)]
         public static void CreateImageList()
         {
             string path = EditorUtility.OpenFolderPanel("Select Image Folder", "", "");

@@ -32,6 +32,7 @@ namespace traVRsal.SDK
         public bool isPlayer;
         public bool destructible = true;
         public bool registerAsTarget = true;
+        public string targetName;
         public bool triggerVariable;
 
         [Header("Destruction")] public bool allowMelee;
@@ -57,6 +58,7 @@ namespace traVRsal.SDK
             isPlayer = copyFrom.isPlayer;
             destructible = copyFrom.destructible;
             registerAsTarget = copyFrom.registerAsTarget;
+            targetName = copyFrom.targetName;
             triggerVariable = copyFrom.triggerVariable;
             allowMelee = copyFrom.allowMelee;
             hideWhenDestroyed = copyFrom.hideWhenDestroyed;
@@ -65,6 +67,11 @@ namespace traVRsal.SDK
             endValue = copyFrom.endValue;
             duration = copyFrom.duration;
             breakSounds = copyFrom.breakSounds;
+        }
+
+        public override string ToString()
+        {
+            return $"Damageable Config ({type})";
         }
     }
 }
