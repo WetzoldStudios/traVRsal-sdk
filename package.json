@@ -10,7 +10,7 @@
     "com.unity.render-pipelines.universal": "9.0.0-preview.72",
     "com.unity.settings-manager": "1.0.3",
     "com.unity.test-framework": "1.1.22",
-    "com.unity.textmeshpro": "3.0.4",
+    "com.unity.textmeshpro": "3.0.3",
     "com.unity.xr.management": "3.2.17",
     "com.unity.xr.oculus": "1.8.1"
   },

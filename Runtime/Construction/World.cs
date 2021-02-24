@@ -20,9 +20,10 @@ namespace traVRsal.SDK
         public string maxSize;
         [DefaultValue(300)] public int availableTime = 5 * 60;
         [DefaultValue(true)] public bool showHandHud = true;
-        public HUDConfig defaultHandHud;
-        public HUDConfig defaultHandHudMain;
-        public HUDConfig defaultHandHudSecondary;
+        public HUDConfig[] customHandHuds;
+        public Reference defaultHandHud;
+        public Reference defaultHandHudMain;
+        public Reference defaultHandHudSecondary;
         public bool isVirtual;
         public string deathSound;
         [DefaultValue(true)] public bool enableChallenges = true;

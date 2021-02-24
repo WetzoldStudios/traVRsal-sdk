@@ -12,5 +12,24 @@ namespace traVRsal.SDK
         public string subText;
         public string subTextWhenZero;
         public bool hideSubTextWhenZero;
+
+        public HUDConfig()
+        {
+        }
+
+        public HUDConfig(Reference text, string textWhenZero, bool hideTextWhenZero, string subText, string subTextWhenZero, bool hideSubTextWhenZero)
+        {
+            this.text = text;
+            this.textWhenZero = textWhenZero;
+            this.hideTextWhenZero = hideTextWhenZero;
+            this.subText = subText;
+            this.subTextWhenZero = subTextWhenZero;
+            this.hideSubTextWhenZero = hideSubTextWhenZero;
+        }
+
+        public override string ToString()
+        {
+            return $"HUD Config ({text})";
+        }
     }
 }
