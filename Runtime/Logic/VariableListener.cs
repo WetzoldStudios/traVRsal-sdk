@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace traVRsal.SDK
 {
@@ -6,18 +7,29 @@ namespace traVRsal.SDK
     {
         public enum Action
         {
-            Activate_Object,
-            Activate_Component,
-            Activate_Emission,
-            Call_Reactors,
-            GameState_Game,
-            GameState_Menu
+            Assignments_Only = 6,
+            Call_Reactors = 3,
+            Activate_Object = 0,
+            Activate_Component = 1,
+            Activate_Emission = 2,
+            GameState_Game = 4,
+            GameState_Menu = 5,
+            Nothing = 7
         }
 
+        [Header("Configuration")]
         public string variable;
-        public Action action = Action.Activate_Object;
+        public bool invert;
+        
+        [Header("Action")]
+        public Action action = Action.Assignments_Only;
         public GameObject targetObject;
         public Behaviour component;
-        public bool invert;
+        
+        [Header("Static Assignments")]
+        public List<Behaviour> enabledComponents;
+        public List<Behaviour> disabledComponents;
+        public List<GameObject> enabledObjects;
+        public List<GameObject> disabledObjects;
     }
 }
