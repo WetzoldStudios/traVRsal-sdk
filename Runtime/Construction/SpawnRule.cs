@@ -50,6 +50,7 @@ namespace traVRsal.SDK
         public float[] yRange;
         public int minDistance;
         public string moveRandomly;
+        public string rotateRandomly;
         public bool snap;
         public bool atCeiling;
         public bool connectToCeiling;
