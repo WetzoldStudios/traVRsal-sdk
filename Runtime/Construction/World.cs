@@ -53,6 +53,7 @@ namespace traVRsal.SDK
 
         [Header("Runtime Data")] public bool journeyMode;
         public bool rotateWorld;
+        public bool invalidSettings;
         public List<ObjectSpec> objectSpecs;
         public List<string> dependencies;
         public List<string> worldDependencies;

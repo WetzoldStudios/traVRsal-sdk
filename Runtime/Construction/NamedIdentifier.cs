@@ -13,6 +13,8 @@ namespace traVRsal.SDK
             PlayerDialog = 7,
             InfoDialog = 10,
             InfoDialogText = 11,
+            InfoDialogMainAction = 26,
+            InfoDialogAlternativeAction = 27,
             WorldDetailsDialog = 2,
             WorldDetailsDialogPosition = 8,
             WorldsListRoot = 19,

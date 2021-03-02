@@ -23,6 +23,7 @@ namespace traVRsal.SDK
             DoOpenPlayerDialog = 58,
             DoClosePlayerDialog = 59,
             DoCloseInfoDialog = 69,
+            DoAlternativeInfoDialogAction = 132,
             DoOpenChallengesDialog = 71,
             DoCloseChallengesDialog = 73,
             DoOpenCreateWorldsDialog = 122,
@@ -148,6 +149,7 @@ namespace traVRsal.SDK
             ShowWorldStatistics = 75,
 
             ImageOrigin = REQUIRE_SOURCE + 8,
+            ImageOriginLogo = REQUIRE_SOURCE + 13,
             ImageName = REQUIRE_SOURCE + 1,
             ImageDescription = REQUIRE_SOURCE + 2,
             ImageDescriptionOrName = REQUIRE_SOURCE + 9,
