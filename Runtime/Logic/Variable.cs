@@ -17,7 +17,7 @@ namespace traVRsal.SDK
         public string value = "0";
         public Behaviour behaviour = Behaviour.Unrestricted;
         public string imageFolder;
-        public int targetCount;
+        public int targetCount = 3;
 
         [Header("Runtime")] public bool runtimeCreated;
         public bool isComboPart;
@@ -28,12 +28,39 @@ namespace traVRsal.SDK
 
         [NonSerialized] public Variable parent;
         [NonSerialized] public List<Variable> children;
+        [NonSerialized] public List<Variable> affects;
         [NonSerialized] public int changeFrame;
         [NonSerialized] public bool everChanged;
 
         public Variable(string key)
         {
             this.key = key;
+        }
+
+        protected bool Equals(Variable other)
+        {
+            return key == other.key && value == other.value && behaviour == other.behaviour && imageFolder == other.imageFolder && targetCount == other.targetCount;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Variable) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = (key != null ? key.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (value != null ? value.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (int) behaviour;
+                hashCode = (hashCode * 397) ^ (imageFolder != null ? imageFolder.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ targetCount;
+                return hashCode;
+            }
         }
 
         public override string ToString()

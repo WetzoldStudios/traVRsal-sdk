@@ -17,18 +17,17 @@ namespace traVRsal.SDK
             Nothing = 7
         }
 
-        [Header("Configuration")]
-        public string variable;
+        [Header("Configuration")] public string variable;
         public bool invert;
-        
-        [Header("Action")]
-        public Action action = Action.Assignments_Only;
+
+        [Header("Action")] public Action action = Action.Assignments_Only;
         public GameObject targetObject;
         public Behaviour component;
-        
-        [Header("Static Assignments")]
-        public List<Behaviour> enabledComponents;
+
+        [Header("Static Assignments")] public List<Behaviour> enabledComponents;
         public List<Behaviour> disabledComponents;
+        public List<Collider> enabledColliders;
+        public List<Collider> disabledColliders;
         public List<GameObject> enabledObjects;
         public List<GameObject> disabledObjects;
     }
