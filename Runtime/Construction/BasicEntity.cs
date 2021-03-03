@@ -59,6 +59,7 @@ namespace traVRsal.SDK
         public string variable;
         public TMProperty[] properties;
 
+        // runtime data
         [HideInInspector] public bool isSpawned;
         [HideInInspector] public int autoIdx;
         [HideInInspector] public Vector2Int originalPosition;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace traVRsal.SDK
 {
@@ -16,16 +17,16 @@ namespace traVRsal.SDK
             warnings.Clear();
         }
 
-        public static void LogWarning(string message)
+        public static void LogWarning(string message, Object context = null)
         {
             warnings.Add(new Tuple<string, string>(GetDate(), message));
-            Debug.LogWarning(message);
+            Debug.LogWarning(message, context);
         }
 
-        public static void LogError(string message)
+        public static void LogError(string message, Object context = null)
         {
             errors.Add(new Tuple<string, string>(GetDate(), message));
-            Debug.LogError(message);
+            Debug.LogError(message, context);
         }
 
         public static List<string> GetData(bool returnErrors, bool returnWarnings)

@@ -58,11 +58,11 @@ namespace traVRsal.SDK
             // TODO: incomplete
         }
 
-        public void MarkAllSidesNoSpawn()
+        public void MarkAllSidesNoSpawn(bool state = true)
         {
             for (int i = 0; i < explicitNoSpawn.Length; i++)
             {
-                explicitNoSpawn[i] = true;
+                explicitNoSpawn[i] = state;
             }
         }
 

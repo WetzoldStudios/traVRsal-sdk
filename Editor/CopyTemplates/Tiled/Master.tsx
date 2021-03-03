@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.4" tiledversion="1.4.3" name="Master" tilewidth="50" tileheight="50" tilecount="25" columns="0">
+<tileset version="1.4" tiledversion="1.4.3" name="Master" tilewidth="50" tileheight="50" tilecount="26" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="2" type="/Base/Ceiling">
   <properties>
@@ -187,5 +187,11 @@
    <property name="Variable" value=""/>
   </properties>
   <image width="50" height="50" source="Master Images/trigger.png"/>
+ </tile>
+ <tile id="31" type="/Base/Explicit-Spawn">
+  <properties>
+   <property name="Virtual" type="bool" value="true"/>
+  </properties>
+  <image width="50" height="50" source="Master Images/explicit-spawn.png"/>
  </tile>
 </tileset>
