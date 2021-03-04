@@ -28,6 +28,7 @@ namespace traVRsal.SDK
         public string deathSound;
         [DefaultValue(true)] public bool enableChallenges = true;
         [DefaultValue("0,4")] public string kpis = "0,4"; // TODO: switch to array?
+        public string[] headItems;
         public string initialItemMain;
         public string initialItemSecondary;
         [DefaultValue("/Base/LightHall")] public string introScenery = "/Base/LightHall";
@@ -101,6 +102,7 @@ namespace traVRsal.SDK
 
         public void NullifyEmpties()
         {
+            if (headItems != null && headItems.Length == 0) headItems = null;
             if (zones != null && zones.Count == 0) zones = null;
             if (zoneTemplates != null && zoneTemplates.Count == 0) zoneTemplates = null;
             if (spawnRules != null && spawnRules.Count == 0) spawnRules = null;

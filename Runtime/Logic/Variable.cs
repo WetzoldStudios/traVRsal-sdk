@@ -14,7 +14,7 @@ namespace traVRsal.SDK
         }
 
         [Header("Configuration")] public string key;
-        public string value = "0";
+        public object value = false;
         public Behaviour behaviour = Behaviour.Unrestricted;
         public string imageFolder;
         public int targetCount = 3;

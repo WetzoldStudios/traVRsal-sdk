@@ -9,7 +9,7 @@ namespace traVRsal.SDK
     {
         public enum ObjectType
         {
-            Enemy = 0,
+            EnemyOrCollectible = 0,
             Environment = 1,
             PlayerHead = 2,
             PlayerLeftArm = 3,
@@ -18,14 +18,7 @@ namespace traVRsal.SDK
             Player = 6
         }
 
-        public enum DestroyAction
-        {
-            None,
-            Move,
-            Rotate
-        }
-
-        [Header("Configuration")] public ObjectType type = ObjectType.Enemy;
+        [Header("Configuration")] public ObjectType type = ObjectType.EnemyOrCollectible;
         public int health = 1;
         public float damageMultiplier = 1f;
         public int points;
@@ -38,9 +31,6 @@ namespace traVRsal.SDK
         [Header("Destruction")] public bool allowMelee;
         public bool hideWhenDestroyed = true;
         public string stateChange;
-
-        [Header("Destruction Effects")] public DestroyAction destroyAction = DestroyAction.None;
-        public Vector3 endValue;
         public float duration = 0.2f;
 
         [HideInInspector] public List<string> breakSounds;
@@ -63,8 +53,6 @@ namespace traVRsal.SDK
             allowMelee = copyFrom.allowMelee;
             hideWhenDestroyed = copyFrom.hideWhenDestroyed;
             stateChange = copyFrom.stateChange;
-            destroyAction = copyFrom.destroyAction;
-            endValue = copyFrom.endValue;
             duration = copyFrom.duration;
             breakSounds = copyFrom.breakSounds;
         }

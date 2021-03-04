@@ -6,7 +6,7 @@ namespace traVRsal.SDK
     {
         public enum Trigger
         {
-            Manual = 0,
+            Variable = 0,
             Automatic = 1
         }
 
@@ -41,7 +41,7 @@ namespace traVRsal.SDK
         public float duration = 3f;
         public float initialPause = 2f;
         public float stationPause = 2f;
-        public Trigger trigger = Trigger.Manual;
+        public Trigger trigger = Trigger.Variable;
         public AutoMovement autoMovement = AutoMovement.None;
         public float playerCheckInterval = 2f;
     }
