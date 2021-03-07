@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 namespace traVRsal.SDK
@@ -17,7 +18,7 @@ namespace traVRsal.SDK
         public object value = false;
         public Behaviour behaviour = Behaviour.Unrestricted;
         public string imageFolder;
-        public int targetCount = 3;
+        [DefaultValue(3)] public int targetCount = 3;
 
         [Header("Runtime")] public bool runtimeCreated;
         public bool isComboPart;
@@ -37,6 +38,14 @@ namespace traVRsal.SDK
             this.key = key;
         }
 
+        public void Merge(Variable copyFrom)
+        {
+            value = copyFrom.value;
+            behaviour = copyFrom.behaviour;
+            imageFolder = copyFrom.imageFolder;
+            targetCount = copyFrom.targetCount;
+        }
+
         protected bool Equals(Variable other)
         {
             return key == other.key && value == other.value && behaviour == other.behaviour && imageFolder == other.imageFolder && targetCount == other.targetCount;
@@ -46,7 +55,7 @@ namespace traVRsal.SDK
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Variable) obj);
         }
 

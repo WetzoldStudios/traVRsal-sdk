@@ -41,6 +41,7 @@ namespace traVRsal.SDK
 
         public string defaultScenery;
         public List<WorldDataReference> worldData;
+        public bool disableJourneys;
         public List<Journey> journeys;
         public List<WorldSetting> settings;
         public List<ImageProvider> imageProviders;

@@ -80,6 +80,7 @@ namespace traVRsal.SDK
             Points = 124,
             AllTargets = 130,
             RemainingTargets = 131,
+            FirstRemainingTarget = 133,
 
             TimeElapsed = PERIODIC + 1,
             SlowMotionCooldownRemaining = PERIODIC + 2,
