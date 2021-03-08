@@ -14,13 +14,14 @@ namespace traVRsal.SDK
 
         public Mode mode = Mode.Manual;
         public Vector2 distance = new Vector2(1f, 1f);
-        public float duration = 4f;
         public Vector3 axis = Vector3.up;
 
         public Ease easeType = Ease.InOutSine;
         public bool loop = true;
         public LoopType loopType = LoopType.Yoyo;
 
+        public float duration = 4f;
+        public float initialDelay;
         public float onDelay;
         public float offDelay;
 
@@ -36,7 +37,6 @@ namespace traVRsal.SDK
             if (mode == Mode.Manual)
             {
                 if (onDelay > 0) yield return new WaitForSeconds(onDelay);
-
                 transform.DOLocalMove(transform.localPosition + axis * finalDistance, duration).SetLoops(loop ? -1 : 0, loopType).SetEase(easeType);
             }
         }
@@ -47,11 +47,11 @@ namespace traVRsal.SDK
 
             if (condition)
             {
-                transform.DOLocalMove(originalPosition + axis * finalDistance, duration).SetDelay(onDelay + (changedOnce ? 0f : onDelay));
+                transform.DOLocalMove(originalPosition + axis * finalDistance, duration).SetDelay(onDelay + (changedOnce ? 0f : initialDelay)).SetEase(easeType);
             }
             else
             {
-                transform.DOLocalMove(originalPosition, duration).SetDelay(offDelay + (changedOnce ? 0f : onDelay));
+                transform.DOLocalMove(originalPosition, duration).SetDelay(offDelay + (changedOnce ? 0f : initialDelay)).SetEase(easeType);
             }
 
             if (!initialCall && variable.everChanged) changedOnce = true;

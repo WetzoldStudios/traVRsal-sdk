@@ -14,13 +14,13 @@ namespace traVRsal.SDK
 
         public Mode mode = Mode.Manual;
         public Vector2 size = new Vector2(0f, 0f);
-        public float duration = 2f;
         public Vector3 axis = Vector3.one;
 
         public Ease easeType = Ease.InOutSine;
         public bool loop = true;
         public LoopType loopType = LoopType.Yoyo;
 
+        public float duration = 2f;
         public float onDelay;
         public float offDelay;
 
@@ -46,11 +46,11 @@ namespace traVRsal.SDK
 
             if (condition)
             {
-                transform.DOScale(originalScale + axis * finalSize, duration).SetDelay(onDelay + (changedOnce ? 0f : onDelay));
+                transform.DOScale(originalScale + axis * finalSize, duration).SetDelay(onDelay + (changedOnce ? 0f : onDelay)).SetEase(easeType);
             }
             else
             {
-                transform.DOScale(originalScale, duration).SetDelay(offDelay + (changedOnce ? 0f : onDelay));
+                transform.DOScale(originalScale, duration).SetDelay(offDelay + (changedOnce ? 0f : onDelay)).SetEase(easeType);
             }
 
             if (!initialCall && variable.everChanged) changedOnce = true;
