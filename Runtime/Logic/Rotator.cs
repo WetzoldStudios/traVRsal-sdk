@@ -13,9 +13,12 @@ namespace traVRsal.SDK
 
         public Mode mode = Mode.Manual;
         public Vector2 degrees = new Vector2(10f, 10f);
-        public float duration = 2f;
         public Vector3 axis = Vector3.up;
 
+        public Ease easeType = Ease.InOutSine;
+        public bool loop = true;
+
+        public float duration = 2f;
         public float onDelay;
         public float offDelay;
 
@@ -30,12 +33,20 @@ namespace traVRsal.SDK
             originalRotationQ = transform.localRotation;
             originalRotation = originalRotationQ.eulerAngles;
             finalDegrees = Random.Range(degrees.x, degrees.y);
-            startTime = Time.time + onDelay;
+
+            if (mode == Mode.Manual)
+            {
+                startTime = Time.time + onDelay;
+                if (!loop)
+                {
+                    transform.DOLocalRotate(originalRotation + axis * finalDegrees, duration).SetDelay(onDelay).SetEase(easeType);
+                }
+            }
         }
 
         private void Update()
         {
-            if (mode != Mode.Manual) return;
+            if (mode != Mode.Manual || !loop) return;
             if (Time.time < startTime) return;
 
             // TODO: switch to DOTween to get rid of update loop
@@ -48,11 +59,11 @@ namespace traVRsal.SDK
 
             if (condition)
             {
-                transform.DOLocalRotate(originalRotation + axis * finalDegrees, duration).SetDelay(onDelay + (changedOnce ? 0f : onDelay));
+                transform.DOLocalRotate(originalRotation + axis * finalDegrees, duration).SetDelay(onDelay + (changedOnce ? 0f : onDelay)).SetEase(easeType);
             }
             else
             {
-                transform.DOLocalRotateQuaternion(originalRotationQ, duration).SetDelay(offDelay + (changedOnce ? 0f : onDelay));
+                transform.DOLocalRotateQuaternion(originalRotationQ, duration).SetDelay(offDelay + (changedOnce ? 0f : onDelay)).SetEase(easeType);
             }
 
             if (!initialCall && variable.everChanged) changedOnce = true;
