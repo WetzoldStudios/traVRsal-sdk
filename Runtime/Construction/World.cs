@@ -31,6 +31,8 @@ namespace traVRsal.SDK
         public string[] headItems;
         public string initialItemMain;
         public string initialItemSecondary;
+        public string handBackItemMain;
+        public string handBackItemSecondary;
         [DefaultValue("/Base/LightHall")] public string introScenery = "/Base/LightHall";
 
         [DefaultValue("/Base/LightHall-Outro")]
