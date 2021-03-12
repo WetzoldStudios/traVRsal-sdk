@@ -32,18 +32,21 @@ namespace traVRsal.SDK
         [DefaultValue(true)] public bool enabled = true;
         public string[] objectKeys;
         public ConditionalValues[] objectKeysIf;
-        public string[] validZones;
-        public string[] validSockets;
-        public string[] validObjects;
+
         public AmountType amountType = AmountType.Total;
         [DefaultValue(10)] public int amount = 10;
         [DefaultValue(DistributionType.Even)] public DistributionType distributionType = DistributionType.Even;
         [DefaultValue(Direction.Path_Ahead)] public Direction orientation = Direction.Path_Ahead;
         public SpaceRequirement occupy = SpaceRequirement.SingleSide;
-        public bool flipOrientation;
+
+        public string[] validZones;
+        public string[] validSockets;
+        public string[] validObjects;
         public string[] restrictions;
+
         public int damage;
         public int health;
+
         public string scale;
         public float maxScale;
         public float y;
@@ -55,8 +58,11 @@ namespace traVRsal.SDK
         public bool atCeiling;
         public bool connectToCeiling;
         public bool stretchToCeiling;
+        public bool flipOrientation;
+
         public bool dontCountAsTarget;
         public bool dontCountAsObstacle;
+
         public bool debug;
 
         // FIXME: will cause "recursive serialization is not supported" warning

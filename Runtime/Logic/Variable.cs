@@ -44,6 +44,9 @@ namespace traVRsal.SDK
             behaviour = copyFrom.behaviour;
             imageFolder = copyFrom.imageFolder;
             targetCount = copyFrom.targetCount;
+
+            // ensure we are always using floats when using decimals for compatibility (e.g. FlowCanvas sync)
+            if (value is double) value = Convert.ChangeType(value, typeof(float));
         }
 
         protected bool Equals(Variable other)

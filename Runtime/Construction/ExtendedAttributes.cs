@@ -1,18 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using static traVRsal.SDK.BasicEntity;
 
 namespace traVRsal.SDK
 {
+    [Serializable]
     [DisallowMultipleComponent]
     public class ExtendedAttributes : MonoBehaviour
     {
-        [Tooltip("Object does not use any logic components, enabling further performance enhancements.")]
+        [Tooltip("Object does not move and does not use any logic components, enabling further performance enhancements.")]
         public bool environment;
 
         [Tooltip("Object should not block agents.")]
         public bool nonBlocking;
 
-        [Tooltip("Provides walkable ground to the player.")]
+        [Tooltip("Object provides walkable ground to the player.")]
         public bool climbable;
 
         [Tooltip("Object is an item that can be carried.")]

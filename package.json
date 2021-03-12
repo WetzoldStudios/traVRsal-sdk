@@ -12,6 +12,7 @@
     "com.unity.settings-manager": "1.0.3",
     "com.unity.test-framework": "1.1.24",
     "com.unity.textmeshpro": "3.0.3",
+    "com.unity.xr.interaction.toolkit": "1.0.0-pre.2",
     "com.unity.xr.management": "3.2.17",
     "com.unity.xr.oculus": "1.8.1"
   },

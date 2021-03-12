@@ -17,13 +17,15 @@ namespace traVRsal.SDK
         public ReplacementType type = ReplacementType.Object;
         public string key;
         public string[] keys;
+
         public string objectKey;
+        public string[] randomObjects;
+        [DefaultValue(Direction.Same)] public Direction orientation = Direction.Same;
+
         public string materials;
         public string[] randomMaterials;
-        public string[] randomObjects;
-        public string[] validZones;
 
-        [DefaultValue(Direction.Same)] public Direction orientation = Direction.Same;
+        public string[] validZones;
 
         public TMProperty[] properties;
 
