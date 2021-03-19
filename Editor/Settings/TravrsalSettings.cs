@@ -8,7 +8,7 @@ namespace traVRsal.SDK
         [UserSetting("General Settings", "Creator Key")]
         static TravrsalSetting<string> apiKey = new TravrsalSetting<string>("apiKey", null, SettingsScope.Project);
 
-        [UserSetting("General Settings", "Path to Tiled.exe")]
+        [UserSetting("General Settings", "Path to Tiled executable")]
         static TravrsalSetting<string> tiledPath = new TravrsalSetting<string>("tiledPath", SDKUtil.TILED_PATH_DEFAULT, SettingsScope.Project);
     }
 }

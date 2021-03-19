@@ -72,6 +72,7 @@ namespace traVRsal.SDK
         [NonSerialized] public Dictionary<string, Tuple<string, BasicEntity>> locationCache;
         [NonSerialized] public Dictionary<int, HashSet<int>> zoneVisibility;
         [NonSerialized] public Challenge challenge;
+        [NonSerialized] public bool useExistingWorld;
         [NonSerialized] public int autoIdx = 1;
         [NonSerialized] public float tileSize;
         [NonSerialized] public Vector2Int maxSizeV = Vector2Int.zero;

@@ -1,36 +1,38 @@
 {
-  "name": "com.wetzold.travrsal.sdk",
-  "description": "Provides the tools necessary to create custom worlds for traVRsal.",
-  "version": "1.1.32",
-  "unity": "2020.1",
-  "displayName": "traVRsal SDK",
-  "dependencies": {
-    "com.unity.addressables": "1.16.15",
-    "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.nuget.newtonsoft-json": "2.0.1-preview.1",
-    "com.unity.render-pipelines.universal": "9.0.0-preview.72",
-    "com.unity.settings-manager": "1.0.3",
-    "com.unity.test-framework": "1.1.24",
-    "com.unity.textmeshpro": "3.0.3",
-    "com.unity.xr.interaction.toolkit": "1.0.0-pre.2",
-    "com.unity.xr.management": "3.2.17",
-    "com.unity.xr.oculus": "1.8.1"
-  },
-  "hideInEditor": false,
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/WetzoldStudios/traVRsal-sdk.git"
-  },
-  "homepage": "https://github.com/WetzoldStudios/traVRsal-sdk",
-  "documentationUrl": "https://github.com/WetzoldStudios/traVRsal-sdk/wiki",
-  "changelogUrl": "https://github.com/WetzoldStudios/traVRsal-sdk/releases",
-  "author": {
-    "name": "traVRsal",
-    "email": "robert@wetzold.com",
-    "url": "https://github.com/WetzoldStudios/traVRsal-sdk"
-  },
-  "keywords": [
-    "sdk", "gaming", "virtual reality"
-  ]
+    "name": "com.wetzold.travrsal.sdk",
+    "description": "Provides the tools necessary to create custom worlds for traVRsal.",
+    "version": "1.1.46",
+    "unity": "2020.1",
+    "displayName": "traVRsal SDK",
+    "dependencies": {
+        "com.unity.addressables": "1.16.15",
+        "com.unity.editorcoroutines": "1.0.0",
+        "com.unity.nuget.newtonsoft-json": "2.0.1-preview.1",
+        "com.unity.render-pipelines.universal": "9.0.0-preview.72",
+        "com.unity.settings-manager": "1.0.3",
+        "com.unity.test-framework": "1.1.24",
+        "com.unity.textmeshpro": "3.0.3",
+        "com.unity.xr.interaction.toolkit": "1.0.0-pre.2",
+        "com.unity.xr.management": "3.2.17",
+        "com.unity.xr.oculus": "1.8.1"
+    },
+    "hideInEditor": false,
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/WetzoldStudios/traVRsal-sdk.git"
+    },
+    "homepage": "https://github.com/WetzoldStudios/traVRsal-sdk",
+    "documentationUrl": "https://github.com/WetzoldStudios/traVRsal-sdk/wiki",
+    "changelogUrl": "https://github.com/WetzoldStudios/traVRsal-sdk/releases",
+    "author": {
+        "name": "traVRsal",
+        "email": "robert@wetzold.com",
+        "url": "https://github.com/WetzoldStudios/traVRsal-sdk"
+    },
+    "keywords": [
+        "sdk",
+        "gaming",
+        "virtual reality"
+    ]
 }
