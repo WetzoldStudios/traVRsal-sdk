@@ -12,7 +12,9 @@ namespace traVRsal.SDK
         }
 
         public Mode mode = Mode.Manual;
+        [Tooltip("Degrees per second in manual mode. Total degrees otherwise. Use different values for X and Y to define a range for a random angle.")]
         public Vector2 degrees = new Vector2(10f, 10f);
+        [Tooltip("Local axis around which the object should be rotated, e.g. (0,1,0) for Y.")]
         public Vector3 axis = Vector3.up;
 
         public Ease easeType = Ease.InOutSine;

@@ -38,11 +38,16 @@ namespace traVRsal.SDK
         public Vector3 targetPosition;
         public string targetLocation;
         public int targetFloor;
+
+        [Tooltip("Defines when a platform should move, either automatically or based on a variable.")]
+        public Trigger trigger = Trigger.Variable;
+
+        [Tooltip("Defines how a platform should automatically move: Return to the original position, move to the floor the player is on or continuously move between home and target position.")]
+        public AutoMovement autoMovement = AutoMovement.None;
+
         public float duration = 3f;
         public float initialPause = 2f;
         public float stationPause = 2f;
-        public Trigger trigger = Trigger.Variable;
-        public AutoMovement autoMovement = AutoMovement.None;
         public float playerCheckInterval = 2f;
     }
 }

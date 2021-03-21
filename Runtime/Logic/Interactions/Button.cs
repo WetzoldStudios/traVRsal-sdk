@@ -5,8 +5,12 @@ namespace traVRsal.SDK
 {
     public class Button : MonoBehaviour
     {
+        [Tooltip("Local z-position of the pushed state of the button.")]
         public float minLocalZ = 0.25f;
+
+        [Tooltip("Local z-position of the initial state of the button. Typically one can copy/paste the current z-value here.")]
         public float maxLocalZ = 0.55f;
+
         public float tolerance = 0.01f;
 
         public UnityEvent OnButtonDown;

@@ -13,7 +13,9 @@ namespace traVRsal.SDK
         }
 
         public Mode mode = Mode.Manual;
+        [Tooltip("Scale of the object, e.g. (1.2,1.2) for 20% bigger. Use different values for X and Y to define a range for a random scale.")]
         public Vector2 size = new Vector2(0f, 0f);
+        [Tooltip("Axis on which the object should be scaled, e.g. (0,1,0) for Y only.")]
         public Vector3 axis = Vector3.one;
 
         public Ease easeType = Ease.InOutSine;

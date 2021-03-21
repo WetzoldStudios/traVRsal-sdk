@@ -13,7 +13,11 @@ namespace traVRsal.SDK
         }
 
         public Mode mode = Mode.Manual;
+
+        [Tooltip("Distance the object should travel. Use different values for X and Y to define a range for a random distance.")]
         public Vector2 distance = new Vector2(1f, 1f);
+
+        [Tooltip("Direction the object should travel, e.g. (0,1,0) for up.")]
         public Vector3 axis = Vector3.up;
 
         public Ease easeType = Ease.InOutSine;

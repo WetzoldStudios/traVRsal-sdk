@@ -24,11 +24,11 @@ namespace traVRsal.SDK
         public GameObject targetObject;
         public Behaviour component;
 
-        [Header("Static Assignments")] public List<Behaviour> enabledComponents;
+        [Header("Static Assignments")] public List<GameObject> enabledObjects;
+        public List<GameObject> disabledObjects;
+        public List<Behaviour> enabledComponents;
         public List<Behaviour> disabledComponents;
         public List<Collider> enabledColliders;
         public List<Collider> disabledColliders;
-        public List<GameObject> enabledObjects;
-        public List<GameObject> disabledObjects;
     }
 }
