@@ -12,6 +12,7 @@ namespace traVRsal.SDK
             Variable = 1
         }
 
+        [Header("Configuration")]
         public Mode mode = Mode.Manual;
 
         [Tooltip("Distance the object should travel. Use different values for X and Y to define a range for a random distance.")]
@@ -24,6 +25,7 @@ namespace traVRsal.SDK
         public bool loop = true;
         public LoopType loopType = LoopType.Yoyo;
 
+        [Header("Timing")]
         public float duration = 4f;
         public float initialDelay;
         public float onDelay;

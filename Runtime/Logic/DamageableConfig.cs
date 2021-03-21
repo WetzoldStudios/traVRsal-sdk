@@ -23,12 +23,12 @@ namespace traVRsal.SDK
         public float damageMultiplier = 1f;
         public int points;
         public bool isPlayer;
-        public bool destructible = true;
         public bool registerAsTarget = true;
         public string targetName;
         public bool triggerVariable;
 
-        [Header("Destruction")] public bool allowMelee;
+        [Header("Destruction")] public bool destructible = true;
+        public bool allowMelee;
         public bool hideWhenDestroyed = true;
         public string stateChange;
         public float duration = 0.2f;

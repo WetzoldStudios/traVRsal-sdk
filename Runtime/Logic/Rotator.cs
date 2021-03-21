@@ -11,6 +11,7 @@ namespace traVRsal.SDK
             Variable = 1
         }
 
+        [Header("Configuration")]
         public Mode mode = Mode.Manual;
         [Tooltip("Degrees per second in manual mode. Total degrees otherwise. Use different values for X and Y to define a range for a random angle.")]
         public Vector2 degrees = new Vector2(10f, 10f);
@@ -20,6 +21,7 @@ namespace traVRsal.SDK
         public Ease easeType = Ease.InOutSine;
         public bool loop = true;
 
+        [Header("Timing")]
         public float duration = 2f;
         public float onDelay;
         public float offDelay;

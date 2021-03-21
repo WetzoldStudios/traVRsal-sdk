@@ -26,7 +26,7 @@ namespace traVRsal.SDK
         public bool proportionateScaling;
         public Direction initialDirection = Direction.South;
 
-        [Tooltip("Additional object attributes.")]
+        [Tooltip("Additional object attributes")]
         public ObjectSpec spec;
     }
 }

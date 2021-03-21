@@ -4,10 +4,12 @@ namespace traVRsal.SDK
 {
     public class AudioPlayer : MonoBehaviour, IVariableReactor
     {
+        [Header("When Variable Is True")]
         [Tooltip("Sound to play when the variable is true.")]
         public AudioSource audioActive;
         public bool playActiveOnlyOnce;
 
+        [Header("When Variable Is False")]
         [Tooltip("Sound to play when the variable is false.")]
         public AudioSource audioInactive;
         public bool playInactiveOnlyOnce;

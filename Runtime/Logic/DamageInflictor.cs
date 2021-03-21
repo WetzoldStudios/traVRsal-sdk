@@ -14,19 +14,29 @@ namespace traVRsal.SDK
         }
 
         [Header("Configuration")] public bool instantKill;
+
+        [Tooltip("Hit points to be deducted from player health")]
         public int damage = 1;
+
+        [Tooltip("Indicator if damage is inflicted through a melee weapon")]
         public bool melee;
+
         public DamageSource source;
         public bool killAfterAttack;
-        public float lifeTime = 5f; // only relevant for bullets right now
+
+        [Tooltip("Only relevant for projectiles right now")]
+        public float lifeTime = 5f;
+
+        [Tooltip("Time span in which no further damage is inflicted after initial hit")]
         public float cooldown = 2f;
 
         [Header("When Dealing Damage")] public string haptics;
         public HapticClip[] customHaptics;
         public GameObject hitAnimation; // only relevant for bullets right now
 
-        [Header("Runtime")] public string originTag;
-        public float lastHit;
+        // runtime 
+        [HideInInspector] public string originTag;
+        [HideInInspector] public float lastHit;
 
         private void Start()
         {
