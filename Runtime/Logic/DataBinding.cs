@@ -151,6 +151,7 @@ namespace traVRsal.SDK
 
             ShowIfBeta = 112,
             ShowIfOffline = 113,
+            ShowIfMPPossible = 147,
             ShowIfMPHost = 138,
             ShowIfInMPSession = 139,
             ShowPlayerLogin = 60,
