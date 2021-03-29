@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
+using UnityEditor.PackageManager;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace traVRsal.SDK
 {
@@ -40,6 +43,12 @@ namespace traVRsal.SDK
             customShader = EditorGUILayout.TextField("Shader Name:", customShader);
             if (GUILayout.Button("Add Custom Shader")) ManipulateWorld("AddCustomShader");
 
+            EditorGUILayout.Space(20f);
+            GUILayout.Label("Misc", EditorStyles.boldLabel);
+
+            EditorGUILayout.Space();
+            if (GUILayout.Button("Set Minimum World Version to Current SDK Version")) ManipulateWorld("SetToCurrentVersion");
+
             OnGUIDone();
         }
 
@@ -50,6 +59,15 @@ namespace traVRsal.SDK
 
             switch (command)
             {
+                case "SetToCurrentVersion":
+                    PackageInfo pi = PackageInfo.FindForAssetPath("Packages/com.wetzold.travrsal.sdk/package.json");
+                    if (pi != null)
+                    {
+                        world.minVersion = pi.version;
+                        EditorUtility.DisplayDialog("Success", $"Set minimum app version required to play the world to {pi.version}.", "OK");
+                    }
+                    break;
+
                 case "AddZone":
                     if (string.IsNullOrEmpty(zoneName)) return;
                     string root = GetWorldPaths()[0];

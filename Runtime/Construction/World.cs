@@ -9,6 +9,16 @@ namespace traVRsal.SDK
     [Serializable]
     public class World
     {
+        public enum TargetMeasures
+        {
+            Time = 0,
+            Accuracy = 1,
+            Targets = 2,
+            Deaths = 3,
+            Distance = 4,
+            Points = 5
+        }
+
         [Header("Configuration")] public string key;
         public string version;
         public string name;
@@ -27,7 +37,7 @@ namespace traVRsal.SDK
         public bool isVirtual;
         public string deathSound;
         [DefaultValue(true)] public bool enableChallenges = true;
-        [DefaultValue("0,4")] public string kpis = "0,4"; // TODO: switch to array?
+        public TargetMeasures[] measures = {TargetMeasures.Time, TargetMeasures.Distance};
         public string[] headItems;
         public string initialItemMain;
         public string initialItemSecondary;
@@ -126,6 +136,7 @@ namespace traVRsal.SDK
             if (credits != null && credits.Count == 0) credits = null;
             if (journeys != null && journeys.Count == 0) journeys = null;
             if (journeyTemplates != null && journeyTemplates.Count == 0) journeyTemplates = null;
+            if (measures != null && measures.Length == 0) measures = null;
 
             if (initialVariables != null)
             {

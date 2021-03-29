@@ -30,6 +30,10 @@ namespace traVRsal.SDK
         [Header("Runtime Information")] public Vector2Int curSize = BasicEntity.EMPTY;
         public string scenePath;
         public bool musicPlayed;
+        public bool hasLightColor;
+        public bool hasAmbientColor;
+        public bool hasBackgroundColor;
+        public bool hasLightIntensity;
         public int agentCount;
         public int idx;
         public byte stencilId;
