@@ -9,6 +9,12 @@ namespace traVRsal.SDK
 {
     public static class DirectoryUtil
     {
+        public static void WriteTextFile(string fileName, string text)
+        {
+            if (File.Exists(fileName)) File.Delete(fileName);
+            File.WriteAllText(fileName, text);
+        }
+
         // Regex version
         public static IEnumerable<string> GetFiles(string path,
             string searchPatternExpression = "",

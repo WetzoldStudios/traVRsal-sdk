@@ -41,6 +41,7 @@ namespace traVRsal.SDK
             DoStartWorld = 14,
             DoStartWorldDownload = 67,
             DoStartRandomChallenge = 109,
+            DoReplayWorld = 148,
             DoSetDebugMode = 7,
             DoSetMetricSystem = 116,
             DoSetHaptics = 125,
