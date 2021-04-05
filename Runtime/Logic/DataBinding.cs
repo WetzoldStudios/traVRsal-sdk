@@ -108,6 +108,7 @@ namespace traVRsal.SDK
             StatDistanceWalkedNoUnit = 118,
             StatPlayerDamage = 30,
             StatPoints = 27,
+            StatRuns = 150,
             StatShotsFired = 29,
             StatShotsHit = 28,
             StatTargets = 32,
@@ -164,6 +165,7 @@ namespace traVRsal.SDK
             ShowWorldStart = ASYNC_RESULT + 2,
             ShowWorldChallenges = 76,
             ShowWorldStatistics = 75,
+            ShowWorldLeaderboards = 149,
 
             ImageOrigin = REQUIRE_SOURCE + 8,
             ImageOriginLogo = REQUIRE_SOURCE + 13,

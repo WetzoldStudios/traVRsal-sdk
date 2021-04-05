@@ -5,6 +5,7 @@ namespace traVRsal.SDK
     [Serializable]
     public class Leaderboard
     {
+        public string aspect;
         public int ranked_players;
         public LeaderboardEntry player;
         public LeaderboardEntry[] player_bracket;
@@ -17,7 +18,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Remote Leaderboard Data ({ranked_players} ranked players)";
+            return $"Remote Leaderboard Data ({aspect}, {ranked_players} ranked players)";
         }
     }
 }

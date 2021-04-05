@@ -136,7 +136,6 @@ namespace traVRsal.SDK
             if (credits != null && credits.Count == 0) credits = null;
             if (journeys != null && journeys.Count == 0) journeys = null;
             if (journeyTemplates != null && journeyTemplates.Count == 0) journeyTemplates = null;
-            if (measures != null && measures.Length == 0) measures = null;
 
             if (initialVariables != null)
             {
