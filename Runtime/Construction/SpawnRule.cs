@@ -17,6 +17,7 @@ namespace traVRsal.SDK
         {
             Random = 0,
             Even = 1,
+            TowardsEnd = 3,
             Object = 2
         }
 
