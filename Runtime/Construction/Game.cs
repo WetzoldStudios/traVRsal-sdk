@@ -14,10 +14,17 @@ namespace traVRsal.SDK
             Beta = 1
         }
 
+        public enum PublishingEnvironment
+        {
+            Other = 0,
+            Oculus = 1
+        }
+
         [Header("Configuration")] [DefaultValue("game")]
         public string key = "game";
 
         public ReleaseChannel channel = ReleaseChannel.Live;
+        public PublishingEnvironment environment = PublishingEnvironment.Other;
 
         [DefaultValue("Development Mode")] public string name = "Development Mode";
         public List<string> worlds;
@@ -25,7 +32,6 @@ namespace traVRsal.SDK
         [DefaultValue("Pause-traVRsal")] public string pauseScene = "Pause-traVRsal";
         [DefaultValue("/Base/Menu/World3")] public string worldObject = "/Base/Menu/World3";
         public bool devMode;
-        public bool checkEntitlements;
         public bool enableMultiplayer;
 
         // derived 
