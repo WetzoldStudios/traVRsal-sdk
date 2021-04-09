@@ -19,6 +19,7 @@ namespace traVRsal.SDK
             WorldDetailsDialog = 2,
             WorldDetailsDialogPosition = 8,
             WorldsListRoot = 19,
+            FeaturedWorldsRoot = 32,
             FeaturedWorldsListRoot = 0,
             WorldPlacement = 6,
             WorldBrowserDialog = 20,

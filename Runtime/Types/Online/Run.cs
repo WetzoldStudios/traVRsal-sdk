@@ -21,6 +21,7 @@ namespace traVRsal.SDK
         public float tile_size;
         public string app_version;
         public string unity_version;
+        public string world_version;
 
         public float time_taken;
         public float distance;

@@ -83,7 +83,7 @@ namespace traVRsal.SDK
                         break;
 
                     default:
-                        shooter.Fire();
+                        shooter?.Fire();
                         break;
                 }
 

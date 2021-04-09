@@ -48,6 +48,7 @@ namespace traVRsal.SDK
             DoLogOut = 63,
             DoClearCache = 68,
             DoResetSettings = 111,
+            DoResetHints = 151,
             DoChallengeFilterMine = 94,
             DoChallengeFilterOthers = 95,
             DoChallengeFilterPlayspace = 100,
