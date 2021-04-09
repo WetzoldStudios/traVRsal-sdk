@@ -49,6 +49,7 @@
    <property name="Music" value=""/>
    <property name="OneWay" type="bool" value="false"/>
    <property name="RandomMusic" value=""/>
+   <property name="Reactivatable" type="bool" value="false"/>
    <property name="Snap" type="bool" value="true"/>
    <property name="Speak" value=""/>
    <property name="TargetZone" value=""/>

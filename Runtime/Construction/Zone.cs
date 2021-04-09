@@ -14,6 +14,7 @@ namespace traVRsal.SDK
         public List<Floor> floors;
         public bool isExit;
         public bool isIntro;
+        public bool reactivateTransitions;
         public bool invisibleGround;
         public bool blockAgents = true;
         public Color ambientColor = new Color(0.8f, 0.782f, 0.745f);
@@ -88,6 +89,7 @@ namespace traVRsal.SDK
             backgroundColor = copyFrom.backgroundColor;
             isExit = copyFrom.isExit;
             isIntro = copyFrom.isIntro;
+            reactivateTransitions = copyFrom.reactivateTransitions;
             invisibleGround = copyFrom.invisibleGround;
             music = copyFrom.music;
             randomMusic = copyFrom.randomMusic;

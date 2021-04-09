@@ -183,21 +183,25 @@ namespace traVRsal.SDK
             ImageRatingsCount = REQUIRE_SOURCE + 7
         }
 
+        [Header("Configuration")]
         [Tooltip("Optional source for the data (e.g. image assignment), otherwise using globally available data")]
         public Component sourceComponent;
 
         public Component targetComponent;
         public Reference reference;
 
+        [Header("Boolean-Bindings")]
         [Tooltip("Indicator if boolean result should be checked for false instead of true")]
         public bool invert;
 
+        [Header("Text-Bindings")]
         [Tooltip("Maximum number of characters to be returned (... added if longer)")]
         public int maxLength;
 
         [Tooltip("Maximum number of lines to be returned (... added if longer)")]
         public int maxLines;
 
+        [Header("Advanced")]
         [Tooltip("Indicator if result should be calculated only once")]
         public bool oneTimeOnly;
 
