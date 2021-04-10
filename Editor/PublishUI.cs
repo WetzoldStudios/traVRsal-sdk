@@ -191,7 +191,6 @@ namespace traVRsal.SDK
                     EditorGUILayout.HelpBox("Debug mode is enabled.", MessageType.Warning);
 
                     EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);
-                    if (GUILayout.Button("Prepare Upload (Linux)")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(false, true), this);
                     if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
                     EditorGUI.EndDisabledGroup();
                 }
