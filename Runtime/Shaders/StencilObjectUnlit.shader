@@ -1,6 +1,5 @@
-﻿Shader "MazeVR/StencilObjectUnlit" 
+﻿Shader "MazeVR/StencilObjectUnlit"
 {
-    // Keep properties of StandardSpecular shader for upgrade reasons.
     Properties
     {
         [IntRange] _StencilReference("Stencil Mask", Range(0, 255)) = 0
@@ -30,30 +29,29 @@
         [HideInInspector] _Color("Base Color", Color) = (0.5, 0.5, 0.5, 1)
         [HideInInspector] _SampleGI("SampleGI", float) = 0.0 // needed from bakedlit
     }
+    SubShader
+    {
+        Tags {"RenderType" = "Opaque" "IgnoreProjector" = "True" "RenderPipeline" = "UniversalPipeline" "ShaderModel"="4.5"}
+        LOD 100
 
-        SubShader
-            {
-                Tags {"RenderType" = "Opaque" "IgnoreProjector" = "True" "RenderPipeline" = "UniversalPipeline" "ShaderModel"="4.5"}
-                LOD 100
+        Stencil {
+            Ref[_StencilReference]
+            Comp[_StencilComparison]	// equal
+            Pass[_StencilOperation]	// keep
+            ReadMask[_StencilReadMask]
+            WriteMask[_StencilWriteMask]
+        }
 
-                Blend[_SrcBlend][_DstBlend]
-                ZWrite[_ZWrite]
-                Cull[_Cull]
-
-                Stencil {
-                    Ref[_StencilReference]
-                    Comp[_StencilComparison]	// equal
-                    Pass[_StencilOperation]	// keep
-                    ReadMask[_StencilReadMask]
-                    WriteMask[_StencilWriteMask]
-                }
+        Blend [_SrcBlend][_DstBlend]
+        ZWrite [_ZWrite]
+        Cull [_Cull]
 
         Pass
         {
             Name "Unlit"
 
             HLSLPROGRAM
-            #pragma exclude_renderers d3d11_9x gles
+            #pragma exclude_renderers gles gles3 glcore
             #pragma target 4.5
 
             #pragma vertex vert
@@ -125,13 +123,14 @@
         }
         Pass
         {
+            Name "DepthOnly"
             Tags{"LightMode" = "DepthOnly"}
 
             ZWrite On
             ColorMask 0
 
             HLSLPROGRAM
-            #pragma exclude_renderers d3d11_9x gles
+            #pragma exclude_renderers gles gles3 glcore
             #pragma target 4.5
 
             #pragma vertex DepthOnlyVertex
@@ -160,7 +159,7 @@
             Cull Off
 
             HLSLPROGRAM
-            #pragma exclude_renderers d3d11_9x gles
+            #pragma exclude_renderers gles gles3 glcore
             #pragma target 4.5
 
             #pragma vertex UniversalVertexMeta
@@ -178,6 +177,14 @@
         Tags {"RenderType" = "Opaque" "IgnoreProjector" = "True" "RenderPipeline" = "UniversalPipeline" "ShaderModel"="2.0"}
         LOD 100
 
+        Stencil {
+            Ref[_StencilReference]
+            Comp[_StencilComparison]	// equal
+            Pass[_StencilOperation]	// keep
+            ReadMask[_StencilReadMask]
+            WriteMask[_StencilWriteMask]
+        }
+
         Blend [_SrcBlend][_DstBlend]
         ZWrite [_ZWrite]
         Cull [_Cull]
@@ -186,9 +193,9 @@
         {
             Name "Unlit"
             HLSLPROGRAM
-            #pragma only_renderers gles gles3 glcore
+            #pragma only_renderers gles gles3 glcore d3d11
             #pragma target 2.0
-            
+
             #pragma vertex vert
             #pragma fragment frag
             #pragma shader_feature_local_fragment _ALPHATEST_ON
@@ -250,7 +257,7 @@
 #endif
 
                 color = MixFog(color, input.fogCoord);
-                alpha = OutputAlpha(alpha);
+                alpha = OutputAlpha(alpha, _Surface);
 
                 return half4(color, alpha);
             }
@@ -258,22 +265,23 @@
         }
         Pass
         {
+            Name "DepthOnly"
             Tags{"LightMode" = "DepthOnly"}
 
             ZWrite On
             ColorMask 0
 
             HLSLPROGRAM
-            #pragma only_renderers gles gles3 glcore
+            #pragma only_renderers gles gles3 glcore d3d11
             #pragma target 2.0
 
             #pragma vertex DepthOnlyVertex
             #pragma fragment DepthOnlyFragment
-            
+
             // -------------------------------------
             // Material Keywords
             #pragma shader_feature_local_fragment _ALPHATEST_ON
-                        
+
             //--------------------------------------
             // GPU Instancing
             #pragma multi_compile_instancing
@@ -292,7 +300,8 @@
             Cull Off
 
             HLSLPROGRAM
-            #pragma only_renderers gles gles3 glcore
+            #pragma only_renderers gles gles3 glcore d3d11
+            #pragma target 2.0
 
             #pragma vertex UniversalVertexMeta
             #pragma fragment UniversalFragmentMetaUnlit

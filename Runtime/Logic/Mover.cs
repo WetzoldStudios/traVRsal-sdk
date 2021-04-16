@@ -12,8 +12,7 @@ namespace traVRsal.SDK
             Variable = 1
         }
 
-        [Header("Configuration")]
-        public Mode mode = Mode.Manual;
+        [Header("Configuration")] public Mode mode = Mode.Manual;
 
         [Tooltip("Distance the object should travel. Use different values for X and Y to define a range for a random distance.")]
         public Vector2 distance = new Vector2(1f, 1f);
@@ -25,9 +24,8 @@ namespace traVRsal.SDK
         public bool loop = true;
         public LoopType loopType = LoopType.Yoyo;
 
-        [Header("Timing")]
+        [Header("Timing")] public float initialDelay;
         public float duration = 4f;
-        public float initialDelay;
         public float onDelay;
         public float offDelay;
 
@@ -35,15 +33,14 @@ namespace traVRsal.SDK
         private Vector3 originalPosition;
         private bool changedOnce;
 
-        private IEnumerator Start()
+        private void Start()
         {
             originalPosition = transform.localPosition;
             finalDistance = Random.Range(distance.x, distance.y);
 
             if (mode == Mode.Manual)
             {
-                if (onDelay > 0) yield return new WaitForSeconds(onDelay);
-                transform.DOLocalMove(transform.localPosition + axis * finalDistance, duration).SetLoops(loop ? -1 : 0, loopType).SetEase(easeType);
+                transform.DOLocalMove(transform.localPosition + axis * finalDistance, duration).SetLoops(loop ? -1 : 0, loopType).SetDelay(initialDelay).SetEase(easeType);
             }
         }
 

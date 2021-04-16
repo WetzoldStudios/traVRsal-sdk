@@ -44,6 +44,7 @@ namespace traVRsal.SDK
         public bool socket;
         public bool snap;
         public bool autoFill;
+        public bool autoFillIgnoreDirection;
         public bool isVirtual;
 
         public string targetZone;
@@ -91,6 +92,7 @@ namespace traVRsal.SDK
             flipZ = copyFrom.flipZ;
             socket = copyFrom.socket;
             autoFill = copyFrom.autoFill;
+            autoFillIgnoreDirection = copyFrom.autoFillIgnoreDirection;
             snap = copyFrom.snap;
             isVirtual = copyFrom.isVirtual;
             targetZone = copyFrom.targetZone;

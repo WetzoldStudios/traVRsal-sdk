@@ -12,10 +12,10 @@ namespace traVRsal.SDK
         public enum TargetMeasures
         {
             Time = 0,
+            Distance = 4,
             Accuracy = 1,
             Targets = 2,
             Deaths = 3,
-            Distance = 4,
             Points = 5
         }
 
