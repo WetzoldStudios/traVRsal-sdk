@@ -21,7 +21,7 @@ namespace traVRsal.SDK
 
         public Ease easeType = Ease.InOutSine;
         public bool loop = true;
-        public LoopType loopType = LoopType.Yoyo;
+        public LoopType loopType = LoopType.Incremental;
 
         [Header("Timing")] public Vector2 initialDelay;
         public Vector2 duration = new Vector2(2f, 2f);
@@ -66,6 +66,8 @@ namespace traVRsal.SDK
 
         private void SetupManual()
         {
+            if (finalDegrees == 0) return;
+
             Sequence s = DOTween.Sequence();
             s.PrependInterval(finalOnDelay);
             s.AppendCallback(PlayAudio); // OnPlay is only called once in a sequence

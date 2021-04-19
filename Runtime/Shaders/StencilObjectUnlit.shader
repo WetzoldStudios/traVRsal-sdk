@@ -7,6 +7,7 @@
         [Enum(UnityEngine.Rendering.StencilOp)] _StencilOperation("Stencil Operation", Float) = 0
         _StencilWriteMask("Stencil Write Mask", Float) = 255
         _StencilReadMask("Stencil Read Mask", Float) = 255
+        [Gamma] _Exposure ("Exposure", Range(0, 8)) = 1.0
 
         [MainTexture] _BaseMap("Texture", 2D) = "white" {}
         [MainColor]   _BaseColor("Color", Color) = (1, 1, 1, 1)
@@ -67,6 +68,8 @@
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/UnlitInput.hlsl"
 
+            half _Exposure;
+
             struct Attributes
             {
                 float4 positionOS       : POSITION;
@@ -116,7 +119,7 @@
 #endif
 
                 color = MixFog(color, input.fogCoord);
-
+                color *= _Exposure;
                 return half4(color, alpha);
             }
             ENDHLSL

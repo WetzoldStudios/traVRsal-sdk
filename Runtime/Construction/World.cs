@@ -19,31 +19,46 @@ namespace traVRsal.SDK
             Points = 5
         }
 
-        [Header("Configuration")] public string key;
+        public enum SkyboxMode
+        {
+            None = 0,
+            Single = 1,
+            Multiple = 2
+        }
+
+        [Header("Information")] public string key;
         public string version;
         public string name;
         [DefaultValue("Experience")] public string category = "Experience";
         public string shortDescription;
         public string longDescription;
         public string coverImage;
+        [DefaultValue(true)] public bool enableChallenges = true;
+        public TargetMeasures[] measures = {TargetMeasures.Time, TargetMeasures.Distance};
+
+        [Header("Restrictions")] public bool isVirtual;
         public string minVersion;
         public string minSize;
         public string maxSize;
         [DefaultValue(300)] public int availableTime = 5 * 60;
-        [DefaultValue(true)] public bool showHandHud = true;
+
+        [Header("Items & HUD")] [DefaultValue(true)]
+        public bool showHandHud = true;
+
         public HUDConfig[] customHandHuds;
         public Reference defaultHandHud;
         public Reference defaultHandHudMain;
         public Reference defaultHandHudSecondary;
-        public bool isVirtual;
-        public string deathSound;
-        [DefaultValue(true)] public bool enableChallenges = true;
-        public TargetMeasures[] measures = {TargetMeasures.Time, TargetMeasures.Distance};
+
         public string[] headItems;
         public string initialItemMain;
         public string initialItemSecondary;
         public string handBackItemMain;
         public string handBackItemSecondary;
+
+        [Header("Assets")] public string deathSound;
+        public string defaultSkybox;
+        public string defaultScenery;
         [DefaultValue("/Base/LightHall")] public string introScenery = "/Base/LightHall";
 
         [DefaultValue("/Base/LightHall-Outro")]
@@ -52,8 +67,7 @@ namespace traVRsal.SDK
         [DefaultValue("/Base/FutureWorld_Resolution_Loop.ogg")]
         public string outroMusic = "/Base/FutureWorld_Resolution_Loop.ogg";
 
-        public string defaultScenery;
-        public List<WorldDataReference> worldData;
+        [Header("Configuration")] public List<WorldDataReference> worldData;
         public bool disableJourneys;
         public List<Journey> journeys;
         public List<WorldSetting> settings;
@@ -69,6 +83,7 @@ namespace traVRsal.SDK
         [Header("Runtime Data")] public bool journeyMode;
         public bool rotateWorld;
         public bool invalidSettings;
+        public SkyboxMode skyboxMode = SkyboxMode.None;
         public List<ObjectSpec> objectSpecs;
         public List<string> dependencies;
         public List<string> worldDependencies;
