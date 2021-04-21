@@ -16,20 +16,20 @@ namespace traVRsal.SDK
 
         public enum Direction
         {
-            West,
-            East,
-            South,
-            North,
-            Top,
-            Bottom,
-            Random_Side,
-            Free_Side,
-            None,
-            Path_Ahead,
-            Path_Back,
-            Same,
-            Opposite,
-            Corner
+            West = 0,
+            East = 1,
+            South = 2,
+            North = 3,
+            Top = 4,
+            Bottom = 5,
+            Random_Side = 6,
+            Free_Side = 7,
+            None = 8,
+            Path_Ahead = 9,
+            Path_Back = 10,
+            Same = 11,
+            Opposite = 12,
+            Corner = 13
         }
 
         public Vector2Int position = EMPTY;

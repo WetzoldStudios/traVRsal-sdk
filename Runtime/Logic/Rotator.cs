@@ -23,7 +23,7 @@ namespace traVRsal.SDK
         public bool loop = true;
         public LoopType loopType = LoopType.Incremental;
 
-        [Header("Timing")] public Vector2 initialDelay;
+        [Header("Timings")] public Vector2 initialDelay;
         public Vector2 duration = new Vector2(2f, 2f);
         public Vector2 onDelay;
         public Vector2 offDelay;
@@ -42,16 +42,39 @@ namespace traVRsal.SDK
         private bool changedOnce;
         private float startTime;
         private bool initDone;
+        private bool loadingDone;
+        private Tween curTween;
 
         private void Start()
         {
             originalRotationQ = transform.localRotation;
             originalRotation = originalRotationQ.eulerAngles;
+
             finalDegrees = Random.Range(degrees.x, degrees.y);
             finalInitialDelay = Random.Range(initialDelay.x, initialDelay.y);
             finalDuration = Random.Range(duration.x, duration.y);
             finalOnDelay = Random.Range(onDelay.x, onDelay.y);
             finalOffDelay = Random.Range(offDelay.x, offDelay.y);
+        }
+
+        private void OnEnable()
+        {
+            if (!loadingDone) return;
+            if (initDone)
+            {
+                if (curTween != null && !curTween.IsComplete()) curTween.Play();
+                return;
+            }
+
+            // needed for support of initialDelay, since any WaitForSeconds will be interrupted during loading when GO becomes inactive
+            startTime = Time.time + finalInitialDelay;
+        }
+
+        private void OnDisable()
+        {
+            if (curTween == null) return;
+
+            if (curTween.IsPlaying()) curTween.Pause();
         }
 
         private void Update()
@@ -74,6 +97,8 @@ namespace traVRsal.SDK
             s.Append(transform.DOLocalRotate(originalRotation + axis * finalDegrees, finalDuration).SetEase(easeType));
             s.AppendInterval(finalOffDelay);
             s.SetLoops(loop ? -1 : 0, loopType);
+
+            curTween = s;
         }
 
         private void PlayAudio()
@@ -87,11 +112,11 @@ namespace traVRsal.SDK
 
             if (condition)
             {
-                transform.DOLocalRotate(originalRotation + axis * finalDegrees, finalDuration).SetDelay(finalOnDelay + (changedOnce ? 0f : finalOnDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                curTween = transform.DOLocalRotate(originalRotation + axis * finalDegrees, finalDuration).SetDelay(finalOnDelay + (changedOnce ? 0f : finalOnDelay)).SetEase(easeType).OnPlay(PlayAudio);
             }
             else
             {
-                transform.DOLocalRotateQuaternion(originalRotationQ, finalDuration).SetDelay(finalOffDelay + (changedOnce ? 0f : finalOnDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                curTween = transform.DOLocalRotateQuaternion(originalRotationQ, finalDuration).SetDelay(finalOffDelay + (changedOnce ? 0f : finalOnDelay)).SetEase(easeType).OnPlay(PlayAudio);
             }
 
             if (!initialCall && variable.everChanged) changedOnce = true;
@@ -99,8 +124,7 @@ namespace traVRsal.SDK
 
         public void FinishedLoading()
         {
-            // needed for support of initialDelay, since any WaitForSeconds will be interrupted during loading when GO becomes inactive
-            startTime = Time.time + finalInitialDelay;
+            loadingDone = true;
         }
     }
 }
