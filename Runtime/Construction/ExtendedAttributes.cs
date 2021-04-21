@@ -8,7 +8,7 @@ namespace traVRsal.SDK
     [DisallowMultipleComponent]
     public class ExtendedAttributes : MonoBehaviour
     {
-        [Tooltip("Object is not an agent and does not use logic components that are set through properties, enabling further performance enhancements. It will also not be used to calculate the center of the scene which is recommended for scenery.")]
+        [Tooltip("Object is not an agent and does not use logic components, enabling further performance enhancements. It will also not be used to calculate the center of the scene which is recommended for scenery.")]
         public bool environment;
 
         [Tooltip("Object should not block agents")]
@@ -25,6 +25,9 @@ namespace traVRsal.SDK
 
         [Tooltip("Scale object also along Y axis")]
         public bool proportionateScaling;
+
+        [Tooltip("Ignore object when calculating center point of zone inside the studio")]
+        public bool editorCamIgnore;
 
         public Direction initialDirection = Direction.South;
 
