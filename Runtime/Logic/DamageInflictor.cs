@@ -36,7 +36,7 @@ namespace traVRsal.SDK
 
         // runtime 
         [HideInInspector] public string originTag;
-        [HideInInspector] public float lastHit;
+        private float lastHit;
 
         private void Start()
         {
@@ -46,6 +46,11 @@ namespace traVRsal.SDK
         public bool IsActive()
         {
             return enabled && Time.time > lastHit + cooldown;
+        }
+
+        public void RegisterHit()
+        {
+            lastHit = Time.time;
         }
     }
 }

@@ -111,11 +111,13 @@ namespace traVRsal.SDK
 
             if (condition)
             {
-                curTween = transform.DOLocalMove(originalPosition + axis * finalDistance, finalDuration).SetDelay(finalOnDelay + (changedOnce ? 0f : finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                curTween = transform.DOLocalMove(originalPosition + axis * finalDistance, finalDuration)
+                    .SetDelay(finalOnDelay + (changedOnce ? 0f : finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
             }
             else
             {
-                curTween = transform.DOLocalMove(originalPosition, finalDuration).SetDelay(finalOffDelay + (changedOnce ? 0f : finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                curTween = transform.DOLocalMove(originalPosition, finalDuration)
+                    .SetDelay(finalOffDelay + (changedOnce ? 0f : finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
             }
 
             if (!initialCall && variable.everChanged) changedOnce = true;

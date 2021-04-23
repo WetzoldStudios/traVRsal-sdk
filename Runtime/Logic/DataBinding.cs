@@ -95,6 +95,7 @@ namespace traVRsal.SDK
             AllTargets = 130,
             RemainingTargets = 131,
             FirstRemainingTarget = 133,
+            Health = 153,
 
             TimeElapsed = PERIODIC + 1,
             SlowMotionCooldownRemaining = PERIODIC + 2,
