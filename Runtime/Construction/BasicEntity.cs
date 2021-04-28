@@ -24,6 +24,7 @@ namespace traVRsal.SDK
             Bottom = 5,
             Random_Side = 6,
             Free_Side = 7,
+            Any = 14,
             None = 8,
             Path_Ahead = 9,
             Path_Back = 10,
