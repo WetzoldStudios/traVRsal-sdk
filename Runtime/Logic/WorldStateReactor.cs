@@ -7,7 +7,7 @@ namespace traVRsal.SDK
         [Tooltip("Components to activate when world has finished loading.")]
         public Behaviour[] components;
 
-        public void FinishedLoading()
+        public void FinishedLoading(Vector3 tileSizes)
         {
             for (int i = 0; i < components.Length; i++)
             {

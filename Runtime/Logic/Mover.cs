@@ -12,7 +12,14 @@ namespace traVRsal.SDK
             Variable = 1
         }
 
+        public enum ValueScale
+        {
+            Meters = 0,
+            Tiles = 1
+        }
+
         [Header("Configuration")] public Mode mode = Mode.Manual;
+        public ValueScale valueScale = ValueScale.Meters;
 
         [Tooltip("Distance the object should travel. Use different values for X and Y to define a range for a random distance.")]
         public Vector2 distance = new Vector2(1f, 1f);
@@ -48,12 +55,6 @@ namespace traVRsal.SDK
         private void Start()
         {
             originalPosition = transform.localPosition;
-
-            finalDistance = Random.Range(distance.x, distance.y);
-            finalInitialDelay = Random.Range(initialDelay.x, initialDelay.y);
-            finalDuration = Random.Range(duration.x, duration.y);
-            finalOnDelay = Random.Range(onDelay.x, onDelay.y);
-            finalOffDelay = Random.Range(offDelay.x, offDelay.y);
         }
 
         private void OnEnable()
@@ -123,8 +124,21 @@ namespace traVRsal.SDK
             if (!initialCall && variable.everChanged) changedOnce = true;
         }
 
-        public void FinishedLoading()
+        public void FinishedLoading(Vector3 tileSizes)
         {
+            finalDistance = Random.Range(distance.x, distance.y);
+
+            // multiply with tile size to fit into world grid
+            if (valueScale == ValueScale.Tiles)
+            {
+                finalDistance *= axis.y != 0 ? tileSizes.y : tileSizes.x;
+            }
+
+            finalInitialDelay = Random.Range(initialDelay.x, initialDelay.y);
+            finalDuration = Random.Range(duration.x, duration.y);
+            finalOnDelay = Random.Range(onDelay.x, onDelay.y);
+            finalOffDelay = Random.Range(offDelay.x, offDelay.y);
+
             loadingDone = true;
         }
     }

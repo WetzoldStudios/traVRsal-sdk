@@ -122,7 +122,7 @@ namespace traVRsal.SDK
             if (!initialCall && variable.everChanged) changedOnce = true;
         }
 
-        public void FinishedLoading()
+        public void FinishedLoading(Vector3 tileSizes)
         {
             loadingDone = true;
         }

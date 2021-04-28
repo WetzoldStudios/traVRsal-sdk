@@ -1,7 +1,9 @@
-﻿namespace traVRsal.SDK
+﻿using UnityEngine;
+
+namespace traVRsal.SDK
 {
     public interface IWorldStateReactor
     {
-        void FinishedLoading();
+        void FinishedLoading(Vector3 tileSizes);
     }
 }
