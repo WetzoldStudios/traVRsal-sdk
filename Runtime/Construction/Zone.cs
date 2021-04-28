@@ -17,6 +17,7 @@ namespace traVRsal.SDK
         public bool reactivateTransitions;
         public bool invisibleGround;
         public bool blockAgents = true;
+        public int availableTime;
         public Color ambientColor = new Color(0.8f, 0.782f, 0.745f);
         public Color lightColor = Color.white;
         public Color backgroundColor = Color.black;
@@ -42,6 +43,7 @@ namespace traVRsal.SDK
         public int navAgentId;
         public string originalName;
         public string variationOf;
+        public float entryTime;
 
         // cache structures
         [NonSerialized] public Transform node;
@@ -83,6 +85,7 @@ namespace traVRsal.SDK
             offset = copyFrom.offset;
             offsetRaw = copyFrom.offsetRaw;
             scenePath = copyFrom.scenePath;
+            availableTime = copyFrom.availableTime;
             hasAmbientColor = copyFrom.hasAmbientColor;
             hasBackgroundColor = copyFrom.hasBackgroundColor;
             hasLightColor = copyFrom.hasLightColor;
@@ -125,6 +128,7 @@ namespace traVRsal.SDK
                    reactivateTransitions == zone.reactivateTransitions &&
                    invisibleGround == zone.invisibleGround &&
                    blockAgents == zone.blockAgents &&
+                   availableTime == zone.availableTime &&
                    hasAmbientColor == zone.hasAmbientColor &&
                    hasBackgroundColor == zone.hasBackgroundColor &&
                    hasLightColor == zone.hasLightColor &&
@@ -150,6 +154,7 @@ namespace traVRsal.SDK
             hashCode = hashCode * -1521134295 + isIntro.GetHashCode();
             hashCode = hashCode * -1521134295 + reactivateTransitions.GetHashCode();
             hashCode = hashCode * -1521134295 + invisibleGround.GetHashCode();
+            hashCode = hashCode * -1521134295 + availableTime.GetHashCode();
             hashCode = hashCode * -1521134295 + blockAgents.GetHashCode();
             hashCode = hashCode * -1521134295 + hasAmbientColor.GetHashCode();
             hashCode = hashCode * -1521134295 + hasLightColor.GetHashCode();

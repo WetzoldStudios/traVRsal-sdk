@@ -68,12 +68,15 @@ namespace traVRsal.SDK
             WorldName = 2,
             WorldShortDescription = 11,
             WorldLongDescription = 12,
-            WorldTime = 4,
+            WorldTimer = PERIODIC + 3,
             WorldUpdate = 56,
             WorldUpdateRelative = 92,
             WorldSize = 55,
             WorldOwner = 66,
             WorldCreators = 123,
+
+            ZoneTime = PERIODIC + 5,
+            ZoneTimer = PERIODIC + 4,
 
             PlayerDistance = 9,
             PlayerDistanceNoUnit = 119,
