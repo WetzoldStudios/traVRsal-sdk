@@ -23,6 +23,7 @@ namespace traVRsal.SDK
         public byte is_private;
         public byte is_virtual;
         public byte is_featured;
+        public byte is_community;
         public long android_size;
         public long pc_size;
         public long linux_size;

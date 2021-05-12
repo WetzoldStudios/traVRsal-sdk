@@ -10,7 +10,8 @@ namespace traVRsal.SDK
         public enum SettingsType
         {
             Boolean = 0,
-            ImageProvider = 1
+            ImageProvider = 1,
+            Link = 2
         }
 
         public string key;
