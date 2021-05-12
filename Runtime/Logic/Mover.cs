@@ -124,7 +124,11 @@ namespace traVRsal.SDK
             if (!initialCall && variable.everChanged) changedOnce = true;
         }
 
-        public void FinishedLoading(Vector3 tileSizes)
+        public void ZoneChange(Zone zone, bool isCurrent)
+        {
+        }
+
+        public void FinishedLoading(Vector3 tileSizes, bool instantEnablement = false)
         {
             finalDistance = Random.Range(distance.x, distance.y);
 
@@ -140,6 +144,7 @@ namespace traVRsal.SDK
             finalOffDelay = Random.Range(offDelay.x, offDelay.y);
 
             loadingDone = true;
+            if (instantEnablement) OnEnable();
         }
     }
 }

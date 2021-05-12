@@ -40,6 +40,9 @@ namespace traVRsal.SDK
         [DefaultValue(Direction.Path_Ahead)] public Direction orientation = Direction.Path_Ahead;
         public SpaceRequirement occupy = SpaceRequirement.SingleSide;
 
+        public float progressionStart;
+        [DefaultValue(1.0f)] public float progressionEnd = 1f;
+
         public string[] validZones;
         public string[] validSockets;
         public string[] validObjects;

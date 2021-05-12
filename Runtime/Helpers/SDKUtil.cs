@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -174,6 +175,15 @@ namespace traVRsal.SDK
             return sw.ToString();
         }
 
+        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            foreach (T obj in source)
+            {
+                action(obj);
+            }
+            return source;
+        }
+
         public static T[] Append<T>(this T[] data, T element)
         {
             Array.Resize(ref data, data.Length + 1);
@@ -187,6 +197,6 @@ namespace traVRsal.SDK
     {
         [ThreadStatic] private static Random Local;
 
-        public static Random ThisThreadsRandom => Local ?? (Local = new Random(unchecked(Environment.TickCount * 31 + Thread.CurrentThread.ManagedThreadId)));
+        public static Random ThisThreadsRandom => Local ??= new Random(unchecked(Environment.TickCount * 31 + Thread.CurrentThread.ManagedThreadId));
     }
 }

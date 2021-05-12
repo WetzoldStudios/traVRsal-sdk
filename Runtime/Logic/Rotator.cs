@@ -122,9 +122,14 @@ namespace traVRsal.SDK
             if (!initialCall && variable.everChanged) changedOnce = true;
         }
 
-        public void FinishedLoading(Vector3 tileSizes)
+        public void ZoneChange(Zone zone, bool isCurrent)
+        {
+        }
+
+        public void FinishedLoading(Vector3 tileSizes, bool instantEnablement = false)
         {
             loadingDone = true;
+            if (instantEnablement) OnEnable();
         }
     }
 }

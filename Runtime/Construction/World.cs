@@ -26,6 +26,12 @@ namespace traVRsal.SDK
             Multiple = 2
         }
 
+        public enum TargetVisiblity
+        {
+            Always = 1,
+            EnteringZone = 0
+        }
+
         [Header("Information")] public string key;
         public string version;
         public string name;
@@ -33,14 +39,15 @@ namespace traVRsal.SDK
         public string shortDescription;
         public string longDescription;
         public string coverImage;
-        [DefaultValue(true)] public bool enableChallenges = true;
-        public TargetMeasures[] measures = {TargetMeasures.Time, TargetMeasures.Distance};
 
-        [Header("Restrictions")] public bool isVirtual;
+        [Header("Configuration")] public bool isVirtual;
         public string minVersion;
         public string minSize;
         public string maxSize;
         [DefaultValue(300)] public int availableTime = 5 * 60;
+        [DefaultValue(true)] public bool enableChallenges = true;
+        public TargetMeasures[] measures = {TargetMeasures.Time, TargetMeasures.Distance};
+        public TargetVisiblity targetVisibility = TargetVisiblity.EnteringZone;
 
         [Header("Items & HUD")] [DefaultValue(true)]
         public bool showHandHud = true;
@@ -50,13 +57,15 @@ namespace traVRsal.SDK
         public Reference defaultHandHudMain;
         public Reference defaultHandHudSecondary;
 
-        public string[] headItems;
+        public List<string> inventoryItems;
         public string initialItemMain;
         public string initialItemSecondary;
         public string handBackItemMain;
         public string handBackItemSecondary;
+        public string[] headItems;
 
         [Header("Assets")] public string deathSound;
+        public string[] defaultRandomSkybox;
         public string defaultSkybox;
         public string defaultScenery;
         [DefaultValue("/Base/LightHall")] public string introScenery = "/Base/LightHall";
@@ -67,7 +76,7 @@ namespace traVRsal.SDK
         [DefaultValue("/Base/FutureWorld_Resolution_Loop.ogg")]
         public string outroMusic = "/Base/FutureWorld_Resolution_Loop.ogg";
 
-        [Header("Configuration")] public List<WorldDataReference> worldData;
+        [Header("Content")] public List<WorldDataReference> worldData;
         public bool disableJourneys;
         public List<Journey> journeys;
         public List<WorldSetting> settings;
@@ -94,6 +103,7 @@ namespace traVRsal.SDK
 
         // cache structures
         [NonSerialized] public Texture2D cover;
+        [NonSerialized] public Dictionary<string, int> visitedZones;
         [NonSerialized] public Dictionary<string, string> zoneTemplateCache;
         [NonSerialized] public Dictionary<string, Tuple<string, BasicEntity>> locationCache;
         [NonSerialized] public Dictionary<int, HashSet<int>> zoneVisibility;
@@ -112,9 +122,11 @@ namespace traVRsal.SDK
             imageProviders = new List<ImageProvider>();
             replacements = new List<ReplacementRule>();
             objectSpecs = new List<ObjectSpec>();
+            visitedZones = new Dictionary<string, int>();
             zoneTemplateCache = new Dictionary<string, string>();
             locationCache = new Dictionary<string, Tuple<string, BasicEntity>>();
             zoneVisibility = new Dictionary<int, HashSet<int>>();
+            inventoryItems = new List<string>();
             speech = new List<TextFragment>();
             initialVariables = new List<Variable>();
             settings = new List<WorldSetting>();
@@ -134,12 +146,15 @@ namespace traVRsal.SDK
         public void NullifyEmpties()
         {
             if (headItems != null && headItems.Length == 0) headItems = null;
+            if (defaultRandomSkybox != null && defaultRandomSkybox.Length == 0) defaultRandomSkybox = null;
+            if (inventoryItems != null && inventoryItems.Count == 0) inventoryItems = null;
             if (zones != null && zones.Count == 0) zones = null;
             if (zoneTemplates != null && zoneTemplates.Count == 0) zoneTemplates = null;
             if (spawnRules != null && spawnRules.Count == 0) spawnRules = null;
             if (imageProviders != null && imageProviders.Count == 0) imageProviders = null;
             if (replacements != null && replacements.Count == 0) replacements = null;
             if (objectSpecs != null && objectSpecs.Count == 0) objectSpecs = null;
+            if (visitedZones != null && visitedZones.Count == 0) visitedZones = null;
             if (zoneTemplateCache != null && zoneTemplateCache.Count == 0) zoneTemplateCache = null;
             if (locationCache != null && locationCache.Count == 0) locationCache = null;
             if (zoneVisibility != null && zoneVisibility.Count == 0) zoneVisibility = null;

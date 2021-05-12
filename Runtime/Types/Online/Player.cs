@@ -11,13 +11,14 @@ namespace traVRsal.SDK
         public int accepted_terms_version;
         public string accepted_terms_date;
         public string player_id;
+        public string oculus_id; // php will not convert biginteger correctly
         public string nickname;
         public float distance;
 
         public string device;
         public string app_version;
         public string unity_version;
-        
+
         public string created_at;
         public string updated_at;
 
