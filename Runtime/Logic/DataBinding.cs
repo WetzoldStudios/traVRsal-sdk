@@ -156,7 +156,9 @@ namespace traVRsal.SDK
             ShowIfChallengeWonBest = 78,
             ShowIfChallengeWon = 80,
 
+            ShowIfProduction = 155,
             ShowIfBeta = 112,
+            ShowIfAlpha = 154,
             ShowIfOffline = 113,
             ShowIfMPPossible = 147,
             ShowIfMPHost = 138,

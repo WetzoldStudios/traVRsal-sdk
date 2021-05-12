@@ -11,7 +11,8 @@ namespace traVRsal.SDK
         public enum ReleaseChannel
         {
             Live = 0,
-            Beta = 1
+            Beta = 1,
+            Alpha = 2
         }
 
         public enum PublishingEnvironment

@@ -24,7 +24,7 @@ namespace traVRsal.SDK
         private const bool linuxSupport = true;
 
         private string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};
-        private string[] RELEASE_CHANNELS = {"Production", "Beta"};
+        private string[] RELEASE_CHANNELS = {"Production", "Beta", "Alpha"};
 
         private static bool debugMode = false;
 
@@ -842,7 +842,21 @@ namespace traVRsal.SDK
 
                 // set variables
                 string localRoot = Application.dataPath + $"/../traVRsal/{worldName}/[BuildTarget]";
-                string remoteTarget = releaseChannel == 0 ? AWSUtil.S3CDNRoot_Live : AWSUtil.S3CDNRoot_Beta;
+                string remoteTarget = null;
+                switch (releaseChannel)
+                {
+                    case 0:
+                        remoteTarget = AWSUtil.S3CDNRoot_Live;
+                        break;
+
+                    case 1:
+                        remoteTarget = AWSUtil.S3CDNRoot_Beta;
+                        break;
+
+                    case 2:
+                        remoteTarget = AWSUtil.S3CDNRoot_Alpha;
+                        break;
+                }
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalBuildPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalLoadPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kRemoteBuildPath, $"ServerData/Worlds/{worldName}/[BuildTarget]");
@@ -895,14 +909,44 @@ namespace traVRsal.SDK
             }
             else
             {
-                EditorUtility.DisplayDialog("Success", $"Upload of {worldName} completed. Use the " + (preparedReleaseChannel == 0 ? "PRODUCTION" : "BETA") + " app to test.", "OK");
+                string channelName = null;
+                switch (preparedReleaseChannel)
+                {
+                    case 0:
+                        channelName = "PRODUCTION";
+                        break;
+
+                    case 1:
+                        channelName = "BETA";
+                        break;
+
+                    case 2:
+                        channelName = "ALPHA";
+                        break;
+                }
+                EditorUtility.DisplayDialog("Success", $"Upload of {worldName} completed. Use the " + channelName + " app to test.", "OK");
             }
         }
 
         private IEnumerator PublishWorldUpdates(string worldName)
         {
-            string uri = SDKUtil.API_ENDPOINT + "userworlds/" +
-                         userWorlds.First(w => w.key == worldName).id + "?channel=" + (preparedReleaseChannel == 0 ? "live" : "beta");
+            string channelName = null;
+            switch (preparedReleaseChannel)
+            {
+                case 0:
+                    channelName = "live";
+                    break;
+
+                case 1:
+                    channelName = "beta";
+                    break;
+
+                case 2:
+                    channelName = "alpha";
+                    break;
+            }
+
+            string uri = SDKUtil.API_ENDPOINT + "userworlds/" + userWorlds.First(w => w.key == worldName).id + "?channel=" + channelName;
 
             // extract data from world descriptor
             string worldJson = File.ReadAllText(GetWorldsRoot() + "/" + worldName + "/World.json");
