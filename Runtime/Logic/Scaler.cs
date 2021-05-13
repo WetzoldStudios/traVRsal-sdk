@@ -67,7 +67,7 @@ namespace traVRsal.SDK
             }
 
             // needed for support of initialDelay, since any WaitForSeconds will be interrupted during loading when GO becomes inactive
-            startTime = Time.time + finalInitialDelay;
+            startTime = Mathf.Max(Time.time + finalInitialDelay, Single.Epsilon);
         }
 
         private void OnDisable()
