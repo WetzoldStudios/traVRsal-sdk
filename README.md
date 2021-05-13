@@ -41,5 +41,4 @@ This SDK is licensed under the MIT license except for all contents in "Third-Par
 * bhaptics SDK
 * DOTween
 * Unity NavMeshComponents
-* JSONnet
 * XNode

@@ -1,5 +1,7 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace traVRsal.SDK
 {
@@ -24,7 +26,7 @@ namespace traVRsal.SDK
         public LoopType loopType = LoopType.Yoyo;
 
         [Header("Timings")] public Vector2 initialDelay;
-        public Vector2 duration = new Vector2(2f, 2f);
+        public Vector2 duration = new Vector2(1f, 1f);
         public Vector2 onDelay;
         public Vector2 offDelay;
 
@@ -87,8 +89,6 @@ namespace traVRsal.SDK
 
         private void SetupManual()
         {
-            if (finalSize == 0) return;
-
             Sequence s = DOTween.Sequence();
             s.PrependInterval(finalOnDelay);
             s.AppendCallback(PlayAudio); // OnPlay is only called once in a sequence

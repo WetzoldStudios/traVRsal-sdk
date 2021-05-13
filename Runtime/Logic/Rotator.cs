@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace traVRsal.SDK
 {
@@ -24,7 +25,7 @@ namespace traVRsal.SDK
         public LoopType loopType = LoopType.Incremental;
 
         [Header("Timings")] public Vector2 initialDelay;
-        public Vector2 duration = new Vector2(2f, 2f);
+        public Vector2 duration = new Vector2(1f, 1f);
         public Vector2 onDelay;
         public Vector2 offDelay;
 
@@ -41,11 +42,17 @@ namespace traVRsal.SDK
         private Vector3 originalRotation;
         private bool changedOnce;
         private float startTime;
+        private bool initStateDone;
         private bool initDone;
         private bool loadingDone;
         private Tween curTween;
 
         private void Start()
+        {
+            if (!initStateDone) InitState();
+        }
+
+        private void InitState()
         {
             originalRotationQ = transform.localRotation;
             originalRotation = originalRotationQ.eulerAngles;
@@ -55,6 +62,8 @@ namespace traVRsal.SDK
             finalDuration = Random.Range(duration.x, duration.y);
             finalOnDelay = Random.Range(onDelay.x, onDelay.y);
             finalOffDelay = Random.Range(offDelay.x, offDelay.y);
+
+            initStateDone = true;
         }
 
         private void OnEnable()
@@ -109,6 +118,7 @@ namespace traVRsal.SDK
         public void VariableChanged(Variable variable, bool condition, bool initialCall = false)
         {
             if (mode != Mode.Variable) return;
+            if (!initStateDone) InitState();
 
             if (condition)
             {

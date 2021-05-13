@@ -11,7 +11,7 @@ namespace traVRsal.SDK
         public GameObject destructionEffect;
         public Vector3 destructionEffectOffset;
 
-        public List<GameObject> enabledGameObjectssOnDestruction;
+        public List<GameObject> enabledGameObjectsOnDestruction;
         public List<GameObject> disabledGameObjectsOnDestruction;
         public List<Behaviour> enabledComponentsOnDestruction;
         public List<Behaviour> disabledComponentsOnDestruction;
@@ -19,7 +19,7 @@ namespace traVRsal.SDK
 
         public Damageable()
         {
-            enabledGameObjectssOnDestruction = new List<GameObject>();
+            enabledGameObjectsOnDestruction = new List<GameObject>();
             disabledGameObjectsOnDestruction = new List<GameObject>();
             enabledComponentsOnDestruction = new List<Behaviour>();
             disabledComponentsOnDestruction = new List<Behaviour>();
