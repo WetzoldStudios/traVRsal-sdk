@@ -50,12 +50,27 @@ namespace traVRsal.SDK
         private bool changedOnce;
         private float startTime;
         private bool loadingDone;
+        private bool initStateDone;
         private bool initDone;
+        private bool continueAfterPause;
         private Tween curTween;
 
         private void Start()
         {
+            if (!initStateDone) InitState();
+        }
+
+        private void InitState()
+        {
             originalPosition = transform.localPosition;
+
+            finalDistance = Random.Range(distance.x, distance.y);
+            finalInitialDelay = Random.Range(initialDelay.x, initialDelay.y);
+            finalDuration = Random.Range(duration.x, duration.y);
+            finalOnDelay = Random.Range(onDelay.x, onDelay.y);
+            finalOffDelay = Random.Range(offDelay.x, offDelay.y);
+
+            initStateDone = true;
         }
 
         private void OnEnable()
@@ -63,7 +78,8 @@ namespace traVRsal.SDK
             if (!loadingDone) return;
             if (initDone)
             {
-                if (curTween != null && !curTween.IsComplete()) curTween.Play();
+                if (curTween != null && (continueAfterPause || !curTween.IsComplete())) curTween.Play();
+                continueAfterPause = false;
                 return;
             }
 
@@ -75,7 +91,11 @@ namespace traVRsal.SDK
         {
             if (curTween == null) return;
 
-            if (curTween.IsPlaying()) curTween.Pause();
+            if (curTween.IsPlaying())
+            {
+                curTween.Pause();
+                continueAfterPause = true;
+            }
         }
 
         private void Update()
@@ -110,6 +130,8 @@ namespace traVRsal.SDK
         public void VariableChanged(Variable variable, bool condition, bool initialCall = false)
         {
             if (mode != Mode.Variable) return;
+            if (!initStateDone) InitState();
+            initDone = true;
 
             if (condition)
             {
@@ -131,18 +153,13 @@ namespace traVRsal.SDK
 
         public void FinishedLoading(Vector3 tileSizes, bool instantEnablement = false)
         {
-            finalDistance = Random.Range(distance.x, distance.y);
+            if (!initStateDone) InitState();
 
             // multiply with tile size to fit into world grid
             if (valueScale == ValueScale.Tiles)
             {
                 finalDistance *= axis.y != 0 ? tileSizes.y : tileSizes.x;
             }
-
-            finalInitialDelay = Random.Range(initialDelay.x, initialDelay.y);
-            finalDuration = Random.Range(duration.x, duration.y);
-            finalOnDelay = Random.Range(onDelay.x, onDelay.y);
-            finalOffDelay = Random.Range(offDelay.x, offDelay.y);
 
             loadingDone = true;
             if (instantEnablement) OnEnable();

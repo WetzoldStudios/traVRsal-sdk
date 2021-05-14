@@ -46,6 +46,7 @@ namespace traVRsal.SDK
         private bool initStateDone;
         private bool initDone;
         private bool loadingDone;
+        private bool continueAfterPause;
         private Tween curTween;
 
         private void Start()
@@ -72,7 +73,8 @@ namespace traVRsal.SDK
             if (!loadingDone) return;
             if (initDone)
             {
-                if (curTween != null && !curTween.IsComplete()) curTween.Play();
+                if (curTween != null && (continueAfterPause || !curTween.IsComplete())) curTween.Play();
+                continueAfterPause = false;
                 return;
             }
 
@@ -84,7 +86,11 @@ namespace traVRsal.SDK
         {
             if (curTween == null) return;
 
-            if (curTween.IsPlaying()) curTween.Pause();
+            if (curTween.IsPlaying())
+            {
+                curTween.Pause();
+                continueAfterPause = true;
+            }
         }
 
         private void Update()
@@ -120,6 +126,7 @@ namespace traVRsal.SDK
         {
             if (mode != Mode.Variable) return;
             if (!initStateDone) InitState();
+            initDone = true;
 
             if (condition)
             {

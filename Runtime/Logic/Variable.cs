@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class Variable
+    public class Variable : ISavable
     {
         public enum Behaviour
         {
@@ -24,9 +25,9 @@ namespace traVRsal.SDK
         public bool isComboPart;
         public List<string> targetOrder = new List<string>();
         public List<string> currentOrder = new List<string>();
-        public List<IVariableListener> listeners = new List<IVariableListener>();
         public int currentAutoIndex;
 
+        [NonSerialized] public List<IVariableListener> listeners = new List<IVariableListener>();
         [NonSerialized] public Variable parent;
         [NonSerialized] public List<Variable> children;
         [NonSerialized] public List<Variable> affects;
@@ -44,9 +45,23 @@ namespace traVRsal.SDK
             behaviour = copyFrom.behaviour;
             imageFolder = copyFrom.imageFolder;
             targetCount = copyFrom.targetCount;
+            targetOrder = copyFrom.targetOrder;
+            currentOrder = copyFrom.currentOrder;
+            everChanged = copyFrom.everChanged;
 
             // ensure we are always using floats when using decimals for compatibility (e.g. FlowCanvas sync)
             if (value is double) value = Convert.ChangeType(value, typeof(float));
+        }
+
+        public string GetPersistedState()
+        {
+            return SDKUtil.SerializeObject(this);
+        }
+
+        public void LoadPersistedState(string state)
+        {
+            Variable v = JsonConvert.DeserializeObject<Variable>(state);
+            Merge(v);
         }
 
         protected bool Equals(Variable other)

@@ -42,11 +42,18 @@ namespace traVRsal.SDK
         private Vector3 originalScale;
         private bool changedOnce;
         private float startTime;
+        private bool initStateDone;
         private bool initDone;
         private bool loadingDone;
+        private bool continueAfterPause;
         private Tween curTween;
 
         private void Start()
+        {
+            if (!initStateDone) InitState();
+        }
+
+        private void InitState()
         {
             originalScale = transform.localScale;
 
@@ -62,7 +69,8 @@ namespace traVRsal.SDK
             if (!loadingDone) return;
             if (initDone)
             {
-                if (curTween != null && !curTween.IsComplete()) curTween.Play();
+                if (curTween != null && (continueAfterPause || !curTween.IsComplete())) curTween.Play();
+                continueAfterPause = false;
                 return;
             }
 
@@ -74,7 +82,11 @@ namespace traVRsal.SDK
         {
             if (curTween == null) return;
 
-            if (curTween.IsPlaying()) curTween.Pause();
+            if (curTween.IsPlaying())
+            {
+                curTween.Pause();
+                continueAfterPause = true;
+            }
         }
 
         private void Update()
@@ -107,6 +119,8 @@ namespace traVRsal.SDK
         public void VariableChanged(Variable variable, bool condition, bool initialCall = false)
         {
             if (mode != Mode.Variable) return;
+            if (!initStateDone) InitState();
+            initDone = true;
 
             if (condition)
             {
