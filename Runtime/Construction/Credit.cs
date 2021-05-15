@@ -10,7 +10,9 @@ namespace traVRsal.SDK
         public string originalSource;
         public string url;
 
-        public Credit() { }
+        public Credit()
+        {
+        }
 
         public override string ToString()
         {

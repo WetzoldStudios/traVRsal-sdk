@@ -17,6 +17,7 @@ namespace traVRsal.SDK
         [DefaultValue(true)]
         public bool enabled = true;
         public string key;
+        public string chapter;
         [DefaultValue(SUM_OF_COMPONENTS)]
         public int length = SUM_OF_COMPONENTS;
         public List<SegmentComponent> components;

@@ -39,6 +39,8 @@ namespace traVRsal.SDK
         public string shortDescription;
         public string longDescription;
         public string coverImage;
+        public bool chaptersUnlocked;
+        public List<Chapter> chapters;
 
         [Header("Configuration")] public bool isVirtual;
         public string minVersion;
@@ -46,6 +48,7 @@ namespace traVRsal.SDK
         public string maxSize;
         [DefaultValue(300)] public int availableTime = 5 * 60;
         [DefaultValue(true)] public bool enableChallenges = true;
+        public bool autoCheckPoints;
         public TargetMeasures[] measures = {TargetMeasures.Time, TargetMeasures.Distance};
         public TargetVisiblity targetVisibility = TargetVisiblity.EnteringZone;
 
@@ -116,6 +119,7 @@ namespace traVRsal.SDK
 
         public World()
         {
+            chapters = new List<Chapter>();
             zones = new List<Zone>();
             zoneTemplates = new List<Zone>();
             spawnRules = new List<SpawnRule>();
@@ -145,6 +149,7 @@ namespace traVRsal.SDK
 
         public void NullifyEmpties()
         {
+            if (chapters != null && chapters.Count == 0) chapters = null;
             if (headItems != null && headItems.Length == 0) headItems = null;
             if (defaultRandomSkybox != null && defaultRandomSkybox.Length == 0) defaultRandomSkybox = null;
             if (inventoryItems != null && inventoryItems.Count == 0) inventoryItems = null;

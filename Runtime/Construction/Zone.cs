@@ -18,6 +18,7 @@ namespace traVRsal.SDK
         public bool invisibleGround;
         public bool blockAgents = true;
         public int availableTime;
+        public string chapter;
         public Color ambientColor = new Color(0.8f, 0.782f, 0.745f);
         public Color lightColor = Color.white;
         public Color backgroundColor = Color.black;
@@ -94,6 +95,7 @@ namespace traVRsal.SDK
             lightColor = copyFrom.lightColor;
             lightIntensity = copyFrom.lightIntensity;
             backgroundColor = copyFrom.backgroundColor;
+            chapter = copyFrom.chapter;
             isExit = copyFrom.isExit;
             isIntro = copyFrom.isIntro;
             reactivateTransitions = copyFrom.reactivateTransitions;
@@ -119,6 +121,7 @@ namespace traVRsal.SDK
         {
             return obj is Zone zone &&
                    name == zone.name &&
+                   chapter == zone.chapter &&
                    minSize.Equals(zone.minSize) &&
                    offset.Equals(zone.offset) &&
                    // FIXME: returns false for some reason
