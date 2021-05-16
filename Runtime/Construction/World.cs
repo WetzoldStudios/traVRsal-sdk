@@ -39,7 +39,8 @@ namespace traVRsal.SDK
         public string shortDescription;
         public string longDescription;
         public string coverImage;
-        public bool chaptersUnlocked;
+        public bool loadAllChapters;
+        public string defaultChapter;
         public List<Chapter> chapters;
 
         [Header("Configuration")] public bool isVirtual;
@@ -95,6 +96,7 @@ namespace traVRsal.SDK
         [Header("Runtime Data")] public bool journeyMode;
         public bool rotateWorld;
         public bool invalidSettings;
+        public string chapter;
         public SkyboxMode skyboxMode = SkyboxMode.None;
         public List<ObjectSpec> objectSpecs;
         public List<string> dependencies;

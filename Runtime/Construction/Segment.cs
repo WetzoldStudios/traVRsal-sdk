@@ -11,15 +11,14 @@ namespace traVRsal.SDK
 
         public enum Order
         {
-            Random, Fixed
+            Random,
+            Fixed
         }
 
-        [DefaultValue(true)]
-        public bool enabled = true;
+        [DefaultValue(true)] public bool enabled = true;
         public string key;
         public string chapter;
-        [DefaultValue(SUM_OF_COMPONENTS)]
-        public int length = SUM_OF_COMPONENTS;
+        [DefaultValue(SUM_OF_COMPONENTS)] public int length = SUM_OF_COMPONENTS;
         public List<SegmentComponent> components;
         public Order order = Order.Random;
 
@@ -35,10 +34,15 @@ namespace traVRsal.SDK
             this.length = length;
         }
 
+        public Segment WithChapter(string chapter)
+        {
+            this.chapter = chapter;
+            return this;
+        }
+
         public Segment WithComponent(SegmentComponent component)
         {
             components.Add(component);
-
             return this;
         }
 

@@ -12,27 +12,39 @@ namespace traVRsal.SDK
             SettingsDialog = 1,
             PlayerDialog = 7,
             MultiplayerDialog = 28,
+
             InfoDialog = 10,
             InfoDialogText = 11,
             InfoDialogMainAction = 26,
             InfoDialogAlternativeAction = 27,
+
             WorldDetailsDialog = 2,
             WorldDetailsDialogPosition = 8,
             WorldsListRoot = 19,
-            FeaturedWorldsRoot = 32,
-            FeaturedWorldsListRoot = 0,
             WorldPlacement = 6,
             WorldBrowserDialog = 20,
             WorldBrowserDialogPosition = 21,
+            WorldStartButton = 35,
+
+            ChaptersDialog = 33,
+            ChaptersListRoot = 34,
+            ChapterCover = 36,
+
+            FeaturedWorldsRoot = 32,
+            FeaturedWorldsListRoot = 0,
+
             ChallengesDialog = 13,
             ChallengesListRoot = 14,
+
             GlobalLeaderListRoot = 18,
             WorldOverallLeaderListRoot = 29,
             WorldSpeedLeaderListRoot = 30,
             WorldAccuracyLeaderListRoot = 31,
+
             NoWorldSettingsHint = 3,
             NoChallengesHint = 15,
             WorldSettingsRoot = 4,
+
             InterstitialDialog = 12,
             IntroductionDialog = 22,
             CreateWorldsDialog = 16,
