@@ -34,6 +34,7 @@ namespace traVRsal.SDK
         [DefaultValue("/Base/Menu/World3")] public string worldObject = "/Base/Menu/World3";
         public bool devMode;
         public bool enableMultiplayer;
+        public bool enableHaptics;
 
         // derived 
         public bool stickMode;
