@@ -11,6 +11,7 @@ using System.Text;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
+using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEngine;
@@ -259,6 +260,16 @@ namespace traVRsal.SDK
                 {
                     File.Copy(dir + "/Images/" + world.coverImage, mediaPath + world.coverImage, true);
                 }
+                if (world.chapters != null)
+                {
+                    foreach (Chapter chapter in world.chapters)
+                    {
+                        if (!string.IsNullOrEmpty(chapter.coverImage))
+                        {
+                            File.Copy(dir + "/Images/" + chapter.coverImage, mediaPath + chapter.coverImage, true);
+                        }
+                    }
+                }
             }
         }
 
@@ -450,6 +461,7 @@ namespace traVRsal.SDK
                         BundledAssetGroupSchema schema = settings.groups.First(group => @group.name == worldName).GetSchema<BundledAssetGroupSchema>();
                         settings.RemoteCatalogBuildPath = schema.BuildPath;
                         settings.RemoteCatalogLoadPath = schema.LoadPath;
+                        settings.ShaderBundleCustomNaming = worldName;
 
                         AddressableAssetSettings.BuildPlayerContent();
                     }
@@ -795,6 +807,7 @@ namespace traVRsal.SDK
             settings.DisableCatalogUpdateOnStartup = true;
             settings.ContiguousBundles = true;
             settings.IgnoreUnsupportedFilesInBuild = true;
+            settings.ShaderBundleNaming = ShaderBundleNaming.Custom;
 
             // don't include built-in data, causes shader issues
             settings.groups.ForEach(g =>
