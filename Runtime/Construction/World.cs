@@ -32,14 +32,29 @@ namespace traVRsal.SDK
             EnteringZone = 0
         }
 
-        [Header("Information")] public string key;
+        public enum UnlockMethod
+        {
+            None = 0,
+            ButtonCombination = 1
+        }
+
+        [Header("Presentation")] public string key;
         public string version;
         public string name;
         [DefaultValue("Experience")] public string category = "Experience";
         public string shortDescription;
         public string longDescription;
         public string coverImage;
-        public bool loadAllChapters;
+
+        [Header("Unlocking")] public UnlockMethod unlockMethod = UnlockMethod.None;
+        public string unlockCombination;
+        [DefaultValue("?????")] public string lockedName = "?????";
+        public string lockedShortDescription;
+        public string lockedLongDescription;
+        public string unlockLink;
+        public string unlockLinkTitle;
+
+        [Header("Chapters")] public bool loadAllChapters;
         public string defaultChapter;
         public List<Chapter> chapters;
 
@@ -151,38 +166,38 @@ namespace traVRsal.SDK
 
         public void NullifyEmpties()
         {
-            if (chapters != null && chapters.Count == 0) chapters = null;
-            if (headItems != null && headItems.Length == 0) headItems = null;
-            if (defaultRandomSkybox != null && defaultRandomSkybox.Length == 0) defaultRandomSkybox = null;
-            if (inventoryItems != null && inventoryItems.Count == 0) inventoryItems = null;
-            if (zones != null && zones.Count == 0) zones = null;
-            if (zoneTemplates != null && zoneTemplates.Count == 0) zoneTemplates = null;
-            if (spawnRules != null && spawnRules.Count == 0) spawnRules = null;
-            if (imageProviders != null && imageProviders.Count == 0) imageProviders = null;
-            if (replacements != null && replacements.Count == 0) replacements = null;
-            if (objectSpecs != null && objectSpecs.Count == 0) objectSpecs = null;
-            if (visitedZones != null && visitedZones.Count == 0) visitedZones = null;
-            if (zoneTemplateCache != null && zoneTemplateCache.Count == 0) zoneTemplateCache = null;
-            if (locationCache != null && locationCache.Count == 0) locationCache = null;
-            if (zoneVisibility != null && zoneVisibility.Count == 0) zoneVisibility = null;
-            if (speech != null && speech.Count == 0) speech = null;
-            if (initialVariables != null && initialVariables.Count == 0) initialVariables = null;
-            if (settings != null && settings.Count == 0) settings = null;
-            if (worldData != null && worldData.Count == 0) worldData = null;
-            if (dependencies != null && dependencies.Count == 0) dependencies = null;
-            if (worldDependencies != null && worldDependencies.Count == 0) worldDependencies = null;
-            if (customShaders != null && customShaders.Count == 0) customShaders = null;
-            if (credits != null && credits.Count == 0) credits = null;
-            if (journeys != null && journeys.Count == 0) journeys = null;
-            if (journeyTemplates != null && journeyTemplates.Count == 0) journeyTemplates = null;
+            if (chapters is {Count: 0}) chapters = null;
+            if (headItems is {Length: 0}) headItems = null;
+            if (defaultRandomSkybox is {Length: 0}) defaultRandomSkybox = null;
+            if (inventoryItems is {Count: 0}) inventoryItems = null;
+            if (zones is {Count: 0}) zones = null;
+            if (zoneTemplates is {Count: 0}) zoneTemplates = null;
+            if (spawnRules is {Count: 0}) spawnRules = null;
+            if (imageProviders is {Count: 0}) imageProviders = null;
+            if (replacements is {Count: 0}) replacements = null;
+            if (objectSpecs is {Count: 0}) objectSpecs = null;
+            if (visitedZones is {Count: 0}) visitedZones = null;
+            if (zoneTemplateCache is {Count: 0}) zoneTemplateCache = null;
+            if (locationCache is {Count: 0}) locationCache = null;
+            if (zoneVisibility is {Count: 0}) zoneVisibility = null;
+            if (speech is {Count: 0}) speech = null;
+            if (initialVariables is {Count: 0}) initialVariables = null;
+            if (settings is {Count: 0}) settings = null;
+            if (worldData is {Count: 0}) worldData = null;
+            if (dependencies is {Count: 0}) dependencies = null;
+            if (worldDependencies is {Count: 0}) worldDependencies = null;
+            if (customShaders is {Count: 0}) customShaders = null;
+            if (credits is {Count: 0}) credits = null;
+            if (journeys is {Count: 0}) journeys = null;
+            if (journeyTemplates is {Count: 0}) journeyTemplates = null;
 
             if (initialVariables != null)
             {
                 foreach (Variable variable in initialVariables)
                 {
-                    if (variable.currentOrder != null && variable.currentOrder.Count == 0) variable.currentOrder = null;
-                    if (variable.targetOrder != null && variable.targetOrder.Count == 0) variable.targetOrder = null;
-                    if (variable.listeners != null && variable.listeners.Count == 0) variable.listeners = null;
+                    if (variable.currentOrder is {Count: 0}) variable.currentOrder = null;
+                    if (variable.targetOrder is {Count: 0}) variable.targetOrder = null;
+                    if (variable.listeners is {Count: 0}) variable.listeners = null;
                 }
             }
         }
