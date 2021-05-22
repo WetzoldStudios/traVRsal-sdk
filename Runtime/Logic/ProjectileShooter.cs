@@ -16,7 +16,7 @@ namespace traVRsal.SDK
         public Transform firePoint;
         public GameObject layerRef;
         public float speed = 1f;
-        public bool countIntoStatistics = false;
+        public bool countIntoStatistics;
         public bool byPlayer;
         public AudioSource audioSource;
         public AudioSource reloadAudio;
