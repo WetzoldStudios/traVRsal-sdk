@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 namespace Bhaptics.Tact.Unity
 {
-
     public class AndroidWidget_ScannedDeviceUI : MonoBehaviour
     { 
         [Header("[UI]")]
@@ -32,7 +31,7 @@ namespace Bhaptics.Tact.Unity
 
         private void OnPairSelected()
         {
-            if (AndroidUtils.ConvertConnectionStatus(device.ConnectionStatus) == 2)
+            if (!(device.IsPaired))
             {
                 BhapticsAndroidManager.Pair(device.Address);
             }

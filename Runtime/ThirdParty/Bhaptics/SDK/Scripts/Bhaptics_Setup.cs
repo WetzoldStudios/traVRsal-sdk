@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Bhaptics.Tact.Unity;
+﻿using Bhaptics.Tact.Unity;
 using UnityEngine;
 
 public class Bhaptics_Setup : MonoBehaviour
@@ -8,7 +6,7 @@ public class Bhaptics_Setup : MonoBehaviour
     [SerializeField] public BhapticsConfig Config;
 
 
-    private static Bhaptics_Setup instance;
+    public static Bhaptics_Setup instance;
 
     void Awake()
     {
@@ -33,7 +31,6 @@ public class Bhaptics_Setup : MonoBehaviour
 
     private void Initialize()
     {
-
         BhapticsManager.Initialize();
 
         if (Config == null)
@@ -64,7 +61,6 @@ public class Bhaptics_Setup : MonoBehaviour
         }
 
         var go = Instantiate(Config.AndroidManagerPrefab, transform);
-        go.alwaysScanDisconnectedDevice = Config.AlwaysScanDisconnectedDevice;
 #endif
 
     }

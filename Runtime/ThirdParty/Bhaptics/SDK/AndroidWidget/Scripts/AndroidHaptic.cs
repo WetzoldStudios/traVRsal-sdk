@@ -1,38 +1,164 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 namespace Bhaptics.Tact.Unity
 {
     public class AndroidHaptic : IHaptic
     {
-        private static AndroidJavaObject hapticPlayer;
+        protected static AndroidJavaObject androidJavaObject;
 
-        private List<HapticDevice> deviceList = new List<HapticDevice>();
+        protected List<HapticDevice> deviceList = new List<HapticDevice>();
 
-        private readonly List<string> activeKeys = new List<string>();
-        private readonly List<string> registered = new List<string>();
-        private Dictionary<string, int[]> status = new Dictionary<string, int[]>();
+        private List<string> registeredCache = new List<string>();
+
+
+        private static readonly object[] SubmitRegisteredParams = new object[6];
+        private static readonly int[] Empty = new int[20];
+        private static readonly object[] EmptyParams = new object[0];
+
+        private static readonly RotationOption DefaultRotationOption = new RotationOption(0, 0);
+
+
+        private readonly object syncLock = new object();
+        private Dictionary<PositionType, int[]> updatedList = new Dictionary<PositionType, int[]>();
+
+
+        protected IntPtr AndroidJavaObjectPtr;
+
+        protected IntPtr HasPermissionPtr;
+        protected IntPtr RequestPermissionPtr;
+
+
+        protected IntPtr SubmitRegisteredPtr;
+        protected IntPtr SubmitRegisteredWithTimePtr;
+        protected IntPtr RegisterPtr;
+        protected IntPtr RegisterReflectedPtr;
+        protected IntPtr ToggleScanPtr;
+        protected IntPtr PingPtr;
+        protected IntPtr PingAllPtr;
+        protected IntPtr UnpairPtr;
+        protected IntPtr UnpairAllPtr;
+
+        // bool methods
+        protected IntPtr IsRegisteredPtr;
+        protected IntPtr IsPlayingPtr;
+        protected IntPtr IsPlayingAnythingPtr;
+        protected IntPtr IsScanningPtr;
+
+        // Streaming methods
+        protected IntPtr ToggleStreamPtr;
+        protected IntPtr IsStreamingEnablePtr;
+        protected IntPtr GetStreamingHostsPtr;
 
         public AndroidHaptic()
         {
-            AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-            hapticPlayer = new AndroidJavaObject("com.bhaptics.bhapticsunity.BhapticsManagerWrapper", currentActivity);
-            TurnOnVisualization();
-            if (AndroidPermissionsManager.CheckBluetoothPermissions())
+            try
             {
-                deviceList = GetDevices(true);
-                StartScan();
+
+                AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+                AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+                androidJavaObject =
+                    new AndroidJavaObject("com.bhaptics.bhapticsunity.BhapticsManagerWrapper", currentActivity, Application.productName);
+
+                AndroidJavaObjectPtr = androidJavaObject.GetRawObject();
+
+                ToggleStreamPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "toggleStreamingEnable");
+                HasPermissionPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "hasPermission");
+                RequestPermissionPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "requestPermission");
+
+                SubmitRegisteredPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "submitRegistered");
+                SubmitRegisteredWithTimePtr =
+                    AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "submitRegisteredWithTime");
+                RegisterPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "register");
+                RegisterReflectedPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "registerReflected");
+                PingPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "ping");
+                PingAllPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "pingAll");
+                UnpairPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "unpair");
+                UnpairAllPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "unpairAll");
+
+                IsRegisteredPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "isRegistered");
+                IsPlayingPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "isPlaying");
+                IsPlayingAnythingPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "isAnythingPlaying");
+
+
+                ToggleScanPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "toggleScan");
+                IsScanningPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "isScanning");
+
+                IsStreamingEnablePtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "isStreamingEnable");
+                GetStreamingHostsPtr = AndroidJNIHelper.GetMethodID(androidJavaObject.GetRawClass(), "getStreamingHosts");
             }
+            catch (Exception e)
+            {
+                Debug.LogErrorFormat("AndroidHaptic {0} {1} ", e.Message, e);
+            }
+
+
+            deviceList = GetDevices();
         }
 
-        public bool IsActive(PositionType type)
+        public List<AndroidUtils.StreamHost> GetStreamingHosts()
+        {
+            if (androidJavaObject == null)
+            {
+                return new List<AndroidUtils.StreamHost>();
+            }
+
+            var list = new List<AndroidUtils.StreamHost>();
+
+            string[] res = androidJavaObject.Call<string[]>("getStreamingHosts");
+            for (int index = 0; index < res.Length; index++)
+            {
+                try
+                {
+                    var streamHost = JsonUtility.FromJson<AndroidUtils.StreamHost>(res[index]);
+                    list.Add(streamHost);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogFormat("FromJson {0} {1}", res[index], e.Message);
+                }
+            }
+
+            return list;
+        }
+
+        public bool IsStreamingEnable()
+        {
+            return CallNativeBoolMethod(IsStreamingEnablePtr, EmptyParams);
+        }
+
+        public void ToggleStreaming()
+        {
+            if (androidJavaObject == null)
+            {
+                return;
+            }
+
+            CallNativeVoidMethod(ToggleStreamPtr, EmptyParams);
+
+        }
+
+        public bool IsConnect(PositionType type)
         {
             foreach (var device in deviceList)
             {
-                if (device.Position == type
-                    && device.IsConnected)
+                if (device.Position == type && device.IsConnected)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool IsConnect(HapticDeviceType type, bool isLeft = true)
+        {
+            foreach (var device in deviceList)
+            {
+                if (device.Position == BhapticsUtils.ToPositionType(type, isLeft) && device.IsConnected)
                 {
                     return true;
                 }
@@ -43,345 +169,379 @@ namespace Bhaptics.Tact.Unity
 
         public bool IsPlaying(string key)
         {
-            lock (activeKeys)
+
+            if (androidJavaObject == null)
             {
-                return activeKeys.Contains(key);
+                return false;
             }
+
+            return CallNativeBoolMethod(IsPlayingPtr, new object[] {key});
         }
 
         public bool IsFeedbackRegistered(string key)
         {
-            lock (registered)
+            if (androidJavaObject == null)
             {
-                return registered.Contains(key);
+                return false;
             }
+
+            if (registeredCache.Contains(key))
+            {
+                return true;
+            }
+
+            var res = CallNativeBoolMethod(IsRegisteredPtr, new object[] {key});
+            if (res)
+            {
+                registeredCache.Add(key);
+            }
+
+            return res;
         }
 
         public bool IsPlaying()
         {
-            lock (activeKeys)
+            if (androidJavaObject == null)
             {
-                return activeKeys.Count > 0;
+                return false;
             }
+
+            return CallNativeBoolMethod(IsPlayingAnythingPtr, EmptyParams);
         }
 
         public void RegisterTactFileStr(string key, string tactFileStr)
         {
-            var file = CommonUtils.ConvertJsonStringToTactosyFile(tactFileStr);
-            Register(key, file.Project);
+            if (androidJavaObject == null)
+            {
+                return;
+            }
+
+            CallNativeVoidMethod(RegisterPtr, new object[] {key, tactFileStr});
         }
 
         public void RegisterTactFileStrReflected(string key, string tactFileStr)
         {
-            var project = BhapticsUtils.ReflectLeftRight(tactFileStr);
-            Register(key, project);
+            if (androidJavaObject == null)
+            {
+                return;
+            }
+
+            CallNativeVoidMethod(RegisterReflectedPtr, new object[] {key, tactFileStr});
         }
 
         public void Submit(string key, PositionType position, List<DotPoint> points, int durationMillis)
         {
-            var frame = new Frame();
-            frame.DotPoints = points;
-            frame.PathPoints = new List<PathPoint>();
-            frame.Position = position;
-            frame.DurationMillis = durationMillis;
-            Submit(key, frame);
+            if (androidJavaObject == null)
+            {
+                return;
+            }
+
+            try
+            {
+                int[] indexes = new int[points.Count];
+                int[] intensity = new int[points.Count];
+                for (var i = 0; i < points.Count; i++)
+                {
+                    indexes[i] = points[i].Index;
+                    intensity[i] = points[i].Intensity;
+                }
+
+                androidJavaObject.Call("submitDot",
+                    key, position.ToString(), indexes, intensity, durationMillis);
+            }
+            catch (Exception e)
+            {
+                BhapticsLogger.LogError("submitDot() : {0}", e.Message);
+            }
         }
 
         public void Submit(string key, PositionType position, List<PathPoint> points, int durationMillis)
         {
-            var frame = new Frame();
-            frame.DotPoints = new List<DotPoint>();
-            frame.PathPoints = points;
-            frame.Position = position;
-            frame.DurationMillis = durationMillis;
-            Submit(key, frame);
+            if (androidJavaObject == null)
+            {
+                return;
+            }
+            try
+            {
+                float[] x = new float[points.Count];
+                float[] y = new float[points.Count];
+                int[] intensity = new int[points.Count];
+                for (var i = 0; i < points.Count; i++)
+                {
+                    x[i] = points[i].X;
+                    y[i] = points[i].Y;
+                    intensity[i] = points[i].Intensity;
+                }
+
+                androidJavaObject.Call("submitPath",
+                    key, position.ToString(), x, y, intensity, durationMillis);
+            }
+            catch (Exception e)
+            {
+                BhapticsLogger.LogError("submitPath() : {0}", e.Message);
+            }
         }
 
         public void SubmitRegistered(string key, string altKey, ScaleOption option)
         {
-            var request = new SubmitRequest()
-            {
-                Key = key,
-                Type = "key",
-                Parameters = new Dictionary<string, object>
-                {
-                    {"scaleOption", option},
-                    {"altKey", altKey}
-                }
-            };
-            SubmitRequest(request);
+            SubmitRegistered(key, altKey, DefaultRotationOption, option);
         }
 
         public void SubmitRegistered(string key, string altKey, RotationOption rOption, ScaleOption sOption)
         {
-            var request = new SubmitRequest()
-            {
-                Key = key,
-                Type = "key",
-                Parameters = new Dictionary<string, object>
-                {
-                    {"rotationOption", rOption},
-                    {"scaleOption", sOption},
-                    {"altKey", altKey}
-                }
-            };
-            SubmitRequest(request);
+            SubmitRequest(key, altKey, sOption.Intensity, sOption.Duration, rOption.OffsetAngleX, rOption.OffsetY);
         }
 
         public void SubmitRegistered(string key)
         {
-            var request = new SubmitRequest()
-            {
-                Key = key,
-                Type = "key"
-            };
-            SubmitRequest(request);
+            SubmitRequest(key, key, 1, 1, 0, 0);
         }
 
         public void SubmitRegistered(string key, int startTimeMillis)
         {
-            var request = new SubmitRequest()
+            if (androidJavaObject == null)
             {
-                Key = key,
-                Type = "key",
-                Parameters = new Dictionary<string, object>
-                {
-                    {"startTimeMillis", (int) startTimeMillis + ""}
-                }
-            };
-            SubmitRequest(request);
+                return;
+            }
+
+            CallNativeVoidMethod(SubmitRegisteredWithTimePtr, new object[] {startTimeMillis});
         }
 
         public void TurnOff(string key)
         {
-            var req = new SubmitRequest
+            if (androidJavaObject != null)
             {
-                Key = key,
-                Type = "turnOff"
-            };
-            SubmitRequest(req);
+                try
+                {
+                    androidJavaObject.Call("turnOff",
+                        key);
+                }
+                catch (Exception e)
+                {
+                    BhapticsLogger.LogError("TurnOff() : {0}", e.Message);
+                }
+            }
         }
 
         public void TurnOff()
         {
-            var req = new SubmitRequest
+            if (androidJavaObject != null)
             {
-                Key = "",
-                Type = "turnOffAll"
-            };
-            SubmitRequest(req);
+                try
+                {
+                    androidJavaObject.Call("turnOffAll");
+                }
+                catch (Exception e)
+                {
+                    BhapticsLogger.LogError("turnOffAll() : {0}", e.Message);
+                }
+            }
         }
 
         public void Dispose()
         {
-            if (hapticPlayer != null)
+            if (androidJavaObject != null)
             {
-                hapticPlayer.Call("quit");
-                hapticPlayer = null;
+                androidJavaObject.Call("quit");
+                androidJavaObject = null;
             }
         }
 
-        private void Submit(string key, Frame req)
+        private void SubmitRequest(string key, string altKey,
+            float intensity, float duration, float offsetAngleX, float offsetY)
         {
-            var submitRequest = new SubmitRequest
-            {
-                Frame = req,
-                Key = key,
-                Type = "frame"
-            };
-            SubmitRequest(submitRequest);
-        }
-
-        private void SubmitRequest(SubmitRequest submitRequest)
-        {
-            if (!AndroidPermissionsManager.CheckBluetoothPermissions())
+            if (androidJavaObject == null)
             {
                 return;
             }
 
-            var request = PlayerRequest.Create();
-            request.Submit.Add(submitRequest);
-            if (hapticPlayer != null)
-            {
-                try
-                {
-                    hapticPlayer.Call("submit", request.ToJsonObject().ToString());
-                }
-                catch (Exception e)
-                {
-                    BhapticsLogger.LogError("SubmitRequest() : {0}", e.Message);
-                }
-            }
-        }
+            SubmitRegisteredParams[0] = key;
+            SubmitRegisteredParams[1] = altKey;
+            SubmitRegisteredParams[2] = intensity;
+            SubmitRegisteredParams[3] = duration;
+            SubmitRegisteredParams[4] = offsetAngleX;
+            SubmitRegisteredParams[5] = offsetY;
 
-        private void Register(string key, Project project)
-        {
-            if (!AndroidPermissionsManager.CheckBluetoothPermissions())
-            {
-                return;
-            }
-
-            var req = new RegisterRequest
-            {
-                Key = key,
-                Project = project
-            };
-            var registerRequests = new List<RegisterRequest> {req};
-            var request = PlayerRequest.Create();
-            request.Register = registerRequests;
-            if (hapticPlayer == null)
-            {
-                return;
-            }
-
-
-            hapticPlayer.Call("register", request.ToJsonObject().ToString());
+            CallNativeVoidMethod(SubmitRegisteredPtr, SubmitRegisteredParams);
         }
 
         public int[] GetCurrentFeedback(PositionType pos)
         {
-
-            if (status.ContainsKey(pos.ToString()))
+            if (androidJavaObject == null)
             {
-                return status[pos.ToString()];
+                return Empty;
             }
 
-            return new int[20];
+            lock (syncLock)
+            {
+                byte[] result = androidJavaObject.Call<byte[]>("getPositionStatus", pos.ToString());
+                int[] res = Array.ConvertAll(result, System.Convert.ToInt32);
+                updatedList[pos] = res;
+
+                return res;
+            }
         }
 
 
-        public List<HapticDevice> GetDevices(bool force = false)
+        public List<HapticDevice> GetDevices()
         {
-            if (force)
-            {
-                string result = hapticPlayer.Call<string>("getDeviceList");
-                deviceList = AndroidUtils.ConvertToBhapticsDevices(result);
-            }
+            string[] result = androidJavaObject.Call<string[]>("getDeviceList");
+            deviceList = AndroidUtils.ConvertToBhapticsDevices(result);
+            
 
             return deviceList;
         }
 
-        public void UpdateDeviceList(List<HapticDevice> devices)
-        {
-            deviceList = devices;
-        }
-
-        public void Receive(PlayerResponse response)
-        {
-            try
-            {
-                lock (activeKeys)
-                {
-                    activeKeys.Clear();
-                    activeKeys.AddRange(response.ActiveKeys);
-                }
-
-                lock (registered)
-                {
-                    registered.Clear();
-                    registered.AddRange(response.RegisteredKeys);
-                }
-
-                lock (status)
-                {
-                    status = response.Status;
-                }
-            }
-            catch (Exception e)
-            {
-                BhapticsLogger.LogInfo("Receive: {0}", e.Message);
-            }
-        }
-
         public void Pair(string address, string position)
         {
-            if (hapticPlayer != null)
+            if (androidJavaObject != null)
             {
                 if (position != "")
                 {
-                    hapticPlayer.Call("pair", address, position);
+                    androidJavaObject.Call("pair", address, position);
                 }
                 else
                 {
-                    hapticPlayer.Call("pair", address);
+                    androidJavaObject.Call("pair", address);
                 }
             }
         }
 
         public void Unpair(string address)
         {
-            if (hapticPlayer != null)
+            if (androidJavaObject == null)
             {
-                hapticPlayer.Call("unpair", address);
+                return;
             }
+
+            CallNativeVoidMethod(UnpairPtr, new object[] {address});
         }
 
         public void UnpairAll()
         {
-            if (hapticPlayer != null)
+            if (androidJavaObject == null)
             {
-                hapticPlayer.Call("unpairAll");
+                return;
             }
+
+            CallNativeVoidMethod(UnpairAllPtr, EmptyParams);
         }
 
 
         public void StartScan()
         {
-            if (hapticPlayer != null)
+            if (androidJavaObject == null)
             {
-                BhapticsLogger.LogDebug("StartScan()");
-                hapticPlayer.Call("scan");
+                return;
             }
+
+            if (!CheckPermission())
+            {
+                return;
+            }
+
+            CallNativeVoidMethod(ToggleScanPtr, EmptyParams);
         }
 
         public void StopScan()
         {
-            if (hapticPlayer != null)
+            if (androidJavaObject == null)
             {
-                hapticPlayer.Call("stopScan");
+                return;
             }
+
+            if (!CheckPermission())
+            {
+                return;
+            }
+
+            CallNativeVoidMethod(ToggleScanPtr, EmptyParams);
         }
 
         public bool IsScanning()
         {
-            if (hapticPlayer != null)
+            if (androidJavaObject == null)
             {
-                return hapticPlayer.Call<bool>("isScanning");
+                return false;
             }
 
-            return false;
+            return CallNativeBoolMethod(IsScanningPtr, EmptyParams);
         }
 
         public void TogglePosition(string address)
         {
-            if (hapticPlayer != null)
+            if (androidJavaObject == null)
             {
-                hapticPlayer.Call("togglePosition", address);
+                return;
             }
-        }
 
-        public void TurnOnVisualization()
-        {
-            if (hapticPlayer != null)
+
+            if (androidJavaObject != null)
             {
-                hapticPlayer.Call("turnOnVisualization");
+                androidJavaObject.Call("togglePosition", address);
             }
         }
 
         public void PingAll()
         {
-            if (hapticPlayer != null)
+            if (androidJavaObject == null)
             {
-                hapticPlayer.Call("pingAll");
+                return;
             }
+
+            CallNativeVoidMethod(PingAllPtr, EmptyParams);
         }
 
         public void Ping(string address)
         {
-            if (hapticPlayer != null)
+            if (androidJavaObject == null)
             {
-                hapticPlayer.Call("ping", address);
+                return;
             }
+
+            CallNativeVoidMethod(PingPtr, new object[] {address});
+        }
+
+        private void CallNativeVoidMethod(IntPtr methodPtr, object[] param)
+        {
+            if (androidJavaObject == null)
+            {
+                return;
+            }
+
+            AndroidUtils.CallNativeVoidMethod(AndroidJavaObjectPtr, methodPtr, param);
+        }
+
+
+        private bool CallNativeBoolMethod(IntPtr methodPtr, object[] param)
+        {
+            if (androidJavaObject == null)
+            {
+                return false;
+            }
+
+            return AndroidUtils.CallNativeBoolMethod(AndroidJavaObjectPtr, methodPtr, param);
+        }
+
+
+        public void RequestPermission()
+        {
+            if (androidJavaObject == null)
+            {
+                return;
+            }
+
+            AndroidUtils.CallNativeVoidMethod(AndroidJavaObjectPtr, RequestPermissionPtr, EmptyParams);
+        }
+
+        public bool CheckPermission()
+        {
+            if (androidJavaObject == null)
+            {
+                return false;
+            }
+
+            return AndroidUtils.CallNativeBoolMethod(AndroidJavaObjectPtr, HasPermissionPtr, EmptyParams);
         }
     }
 }

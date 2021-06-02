@@ -1,67 +1,77 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Bhaptics.Tact;
-using Bhaptics.Tact.Unity;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Bhaptics.Tact.Unity
 {
     public class VestHapticClip : FileHapticClip
     {
-        [Range(0f, 360f)] public float VestRotationAngleX;
-        [Range(-0.5f, 0.5f)] public float VestRotationOffsetY;
-        [Range(0f, 360f)] public float TactFileAngleX;
-        [Range(-0.5f, 0.5f)] public float TactFileOffsetY;
+        [SerializeField, Range(0f, 360f)] protected float TactFileAngleX;
+        [SerializeField, Range(-0.5f, 0.5f)] protected float TactFileOffsetY;
 
+        private RotationOption _rotationOption = new RotationOption(0, 0);
+        private ScaleOption _scaleOption = new ScaleOption(1, 1);
+
+
+        #region Play method
         public override void Play()
         {
-            Play(Intensity, Duration, VestRotationAngleX, VestRotationOffsetY);
+            Play(Intensity, Duration, this.TactFileAngleX, this.TactFileOffsetY, "");
         }
 
-        public override void Play(float intensity)
+        public override void Play(string identifier)
         {
-            Play(intensity, Duration, VestRotationAngleX, VestRotationOffsetY);
+            Play(Intensity, Duration, this.TactFileAngleX, this.TactFileOffsetY, identifier);
         }
 
-        public override void Play(float intensity, float duration)
+        public override void Play(float intensity, string identifier = "")
         {
-            Play(intensity, duration, this.VestRotationAngleX, this.VestRotationOffsetY);
+            Play(intensity, Duration, this.TactFileAngleX, this.TactFileOffsetY, identifier);
         }
 
-        public override void Play(float intensity, float duration, float vestRotationAngleX)
+        public override void Play(float intensity, float duration, string identifier = "")
         {
-            Play(intensity, duration, vestRotationAngleX, this.VestRotationOffsetY);
+            Play(intensity, duration, this.TactFileAngleX, this.TactFileOffsetY, identifier);
         }
 
-        public override void Play(float intensity, float duration, float vestRotationAngleX, float vestRotationOffsetY)
+        public override void Play(float intensity, float duration, float vestRotationAngleX, string identifier = "")
+        {
+            Play(intensity, duration, vestRotationAngleX, this.TactFileOffsetY, identifier);
+        }
+
+        public override void Play(float intensity, float duration, float vestRotationAngleX, float vestRotationOffsetY, string identifier = "")
         {
             if (!BhapticsManager.Init)
             {
                 BhapticsManager.Initialize();
-                return;
             }
 
             var haptic = BhapticsManager.GetHaptic();
+
+            if (haptic == null)
+            {
+                return;
+            }
+
             if (!haptic.IsFeedbackRegistered(assetId))
             {
                 haptic.RegisterTactFileStr(assetId, JsonValue);
             }
 
-            haptic.SubmitRegistered(assetId, keyId,
-                new RotationOption(
-                    vestRotationAngleX + TactFileAngleX,
-                    vestRotationOffsetY + TactFileOffsetY), new ScaleOption(intensity, duration));
+            _rotationOption.OffsetAngleX = vestRotationAngleX + this.TactFileAngleX;
+            _rotationOption.OffsetY = vestRotationOffsetY + this.TactFileOffsetY;
 
+            _scaleOption.Intensity = intensity;
+            _scaleOption.Duration = duration;
+
+            haptic.SubmitRegistered(assetId, keyId + identifier,
+                _rotationOption, _scaleOption);
         }
+        #endregion
 
         public override void ResetValues()
         {
             base.ResetValues();
-            VestRotationAngleX = 0f;
-            VestRotationOffsetY = 0f;
-            TactFileAngleX = 0f;
-            TactFileOffsetY = 0f;
+            this.TactFileAngleX = 0f;
+            this.TactFileOffsetY = 0f;
         }
-
     }
 }

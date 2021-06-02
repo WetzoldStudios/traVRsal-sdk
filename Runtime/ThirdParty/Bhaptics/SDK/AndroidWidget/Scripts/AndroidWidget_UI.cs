@@ -27,6 +27,8 @@ namespace Bhaptics.Tact.Unity
 
         private AndroidWidget_ControlButton[] controllButtons;
 
+        public static AndroidWidget_UI Instance;
+
         void Awake()
         {
             InitializeButtons();
@@ -37,16 +39,11 @@ namespace Bhaptics.Tact.Unity
             controllButtons = GetComponentsInChildren<AndroidWidget_ControlButton>(true);
             animator = GetComponent<Animator>();
             GetComponent<Canvas>().worldCamera = Camera.main;
+            Instance = this;
         }
 
         void Start()
         {
-            if (!AndroidPermissionsManager.CheckBluetoothPermissions())
-            {
-                BhapticsLogger.LogError("bhaptics requires bluetooth permission.");
-            }
-
-
             if (WidgetSetting == null)
             {
                 BhapticsLogger.LogError("[bhaptics] WidgetSetting is null");
@@ -56,14 +53,20 @@ namespace Bhaptics.Tact.Unity
             {
                 animator.Play("HideWidget", -1, 1);
             }
+            else
+            {
+                BhapticsAndroidManager.AddRefreshAction(Refresh);
+            }
 
-            BhapticsAndroidManager.AddRefresh(Refresh);
+            Refresh();
+
         }
 
         private void OnEnable()
         {
             if (alwaysActive)
             {
+                ShowWidget();
                 scanCoroutine = StartCoroutine(LoopScan());
             }
             else
@@ -73,9 +76,8 @@ namespace Bhaptics.Tact.Unity
                     animator.Play("HideWidget", -1, 1);
                 }
             }
-
-            BhapticsAndroidManager.AddRefresh(Refresh);
         }
+
         private void OnDisable()
         {
             if(scanCoroutine != null)
@@ -83,8 +85,6 @@ namespace Bhaptics.Tact.Unity
                 StopCoroutine(scanCoroutine);
                 scanCoroutine = null;
             }
-
-            BhapticsAndroidManager.RemoveRefresh(Refresh);
         }
         
 
@@ -109,10 +109,22 @@ namespace Bhaptics.Tact.Unity
         // calling from the UI Button
         public void ToggleWidgetButton()
         {
-            if (!AndroidPermissionsManager.CheckBluetoothPermissions())
-            {
-                AndroidPermissionsManager.RequestPermission();
 
+            if (!BhapticsAndroidManager.CheckPermission())
+            {
+                if (Bhaptics_Setup.instance != null && Bhaptics_Setup.instance.Config.UseOnlyBackgroundMode)
+                {
+                    if (BhapticsAlertManager.Instance != null)
+                    {
+                        BhapticsAlertManager.Instance.ShowAlert();
+                    }
+
+                    return;
+                }
+
+
+
+                BhapticsAndroidManager.RequestPermission();
                 return;
             }
 
@@ -125,21 +137,17 @@ namespace Bhaptics.Tact.Unity
 
             if (widgetActive)
             {
-                BhapticsAndroidManager.ForceUpdateDeviceList();
-                foreach (var controlButton in controllButtons)
-                {
-                    controlButton.Refresh();
-                }
-
-
                 animator.Play("ShowWidget");
                 
                 ShowWidget();
+                BhapticsAndroidManager.AddRefreshAction(Refresh);
             }
             else
             {
                 animator.Play("HideWidget");
                 HideWidget();
+
+                BhapticsAndroidManager.RemoveRefreshAction();
             }
         }
 
@@ -147,18 +155,24 @@ namespace Bhaptics.Tact.Unity
         {
             uiContainer.SetActive(true);
             hideTimer = autoHideTime;
+
+            BhapticsAndroidManager.Scan();
             scanCoroutine = StartCoroutine(LoopScan());
         }
+
         public void HideWidget()
         {
             uiContainer.SetActive(false);
+
+            BhapticsAndroidManager.ScanStop();
+
             if (scanCoroutine != null)
             {
-                BhapticsAndroidManager.ScanStop();
                 StopCoroutine(scanCoroutine);
                 scanCoroutine = null;
             }
         } 
+
         public void ButtonClickSound()
         {
             buttonClickAudio.Play();
@@ -168,8 +182,6 @@ namespace Bhaptics.Tact.Unity
         {
             while (true)
             {
-                BhapticsAndroidManager.Scan();
-
                 if (!alwaysActive)
                 {
                     if (hideTimer < 0f)
@@ -202,8 +214,6 @@ namespace Bhaptics.Tact.Unity
             {
                 if (device.IsPaired)
                 {
-                    bool isConnect = device.IsConnected;
-
                     var ui = settingObjectPool.GetPairedDeviceUI();
                     if (ui == null)
                     {
@@ -236,9 +246,19 @@ namespace Bhaptics.Tact.Unity
         public void Refresh()
         {
             var devices = BhapticsAndroidManager.GetDevices();
-            settingObjectPool.DisableAll();
+
+            if (settingObjectPool != null)
+            {
+                settingObjectPool.DisableAll();
+            }
+
             RefreshPairedDevices(devices);
             RefreshScannedDevices(devices);
+
+            foreach (var controlButton in controllButtons)
+            {
+                controlButton.Refresh();
+            }
         }
         #endregion
     }
