@@ -5,17 +5,17 @@
         {
             "type": "Material",
             "key": "[walls]",
-            "materials": "/Base/Proto/Blue"
+            "materials": "/Base/DarkGrid"
         },
         {
             "type": "Material",
             "key": "[ceiling]",
-            "materials": "/Base/Proto/White"
+            "materials": "/Base/DarkGrid"
         },
         {
             "type": "Material",
             "key": "[ground]",
-            "materials": "/Base/Proto/Green"
+            "materials": "/Base/DarkGrid"
         }
     ]
 }

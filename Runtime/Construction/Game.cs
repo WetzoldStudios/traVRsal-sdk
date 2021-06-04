@@ -31,10 +31,9 @@ namespace traVRsal.SDK
         public List<string> worlds;
         [DefaultValue("Menu-traVRsal")] public string menuScene = "Menu-traVRsal";
         [DefaultValue("Pause-traVRsal")] public string pauseScene = "Pause-traVRsal";
-        [DefaultValue("/Base/Menu/World3")] public string worldObject = "/Base/Menu/World3";
+        [DefaultValue("Theater-traVRsal")] public string theaterScene = "Theater-traVRsal";
         public bool devMode;
         public bool enableMultiplayer;
-        public bool enableHaptics;
 
         // derived 
         public bool stickMode;

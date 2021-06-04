@@ -103,6 +103,7 @@ namespace traVRsal.SDK
 
             TimeElapsed = PERIODIC + 1,
             SlowMotionCooldownRemaining = PERIODIC + 2,
+            DistanceWalked = PERIODIC + 6,
 
             SettingPadding = 6,
             SettingTileCount = 5,

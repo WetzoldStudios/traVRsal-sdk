@@ -23,6 +23,7 @@ namespace traVRsal.SDK
         public string app_version;
         public string unity_version;
         public string world_version;
+        public int world_version_code;
 
         public float time_taken;
         public float distance;

@@ -49,7 +49,10 @@ namespace traVRsal.SDK
             IntroductionDialog = 22,
             CreateWorldsDialog = 16,
             FailedEntitlementCheckDialog = 24,
+
             MainMenuRoot = 25,
+            MainMenuModalCanvasRoot = 38,
+            TheaterRoot = 37,
             Pivot = 9,
             Object = 23
         }

@@ -44,6 +44,8 @@ namespace Bhaptics.Tact.Unity
 
         public void Refresh()
         {
+            button = GetComponent<Button>();
+
             BhapticsLogger.LogDebug("Refresh()");
 
             var connectedDevices = BhapticsAndroidManager.GetConnectedDevices(DeviceType);

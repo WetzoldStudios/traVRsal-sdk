@@ -19,6 +19,7 @@ namespace traVRsal.SDK
         public bool blockAgents = true;
         public int availableTime;
         public string chapter;
+        public bool createCheckpoint;
         public Color ambientColor = new Color(0.8f, 0.782f, 0.745f);
         public Color lightColor = Color.white;
         public Color backgroundColor = Color.black;
@@ -96,6 +97,7 @@ namespace traVRsal.SDK
             lightIntensity = copyFrom.lightIntensity;
             backgroundColor = copyFrom.backgroundColor;
             chapter = copyFrom.chapter;
+            createCheckpoint = copyFrom.createCheckpoint;
             isExit = copyFrom.isExit;
             isIntro = copyFrom.isIntro;
             reactivateTransitions = copyFrom.reactivateTransitions;
@@ -122,6 +124,7 @@ namespace traVRsal.SDK
             return obj is Zone zone &&
                    name == zone.name &&
                    chapter == zone.chapter &&
+                   createCheckpoint == zone.createCheckpoint &&
                    minSize.Equals(zone.minSize) &&
                    offset.Equals(zone.offset) &&
                    // FIXME: returns false for some reason
@@ -150,11 +153,13 @@ namespace traVRsal.SDK
         {
             int hashCode = -1742729958;
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(chapter);
             hashCode = hashCode * -1521134295 + minSize.GetHashCode();
             hashCode = hashCode * -1521134295 + offset.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<List<Floor>>.Default.GetHashCode(floors);
             hashCode = hashCode * -1521134295 + isExit.GetHashCode();
             hashCode = hashCode * -1521134295 + isIntro.GetHashCode();
+            hashCode = hashCode * -1521134295 + createCheckpoint.GetHashCode();
             hashCode = hashCode * -1521134295 + reactivateTransitions.GetHashCode();
             hashCode = hashCode * -1521134295 + invisibleGround.GetHashCode();
             hashCode = hashCode * -1521134295 + availableTime.GetHashCode();

@@ -21,8 +21,8 @@ namespace traVRsal.SDK
         public Vector3 position;
         public Vector3 rotation;
         [DefaultValue("Vector3.one")] public Vector3 scale = Vector3.one;
-        [DefaultValue(1)] public int width = 1;
-        [DefaultValue(1)] public int height = 1;
+        [DefaultValue(1)] public byte width = 1;
+        [DefaultValue(1)] public byte height = 1;
 
         [Tooltip("Moves object to the ceiling.")]
         public bool atCeiling;

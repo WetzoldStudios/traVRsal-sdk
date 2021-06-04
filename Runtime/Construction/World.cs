@@ -40,6 +40,7 @@ namespace traVRsal.SDK
 
         [Header("Presentation")] public string key;
         public string version;
+        public int versionCode;
         public string name;
         [DefaultValue("Experience")] public string category = "Experience";
         public string shortDescription;
@@ -62,6 +63,8 @@ namespace traVRsal.SDK
         public string minVersion;
         public string minSize;
         public string maxSize;
+        public float maxTileSize;
+        [DefaultValue(3.5f)] public float maxFallHeight = 3.5f;
         [DefaultValue(300)] public int availableTime = 5 * 60;
         [DefaultValue(true)] public bool enableChallenges = true;
         public bool autoCheckPoints;

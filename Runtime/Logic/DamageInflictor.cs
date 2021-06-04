@@ -10,7 +10,8 @@ namespace traVRsal.SDK
             Enemy = 0,
             Player = 1,
             Environment = 2,
-            Boundary = 3
+            Boundary = 3,
+            Falling = 4
         }
 
         [Header("Configuration")] public bool instantKill;

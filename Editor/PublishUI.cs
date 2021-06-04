@@ -555,6 +555,7 @@ namespace traVRsal.SDK
                     Debug.LogError($"World.json of {worldName} contained an unreadable version. Resetting to {world.version}.");
                 }
             }
+            world.versionCode++;
 
             // write back
             world.NullifyEmpties();

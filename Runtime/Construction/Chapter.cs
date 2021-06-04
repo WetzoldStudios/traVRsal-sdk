@@ -9,7 +9,8 @@ namespace traVRsal.SDK
         public enum UnlockRule
         {
             None = 0,
-            EnterZone = 1
+            EnterZone = 1,
+            Future = 2
         }
 
         public string key;

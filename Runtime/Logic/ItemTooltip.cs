@@ -25,7 +25,7 @@ namespace traVRsal.SDK
 
             Sequence seq = DOTween.Sequence();
             seq.Append(actor.DOScale(originalScale, duration / 8f));
-            seq.Append(actor.DOScale(0, duration / 8f).SetDelay((duration / 8f) * 6f));
+            seq.Append(actor.DOScale(0, duration / 8f).SetDelay(duration / 8f * 6f));
             seq.OnComplete(() => actor.gameObject.SetActive(false));
         }
     }

@@ -34,9 +34,18 @@ namespace traVRsal.SDK
         [NonSerialized] public int changeFrame;
         [NonSerialized] public bool everChanged;
 
-        public Variable(string key)
+        public Variable()
+        {
+        }
+
+        public Variable(string key) : this()
         {
             this.key = key;
+        }
+
+        public Variable(string key, bool value) : this(key)
+        {
+            this.value = value;
         }
 
         public void Merge(Variable copyFrom)

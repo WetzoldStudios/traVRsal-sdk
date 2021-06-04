@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42250c64955684b42acc6fe489dcafd4, type: 3}
+  m_Name: Charging1_R
+  m_EditorClassIdentifier: 
+  Intensity: 1
+  Duration: 1
+  ClipType: 3
+  JsonValue: '{"project":{"createdAt":1593681708053,"description":"","layout":{"layouts":{"ForearmL":[{"index":0,"x":0,"y":0},{"index":1,"x":0.5,"y":0},{"index":2,"x":1,"y":0},{"index":3,"x":0,"y":1},{"index":4,"x":0.5,"y":1},{"index":5,"x":1,"y":1}],"ForearmR":[{"index":0,"x":0,"y":0},{"index":1,"x":0.5,"y":0},{"index":2,"x":1,"y":0},{"index":3,"x":0,"y":1},{"index":4,"x":0.5,"y":1},{"index":5,"x":1,"y":1}]},"name":"Tactosy2","type":"Tactosy2"},"mediaFileDuration":1,"name":"Charging1_L","tracks":[{"effects":[{"modes":{"ForearmL":{"dotMode":{"dotConnected":false,"feedback":[]},"mode":"PATH_MODE","pathMode":{"feedback":[{"movingPattern":"CONST_SPEED","playbackType":"FADE_IN_OUT","pointList":[{"intensity":0.5,"time":0,"x":0,"y":0},{"intensity":0.5,"time":82,"x":0.27,"y":1},{"intensity":0.5,"time":164,"x":0.58,"y":0},{"intensity":0.5,"time":241,"x":0.74,"y":0.97},{"intensity":0.5,"time":322,"x":0.97,"y":0}],"visible":true},{"movingPattern":"CONST_SPEED","playbackType":"FADE_IN_OUT","pointList":[{"intensity":0.5,"time":0,"x":1,"y":1},{"intensity":0.5,"time":81,"x":0.7,"y":0},{"intensity":0.5,"time":161,"x":0.47,"y":1},{"intensity":0.5,"time":241,"x":0.21,"y":0},{"intensity":0.5,"time":322,"x":0,"y":1}],"visible":true}]}},"ForearmR":{"dotMode":{"dotConnected":false,"feedback":[{"endTime":322,"playbackType":"NONE","startTime":0,"pointList":[]}]},"mode":"PATH_MODE","pathMode":{"feedback":[{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]}]}}},"name":"Effect
+    1","offsetTime":322,"startTime":0},{"modes":{"ForearmL":{"dotMode":{"dotConnected":false,"feedback":[]},"mode":"PATH_MODE","pathMode":{"feedback":[{"movingPattern":"CONST_SPEED","playbackType":"FADE_IN_OUT","pointList":[{"intensity":0.6,"time":0,"x":0,"y":0},{"intensity":0.6,"time":82,"x":0.27,"y":1},{"intensity":0.6,"time":164,"x":0.58,"y":0},{"intensity":0.6,"time":241,"x":0.74,"y":0.97},{"intensity":0.6,"time":322,"x":0.97,"y":0}],"visible":true},{"movingPattern":"CONST_SPEED","playbackType":"FADE_IN_OUT","pointList":[{"intensity":0.6,"time":0,"x":1,"y":1},{"intensity":0.6,"time":81,"x":0.7,"y":0},{"intensity":0.6,"time":161,"x":0.47,"y":1},{"intensity":0.6,"time":241,"x":0.21,"y":0},{"intensity":0.6,"time":322,"x":0,"y":1}],"visible":true}]}},"ForearmR":{"dotMode":{"dotConnected":false,"feedback":[{"endTime":322,"playbackType":"NONE","startTime":0,"pointList":[]}]},"mode":"PATH_MODE","pathMode":{"feedback":[{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]}]}}},"name":"Effect
+    1 copy 1","offsetTime":322,"startTime":328}],"enable":true},{"enable":true,"effects":[]}],"updatedAt":1593681708053,"id":"-MBDpIWmc41lpq7GTWdT"},"durationMillis":0,"intervalMillis":20,"size":20}'
+  _clipDurationTime: -1
+  IsReflect: 1
