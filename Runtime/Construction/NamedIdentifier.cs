@@ -8,10 +8,17 @@ namespace traVRsal.SDK
     {
         public enum IdentifierType
         {
+            None = 39,
+            Pivot = 9,
+
             GameOverDialog = 5,
             SettingsDialog = 1,
             PlayerDialog = 7,
             MultiplayerDialog = 28,
+            InterstitialDialog = 12,
+            IntroductionDialog = 22,
+            CreateWorldsDialog = 16,
+            FailedEntitlementCheckDialog = 24,
 
             InfoDialog = 10,
             InfoDialogText = 11,
@@ -41,23 +48,18 @@ namespace traVRsal.SDK
             WorldSpeedLeaderListRoot = 30,
             WorldAccuracyLeaderListRoot = 31,
 
+            WorldSettingsRoot = 4,
             NoWorldSettingsHint = 3,
             NoChallengesHint = 15,
-            WorldSettingsRoot = 4,
-
-            InterstitialDialog = 12,
-            IntroductionDialog = 22,
-            CreateWorldsDialog = 16,
-            FailedEntitlementCheckDialog = 24,
 
             MainMenuRoot = 25,
             MainMenuModalCanvasRoot = 38,
+
             TheaterRoot = 37,
-            Pivot = 9,
             Object = 23
         }
 
-        public IdentifierType type = IdentifierType.FeaturedWorldsListRoot;
+        public IdentifierType type = IdentifierType.None;
         public string optionalData;
 
         public override string ToString()

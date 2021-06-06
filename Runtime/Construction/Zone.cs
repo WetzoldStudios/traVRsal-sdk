@@ -46,6 +46,7 @@ namespace traVRsal.SDK
         public string originalName;
         public string variationOf;
         public float entryTime;
+        public float remainingTime;
 
         // cache structures
         [NonSerialized] public Transform node;

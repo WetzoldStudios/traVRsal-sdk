@@ -68,6 +68,7 @@ namespace traVRsal.SDK
         [DefaultValue(300)] public int availableTime = 5 * 60;
         [DefaultValue(true)] public bool enableChallenges = true;
         public bool autoCheckPoints;
+        [DefaultValue(true)] public bool createIntro = true;
         public TargetMeasures[] measures = {TargetMeasures.Time, TargetMeasures.Distance};
         public TargetVisiblity targetVisibility = TargetVisiblity.EnteringZone;
 

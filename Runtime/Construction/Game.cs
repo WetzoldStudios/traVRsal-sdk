@@ -29,6 +29,7 @@ namespace traVRsal.SDK
 
         [DefaultValue("Development Mode")] public string name = "Development Mode";
         public List<string> worlds;
+        [DefaultValue("Intro")] public string introWorld = "Intro";
         [DefaultValue("Menu-traVRsal")] public string menuScene = "Menu-traVRsal";
         [DefaultValue("Pause-traVRsal")] public string pauseScene = "Pause-traVRsal";
         [DefaultValue("Theater-traVRsal")] public string theaterScene = "Theater-traVRsal";

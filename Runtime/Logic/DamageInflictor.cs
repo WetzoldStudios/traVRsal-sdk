@@ -11,7 +11,8 @@ namespace traVRsal.SDK
             Player = 1,
             Environment = 2,
             Boundary = 3,
-            Falling = 4
+            Falling = 4,
+            Timer = 5
         }
 
         [Header("Configuration")] public bool instantKill;

@@ -10,6 +10,7 @@ namespace traVRsal.SDK
         {
             None = 0,
             EnterZone = 1,
+            Variable = 3,
             Future = 2
         }
 
@@ -18,6 +19,7 @@ namespace traVRsal.SDK
         public string description;
         public string coverImage;
         [DefaultValue(1)] public UnlockRule unlockRule = UnlockRule.EnterZone;
+        public string condition;
 
         public Chapter()
         {
