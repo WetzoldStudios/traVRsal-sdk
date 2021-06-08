@@ -26,6 +26,7 @@ namespace traVRsal.SDK
         public bool registerAsTarget = true;
         public string targetName;
         public bool triggerVariable;
+        public string variable;
 
         [Header("Destruction")] public bool destructible = true;
         public bool allowMelee;
@@ -50,6 +51,7 @@ namespace traVRsal.SDK
             registerAsTarget = copyFrom.registerAsTarget;
             targetName = copyFrom.targetName;
             triggerVariable = copyFrom.triggerVariable;
+            variable = copyFrom.variable;
             allowMelee = copyFrom.allowMelee;
             hideWhenDestroyed = copyFrom.hideWhenDestroyed;
             stateChange = copyFrom.stateChange;
