@@ -133,18 +133,34 @@ namespace traVRsal.SDK
             if (!initStateDone) InitState();
             initDone = true;
 
-            if (condition)
+            if (curTween != null) DOTween.Kill(curTween);
+            if (variable.value is bool)
             {
-                curTween = transform.DOLocalMove(originalPosition + axis * finalDistance, finalDuration)
-                    .SetDelay(finalOnDelay + (changedOnce ? 0f : finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                if (condition)
+                {
+                    curTween = transform.DOLocalMove(originalPosition + axis * finalDistance, finalDuration)
+                        .SetDelay(finalOnDelay + (changedOnce ? 0f : finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                }
+                else
+                {
+                    curTween = transform.DOLocalMove(originalPosition, finalDuration)
+                        .SetDelay(finalOffDelay + (changedOnce ? 0f : finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                }
             }
             else
             {
-                curTween = transform.DOLocalMove(originalPosition, finalDuration)
-                    .SetDelay(finalOffDelay + (changedOnce ? 0f : finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                MovePartially(variable.GetNumeric());
             }
-
             if (!initialCall && variable.everChanged) changedOnce = true;
+        }
+
+        private void MovePartially(float distance)
+        {
+            Vector3 pos = originalPosition + (axis * finalDistance - originalPosition) * distance;
+
+            if (curTween != null) DOTween.Kill(curTween);
+            curTween = transform.DOLocalMove(pos, finalDuration)
+                .SetDelay(finalOffDelay + (changedOnce ? 0f : finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
         }
 
         public void ZoneChange(Zone zone, bool isCurrent)

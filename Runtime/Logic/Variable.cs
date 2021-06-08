@@ -20,6 +20,7 @@ namespace traVRsal.SDK
         public Behaviour behaviour = Behaviour.Unrestricted;
         public string imageFolder;
         [DefaultValue(3)] public int targetCount = 3;
+        [DefaultValue(true)] public bool resetOnCheckpoint = true;
 
         [Header("Runtime")] public bool runtimeCreated;
         public bool isComboPart;
@@ -48,6 +49,42 @@ namespace traVRsal.SDK
             this.value = value;
         }
 
+        public float GetNumeric(object value)
+        {
+            if (value is float f) return f;
+            if (value is double d) return (float) d;
+            if (value is int i) return i;
+            if (value is bool b) return b ? 1f : 0;
+            if (value is string s)
+            {
+                float.TryParse(s, out float val);
+                return val;
+            }
+
+            return 0;
+        }
+
+        public float GetNumeric()
+        {
+            return GetNumeric(value);
+        }
+
+        public bool GetBool(object value)
+        {
+            if (value is bool b) return b;
+            if (value is float f) return f == 1f;
+            if (value is double d) return d == 1d;
+            if (value is int i) return i == 1;
+            if (value is string s) return s == "1";
+
+            return false;
+        }
+
+        public bool GetBool()
+        {
+            return GetBool(value);
+        }
+
         public void Merge(Variable copyFrom)
         {
             value = copyFrom.value;
@@ -57,6 +94,7 @@ namespace traVRsal.SDK
             targetOrder = copyFrom.targetOrder;
             currentOrder = copyFrom.currentOrder;
             everChanged = copyFrom.everChanged;
+            resetOnCheckpoint = copyFrom.resetOnCheckpoint;
 
             // ensure we are always using floats when using decimals for compatibility (e.g. FlowCanvas sync)
             if (value is double) value = Convert.ChangeType(value, typeof(float));
@@ -75,7 +113,9 @@ namespace traVRsal.SDK
 
         protected bool Equals(Variable other)
         {
-            return key == other.key && value == other.value && behaviour == other.behaviour && imageFolder == other.imageFolder && targetCount == other.targetCount;
+            return key == other.key && value == other.value && behaviour == other.behaviour
+                   && imageFolder == other.imageFolder && targetCount == other.targetCount
+                   && resetOnCheckpoint == other.resetOnCheckpoint;
         }
 
         public override bool Equals(object obj)

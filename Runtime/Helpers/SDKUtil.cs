@@ -18,6 +18,7 @@ namespace traVRsal.SDK
         public const string PING_ENDPOINT = "www.travrsal.com";
         public const string SERVER_ENDPOINT = "https://www.travrsal.com";
         public const string API_ENDPOINT = SERVER_ENDPOINT + "/api/";
+        public const int TIMEOUT = 15;
 
         // public const string API_ENDPOINT = "http://localhost:8000/api/";
         public const string DEBUG_API_ENDPOINT = "http://localhost:8000/api/";
@@ -49,12 +50,14 @@ namespace traVRsal.SDK
         public static IEnumerator FetchAPIData<T>(string api, string player, string token, Action<T> callback, string endPoint = API_ENDPOINT)
         {
             string uri = endPoint + api;
+            Debug.Log("Remote (FetchAPIData): " + uri);
 
             networkIssue = false;
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
                 SetStandardHeaders(webRequest);
                 webRequest.SetRequestHeader("Authorization", "Bearer " + token);
+                webRequest.timeout = TIMEOUT;
                 if (!string.IsNullOrEmpty(player)) webRequest.SetRequestHeader("X-Player", player);
                 yield return webRequest.SendWebRequest();
 

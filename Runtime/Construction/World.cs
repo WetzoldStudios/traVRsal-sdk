@@ -127,6 +127,7 @@ namespace traVRsal.SDK
 
         // cache structures
         [NonSerialized] public Texture2D cover;
+        [NonSerialized] public bool loadingCover;
         [NonSerialized] public Dictionary<string, int> visitedZones;
         [NonSerialized] public Dictionary<string, string> zoneTemplateCache;
         [NonSerialized] public Dictionary<string, Tuple<string, BasicEntity>> locationCache;
