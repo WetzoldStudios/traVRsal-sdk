@@ -60,7 +60,8 @@ namespace traVRsal.SDK
         public List<Chapter> chapters;
 
         [Header("Configuration")] public bool isVirtual;
-        public string minVersion;
+        public string minAppVersion;
+        [DefaultValue(1)] public int minCompatibilityVersionCode = 1;
         public string minSize;
         public string maxSize;
         public float maxTileSize;

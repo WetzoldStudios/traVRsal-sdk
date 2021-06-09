@@ -960,6 +960,8 @@ namespace traVRsal.SDK
             UserWorld userWorld = new UserWorld();
             userWorld.cover_image = world.coverImage;
             userWorld.world_json = worldJson;
+            userWorld.min_app_version = world.minAppVersion;
+            userWorld.min_compat_code = world.minCompatibilityVersionCode;
             userWorld.unity_version = Application.unityVersion;
             userWorld.is_virtual = (byte) (world.isVirtual ? 1 : 0);
             userWorld.android_size = verifications[worldName].distroSizeAndroid;

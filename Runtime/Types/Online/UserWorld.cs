@@ -16,6 +16,7 @@ namespace traVRsal.SDK
         public string key;
         public string channel;
         public string min_app_version;
+        public int min_compat_code;
         public string cover_image;
         public string unity_version;
         public string world_json;

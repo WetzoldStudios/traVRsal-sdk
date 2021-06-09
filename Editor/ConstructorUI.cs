@@ -63,7 +63,7 @@ namespace traVRsal.SDK
                     PackageInfo pi = PackageInfo.FindForAssetPath("Packages/com.wetzold.travrsal.sdk/package.json");
                     if (pi != null)
                     {
-                        world.minVersion = pi.version;
+                        world.minAppVersion = pi.version;
                         EditorUtility.DisplayDialog("Success", $"Set minimum app version required to play the world to {pi.version}.", "OK");
                     }
                     break;
