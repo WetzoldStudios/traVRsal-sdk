@@ -91,6 +91,8 @@ namespace traVRsal.SDK
         [Header("Assets")] public string deathSound;
         public string[] defaultRandomSkybox;
         public string defaultSkybox;
+        public bool firstSkyboxInIntro;
+        public bool lastSkyboxInOutro;
         public string defaultScenery;
         [DefaultValue("/Base/LightHall")] public string introScenery = "/Base/LightHall";
 

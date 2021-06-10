@@ -8,7 +8,7 @@ namespace traVRsal.SDK
     [DisallowMultipleComponent]
     public class ExtendedAttributes : MonoBehaviour
     {
-        [Tooltip("Object is not an agent and does not use logic components, enabling further performance enhancements. It will also not be used to calculate the center of the scene which is recommended for scenery.")]
+        [Tooltip("Object is static, does not move, is not an agent and does not use logic components, enabling further performance enhancements.")]
         public bool environment;
 
         [Tooltip("Object should not block agents")]

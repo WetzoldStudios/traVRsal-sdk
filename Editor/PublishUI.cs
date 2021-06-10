@@ -970,31 +970,29 @@ namespace traVRsal.SDK
 
             // TODO: convert to SDKUtil function as well
             byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(userWorld));
-            using (UnityWebRequest webRequest = UnityWebRequest.Put(uri, data))
-            {
-                webRequest.SetRequestHeader("Accept", "application/json");
-                webRequest.SetRequestHeader("Authorization", "Bearer " + GetAPIToken());
-                webRequest.SetRequestHeader("Content-Type", "application/json");
-                yield return webRequest.SendWebRequest();
+            using UnityWebRequest webRequest = UnityWebRequest.Put(uri, data);
+            webRequest.SetRequestHeader("Accept", "application/json");
+            webRequest.SetRequestHeader("Authorization", "Bearer " + GetAPIToken());
+            webRequest.SetRequestHeader("Content-Type", "application/json");
+            yield return webRequest.SendWebRequest();
 
-                if (webRequest.isNetworkError)
+            if (webRequest.isNetworkError)
+            {
+                Debug.LogError($"Could not update world {worldName} due to network issues: {webRequest.error}");
+                uploadErrors = true;
+            }
+            else if (webRequest.isHttpError)
+            {
+                if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
                 {
-                    Debug.LogError($"Could not update world {worldName} due to network issues: {webRequest.error}");
-                    uploadErrors = true;
+                    SDKUtil.invalidAPIToken = true;
+                    Debug.LogError("Invalid or expired API Token.");
                 }
-                else if (webRequest.isHttpError)
+                else
                 {
-                    if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
-                    {
-                        SDKUtil.invalidAPIToken = true;
-                        Debug.LogError("Invalid or expired API Token.");
-                    }
-                    else
-                    {
-                        Debug.LogError($"There was an error updating world {worldName}: {webRequest.downloadHandler.text}");
-                    }
-                    uploadErrors = true;
+                    Debug.LogError($"There was an error updating world {worldName}: {webRequest.downloadHandler.text}");
                 }
+                uploadErrors = true;
             }
         }
 

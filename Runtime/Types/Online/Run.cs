@@ -13,6 +13,7 @@ namespace traVRsal.SDK
         public string world_date;
         public string kpis;
         public string chapter;
+        public string channel;
 
         public int run_reference;
         public int rank;
