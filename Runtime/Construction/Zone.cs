@@ -7,28 +7,38 @@ namespace traVRsal.SDK
     [Serializable]
     public class Zone
     {
+        public enum TimeResetMode
+        {
+            OnZoneEntryAndDeath = 0,
+            OnZoneEntry = 1
+        }
+
         [Header("Configuration")] public string name;
         public Vector2Int minSize = new Vector2Int(4, 4);
-        public Vector3 offset = Vector3.zero;
-        public Vector3 offsetRaw = Vector3.zero;
-        public List<Floor> floors;
-        public bool isExit;
-        public bool isIntro;
-        public bool reactivateTransitions;
-        public bool invisibleGround;
-        public bool blockAgents = true;
         public int availableTime;
+        public TimeResetMode timeResetMode = TimeResetMode.OnZoneEntryAndDeath;
         public string chapter;
         public bool createCheckpoint;
-        public Color ambientColor = new Color(0.8f, 0.782f, 0.745f);
+        public bool isExit;
+        public bool isIntro;
+        public bool blockAgents = true;
+        public bool reactivateTransitions;
+        public bool invisibleGround;
+
+        [Header("Environment")] public Color ambientColor = new Color(0.8f, 0.782f, 0.745f);
         public Color lightColor = Color.white;
         public Color backgroundColor = Color.black;
         public float lightIntensity = 1f;
         public string skybox;
-        public string music;
+
+        [Header("Audio")] public string music;
         public float musicVolume = 1f;
         public string randomAmbience;
         public string randomMusic;
+
+        [Header("Construction")] public Vector3 offset = Vector3.zero;
+        public Vector3 offsetRaw = Vector3.zero;
+        public List<Floor> floors;
         public TMProperty[] properties;
 
         [Header("Runtime Information")] public Vector2Int curSize = BasicEntity.EMPTY;
