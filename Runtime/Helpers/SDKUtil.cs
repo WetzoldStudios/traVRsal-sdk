@@ -47,7 +47,7 @@ namespace traVRsal.SDK
             Sphere
         }
 
-        public static IEnumerator FetchAPIData<T>(string api, string player, string token, Action<T> callback, string endPoint = API_ENDPOINT)
+        public static IEnumerator FetchAPIData<T>(string api, string player, string token, Action<T> callback, Game game, string endPoint = API_ENDPOINT)
         {
             string uri = endPoint + api;
             Debug.Log("Remote (FetchAPIData): " + uri);
@@ -55,7 +55,7 @@ namespace traVRsal.SDK
             networkIssue = false;
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
-                SetStandardHeaders(webRequest);
+                SetStandardHeaders(webRequest, game);
                 webRequest.SetRequestHeader("Authorization", "Bearer " + token);
                 webRequest.timeout = TIMEOUT;
                 if (!string.IsNullOrEmpty(player)) webRequest.SetRequestHeader("X-Player", player);
@@ -98,12 +98,19 @@ namespace traVRsal.SDK
             callback(default);
         }
 
-        public static void SetStandardHeaders(UnityWebRequest webRequest)
+        public static void SetStandardHeaders(UnityWebRequest webRequest, Game game)
         {
             webRequest.SetRequestHeader("Accept", "application/json");
             webRequest.SetRequestHeader("Content-Type", "application/json");
             webRequest.SetRequestHeader("X-Version", Application.version);
+            webRequest.SetRequestHeader("X-UnityVersion", Application.unityVersion);
+            webRequest.SetRequestHeader("X-Platform", Application.platform.ToString());
             webRequest.SetRequestHeader("X-Do-Not-Track", Application.isEditor ? "True" : "False");
+            if (game != null)
+            {
+                webRequest.SetRequestHeader("X-Channel", game.channel.ToString().ToLower());
+                webRequest.SetRequestHeader("X-DevMode", game.devMode ? "True" : "False");
+            }
         }
 
         public static TMProperty[] CopyProperties(TMProperty[] copyFrom)

@@ -43,6 +43,7 @@ namespace traVRsal.SDK
         public bool flipX;
         public bool flipZ;
         public bool socket;
+        public bool wasSocket; // needed for correct reconstruction of challenges
         public bool snap;
         public bool autoFill;
         public bool autoFillIgnoreDirection;
@@ -92,6 +93,7 @@ namespace traVRsal.SDK
             flipX = copyFrom.flipX;
             flipZ = copyFrom.flipZ;
             socket = copyFrom.socket;
+            wasSocket = copyFrom.wasSocket;
             autoFill = copyFrom.autoFill;
             autoFillIgnoreDirection = copyFrom.autoFillIgnoreDirection;
             snap = copyFrom.snap;

@@ -46,6 +46,7 @@ namespace traVRsal.SDK
             DoSetDebugMode = 7,
             DoSetMetricSystem = 116,
             DoSetHaptics = 125,
+            DoSetHQShaders = 158,
             DoLogOut = 63,
             DoClearCache = 68,
             DoResetSettings = 111,

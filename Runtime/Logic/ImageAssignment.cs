@@ -27,6 +27,9 @@ namespace traVRsal.SDK
         [Tooltip("Specifies if the height of the image should be adjusted to align to the aspect ratio of the loaded image. For this to work properly the original object here should have square dimensions.")]
         public bool adjustAspectRatio;
 
+        [Tooltip("Will not assign a new image on low-end devices like the Quest 1.")]
+        public bool skipOnLowMemory;
+
         // Runtime
         [HideInInspector] public ImageData imageData;
     }

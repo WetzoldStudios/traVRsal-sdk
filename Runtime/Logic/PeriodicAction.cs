@@ -7,6 +7,8 @@ namespace traVRsal.SDK
     {
         [Header("Timing")] public Vector2 initialDelay = new Vector2(1f, 2f);
         public Vector2 interval = new Vector2(3f, 4f);
+
+        [Tooltip("Keep interval the same once initially determined or determine new after each action")]
         public bool fixedInterval = true;
 
         [Header("Action")] public List<GameObject> toggleObjects;

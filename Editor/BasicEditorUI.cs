@@ -122,7 +122,7 @@ namespace traVRsal.SDK
             yield return SDKUtil.FetchAPIData<UserWorld[]>("userworlds", null, GetAPIToken(), worlds =>
             {
                 if (worlds != null) userWorlds = worlds;
-            });
+            }, null);
         }
     }
 }
