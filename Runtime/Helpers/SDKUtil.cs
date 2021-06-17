@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
+using WanzyeeStudio.Json;
 using Random = System.Random;
 
 namespace traVRsal.SDK
@@ -28,6 +29,21 @@ namespace traVRsal.SDK
         public const string TILED_PATH_DEFAULT = "C:\\Program Files\\Tiled\\tiled.exe";
         public const string LOCKFILE_NAME = "traVRsal.lock";
         public const string MODFILE_NAME = "modding.json";
+
+        // only use specified converters to ensure consistent file format
+        private static readonly List<JsonConverter> JSON_CONVERTERS = new List<JsonConverter>()
+        {
+            new BoundsConverter(),
+            new ColorConverter(),
+            new DictionaryConverter(),
+            new Matrix4x4Converter(),
+            new QuaternionConverter(),
+            new RectConverter(),
+            new RectOffsetConverter(),
+            new Vector2Converter(),
+            new Vector3Converter(),
+            new Vector4Converter()
+        };
 
         // Tags
         public const string INTERACTABLE_TAG = "Interactable";
@@ -87,10 +103,7 @@ namespace traVRsal.SDK
                     }
                     else
                     {
-                        callback(JsonConvert.DeserializeObject<T>(webRequest.downloadHandler.text, new JsonSerializerSettings
-                        {
-                            NullValueHandling = NullValueHandling.Ignore
-                        }));
+                        callback(JsonConvert.DeserializeObject<T>(webRequest.downloadHandler.text, GetDefaultJsonSettings()));
                     }
                     yield break;
                 }
@@ -131,7 +144,7 @@ namespace traVRsal.SDK
             TextAsset textFile = (TextAsset) Resources.Load(fileName);
             if (textFile == null) return default;
 
-            T data = JsonConvert.DeserializeObject<T>(textFile.text);
+            T data = JsonConvert.DeserializeObject<T>(textFile.text, GetDefaultJsonSettings());
             Resources.UnloadAsset(textFile);
 
             return data;
@@ -142,9 +155,40 @@ namespace traVRsal.SDK
             if (!File.Exists(fileName)) return default;
 
             string text = File.ReadAllText(fileName);
-            T data = JsonConvert.DeserializeObject<T>(text);
+            T data = JsonConvert.DeserializeObject<T>(text, GetDefaultJsonSettings());
 
             return data;
+        }
+
+        public static JsonSerializerSettings GetDefaultJsonSettings()
+        {
+            return new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                Converters = JSON_CONVERTERS
+            };
+        }
+
+        // inspired from https://stackoverflow.com/questions/33100164/customize-identation-parameter-in-jsonconvert-serializeobject
+        public static string SerializeObject<T>(T value)
+        {
+            StringBuilder sb = new StringBuilder(256);
+            StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
+
+            JsonSerializer jsonSerializer = JsonSerializer.CreateDefault();
+            jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
+            jsonSerializer.DefaultValueHandling = DefaultValueHandling.Ignore;
+
+            jsonSerializer.Converters.Clear();
+            jsonSerializer.Converters.AddRange(JSON_CONVERTERS);
+
+            using JsonTextWriter jsonWriter = new JsonTextWriter(sw);
+            jsonWriter.Formatting = Formatting.Indented;
+            jsonWriter.IndentChar = ' ';
+            jsonWriter.Indentation = 4;
+            jsonSerializer.Serialize(jsonWriter, value, typeof(T));
+
+            return sw.ToString();
         }
 
         // inspired from https://stackoverflow.com/questions/281640/how-do-i-get-a-human-readable-file-size-in-bytes-abbreviation-using-net
@@ -164,27 +208,6 @@ namespace traVRsal.SDK
             return text.Length < maxLength ? text : text.Substring(0, maxLength);
         }
 
-        // inspired from https://stackoverflow.com/questions/33100164/customize-identation-parameter-in-jsonconvert-serializeobject
-        public static string SerializeObject<T>(T value)
-        {
-            StringBuilder sb = new StringBuilder(256);
-            StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
-
-            JsonSerializer jsonSerializer = JsonSerializer.CreateDefault();
-            jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
-            jsonSerializer.DefaultValueHandling = DefaultValueHandling.Ignore;
-            using (JsonTextWriter jsonWriter = new JsonTextWriter(sw))
-            {
-                jsonWriter.Formatting = Formatting.Indented;
-                jsonWriter.IndentChar = ' ';
-                jsonWriter.Indentation = 4;
-
-                jsonSerializer.Serialize(jsonWriter, value, typeof(T));
-            }
-
-            return sw.ToString();
-        }
-
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
             foreach (T obj in source)
@@ -200,6 +223,21 @@ namespace traVRsal.SDK
             data[data.Length - 1] = element;
 
             return data;
+        }
+
+        public static void AddRange<T>(this IList<T> list, IEnumerable<T> collection)
+        {
+            if (list is List<T> result)
+            {
+                result.AddRange(collection);
+            }
+            else
+            {
+                foreach (T obj in collection)
+                {
+                    list.Add(obj);
+                }
+            }
         }
     }
 
