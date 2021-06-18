@@ -7,6 +7,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
+using Newtonsoft.Json.Converters;
 using UnityEngine;
 using UnityEngine.Networking;
 using WanzyeeStudio.Json;
@@ -31,7 +32,7 @@ namespace traVRsal.SDK
         public const string MODFILE_NAME = "modding.json";
 
         // only use specified converters to ensure consistent file format
-        private static readonly List<JsonConverter> JSON_CONVERTERS = new List<JsonConverter>()
+        private static readonly List<JsonConverter> JSON_CONVERTERS = new List<JsonConverter>
         {
             new BoundsConverter(),
             new ColorConverter(),
@@ -42,7 +43,8 @@ namespace traVRsal.SDK
             new RectOffsetConverter(),
             new Vector2Converter(),
             new Vector3Converter(),
-            new Vector4Converter()
+            new Vector4Converter(),
+            new StringEnumConverter()
         };
 
         // Tags

@@ -17,7 +17,9 @@ namespace traVRsal.SDK
             Nothing = 7
         }
 
-        [Header("Configuration")] public string variable;
+        [Header("Configuration")] [Tooltip("Variable to listen to. If left empty will ise the variable defined from the outside, e.g. through Tiled.")]
+        public string variable;
+
         public bool invert;
 
         [Header("Action")] public Action action = Action.Assignments_Only;

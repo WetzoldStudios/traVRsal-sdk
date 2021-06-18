@@ -4,7 +4,9 @@ namespace traVRsal.SDK
 {
     public class AnimatorTrigger : MonoBehaviour, IVariableReactor
     {
+        [Tooltip("Animator to use. If empty will use first animator found in hierarchy.")]
         public Animator animator;
+
         public string parameterName;
         public bool invert;
 

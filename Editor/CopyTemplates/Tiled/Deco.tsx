@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.4" tiledversion="1.4.3" name="Deco" tilewidth="50" tileheight="50" tilecount="7" columns="0">
+<tileset version="1.5" tiledversion="1.7.0" name="Deco" tilewidth="50" tileheight="50" tilecount="8" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="3" type="/Base/MultiDisplay">
   <properties>
@@ -76,5 +76,16 @@
    <property name="Y" type="int" value="0"/>
   </properties>
   <image width="50" height="50" source="Master Images/object4.png"/>
+ </tile>
+ <tile id="10" type="/Base/GLB">
+  <properties>
+   <property name="Anchor" value=""/>
+   <property name="Move" value=""/>
+   <property name="Offset" value=""/>
+   <property name="Rotate" value=""/>
+   <property name="Scale" value=""/>
+   <property name="Url" value=""/>
+  </properties>
+  <image width="50" height="50" source="Master Images/glb.png"/>
  </tile>
 </tileset>
