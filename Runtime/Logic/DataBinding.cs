@@ -33,6 +33,7 @@ namespace traVRsal.SDK
             DoOpenMultiplayerDialog = 134,
             DoCloseMultiplayerDialog = 135,
             DoCreateRandomRoom = 136,
+            DoJoinRoom = 159,
             DoQuit = 126,
             DoPause = 15,
             DoUnpause = 16,
