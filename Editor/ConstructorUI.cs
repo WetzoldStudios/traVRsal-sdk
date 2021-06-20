@@ -14,6 +14,7 @@ namespace traVRsal.SDK
         private string varName;
         private string worldSetting;
         private string customShader;
+        private string fixedSize = "4";
 
         [MenuItem("traVRsal/Constructor", priority = 110)]
         public static void ShowWindow()
@@ -45,6 +46,10 @@ namespace traVRsal.SDK
 
             EditorGUILayout.Space(20f);
             GUILayout.Label("Misc", EditorStyles.boldLabel);
+
+            EditorGUILayout.Space();
+            fixedSize = EditorGUILayout.TextField("Fixed Tile Size:", fixedSize);
+            if (GUILayout.Button("Set Fixed Size")) ManipulateWorld("SetFixedSize");
 
             EditorGUILayout.Space();
             if (GUILayout.Button("Set Minimum World Version to Current SDK Version")) ManipulateWorld("SetToCurrentVersion");
@@ -122,6 +127,15 @@ namespace traVRsal.SDK
                     if (world.customShaders == null) world.customShaders = new List<string>();
                     world.customShaders.Add(customShader);
                     customShader = "";
+                    break;
+
+                case "SetFixedSize":
+                    if (string.IsNullOrEmpty(fixedSize)) return;
+                    int size = int.Parse(fixedSize);
+                    if (size <= 0) return;
+                    world.minSize = $"{size},{size}";
+                    world.maxSize = $"{size},{size}";
+                    fixedSize = "";
                     break;
             }
 
