@@ -44,9 +44,10 @@ namespace traVRsal.SDK
             this.key = key;
         }
 
-        public Variable(string key, bool value) : this(key)
+        public Variable(string key, bool value, Behaviour behaviour = Behaviour.Unrestricted) : this(key)
         {
             this.value = value;
+            this.behaviour = behaviour;
         }
 
         public float GetNumeric(object value)
