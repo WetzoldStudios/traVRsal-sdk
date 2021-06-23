@@ -44,7 +44,8 @@ namespace traVRsal.SDK
             new Vector2Converter(),
             new Vector3Converter(),
             new Vector4Converter(),
-            new StringEnumConverter()
+            new StringEnumConverter(),
+            new VersionConverter()
         };
 
         // Tags
@@ -105,7 +106,7 @@ namespace traVRsal.SDK
                     }
                     else
                     {
-                        callback(JsonConvert.DeserializeObject<T>(webRequest.downloadHandler.text, GetDefaultJsonSettings()));
+                        callback(DeserializeObject<T>(webRequest.downloadHandler.text));
                     }
                     yield break;
                 }
@@ -146,7 +147,7 @@ namespace traVRsal.SDK
             TextAsset textFile = (TextAsset) Resources.Load(fileName);
             if (textFile == null) return default;
 
-            T data = JsonConvert.DeserializeObject<T>(textFile.text, GetDefaultJsonSettings());
+            T data = DeserializeObject<T>(textFile.text);
             Resources.UnloadAsset(textFile);
 
             return data;
@@ -157,12 +158,12 @@ namespace traVRsal.SDK
             if (!File.Exists(fileName)) return default;
 
             string text = File.ReadAllText(fileName);
-            T data = JsonConvert.DeserializeObject<T>(text, GetDefaultJsonSettings());
+            T data = DeserializeObject<T>(text);
 
             return data;
         }
 
-        public static JsonSerializerSettings GetDefaultJsonSettings()
+        private static JsonSerializerSettings GetDefaultJsonSettings()
         {
             return new JsonSerializerSettings
             {
@@ -171,15 +172,20 @@ namespace traVRsal.SDK
             };
         }
 
+        public static T DeserializeObject<T>(string json)
+        {
+            return JsonConvert.DeserializeObject<T>(json, GetDefaultJsonSettings());
+        }
+
         // inspired from https://stackoverflow.com/questions/33100164/customize-identation-parameter-in-jsonconvert-serializeobject
-        public static string SerializeObject<T>(T value)
+        public static string SerializeObject<T>(T value, DefaultValueHandling defaultHandling = DefaultValueHandling.Include)
         {
             StringBuilder sb = new StringBuilder(256);
             StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
 
             JsonSerializer jsonSerializer = JsonSerializer.CreateDefault();
             jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
-            jsonSerializer.DefaultValueHandling = DefaultValueHandling.Ignore;
+            jsonSerializer.DefaultValueHandling = defaultHandling;
 
             jsonSerializer.Converters.Clear();
             jsonSerializer.Converters.AddRange(JSON_CONVERTERS);

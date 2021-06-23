@@ -108,7 +108,7 @@ namespace traVRsal.SDK
 
         public void LoadPersistedState(string state)
         {
-            Variable v = JsonConvert.DeserializeObject<Variable>(state);
+            Variable v = SDKUtil.DeserializeObject<Variable>(state);
             Merge(v);
         }
 

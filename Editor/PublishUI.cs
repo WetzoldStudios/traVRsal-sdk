@@ -1,5 +1,4 @@
 ﻿using Asyncoroutine;
-using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Newtonsoft.Json;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
@@ -559,7 +559,7 @@ namespace traVRsal.SDK
 
             // write back
             world.NullifyEmpties();
-            File.WriteAllText(root + "World.json", SDKUtil.SerializeObject(world));
+            File.WriteAllText(root + "World.json", SDKUtil.SerializeObject(world, DefaultValueHandling.Ignore));
 
             return true;
         }
@@ -955,7 +955,7 @@ namespace traVRsal.SDK
 
             // extract data from world descriptor
             string worldJson = File.ReadAllText(GetWorldsRoot() + "/" + worldName + "/World.json");
-            World world = JsonConvert.DeserializeObject<World>(worldJson);
+            World world = SDKUtil.DeserializeObject<World>(worldJson);
 
             UserWorld userWorld = new UserWorld();
             userWorld.cover_image = world.coverImage;
@@ -969,7 +969,7 @@ namespace traVRsal.SDK
             userWorld.linux_size = verifications[worldName].distroSizeStandaloneLinux;
 
             // TODO: convert to SDKUtil function as well
-            byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(userWorld));
+            byte[] data = Encoding.UTF8.GetBytes(SDKUtil.SerializeObject(userWorld, DefaultValueHandling.Ignore));
             using UnityWebRequest webRequest = UnityWebRequest.Put(uri, data);
             webRequest.SetRequestHeader("Accept", "application/json");
             webRequest.SetRequestHeader("Authorization", "Bearer " + GetAPIToken());
