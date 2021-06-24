@@ -24,13 +24,12 @@ Join the [Discord server](https://discord.gg/67fNz4F) for all questions and feed
 
 # Known Bugs & Limitations
 
-This is an early alpha version to get feedback and steer the direction of future development. Many things are still rough around the edges. It will help tremendously if you report every error you encounter but also every feature you are missing to the Discord SDK channel.
+This is an early version to get feedback and steer the direction of future development. Many things are still rough around the edges. It will help tremendously if you report every error you encounter but also every feature you are missing to the Discord SDK channel.
 
 * TextMeshPro is not yet visible through portals and will suddenly pop into view
-* transparent objects are not visible through transitions
-* incorrect JSON files will cause the studio to become stuck
-* audio is not assigned to correct mixer channels yet 
-* objects needs to be marked "Enable Read/Write" at import, otherwise NavMesh will fail or might even result in crashes
+* Transparent objects are not visible through transitions
+* Audio is not assigned to correct mixer channels yet 
+* Objects needs to be marked "Enable Read/Write" at import, otherwise NavMesh will fail or might even result in crashes
 
 # Licenses
 
@@ -40,5 +39,4 @@ This SDK is licensed under the MIT license except for all contents in "Third-Par
 * AWS SDK
 * bhaptics SDK
 * DOTween
-* Unity NavMeshComponents
 * XNode

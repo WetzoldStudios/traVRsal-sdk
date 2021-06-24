@@ -969,7 +969,7 @@ namespace traVRsal.SDK
             userWorld.linux_size = verifications[worldName].distroSizeStandaloneLinux;
 
             // TODO: convert to SDKUtil function as well
-            byte[] data = Encoding.UTF8.GetBytes(SDKUtil.SerializeObject(userWorld, DefaultValueHandling.Ignore));
+            byte[] data = Encoding.UTF8.GetBytes(SDKUtil.SerializeObject(userWorld));
             using UnityWebRequest webRequest = UnityWebRequest.Put(uri, data);
             webRequest.SetRequestHeader("Accept", "application/json");
             webRequest.SetRequestHeader("Authorization", "Bearer " + GetAPIToken());
