@@ -48,8 +48,8 @@ namespace traVRsal.SDK
             GUILayout.Label("Misc", EditorStyles.boldLabel);
 
             EditorGUILayout.Space();
-            fixedSize = EditorGUILayout.TextField("Fixed Tile Size:", fixedSize);
-            if (GUILayout.Button("Set Fixed Size")) ManipulateWorld("SetFixedSize");
+            fixedSize = EditorGUILayout.TextField("Fixed Tile Count:", fixedSize);
+            if (GUILayout.Button("Set Fixed Count")) ManipulateWorld("SetFixedTileCount");
 
             EditorGUILayout.Space();
             if (GUILayout.Button("Set Minimum World Version to Current SDK Version")) ManipulateWorld("SetToCurrentVersion");
@@ -129,7 +129,7 @@ namespace traVRsal.SDK
                     customShader = "";
                     break;
 
-                case "SetFixedSize":
+                case "SetFixedTileCount":
                     if (string.IsNullOrEmpty(fixedSize)) return;
                     int size = int.Parse(fixedSize);
                     if (size <= 0) return;
