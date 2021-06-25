@@ -178,7 +178,7 @@ namespace traVRsal.SDK
         }
 
         // inspired from https://stackoverflow.com/questions/33100164/customize-identation-parameter-in-jsonconvert-serializeobject
-        public static string SerializeObject<T>(T value, DefaultValueHandling defaultHandling = DefaultValueHandling.Include)
+        public static string SerializeObject<T>(T value, DefaultValueHandling defaultHandling = DefaultValueHandling.Include, Formatting formatting = Formatting.Indented)
         {
             StringBuilder sb = new StringBuilder(256);
             StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
@@ -191,7 +191,7 @@ namespace traVRsal.SDK
             jsonSerializer.Converters.AddRange(JSON_CONVERTERS);
 
             using JsonTextWriter jsonWriter = new JsonTextWriter(sw);
-            jsonWriter.Formatting = Formatting.Indented;
+            jsonWriter.Formatting = formatting;
             jsonWriter.IndentChar = ' ';
             jsonWriter.Indentation = 4;
             jsonSerializer.Serialize(jsonWriter, value, typeof(T));
