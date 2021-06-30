@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Security;
 using System.Text;
 using Newtonsoft.Json;
 using Unity.EditorCoroutines.Editor;
@@ -22,6 +23,12 @@ namespace traVRsal.SDK
 {
     public class PublishUI : BasicEditorUI
     {
+        private const string TTS_LANGUAGE_CODE = "en-US";
+        private const string TTS_VOICE = "en-US-GuyNeural";
+        private const string TTS_MOOD = "cheerful";
+        private const string TTS_PITCH = "low";
+        private const string TTS_SPEED = "";
+
         private const bool linuxSupport = true;
 
         private string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};
@@ -32,6 +39,7 @@ namespace traVRsal.SDK
         private static bool packagingInProgress;
         private static bool documentationInProgress;
         private static bool uploadErrors;
+        private static bool speechErrors;
         private static bool uploadInProgress;
         private static bool verifyInProgress;
         private static bool packagingSuccessful;
@@ -94,41 +102,63 @@ namespace traVRsal.SDK
             }
             else
             {
-                if (worlds.Length > 1)
+                bool androidSupported = BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Android, BuildTarget.Android);
+                bool pcSupported = BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
+                bool linuxSupported = BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64);
+
+                if (!pcSupported && !linuxSupported)
                 {
                     EditorGUILayout.Space();
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label("Packaging Mode:", EditorStyles.wordWrappedLabel);
-                    packageMode = EditorGUILayout.Popup(packageMode, PACKAGE_OPTIONS);
-                    GUILayout.EndHorizontal();
+                    EditorGUILayout.HelpBox("Windows (IL2CPP) module not installed with Unity. Add this through the hub installer to be able to test in the studio.", MessageType.Error);
+                    EditorGUILayout.Space();
                 }
                 else
                 {
-                    packageMode = 0;
-                }
+                    if (worlds.Length > 1)
+                    {
+                        EditorGUILayout.Space();
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("Packaging Mode:", EditorStyles.wordWrappedLabel);
+                        packageMode = EditorGUILayout.Popup(packageMode, PACKAGE_OPTIONS);
+                        GUILayout.EndHorizontal();
+                    }
+                    else
+                    {
+                        packageMode = 0;
+                    }
 
-                EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress);
-                string buttonText = "Package";
-                if (packageMode == 1)
-                {
-                    string[] worldsToBuild = GetWorldsToBuild(packageMode).Select(Path.GetFileName).ToArray();
-                    buttonText += " (" + ((dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", worldsToBuild) : "everything") + ")";
-                }
+                    EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress);
+                    string buttonText = "Package";
+                    if (packageMode == 1)
+                    {
+                        string[] worldsToBuild = GetWorldsToBuild(packageMode).Select(Path.GetFileName).ToArray();
+                        buttonText += " (" + ((dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", worldsToBuild) : "everything") + ")";
+                    }
 
-                if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode, releaseChannel, packageMode == 2, packageMode == 2), this);
-                EditorGUI.EndDisabledGroup();
+                    if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode, releaseChannel, packageMode == 2, packageMode == 2), this);
+                    EditorGUI.EndDisabledGroup();
+                }
 
                 EditorGUILayout.Space();
                 GUILayout.Label("To test inside the Quest or to make the world accessible to others, upload it to the traVRsal server.", EditorStyles.wordWrappedLabel);
 
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("Release Channel:", EditorStyles.wordWrappedLabel);
-                releaseChannel = EditorGUILayout.Popup(releaseChannel, RELEASE_CHANNELS);
+                if (!androidSupported)
+                {
+                    EditorGUILayout.Space();
+                    EditorGUILayout.HelpBox("Android module not installed with Unity. Add this through the hub installer to be able to deploy to Quest.", MessageType.Error);
+                    EditorGUILayout.Space();
+                }
+                else
+                {
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Release Channel:", EditorStyles.wordWrappedLabel);
+                    releaseChannel = EditorGUILayout.Popup(releaseChannel, RELEASE_CHANNELS);
 
-                EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);
-                if (GUILayout.Button("Prepare Upload")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(), this);
-                EditorGUI.EndDisabledGroup();
-                GUILayout.EndHorizontal();
+                    EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);
+                    if (GUILayout.Button("Prepare Upload")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(), this);
+                    EditorGUI.EndDisabledGroup();
+                    GUILayout.EndHorizontal();
+                }
 
                 CheckTokenGUI();
                 if (worldListMismatch && !SDKUtil.networkIssue)
@@ -194,6 +224,8 @@ namespace traVRsal.SDK
                     EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);
                     if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
                     EditorGUI.EndDisabledGroup();
+
+                    if (GUILayout.Button("Test Speech")) EditorCoroutineUtility.StartCoroutine(FetchTTS(), this);
                 }
             }
 
@@ -227,11 +259,42 @@ namespace traVRsal.SDK
             GUILayout.EndHorizontal();
         }
 
+        private IEnumerator FetchTTS()
+        {
+            foreach (string dir in GetWorldPaths())
+            {
+                string voicePath = dir + "/Audio/Voice/";
+                Directory.CreateDirectory(voicePath);
+
+                World world = SDKUtil.ReadJSONFileDirect<World>(dir + "/World.json");
+
+                // generate loading text
+                // TODO: hash & cache + support custom loading text
+                string text;
+                if (world.journeys?.Count > 0)
+                {
+                    text = $"Creating a random and unique play-through for {world.name}. ";
+                }
+                else
+                {
+                    text = $"Loading {world.name}. ";
+                }
+                text += string.IsNullOrEmpty(world.longDescription) ? world.shortDescription : world.longDescription;
+
+                string targetFile = voicePath + SDKUtil.VOICE_LOADING_WORLD;
+                bool successful = false;
+                if (File.Exists(targetFile)) File.Delete(targetFile);
+                yield return FetchSpeech(text, targetFile, result => successful = result);
+                if (!successful) yield break;
+            }
+        }
+
         private IEnumerator PrepareUpload(bool force = false, bool linuxOnly = false)
         {
             preparedReleaseChannel = releaseChannel;
 
             yield return FetchUserWorlds();
+            yield return FetchTTS();
             yield return PackageWorlds(packageMode, releaseChannel, true, true, force, linuxOnly);
             yield return CreateDocumentation();
             PrepareCommonFiles();
@@ -994,6 +1057,56 @@ namespace traVRsal.SDK
                 }
                 uploadErrors = true;
             }
+        }
+
+        private IEnumerator FetchSpeech(string text, string filePath, Action<bool> callback)
+        {
+            Debug.Log("Remote (Fetch Speech)");
+
+            string uri = SDKUtil.API_ENDPOINT + "tts/ms";
+
+            string ssml = "<speak version=\"1.0\" xmlns=\"https://www.w3.org/2001/10/synthesis\" xmlns:mstts=\"https://www.w3.org/2001/mstts\" " +
+                          "xml:lang=\"" + TTS_LANGUAGE_CODE + "\">" +
+                          "<voice name=\"" + TTS_VOICE + "\">" +
+                          "<mstts:express-as type=\"" + TTS_MOOD + "\">" +
+                          "<prosody pitch=\"" + TTS_PITCH + "\" " + (!string.IsNullOrEmpty(TTS_SPEED) ? "rate=\"" + TTS_SPEED + "\"" : "") + ">" +
+                          SecurityElement.Escape(text) +
+                          "</prosody></mstts:express-as></voice></speak>";
+
+            byte[] data = Encoding.UTF8.GetBytes(ssml);
+
+            using UnityWebRequest webRequest = new UnityWebRequest(uri, "POST");
+            webRequest.uploadHandler = new UploadHandlerRaw(data);
+            webRequest.downloadHandler = new DownloadHandlerBuffer();
+            webRequest.timeout = SDKUtil.TIMEOUT;
+            webRequest.SetRequestHeader("Accept", "application/json");
+            webRequest.SetRequestHeader("Authorization", "Bearer " + GetAPIToken());
+            webRequest.SetRequestHeader("Content-Type", "application/json");
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.isNetworkError)
+            {
+                Debug.LogError($"Could not fetch speech due to network issues: {webRequest.error}");
+                speechErrors = true;
+            }
+            else if (webRequest.isHttpError)
+            {
+                if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
+                {
+                    SDKUtil.invalidAPIToken = true;
+                    Debug.LogError("Invalid or expired API Token.");
+                }
+                else
+                {
+                    Debug.LogError($"There was an error fetching speech: {webRequest.downloadHandler.text}");
+                }
+                speechErrors = true;
+            }
+            else
+            {
+                File.WriteAllBytes(filePath, webRequest.downloadHandler.data);
+            }
+            callback?.Invoke(!speechErrors);
         }
 
         void OnInspectorUpdate()

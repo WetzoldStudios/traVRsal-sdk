@@ -31,6 +31,8 @@ namespace traVRsal.SDK
         public const string LOCKFILE_NAME = "traVRsal.lock";
         public const string MODFILE_NAME = "modding.json";
 
+        public const string VOICE_LOADING_WORLD = "LoadingWorld.wav"; 
+        
         // only use specified converters to ensure consistent file format
         private static readonly List<JsonConverter> JSON_CONVERTERS = new List<JsonConverter>
         {
