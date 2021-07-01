@@ -263,22 +263,15 @@ namespace traVRsal.SDK
         {
             foreach (string dir in GetWorldPaths())
             {
+                World world = SDKUtil.ReadJSONFileDirect<World>(dir + "/World.json");
+                if (world.isVirtual) continue;
+
                 string voicePath = dir + "/Audio/Voice/";
                 Directory.CreateDirectory(voicePath);
 
-                World world = SDKUtil.ReadJSONFileDirect<World>(dir + "/World.json");
-
                 // generate loading text
                 // TODO: hash & cache + support custom loading text
-                string text;
-                if (world.journeys?.Count > 0)
-                {
-                    text = $"Creating a random and unique play-through for {world.name}. ";
-                }
-                else
-                {
-                    text = $"Loading {world.name}. ";
-                }
+                string text = world.journeys?.Count > 0 ? $"Creating a random and unique play-through for {world.name}. " : $"Loading {world.name}. ";
                 text += string.IsNullOrEmpty(world.longDescription) ? world.shortDescription : world.longDescription;
 
                 string targetFile = voicePath + SDKUtil.VOICE_LOADING_WORLD;
