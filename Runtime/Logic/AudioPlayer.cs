@@ -2,6 +2,7 @@
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Audio Player")]
     public class AudioPlayer : MonoBehaviour, IVariableReactor
     {
         [Header("When Variable Is True")]

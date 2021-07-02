@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Zone Restriction")]
     public class ZoneRestriction : ExecutorConfig
     {
         [Tooltip("Game objects to enable if the player enters this zone.")]

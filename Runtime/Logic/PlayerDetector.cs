@@ -2,6 +2,7 @@
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Player Detector")]
     public class PlayerDetector : ExecutorConfig
     {
         public bool limitDetectionRadius = true;

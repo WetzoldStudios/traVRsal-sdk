@@ -2,6 +2,7 @@
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Data Binding")]
     public class DataBinding : ExecutorConfig
     {
         public const int REQUIRE_SOURCE = 1000;

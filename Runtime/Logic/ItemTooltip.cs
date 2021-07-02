@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Item Tooltip")]
     public class ItemTooltip : MonoBehaviour
     {
         public float duration = 4f;

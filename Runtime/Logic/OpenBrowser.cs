@@ -1,5 +1,8 @@
-﻿namespace traVRsal.SDK
+﻿using UnityEngine;
+
+namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Open Browser")]
     public class OpenBrowser : ExecutorConfig
     {
         public enum UserAction

@@ -2,6 +2,7 @@
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Enemy Behavior")]
     public class EnemyBehavior : ExecutorConfig
     {
         public enum EnemyState

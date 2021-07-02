@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Time Manipulator")]
     public class TimeManipulator : MonoBehaviour
     {
         public enum OperationMode

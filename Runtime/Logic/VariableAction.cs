@@ -2,6 +2,7 @@
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Variable Action")]
     public class VariableAction : MonoBehaviour
     {
         public AudioSource maxSound;

@@ -2,6 +2,7 @@
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Animator Trigger")]
     public class AnimatorTrigger : MonoBehaviour, IVariableReactor
     {
         [Tooltip("Animator to use. If empty will use first animator found in hierarchy.")]

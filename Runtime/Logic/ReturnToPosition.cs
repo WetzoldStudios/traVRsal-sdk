@@ -2,6 +2,7 @@
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Return To Position")]
     public class ReturnToPosition : MonoBehaviour
     {
         public float speed = 10f;

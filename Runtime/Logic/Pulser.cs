@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Pulser")]
     public class Pulser : MonoBehaviour
     {
         public LoopType loopType = LoopType.Restart;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/State Changer")]
     public class StateChanger : ExecutorConfig
     {
         public string key = "alt";

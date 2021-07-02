@@ -5,6 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Rotator")]
     public class Rotator : MonoBehaviour, IVariableReactor, IWorldStateReactor
     {
         public enum Mode

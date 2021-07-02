@@ -5,6 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Mover")]
     public class Mover : MonoBehaviour, IVariableReactor, IWorldStateReactor
     {
         public enum Mode

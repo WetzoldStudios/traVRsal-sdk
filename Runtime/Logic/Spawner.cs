@@ -1,5 +1,8 @@
-﻿namespace traVRsal.SDK
+﻿using UnityEngine;
+
+namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Spawner")]
     public class Spawner : ExecutorConfig
     {
         public enum Mode

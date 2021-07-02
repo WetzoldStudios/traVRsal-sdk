@@ -2,6 +2,7 @@
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Moving Platform")]
     public class MovingPlatform : ExecutorConfig
     {
         public enum Trigger

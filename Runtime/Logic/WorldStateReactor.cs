@@ -2,6 +2,7 @@
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/World State Reactor")]
     public class WorldStateReactor : MonoBehaviour, IWorldStateReactor
     {
         [Tooltip("Components to activate when world has finished loading.")]

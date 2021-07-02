@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Periodic Action")]
     public class PeriodicAction : MonoBehaviour
     {
         [Header("Timing")] public Vector2 initialDelay = new Vector2(1f, 2f);

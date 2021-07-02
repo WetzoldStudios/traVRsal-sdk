@@ -2,6 +2,7 @@
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Image Assignment")]
     public class ImageAssignment : ExecutorConfig, IDataSource
     {
         public enum ImageSource

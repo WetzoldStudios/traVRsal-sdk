@@ -2,6 +2,7 @@
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Trigger Reactor")]
     public class TriggerReactor : ExecutorConfig
     {
         [Tooltip("Tag of object that should be reacted on by the trigger")]

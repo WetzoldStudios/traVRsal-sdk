@@ -2,6 +2,7 @@
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Projectile Shooter")]
     public class ProjectileShooter : ExecutorConfig
     {
         public enum ReloadType

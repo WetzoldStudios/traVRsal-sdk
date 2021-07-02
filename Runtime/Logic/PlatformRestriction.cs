@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Platform Restriction")]
     public class PlatformRestriction : MonoBehaviour
     {
         public RuntimePlatform[] platforms;

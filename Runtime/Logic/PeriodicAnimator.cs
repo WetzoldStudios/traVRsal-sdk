@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Periodic Animator")]
     public class PeriodicAnimator : MonoBehaviour
     {
         [Header("Configuration")] public float initialRandomDelay = 3f;

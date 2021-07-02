@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Variable Listener")]
     public class VariableListener : ExecutorConfig
     {
         public enum Action

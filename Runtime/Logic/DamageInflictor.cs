@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Damage Inflictor")]
     public class DamageInflictor : MonoBehaviour
     {
         public enum DamageSource

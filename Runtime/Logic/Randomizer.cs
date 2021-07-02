@@ -3,6 +3,7 @@ using Random = UnityEngine.Random;
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Randomizer")]
     public class Randomizer : MonoBehaviour
     {
         [Header("Move")] public bool randomMovement;

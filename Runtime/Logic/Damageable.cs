@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace traVRsal.SDK
 {
+    [AddComponentMenu("traVRsal/Damageable")]
     public class Damageable : ExecutorConfig
     {
         public DamageableConfig config;
