@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 
 namespace traVRsal.SDK
 {
@@ -59,7 +60,8 @@ namespace traVRsal.SDK
         public string baseKey;
         public string name;
         public string layerName;
-        public string variable;
+        public string variable; // left in for legacy serialization compatibility (mainly existing challenges)
+        public List<string> variables;
         public TMProperty[] properties;
 
         // runtime data
@@ -109,7 +111,50 @@ namespace traVRsal.SDK
             name = copyFrom.name;
             layerName = copyFrom.layerName;
             variable = copyFrom.variable;
+            variables = copyFrom.variables == null ? null : new List<string>(copyFrom.variables);
             properties = SDKUtil.CopyProperties(copyFrom.properties);
+        }
+
+        private void EnsureVariableCompatibility()
+        {
+            if (string.IsNullOrEmpty(variable)) return;
+
+            // needed due to legacy variable declaration in old serialized files
+            variables ??= new List<string>();
+            if (variables.Count == 0)
+            {
+                variables.Add(variable);
+            }
+            else if (string.IsNullOrEmpty(variables[0]))
+            {
+                variables[0] = variable;
+            }
+        }
+
+        public string GetVariable(int index = 0)
+        {
+            EnsureVariableCompatibility();
+            if (variables == null || variables.Count < index + 1) return null;
+
+            return variables[index];
+        }
+
+        public void SetVariable(string variableKey, int index = 0)
+        {
+            variables ??= new List<string>();
+
+            // fill variables until index
+            for (int i = variables.Count; i <= index; i++)
+            {
+                variables.Add(null);
+            }
+            variables[index] = variableKey;
+        }
+
+        public bool ContainsLateResolvedVariable()
+        {
+            EnsureVariableCompatibility();
+            return variables != null && variables.Any(v => v != null && v.Contains("?"));
         }
 
         public override bool Equals(object obj)
@@ -130,6 +175,7 @@ namespace traVRsal.SDK
                    name == entity.name &&
                    layerName == entity.layerName &&
                    variable == entity.variable &&
+                   EqualityComparer<List<string>>.Default.Equals(variables, entity.variables) &&
                    EqualityComparer<TMProperty[]>.Default.Equals(properties, entity.properties) &&
                    autoIdx == entity.autoIdx;
         }
@@ -152,6 +198,7 @@ namespace traVRsal.SDK
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(layerName);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(variable);
+            hashCode = hashCode * -1521134295 + EqualityComparer<List<string>>.Default.GetHashCode(variables);
             hashCode = hashCode * -1521134295 + EqualityComparer<TMProperty[]>.Default.GetHashCode(properties);
             hashCode = hashCode * -1521134295 + autoIdx.GetHashCode();
             return hashCode;
