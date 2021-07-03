@@ -1,9 +1,15 @@
 ﻿using System;
 using UnityEngine;
-using static traVRsal.SDK.BasicEntity;
 
 namespace traVRsal.SDK
 {
+    public enum ScalingMode
+    {
+        Auto = 0,
+        XZ = 1,
+        XYZ = 2
+    }
+
     [Serializable]
     [DisallowMultipleComponent]
     public class ExtendedAttributes : MonoBehaviour
@@ -23,13 +29,11 @@ namespace traVRsal.SDK
         [Tooltip("Object is a flat wall of width 1 that can be hidden without visual pop-in effects when walking through a transition")]
         public bool portalHole;
 
-        [Tooltip("Scale object also along Y axis")]
-        public bool proportionateScaling;
-
         [Tooltip("Ignore object when calculating center point of zone inside the studio")]
         public bool editorCamIgnore;
 
-        public Direction initialDirection = Direction.South;
+        [Tooltip("Scale object only in XZ direction or also along Y axis. Scenery will per default not scale at all (Auto).")]
+        public ScalingMode scalingMode;
 
         [Tooltip("Additional object attributes")]
         public ObjectSpec spec;
