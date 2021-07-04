@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 namespace traVRsal.SDK
 {
     [AddComponentMenu("traVRsal/Mover")]
-    public class Mover : MonoBehaviour, IWorldStateReactor
+    public class Mover : MonoBehaviour, IWorldStateReactor, IVariableReactor
     {
         public enum Mode
         {
@@ -154,6 +154,11 @@ namespace traVRsal.SDK
                 MovePartially(variable.GetNumeric());
             }
             if (!initialCall && variable.everChanged) changedOnce = true;
+        }
+
+        public int GetVariableChannel()
+        {
+            return variableChannel;
         }
 
         private void MovePartially(float distance)
