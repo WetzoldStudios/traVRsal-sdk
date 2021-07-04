@@ -2,10 +2,10 @@
 {
     public interface IVariableAction
     {
-        void ReachActionMin();
+        void ReachActionMin(int variableChannel);
 
-        void ReachActionMax();
+        void ReachActionMax(int variableChannel);
 
-        void ToggleAction();
+        void ToggleAction(int variableChannel);
     }
 }

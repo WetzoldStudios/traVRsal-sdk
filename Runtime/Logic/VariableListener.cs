@@ -18,8 +18,10 @@ namespace traVRsal.SDK
             Nothing = 7
         }
 
-        [Header("Configuration")] [Tooltip("Variable to listen to. If left empty will ise the variable defined from the outside, e.g. through Tiled.")]
+        [Header("Configuration")] [Tooltip("Variable to listen to. If left empty will use the variable defined from the outside, e.g. through Tiled.")]
         public string variable;
+
+        [Range(0, 5)] public int variableChannel;
 
         public bool invert;
 

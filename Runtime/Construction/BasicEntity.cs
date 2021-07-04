@@ -131,24 +131,24 @@ namespace traVRsal.SDK
             }
         }
 
-        public string GetVariable(int index = 0)
+        public string GetVariable(int channel = 0)
         {
             EnsureVariableCompatibility();
-            if (variables == null || variables.Count < index + 1) return null;
+            if (variables == null || variables.Count < channel + 1) return null;
 
-            return variables[index];
+            return variables[channel];
         }
 
-        public void SetVariable(string variableKey, int index = 0)
+        public void SetVariable(string variableKey, int channel = 0)
         {
             variables ??= new List<string>();
 
             // fill variables until index
-            for (int i = variables.Count; i <= index; i++)
+            for (int i = variables.Count; i <= channel; i++)
             {
                 variables.Add(null);
             }
-            variables[index] = variableKey;
+            variables[channel] = variableKey;
         }
 
         public bool ContainsLateResolvedVariable()

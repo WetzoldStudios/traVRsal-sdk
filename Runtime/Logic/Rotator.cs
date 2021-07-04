@@ -15,6 +15,7 @@ namespace traVRsal.SDK
         }
 
         [Header("Configuration")] public Mode mode = Mode.Manual;
+        [Range(0, 5)] public int variableChannel;
 
         [Tooltip("Degrees per second in manual mode. Total degrees otherwise. Use different values for X and Y to define a range for a random angle.")]
         public Vector2 degrees = new Vector2(10f, 10f);
@@ -139,6 +140,11 @@ namespace traVRsal.SDK
             }
 
             if (!initialCall && variable.everChanged) changedOnce = true;
+        }
+
+        public int GetVariableChannel()
+        {
+            return variableChannel;
         }
 
         public void ZoneChange(Zone zone, bool isCurrent)

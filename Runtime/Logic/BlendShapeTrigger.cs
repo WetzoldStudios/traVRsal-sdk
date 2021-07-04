@@ -14,6 +14,7 @@ namespace traVRsal.SDK
         public float maxValue = 100f;
         public int shapeIndex;
         public bool invert;
+        [Range(0, 5)] public int variableChannel;
 
         private Tween curTween;
 
@@ -28,6 +29,11 @@ namespace traVRsal.SDK
 
             curTween?.Kill();
             curTween = DOTween.To(() => skinnedRenderer.GetBlendShapeWeight(shapeIndex), x => skinnedRenderer.SetBlendShapeWeight(shapeIndex, x), targetValue, duration);
+        }
+
+        public int GetVariableChannel()
+        {
+            return variableChannel;
         }
     }
 }

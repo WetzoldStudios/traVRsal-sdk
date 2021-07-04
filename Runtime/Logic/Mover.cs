@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 namespace traVRsal.SDK
 {
     [AddComponentMenu("traVRsal/Mover")]
-    public class Mover : MonoBehaviour, IVariableReactor, IWorldStateReactor
+    public class Mover : MonoBehaviour, IWorldStateReactor
     {
         public enum Mode
         {
@@ -21,6 +21,7 @@ namespace traVRsal.SDK
         }
 
         [Header("Configuration")] public Mode mode = Mode.Manual;
+        [Range(0, 5)] public int variableChannel;
         public ValueScale valueScale = ValueScale.Meters;
 
         [Tooltip("Distance the object should travel. Use different values for X and Y to define a range for a random distance.")]

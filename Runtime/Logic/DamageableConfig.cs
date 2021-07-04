@@ -27,6 +27,7 @@ namespace traVRsal.SDK
         public string targetName;
         public bool triggerVariable;
         public string variable;
+        [Range(0, 5)] public int variableChannel;
 
         [Header("Destruction")] public bool destructible = true;
         public bool allowMelee;

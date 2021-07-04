@@ -5,6 +5,8 @@ namespace traVRsal.SDK
     [AddComponentMenu("traVRsal/Variable Action")]
     public class VariableAction : MonoBehaviour
     {
+        [Range(0, 5)] public int variableChannel;
+
         public AudioSource maxSound;
         public AudioSource minSound;
 
@@ -19,19 +21,19 @@ namespace traVRsal.SDK
         {
             if (minSound != null && minSound.clip != null) minSound.Play();
 
-            context.ReachActionMin();
+            context.ReachActionMin(variableChannel);
         }
 
         public void ReachActionMax()
         {
             if (maxSound != null && maxSound.clip != null) maxSound.Play();
 
-            context.ReachActionMax();
+            context.ReachActionMax(variableChannel);
         }
 
         public void ToggleAction()
         {
-            context.ToggleAction();
+            context.ToggleAction(variableChannel);
         }
     }
 }

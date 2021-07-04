@@ -15,6 +15,7 @@ namespace traVRsal.SDK
         }
 
         [Header("Configuration")] public Mode mode = Mode.Manual;
+        [Range(0, 5)] public int variableChannel;
 
         [Tooltip("Scale of the object, e.g. (1.2,1.2) for 20% bigger. Use different values for X and Y to define a range for a random scale.")]
         public Vector2 size = new Vector2(0f, 0f);
@@ -133,6 +134,11 @@ namespace traVRsal.SDK
             }
 
             if (!initialCall && variable.everChanged) changedOnce = true;
+        }
+
+        public int GetVariableChannel()
+        {
+            return variableChannel;
         }
 
         public void ZoneChange(Zone zone, bool isCurrent)
