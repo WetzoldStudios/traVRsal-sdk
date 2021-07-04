@@ -19,6 +19,8 @@ namespace traVRsal.SDK
 {
     public class AWSUtil
     {
+        private const int TIMEOUT = 1200;
+
         // Amazon settings
         // Amazon-only: public static string IdentityPoolId = "eu-west-1:87055e81-6bbc-4556-aa65-7b6df7d1ebe7";
         // Amazon-only: public static string S3Root = "https://s3-eu-west-1.amazonaws.com/eu.west1.travrsal.repo/";
@@ -32,49 +34,35 @@ namespace traVRsal.SDK
         public static string S3CDNRoot_Runs = "https://travrsal-runs.sfo2.cdn.digitaloceanspaces.com/";
 
         // FIXME: only leave in for beta, new mechanism as soon as backend is up and running
-        public static string AccessKey = "TJLL2B73DJSGQPBKJRP7";
-        public static string AccessKeySecret = "H8mxC/akX8W9jqIFXvY+UFOj5zrW0bTsEtz1Bh5HDvg";
+        private static string AccessKey = "TJLL2B73DJSGQPBKJRP7";
+        private static string AccessKeySecret = "H8mxC/akX8W9jqIFXvY+UFOj5zrW0bTsEtz1Bh5HDvg";
 
         // Amazon-only: private static string S3BucketName = "eu.west1.travrsal.repo";
-        private static string S3BucketName = "travrsal-upload";
-
         public string CognitoIdentityRegion = RegionEndpoint.EUWest1.SystemName;
-
-        private RegionEndpoint _CognitoIdentityRegion
-        {
-            get { return RegionEndpoint.GetBySystemName(CognitoIdentityRegion); }
-        }
-
         public string S3Region = RegionEndpoint.EUWest1.SystemName;
 
-        private RegionEndpoint _S3Region
-        {
-            get { return RegionEndpoint.GetBySystemName(S3Region); }
-        }
+        private static string S3BucketName = "travrsal-upload";
+        private RegionEndpoint _CognitoIdentityRegion => RegionEndpoint.GetBySystemName(CognitoIdentityRegion);
+        private RegionEndpoint _S3Region => RegionEndpoint.GetBySystemName(S3Region);
 
-        public bool LastActionSuccessful;
+        public bool lastActionSuccessful;
         private IAmazonS3 _s3Client;
         private AWSCredentials _credentials;
 
-        private AWSCredentials Credentials
-        {
-            get
-            {
-                // Amazon-only: if (_credentials == null) _credentials = new CognitoAWSCredentials(IdentityPoolId, _CognitoIdentityRegion);
-                if (_credentials == null) _credentials = new BasicAWSCredentials(AccessKey, AccessKeySecret);
-                return _credentials;
-            }
-        }
+        private AWSCredentials Credentials =>
+            // Amazon-only: if (_credentials == null) _credentials = new CognitoAWSCredentials(IdentityPoolId, _CognitoIdentityRegion);
+            _credentials ??= new BasicAWSCredentials(AccessKey, AccessKeySecret);
 
-        private IAmazonS3 Client
-        {
-            get
+        private IAmazonS3 Client =>
+            // Amazon-only: if (_s3Client == null) _s3Client = new AmazonS3Client(Credentials, _S3Region);
+            _s3Client ?? (_s3Client = new AmazonS3Client(Credentials, new AmazonS3Config
             {
-                // Amazon-only: if (_s3Client == null) _s3Client = new AmazonS3Client(Credentials, _S3Region);
-                if (_s3Client == null) _s3Client = new AmazonS3Client(Credentials, new AmazonS3Config {ServiceURL = S3LoginRoot});
-                return _s3Client;
-            }
-        }
+                Timeout = TimeSpan.FromSeconds(TIMEOUT),
+                ReadWriteTimeout = TimeSpan.FromSeconds(TIMEOUT),
+                RetryMode = RequestRetryMode.Standard,
+                MaxErrorRetry = 8,
+                ServiceURL = S3LoginRoot
+            }));
 
         public async void GetBucketList()
         {
@@ -104,7 +92,7 @@ namespace traVRsal.SDK
 
         public async Task UploadFile(string fileName, string remoteName, string bucket)
         {
-            LastActionSuccessful = true;
+            lastActionSuccessful = true;
             await CarryOutAWSTask(async () =>
             {
                 FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -124,7 +112,7 @@ namespace traVRsal.SDK
 
         public async Task UploadDirectory(string path, Action<float> progressCallback, string pattern = "*")
         {
-            LastActionSuccessful = true;
+            lastActionSuccessful = true;
             await CarryOutAWSTask(async () =>
             {
                 TransferUtility fileTransferUtility = new TransferUtility(Client);
@@ -168,15 +156,13 @@ namespace traVRsal.SDK
                     Key = fileName
                 };
 
-                using (GetObjectResponse response = await Client.GetObjectAsync(request))
+                using GetObjectResponse response = await Client.GetObjectAsync(request);
+                string title = response.Metadata["x-amz-meta-title"];
+                Debug.Log($"The object's title is {title}");
+                string dest = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), fileName);
+                if (!File.Exists(dest))
                 {
-                    string title = response.Metadata["x-amz-meta-title"];
-                    Debug.Log($"The object's title is {title}");
-                    string dest = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), fileName);
-                    if (!File.Exists(dest))
-                    {
-                        await response.WriteResponseStreamToFileAsync(dest, true, CancellationToken.None);
-                    }
+                    await response.WriteResponseStreamToFileAsync(dest, true, CancellationToken.None);
                 }
             }, "read object");
         }
@@ -189,7 +175,7 @@ namespace traVRsal.SDK
             }
             catch (AmazonS3Exception amazonS3Exception)
             {
-                LastActionSuccessful = false;
+                lastActionSuccessful = false;
                 if (amazonS3Exception.ErrorCode != null && (amazonS3Exception.ErrorCode.Equals("InvalidAccessKeyId") || amazonS3Exception.ErrorCode.Equals("InvalidSecurity")))
                 {
                     Debug.LogError("Please check the provided AWS credentials.");
