@@ -9,10 +9,11 @@ namespace traVRsal.SDK
         [Header("Static References")] [Tooltip("Skinned mesh renderer containing the blend shape. If empty will use first one found in hierarchy.")]
         public SkinnedMeshRenderer skinnedRenderer;
 
-        [Header("Configuration")] public float duration = 2f;
+        [Header("Configuration")] 
+        public int shapeIndex;
         public float minValue;
         public float maxValue = 100f;
-        public int shapeIndex;
+        public float duration = 2f;
         public bool invert;
         [Range(0, 5)] public int variableChannel;
 

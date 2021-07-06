@@ -19,7 +19,7 @@ namespace traVRsal.SDK
 {
     public class AWSUtil
     {
-        private const int TIMEOUT = 1200;
+        private const int TIMEOUT = 1500;
 
         // Amazon settings
         // Amazon-only: public static string IdentityPoolId = "eu-west-1:87055e81-6bbc-4556-aa65-7b6df7d1ebe7";

@@ -12,16 +12,19 @@ namespace traVRsal.SDK
 
         private IVariableAction context;
         private bool initDone;
-
-        private void Start()
-        {
-            if (!initDone) Init();
-        }
-
+        
         private void Init()
         {
             initDone = true;
-            context = GetComponentsInParent<IVariableAction>(true)[0];
+            IVariableAction[] contexts = GetComponentsInParent<IVariableAction>(true);
+            if (contexts.Length > 0)
+            {
+                context = contexts[0];
+            }
+            else
+            {
+                EDebug.LogError($"Could not find context on {gameObject}");
+            }
         }
 
         public void ReachActionMin()

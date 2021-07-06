@@ -2,7 +2,7 @@
 
 namespace traVRsal.SDK
 {
-    [AddComponentMenu("traVRsal/Show Only When Facing Player")]
+    [AddComponentMenu("traVRsal/Only Facing Player")]
     [RequireComponent(typeof(Renderer))]
     public class OnlyFacingPlayer : ExecutorConfig
     {
