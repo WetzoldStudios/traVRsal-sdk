@@ -55,14 +55,13 @@ namespace traVRsal.SDK
 
         private IAmazonS3 Client =>
             // Amazon-only: if (_s3Client == null) _s3Client = new AmazonS3Client(Credentials, _S3Region);
-            _s3Client ?? (_s3Client = new AmazonS3Client(Credentials, new AmazonS3Config
+            _s3Client ??= new AmazonS3Client(Credentials, new AmazonS3Config
             {
                 Timeout = TimeSpan.FromSeconds(TIMEOUT),
                 ReadWriteTimeout = TimeSpan.FromSeconds(TIMEOUT),
-                RetryMode = RequestRetryMode.Standard,
                 MaxErrorRetry = 8,
                 ServiceURL = S3LoginRoot
-            }));
+            });
 
         public async void GetBucketList()
         {

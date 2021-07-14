@@ -57,6 +57,8 @@ namespace traVRsal.SDK
             MainMenuRoot = 25,
             MainMenuModalCanvasRoot = 38,
 
+            AvatarName = 42,
+            
             TheaterRoot = 37,
             Object = 23
         }
