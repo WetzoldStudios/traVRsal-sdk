@@ -22,6 +22,8 @@ namespace traVRsal.SDK
 
         private void Update()
         {
+            if (trackedObject == null || referenceObject == null || managedObject == null) return;
+
             float measuredDistance = Mathf.Abs((trackedObject.position - referenceObject.position).magnitude);
             bool visible = measuredDistance >= distance;
             if (managedObject.activeSelf != visible) managedObject.SetActive(visible);
