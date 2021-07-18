@@ -19,8 +19,9 @@ namespace traVRsal.SDK
         }
 
         [Header("Configuration")] public ObjectType type = ObjectType.EnemyOrCollectible;
-        public int health = 1;
+        public float health = 1;
         public float damageMultiplier = 1f;
+        public float regeneratePerSecond;
         public int points;
         public bool isPlayer;
         public bool registerAsTarget = true;
@@ -46,6 +47,7 @@ namespace traVRsal.SDK
             type = copyFrom.type;
             health = copyFrom.health;
             damageMultiplier = copyFrom.damageMultiplier;
+            regeneratePerSecond = copyFrom.regeneratePerSecond;
             points = copyFrom.points;
             isPlayer = copyFrom.isPlayer;
             destructible = copyFrom.destructible;

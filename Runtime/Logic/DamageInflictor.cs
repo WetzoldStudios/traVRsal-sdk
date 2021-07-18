@@ -1,4 +1,5 @@
-﻿using Bhaptics.Tact.Unity;
+﻿using System.Collections.Generic;
+using Bhaptics.Tact.Unity;
 using UnityEngine;
 
 namespace traVRsal.SDK
@@ -39,21 +40,32 @@ namespace traVRsal.SDK
 
         // runtime 
         [HideInInspector] public string originTag;
-        private float lastHit;
+        private Dictionary<GameObject, float> lastHit;
 
         private void Start()
         {
+            lastHit = new Dictionary<GameObject, float>();
             if (string.IsNullOrEmpty(originTag)) originTag = gameObject.tag;
         }
 
-        public bool IsActive()
+        public bool IsActive(GameObject go)
         {
-            return enabled && Time.time > lastHit + cooldown;
+            if (!enabled) return false;
+            if (!lastHit.ContainsKey(go)) return true;
+
+            return Time.time > lastHit[go] + cooldown;
         }
 
-        public void RegisterHit()
+        public void RegisterHit(GameObject go)
         {
-            lastHit = Time.time;
+            if (!lastHit.ContainsKey(go))
+            {
+                lastHit.Add(go, Time.time);
+            }
+            else
+            {
+                lastHit[go] = Time.time;
+            }
         }
     }
 }
