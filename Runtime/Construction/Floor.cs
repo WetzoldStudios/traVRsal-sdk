@@ -10,6 +10,7 @@ namespace traVRsal.SDK
         [Header("Configuration")] public string name;
         public float height = 2.5f;
         public bool underground;
+        public bool considerPlayerHeight;
         public List<BasicEntity> entities;
         public Dictionary<string, TMProperty[]> layerProps;
         public TMProperty[] properties;
@@ -40,6 +41,7 @@ namespace traVRsal.SDK
             name = copyFrom.name;
             height = copyFrom.height;
             underground = copyFrom.underground;
+            considerPlayerHeight = copyFrom.considerPlayerHeight;
             properties = SDKUtil.CopyProperties(copyFrom.properties);
 
             foreach (string key in copyFrom.layerProps.Keys)
@@ -69,6 +71,7 @@ namespace traVRsal.SDK
                    name == floor.name &&
                    height == floor.height &&
                    underground == floor.underground &&
+                   considerPlayerHeight == floor.considerPlayerHeight &&
                    EqualityComparer<List<BasicEntity>>.Default.Equals(entities, floor.entities) &&
                    EqualityComparer<Dictionary<string, TMProperty[]>>.Default.Equals(layerProps, floor.layerProps) &&
                    EqualityComparer<TMProperty[]>.Default.Equals(properties, floor.properties);
@@ -80,6 +83,7 @@ namespace traVRsal.SDK
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
             hashCode = hashCode * -1521134295 + height.GetHashCode();
             hashCode = hashCode * -1521134295 + underground.GetHashCode();
+            hashCode = hashCode * -1521134295 + considerPlayerHeight.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<List<BasicEntity>>.Default.GetHashCode(entities);
             hashCode = hashCode * -1521134295 + EqualityComparer<Dictionary<string, TMProperty[]>>.Default.GetHashCode(layerProps);
             hashCode = hashCode * -1521134295 + EqualityComparer<TMProperty[]>.Default.GetHashCode(properties);

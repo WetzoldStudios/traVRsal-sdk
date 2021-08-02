@@ -5,19 +5,22 @@ namespace traVRsal.SDK
     public class Socket : MonoBehaviour
     {
         public string key;
+
         [Tooltip("Set to true if the socket is inside the play area for additional performance and visibility optimizations. It will inherit the position of the parent object for reference.")]
         public bool cullable = true;
 
-        [HideInInspector]
-        public GameObject item;
+        [Tooltip("Will move the socket vertically depending on height of player.")]
+        public bool considerPlayerHeight;
+
+        [HideInInspector] public GameObject item;
 
         // cache only
-        [HideInInspector]
-        public Rigidbody rigidBody;
-        [HideInInspector]
-        public bool isKinematic = false;
+        [HideInInspector] public Rigidbody rigidBody;
+        [HideInInspector] public bool isKinematic;
 
-        public Socket() { }
+        public Socket()
+        {
+        }
 
         public Socket(string key) : this()
         {

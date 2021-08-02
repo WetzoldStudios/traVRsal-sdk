@@ -24,6 +24,7 @@ namespace traVRsal.SDK
         public bool blockAgents = true;
         public bool reactivateTransitions;
         public bool invisibleGround;
+        public string variable;
 
         [Header("Environment")] public Color ambientColor = new Color(0.8f, 0.782f, 0.745f);
         public Color lightColor = Color.white;
@@ -118,6 +119,7 @@ namespace traVRsal.SDK
             skybox = copyFrom.skybox;
             blockAgents = copyFrom.blockAgents;
             variationOf = copyFrom.variationOf;
+            variable = copyFrom.variable;
             originalName = copyFrom.originalName;
             properties = SDKUtil.CopyProperties(copyFrom.properties);
 
@@ -157,6 +159,7 @@ namespace traVRsal.SDK
                    skybox == zone.skybox &&
                    music == zone.music &&
                    randomMusic == zone.randomMusic &&
+                   variable == zone.variable &&
                    EqualityComparer<TMProperty[]>.Default.Equals(properties, zone.properties);
         }
 
@@ -186,6 +189,7 @@ namespace traVRsal.SDK
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(skybox);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(music);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(randomMusic);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(variable);
             hashCode = hashCode * -1521134295 + EqualityComparer<TMProperty[]>.Default.GetHashCode(properties);
             return hashCode;
         }

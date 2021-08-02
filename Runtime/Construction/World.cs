@@ -65,6 +65,8 @@ namespace traVRsal.SDK
         public string minSize;
         public string maxSize;
         public float maxTileSize;
+        [DefaultValue(1.8f)] public float playerHeight = 1.8f;
+        public bool defaultConsiderPlayerHeight;
         [DefaultValue(3.5f)] public float maxFallHeight = 3.5f;
         [DefaultValue(300)] public int availableTime = 5 * 60;
         [DefaultValue(true)] public bool enableChallenges = true;

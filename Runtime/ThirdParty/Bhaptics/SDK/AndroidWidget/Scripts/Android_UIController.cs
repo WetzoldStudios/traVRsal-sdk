@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -53,8 +54,6 @@ namespace Bhaptics.Tact.Unity
                 controllers.Add(go);
             }
 
-            BhapticsAndroidManager.AddRefreshAction(Refresh);
-
             if (helpButton != null)
             {
                 helpButton.onClick.AddListener(OnHelp);
@@ -90,6 +89,16 @@ namespace Bhaptics.Tact.Unity
             {
                 defaultDeviceContainerSize = defaultMainPanelSize;
             }
+        }
+
+        private void OnEnable()
+        {
+            BhapticsAndroidManager.AddRefreshAction(Refresh);
+        }
+
+        private void OnDisable()
+        {
+            BhapticsAndroidManager.RemoveRefreshAction();
         }
 
         private void Refresh()

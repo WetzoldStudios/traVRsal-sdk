@@ -63,6 +63,7 @@ namespace traVRsal.SDK
         public bool connectToCeiling;
         public bool stretchToCeiling;
         public bool flipOrientation;
+        public bool considerPlayerHeight;
 
         public bool dontCountAsTarget;
         public bool dontCountAsObstacle;

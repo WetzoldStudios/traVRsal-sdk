@@ -112,7 +112,7 @@ namespace Bhaptics.Tact.Unity
                 // TODO DEBUGGING USAGE.
                 for (var i = 0; i < refreshActions.Count; i++)
                 {
-                    refreshActions[i].Invoke();
+                    refreshActions[i]?.Invoke();
                 }
                 return;
             }
@@ -120,7 +120,7 @@ namespace Bhaptics.Tact.Unity
             Devices = androidHapticPlayer.GetDevices();
             for (var i = 0; i < refreshActions.Count; i++)
             {
-                refreshActions[i].Invoke();
+                refreshActions[i]?.Invoke();
             }
         }
 
