@@ -38,7 +38,6 @@ namespace Bhaptics.Tact.Unity
             }
 
             InvokeRepeating("RefreshDevices", 1f, 1f);
-            Scan();
 
 #endif
         }
@@ -53,35 +52,68 @@ namespace Bhaptics.Tact.Unity
             var androidHapticPlayer = BhapticsManager.GetHaptic() as AndroidHaptic;
             if (androidHapticPlayer == null)
             {
-                // if (Devices.Count == 0)
-                // {
-                //     var device = new HapticDevice()
-                //     {
-                //         Position = PositionType.Vest,
-                //         IsConnected = true,
-                //         IsPaired = true,
-                //         Address = "aaaa",
-                //         DeviceName = "Tactot",
-                //         Candidates = new PositionType[] { PositionType.Vest },
-                //     };
-                //     var device2 = new HapticDevice()
-                //     {
-                //         Position = PositionType.ForearmL,
-                //         IsConnected = false,
-                //         IsPaired = false,
-                //         Address = "aaaa22",
-                //         DeviceName = "Tactosy",
-                //         Candidates = new PositionType[] { PositionType.ForearmR, PositionType.ForearmL },
-                //     };
-                //     Devices.Add(device);
-                //     Devices.Add(device2);
-                //
-                // }
-                // // TODO DEBUGGING USAGE.
-                // for (var i = 0; i < refreshActions.Count; i++)
-                // {
-                //     refreshActions[i].Invoke();
-                // }
+                if (Devices.Count == 0)
+                {
+                    var device = new HapticDevice()
+                    {
+                        Position = PositionType.Vest,
+                        IsConnected = true,
+                        IsPaired = true,
+                        Address = "aaaa",
+                        DeviceName = "Tactot",
+                        Candidates = new PositionType[] { PositionType.Vest },
+                    };
+                    var device2 = new HapticDevice()
+                    {
+                        Position = PositionType.ForearmL,
+                        IsConnected = false,
+                        IsPaired = true,
+                        Address = "aaaa22",
+                        DeviceName = "Tactosy",
+                        Candidates = new PositionType[] { PositionType.ForearmR, PositionType.ForearmL },
+                    };
+                    var device3 = new HapticDevice()
+                    {
+                        Position = PositionType.HandL,
+                        IsConnected = true,
+                        IsPaired = true,
+                        Address = "aaaa22",
+                        DeviceName = "Tactosy",
+                        Candidates = new PositionType[] { PositionType.HandL, PositionType.HandR},
+                    };
+                    var device4 = new HapticDevice()
+                    {
+                        Position = PositionType.Head,
+                        IsConnected = true,
+                        IsPaired = true,
+                        Address = "aaaa22",
+                        DeviceName = "Tactal",
+                        Candidates = new PositionType[] { PositionType.Head},
+                    };
+
+                    var device5 = new HapticDevice()
+                    {
+                        Position = PositionType.Vest,
+                        IsConnected = true,
+                        IsPaired = true,
+                        IsAudioJack = true,
+                        Address = "aaaa",
+                        DeviceName = "Tactot",
+                        Battery = 10,
+                        Candidates = new PositionType[] { PositionType.Vest },
+                    };
+                    //Devices.Add(device);
+                    //Devices.Add(device2);
+                    //Devices.Add(device3);
+                    //Devices.Add(device4);
+                    //Devices.Add(device5);
+
+                }
+                // TODO DEBUGGING USAGE.
+                for (var i = 0; i < refreshActions.Count; i++)
+                {
+                    refreshActions[i].Invoke();
+                }
                 return;
             }
 
@@ -94,6 +126,7 @@ namespace Bhaptics.Tact.Unity
 
         public static void Ping(PositionType pos)
         {
+            Debug.LogFormat("PING  ...");
             var connectedDevices = GetConnectedDevices(pos);
             foreach (var pairedDevice in connectedDevices)
             {
@@ -102,106 +135,6 @@ namespace Bhaptics.Tact.Unity
         }
 
         #region Connection Related Functions
-
-        public static void Pair(PositionType deviceType)
-        {
-            var devices = GetDevices();
-            int index = -1;
-
-            for (int i = 0; i < devices.Count; i++)
-            {
-                if (AndroidUtils.CanPair(devices[i], deviceType))
-                {
-                    index = i;
-                    break;
-                }
-            }
-
-            if (index != -1)
-            {
-
-                if (deviceType == PositionType.Vest)
-                {
-                    Pair(devices[index].Address);
-                }
-                else
-                {
-                    Pair(devices[index].Address, deviceType.ToString());
-                }
-            }
-        }
-
-        public static void Pair(string address, string position = "")
-        {
-            var androidHapticPlayer = BhapticsManager.GetHaptic() as AndroidHaptic;
-            if (androidHapticPlayer == null)
-            {
-                return;
-            }
-            androidHapticPlayer.Pair(address, position);
-        }
-
-        public static void Unpair(PositionType deviceType)
-        {
-            var devices = GetPairedDevices(deviceType);
-            for (int i = 0; i < devices.Count; ++i)
-            {
-                if (devices[i].Position == deviceType)
-                {
-                    Unpair(devices[i].Address);
-                }
-            }
-        }
-
-        public static void Unpair(string address)
-        {
-            var androidHapticPlayer = BhapticsManager.GetHaptic() as AndroidHaptic;
-            if (androidHapticPlayer == null)
-            {
-                return;
-            }
-
-            androidHapticPlayer.Unpair(address);
-        }
-
-        public static void UnpairAll()
-        {
-            var androidHapticPlayer = BhapticsManager.GetHaptic() as AndroidHaptic;
-            if (androidHapticPlayer == null)
-            {
-                return;
-            }
-            androidHapticPlayer.UnpairAll();
-        }
-
-        public static void Scan()
-        {
-            var androidHapticPlayer = BhapticsManager.GetHaptic() as AndroidHaptic;
-            if (androidHapticPlayer == null)
-            {
-                return;
-            }
-
-            if (!androidHapticPlayer.IsScanning())
-            {
-                androidHapticPlayer.StartScan();
-            }
-        }
-
-        public static void ScanStop()
-        {
-            var androidHapticPlayer = BhapticsManager.GetHaptic() as AndroidHaptic;
-            if (androidHapticPlayer == null)
-            {
-                return;
-            }
-
-            if (androidHapticPlayer.IsScanning())
-            {
-                androidHapticPlayer.StopScan();
-            }
-        }
-
         public static void TogglePosition(string address)
         {
             var androidHapticPlayer = BhapticsManager.GetHaptic() as AndroidHaptic;
@@ -221,6 +154,8 @@ namespace Bhaptics.Tact.Unity
                 return;
             }
 
+            Debug.LogFormat("PING  ..." + device.Address);
+
             androidHapticPlayer.Ping(device.Address);
         }
 
@@ -233,30 +168,6 @@ namespace Bhaptics.Tact.Unity
             }
 
             androidHapticPlayer.PingAll();
-        }
-
-        public static bool IsScanning()
-        {
-            var androidHapticPlayer = BhapticsManager.GetHaptic() as AndroidHaptic;
-            if (androidHapticPlayer == null)
-            {
-                return false;
-            }
-
-            return androidHapticPlayer.IsScanning();
-        }
-
-        public static bool CanPairDevice(PositionType position)
-        {
-            var deviceList = GetDevices();
-            foreach (var device in deviceList)
-            {
-                if (AndroidUtils.CanPair(device, position))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         public static List<HapticDevice> GetDevices()
@@ -298,35 +209,6 @@ namespace Bhaptics.Tact.Unity
             }
 
             return res;
-        }
-
-
-        public static bool CheckPermission()
-        {
-            var androidHapticPlayer = BhapticsManager.GetHaptic() as AndroidHaptic;
-            if (androidHapticPlayer == null)
-            {
-                if (pcAndoidTestMode)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            return androidHapticPlayer.CheckPermission();
-        }
-
-        public static void RequestPermission()
-        {
-
-            var androidHapticPlayer = BhapticsManager.GetHaptic() as AndroidHaptic;
-            if (androidHapticPlayer == null)
-            {
-                return;
-            }
-
-            androidHapticPlayer.RequestPermission();
         }
 
         public static void AddRefreshAction(UnityAction action)
@@ -377,16 +259,39 @@ namespace Bhaptics.Tact.Unity
 
         #endregion
 
-
-        #region Callback Functions from native code
-
-        public void PermissionGranted(string s)
+        public static void ShowBluetoothSetting()
         {
-            if (AndroidWidget_UI.Instance != null)
+            var androidHapticPlayer = BhapticsManager.GetHaptic() as AndroidHaptic;
+            if (androidHapticPlayer == null)
             {
-                AndroidWidget_UI.Instance.ToggleWidgetButton();
+                return;
+            }
+
+            androidHapticPlayer.ShowBluetoothSetting();
+        }
+        public static void ToggleEnableDevice(HapticDevice device)
+        {
+            var androidHapticPlayer = BhapticsManager.GetHaptic() as AndroidHaptic;
+            if (androidHapticPlayer == null)
+            {
+                return;
+            }
+
+            androidHapticPlayer.EnableDevice(device.Address, !device.IsEnable);
+        }
+
+        void OnApplicationFocus(bool pauseStatus)
+        {
+            if (pauseStatus)
+            {
+                var androidHapticPlayer = BhapticsManager.GetHaptic() as AndroidHaptic;
+                if (androidHapticPlayer == null)
+                {
+                    return;
+                }
+
+                androidHapticPlayer.RefreshPairingInfo();
             }
         }
-#endregion
     }
 }

@@ -15,4 +15,4 @@ MonoBehaviour:
   launchPlayerIfNotRunning: 1
   AndroidManagerPrefab: {fileID: 114531838666343496, guid: 48f8b601b14ac4b40b7981b1ed65e682,
     type: 3}
-  UseOnlyBackgroundMode: 1
+  UseOnlyBackgroundMode: 0

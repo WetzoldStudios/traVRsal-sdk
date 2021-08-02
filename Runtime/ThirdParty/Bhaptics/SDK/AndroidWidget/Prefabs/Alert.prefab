@@ -122,7 +122,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114495812432088468}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OpenLink
         m_Mode: 1
@@ -576,7 +576,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 224470521221649636}
-  - component: {fileID: 114495812432088468}
   m_Layer: 0
   m_Name: Alert
   m_TagString: Untagged
@@ -604,19 +603,6 @@ RectTransform:
   m_AnchoredPosition: {x: -1.94, y: 2.04}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &114495812432088468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1500994432895228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95010d8abf06b734092ebda83169b202, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  alertGameObject: {fileID: 1704571636264886}
 --- !u!1 &1557053423856866
 GameObject:
   m_ObjectHideFlags: 0
@@ -786,7 +772,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &224056298401565166
 RectTransform:
   m_ObjectHideFlags: 0
@@ -934,7 +920,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114495812432088468}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnConfirmClick
         m_Mode: 1

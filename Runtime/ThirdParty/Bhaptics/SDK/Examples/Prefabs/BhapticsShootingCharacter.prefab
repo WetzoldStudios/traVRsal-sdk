@@ -715,7 +715,8 @@ MonoBehaviour:
   target: {fileID: 0}
   shootPointLeft: {fileID: 4008182979547434}
   shootPointRight: {fileID: 4075509343588030}
-  bulletPrefab: {fileID: 1698689588710812, guid: decb0df2a5e853c41bca72823cbe2774, type: 3}
+  bulletPrefab: {fileID: 1698689588710812, guid: decb0df2a5e853c41bca72823cbe2774,
+    type: 3}
   lookingTransforms:
   - {fileID: 4582948879420858}
   - {fileID: 4218957513729680}
