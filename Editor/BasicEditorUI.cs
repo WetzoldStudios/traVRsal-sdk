@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Unity.EditorCoroutines.Editor;
@@ -9,8 +10,6 @@ namespace traVRsal.SDK
 {
     public abstract class BasicEditorUI : EditorWindow
     {
-        private string[] REQUIRED_TAGS = { "ExcludeTeleport", SDKUtil.INTERACTABLE_TAG, SDKUtil.ENEMY_TAG, SDKUtil.PLAYER_HEAD_TAG, SDKUtil.COLLECTIBLE_TAG, SDKUtil.PLAYER_HELPER_TAG };
-
         public UserWorld[] userWorlds;
 
         private static GUIStyle logo;
@@ -19,11 +18,11 @@ namespace traVRsal.SDK
         public virtual void OnEnable()
         {
             string logoName = EditorGUIUtility.isProSkin ? "travrsal-white-300.png" : "travrsal-300.png";
-            
+
             Texture2D logoImage = AssetDatabase.LoadAssetAtPath($"Packages/com.wetzold.travrsal.sdk/Editor/Images/{logoName}", typeof(Texture2D)) as Texture2D;
             if (logoImage == null) logoImage = AssetDatabase.LoadAssetAtPath($"Assets/SDK/Editor/Images/{logoName}", typeof(Texture2D)) as Texture2D;
 
-            logo = new GUIStyle { normal = { background = logoImage }, fixedWidth = 128, fixedHeight = 64 };
+            logo = new GUIStyle {normal = {background = logoImage}, fixedWidth = 128, fixedHeight = 64};
 
             // perform (cheap) setup tasks
             SetupTags();
@@ -78,6 +77,9 @@ namespace traVRsal.SDK
 
         private void SetupTags()
         {
+            List<string> requiredTags = new List<string> {"ExcludeTeleport", SDKUtil.INTERACTABLE_TAG, SDKUtil.ENEMY_TAG, SDKUtil.PLAYER_HEAD_TAG, SDKUtil.COLLECTIBLE_TAG, SDKUtil.PLAYER_HELPER_TAG};
+            Enumerable.Range(1, 100).ForEach(i => requiredTags.Add("Object " + i));
+
             SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
             SerializedProperty tagsProp = tagManager.FindProperty("tags");
 
@@ -88,11 +90,11 @@ namespace traVRsal.SDK
             }
 
             // recreate in exact order required
-            for (int i = 0; i < REQUIRED_TAGS.Length; i++)
+            for (int i = 0; i < requiredTags.Count; i++)
             {
                 tagsProp.InsertArrayElementAtIndex(i);
                 SerializedProperty newTag = tagsProp.GetArrayElementAtIndex(i);
-                newTag.stringValue = REQUIRED_TAGS[i];
+                newTag.stringValue = requiredTags[i];
             }
 
             tagManager.ApplyModifiedProperties();

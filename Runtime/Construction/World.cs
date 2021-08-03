@@ -123,6 +123,7 @@ namespace traVRsal.SDK
         public string chapter;
         public SkyboxMode skyboxMode = SkyboxMode.None;
         public List<ObjectSpec> objectSpecs;
+        public HashSet<string> usedTags;
         public List<string> dependencies;
         public List<string> worldDependencies;
         public List<Zone> zones;
@@ -153,6 +154,7 @@ namespace traVRsal.SDK
             imageProviders = new List<ImageProvider>();
             replacements = new List<ReplacementRule>();
             objectSpecs = new List<ObjectSpec>();
+            usedTags = new HashSet<string>();
             visitedZones = new Dictionary<string, int>();
             zoneTemplateCache = new Dictionary<string, string>();
             locationCache = new Dictionary<string, Tuple<string, BasicEntity>>();
@@ -186,6 +188,7 @@ namespace traVRsal.SDK
             if (imageProviders is {Count: 0}) imageProviders = null;
             if (replacements is {Count: 0}) replacements = null;
             if (objectSpecs is {Count: 0}) objectSpecs = null;
+            if (usedTags is {Count: 0}) usedTags = null;
             if (visitedZones is {Count: 0}) visitedZones = null;
             if (zoneTemplateCache is {Count: 0}) zoneTemplateCache = null;
             if (locationCache is {Count: 0}) locationCache = null;

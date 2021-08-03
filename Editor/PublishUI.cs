@@ -31,8 +31,8 @@ namespace traVRsal.SDK
 
         private const bool linuxSupport = true;
 
-        private string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};
-        private string[] RELEASE_CHANNELS = {"Production", "Beta", "Alpha"};
+        private readonly string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};
+        private readonly string[] RELEASE_CHANNELS = {"Production", "Beta", "Alpha"};
 
         private static bool debugMode = false;
 
@@ -224,8 +224,6 @@ namespace traVRsal.SDK
                     EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);
                     if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
                     EditorGUI.EndDisabledGroup();
-
-                    if (GUILayout.Button("Test Speech")) EditorCoroutineUtility.StartCoroutine(FetchTTS(), this);
                 }
             }
 
@@ -564,6 +562,7 @@ namespace traVRsal.SDK
 
             string worldBasePath = Path.GetDirectoryName(AssetDatabase.GUIDToAssetPath(AssetDatabase.AssetPathToGUID(root + "World.json"))) + "/Pieces";
             world.objectSpecs = new List<ObjectSpec>();
+            world.usedTags = new HashSet<string>();
             string[] assets = AssetDatabase.FindAssets("*", new[] {root + "Pieces"});
             foreach (string asset in assets)
             {
@@ -571,6 +570,8 @@ namespace traVRsal.SDK
                 if (!assetPath.ToLower().EndsWith(".prefab")) continue;
 
                 GameObject prefab = PrefabUtility.LoadPrefabContents(assetPath);
+                if (!string.IsNullOrWhiteSpace(prefab.tag) && !prefab.CompareTag("Untagged")) world.usedTags.Add(prefab.tag);
+
                 if (prefab.TryGetComponent(out ExtendedAttributes ea))
                 {
                     if (!ea.spec.IsDefault())
