@@ -66,6 +66,7 @@ namespace traVRsal.SDK
         public string maxSize;
         public float maxTileSize;
         [DefaultValue(1.8f)] public float playerHeight = 1.8f;
+        [DefaultValue(1)] public int lives = 1;
         public bool defaultConsiderPlayerHeight;
         [DefaultValue(3.5f)] public float maxFallHeight = 3.5f;
         [DefaultValue(300)] public int availableTime = 5 * 60;
@@ -141,6 +142,7 @@ namespace traVRsal.SDK
         [NonSerialized] public Challenge challenge;
         [NonSerialized] public bool useExistingWorld;
         [NonSerialized] public int autoIdx = 1;
+        [NonSerialized] public int livesLeft;
         [NonSerialized] public float tileSize;
         [NonSerialized] public Vector2Int minSizeV = Vector2Int.zero;
         [NonSerialized] public Vector2Int maxSizeV = Vector2Int.zero;

@@ -82,6 +82,7 @@ namespace traVRsal.SDK
             WorldSize = 55,
             WorldOwner = 66,
             WorldCreators = 123,
+            WorldLives = 166,
 
             ZoneTime = PERIODIC + 5,
             ZoneTimer = PERIODIC + 4,
@@ -93,6 +94,7 @@ namespace traVRsal.SDK
             PlayerLogin = 57,
             PlayerAvatarUrl = 163,
             PlayerImage = ASYNC_RESULT + 4,
+            PlayerLives = 167,
 
             MPPlayerCount = 137,
             MPPlayerNames = 143,
