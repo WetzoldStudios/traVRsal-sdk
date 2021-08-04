@@ -3,14 +3,12 @@ using XNode;
 
 namespace traVRsal.SDK
 {
-    [CreateNodeMenu(menuName: "Variables/Set Variable")]
+    [CreateNodeMenu(menuName: "Variables/Get Bool Variable")]
     [NodeTint(hex: "#B04040")]
-    public class SetVariableNode : Node
+    public class GetBoolVariableNode : Node
     {
-        [Input] public bool call;
         [Input] public string varName;
-        [Input] public bool value;
-        [Output(connectionType: ConnectionType.Override)] public bool Done;
+        [Output] public bool value;
 
         public override object GetValue(NodePort port)
         {
@@ -18,14 +16,8 @@ namespace traVRsal.SDK
 
             switch (port.fieldName)
             {
-                case "call":
-                    return call;
-
                 case "varName":
                     return varName;
-
-                case "value":
-                    return value;
 
 
             }
