@@ -31,8 +31,8 @@ namespace traVRsal.SDK
         public const string LOCKFILE_NAME = "traVRsal.lock";
         public const string MODFILE_NAME = "modding.json";
 
-        public const string VOICE_LOADING_WORLD = "LoadingWorld.wav"; 
-        
+        public const string VOICE_LOADING_WORLD = "LoadingWorld.wav";
+
         // only use specified converters to ensure consistent file format
         private static readonly List<JsonConverter> JSON_CONVERTERS = new List<JsonConverter>
         {
@@ -47,7 +47,8 @@ namespace traVRsal.SDK
             new Vector3Converter(),
             new Vector4Converter(),
             new StringEnumConverter(),
-            new VersionConverter()
+            new VersionConverter(),
+            new HashSetConverter()
         };
 
         // Tags
@@ -89,7 +90,7 @@ namespace traVRsal.SDK
                 }
                 else if (webRequest.isHttpError)
                 {
-                    if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
+                    if (webRequest.responseCode == (int)HttpStatusCode.Unauthorized)
                     {
                         invalidAPIToken = true;
                         Debug.LogError($"Invalid or expired API Token when contacting {uri}");
@@ -104,7 +105,7 @@ namespace traVRsal.SDK
                     invalidAPIToken = false;
                     if (typeof(T) == typeof(string))
                     {
-                        callback((T) Convert.ChangeType(webRequest.downloadHandler.text, typeof(T)));
+                        callback((T)Convert.ChangeType(webRequest.downloadHandler.text, typeof(T)));
                     }
                     else
                     {
@@ -146,7 +147,7 @@ namespace traVRsal.SDK
 
         public static T ReadJSONFile<T>(string fileName)
         {
-            TextAsset textFile = (TextAsset) Resources.Load(fileName);
+            TextAsset textFile = (TextAsset)Resources.Load(fileName);
             if (textFile == null) return default;
 
             T data = DeserializeObject<T>(textFile.text);
@@ -204,7 +205,7 @@ namespace traVRsal.SDK
         // inspired from https://stackoverflow.com/questions/281640/how-do-i-get-a-human-readable-file-size-in-bytes-abbreviation-using-net
         public static string BytesToString(long byteCount)
         {
-            string[] suffix = {"B", "KB", "MB", "GB", "TB", "PB", "EB"};
+            string[] suffix = { "B", "KB", "MB", "GB", "TB", "PB", "EB" };
             if (byteCount == 0) return "0" + suffix[0];
             long bytes = Math.Abs(byteCount);
             int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));

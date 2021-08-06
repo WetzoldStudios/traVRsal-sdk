@@ -65,7 +65,7 @@ namespace traVRsal.SDK
         public string minSize;
         public string maxSize;
         public float maxTileSize;
-        [DefaultValue(1.8f)] public float playerHeight = 1.8f;
+        [DefaultValue(1.9f)] public float playerHeight = 1.9f;
         public int lives;
         public bool defaultConsiderPlayerHeight;
         [DefaultValue(3.5f)] public float maxFallHeight = 3.5f;
