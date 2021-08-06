@@ -5,7 +5,7 @@
   "unity": "2021.1",
   "displayName": "traVRsal SDK",
   "dependencies": {
-    "com.unity.addressables": "1.18.13",
+    "com.unity.addressables": "1.18.11",
     "com.unity.ai.navigation": "1.0.0-exp.3",
     "com.unity.editorcoroutines": "1.0.0",
     "com.unity.nuget.newtonsoft-json": "2.0.1-preview.1",

@@ -32,6 +32,7 @@ namespace traVRsal.SDK
         [DefaultValue("Intro")] public string introWorld = "Intro";
         [DefaultValue("Menu-traVRsal")] public string menuScene = "Menu-traVRsal";
         [DefaultValue("Pause-traVRsal")] public string pauseScene = "Pause-traVRsal";
+        [DefaultValue("GameOver-traVRsal")] public string gameOverScene = "GameOver-traVRsal";
         [DefaultValue("Theater-traVRsal")] public string theaterScene = "Theater-traVRsal";
         public bool devMode;
         public bool enableMultiplayer;

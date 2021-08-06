@@ -5,7 +5,9 @@ namespace traVRsal.SDK
     [AddComponentMenu("traVRsal/Trigger Reactor")]
     public class TriggerReactor : ExecutorConfig
     {
-        [Tooltip("Tag of object that should be reacted on by the trigger")]
+        [Range(0, 5)] public int variableChannel;
+
+        [Tooltip("Tag of object that should be reacted on by the trigger. Separate multiple by comma.")]
         public string source = SDKUtil.PLAYER_HEAD_TAG;
 
         [Tooltip("Name of audio file under Audio/Effects")]
