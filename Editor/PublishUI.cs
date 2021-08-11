@@ -29,8 +29,6 @@ namespace traVRsal.SDK
         private const string TTS_PITCH = "low";
         private const string TTS_SPEED = "";
 
-        private const bool linuxSupport = true;
-
         private readonly string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};
         private readonly string[] RELEASE_CHANNELS = {"Production", "Beta", "Alpha"};
 
@@ -89,6 +87,7 @@ namespace traVRsal.SDK
                 Progress.SetRemainingTime(uploadProgressId, timeRemaining);
                 Progress.Report(uploadProgressId, uploadProgress, "Uploading worlds to server...");
             }
+
             base.OnGUI();
 
             GUILayout.Label("Packaging ensures that the editor shows the most up to date version of your world.", EditorStyles.wordWrappedLabel);
@@ -195,7 +194,7 @@ namespace traVRsal.SDK
                         {
                             PrintTableRow("Size (Quest)", v.distroExistsAndroid ? SDKUtil.BytesToString(v.distroSizeAndroid) : "not packaged yet");
                             PrintTableRow("Size (Windows)", v.distroExistsStandaloneWin ? SDKUtil.BytesToString(v.distroSizeStandaloneWin) : "not packaged yet");
-                            if (linuxSupport) PrintTableRow("Size (Linux)", v.distroExistsStandaloneLinux ? SDKUtil.BytesToString(v.distroSizeStandaloneLinux) : "not packaged yet");
+                            PrintTableRow("Size (Linux)", v.distroExistsStandaloneLinux ? SDKUtil.BytesToString(v.distroSizeStandaloneLinux) : "not packaged yet");
                             if (v.documentationExists)
                             {
                                 BeginPartialTableRow("Documentation");
@@ -206,6 +205,7 @@ namespace traVRsal.SDK
                             {
                                 PrintTableRow("Documentation", "not created yet");
                             }
+
                             BeginPartialTableRow("Actions");
                             EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || !uploadPossible);
                             if (GUILayout.Button("Upload")) EditorCoroutineUtility.StartCoroutine(UploadWorld(worldName), this);
@@ -314,6 +314,7 @@ namespace traVRsal.SDK
                 {
                     File.Copy(dir + "/Images/" + world.coverImage, mediaPath + world.coverImage, true);
                 }
+
                 if (world.chapters != null)
                 {
                     foreach (Chapter chapter in world.chapters)
@@ -327,7 +328,7 @@ namespace traVRsal.SDK
             }
         }
 
-        private IEnumerable<TextureImporter> GetUncompressedTextures()
+        private static IEnumerable<TextureImporter> GetUncompressedTextures()
         {
             return AssetDatabase.FindAssets("t:texture", null)
                 .Select(guid => AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid)) as TextureImporter)
@@ -337,7 +338,7 @@ namespace traVRsal.SDK
                 .Where(ti => ti.textureCompression == TextureImporterCompression.Uncompressed || !ti.crunchedCompression);
         }
 
-        private IEnumerator CompressTextures()
+        private static IEnumerator CompressTextures()
         {
             IEnumerable<TextureImporter> uncompressed = GetUncompressedTextures();
 
@@ -356,6 +357,7 @@ namespace traVRsal.SDK
 
                 yield return null;
             }
+
             uncompressedTextures = 0;
 
             Progress.Remove(progressId);
@@ -426,6 +428,7 @@ namespace traVRsal.SDK
                 }
                 catch
                 {
+                    // ignored
                 }
             }
 
@@ -471,7 +474,7 @@ namespace traVRsal.SDK
                     }
                     else
                     {
-                        if (linuxSupport) targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
+                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
                         targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
                     }
                 }
@@ -520,6 +523,7 @@ namespace traVRsal.SDK
                         AddressableAssetSettings.BuildPlayerContent();
                     }
                 }
+
                 CreateAddressableSettings(!allTargets, releaseChannel); // do again to have clean build state, as some settings were messed with while building
                 RenameCatalogs();
                 packagingSuccessful = true;
@@ -539,6 +543,7 @@ namespace traVRsal.SDK
             {
                 CreateDirWatcher(); // can happen after initial project creation
             }
+
             RemoveLockFile();
             packagingInProgress = false;
 
@@ -560,6 +565,19 @@ namespace traVRsal.SDK
                 return false;
             }
 
+            AddObjectSpecs(world, root);
+            AddRuntimeAnalytics(world, root);
+            IncreaseVersion(world);
+
+            // write back
+            world.NullifyEmpties();
+            File.WriteAllText(root + "World.json", SDKUtil.SerializeObject(world, DefaultValueHandling.Ignore));
+
+            return true;
+        }
+
+        private static void AddObjectSpecs(World world, string root)
+        {
             string worldBasePath = Path.GetDirectoryName(AssetDatabase.GUIDToAssetPath(AssetDatabase.AssetPathToGUID(root + "World.json"))) + "/Pieces";
             world.objectSpecs = new List<ObjectSpec>();
             world.usedTags = new HashSet<string>();
@@ -592,10 +610,19 @@ namespace traVRsal.SDK
                         world.objectSpecs.Add(ea.spec);
                     }
                 }
+
                 if (prefab != null) PrefabUtility.UnloadPrefabContents(prefab);
             }
+        }
 
-            // increase version
+        private static void AddRuntimeAnalytics(World world, string root)
+        {
+            WorldAnalysis analysis = SDKUtil.ReadJSONFileDirect<WorldAnalysis>(root + "Data/WorldAnalysis.json");
+            world.dependencies = analysis;
+        }
+
+        private static void IncreaseVersion(World world)
+        {
             if (string.IsNullOrEmpty(world.version))
             {
                 world.version = "0.0.1";
@@ -609,16 +636,11 @@ namespace traVRsal.SDK
                 else
                 {
                     world.version = "0.0.1";
-                    Debug.LogError($"World.json of {worldName} contained an unreadable version. Resetting to {world.version}.");
+                    Debug.LogError($"World.json of {world.key} contained an unreadable version. Resetting to {world.version}.");
                 }
             }
+
             world.versionCode++;
-
-            // write back
-            world.NullifyEmpties();
-            File.WriteAllText(root + "World.json", SDKUtil.SerializeObject(world, DefaultValueHandling.Ignore));
-
-            return true;
         }
 
         private string GetDocuArchivePath(string worldName)
@@ -665,7 +687,7 @@ namespace traVRsal.SDK
                 foreach (string folder in new[] {"Data", "Images", "Logic", "Materials", "Pieces", "Sceneries", "Audio/Effects", "Audio/Music"})
                 {
                     HashSet<string> doneAlready = new HashSet<string>();
-                    string[] assets = new string[0];
+                    string[] assets = Array.Empty<string>();
                     string objects = "";
                     int objCount = 0;
                     string variableName = Path.GetFileName(folder);
@@ -675,6 +697,7 @@ namespace traVRsal.SDK
                             variableName = "Zones";
                             break;
                     }
+
                     if (Directory.Exists($"{root}{folder}"))
                     {
                         Directory.CreateDirectory(docuPath + folder);
@@ -731,6 +754,7 @@ namespace traVRsal.SDK
                                     type = typeof(AudioClip);
                                     break;
                             }
+
                             objCount++;
 
                             if (generatePreview)
@@ -746,6 +770,7 @@ namespace traVRsal.SDK
                                     prefab = PrefabUtility.LoadPrefabContents(assetPath);
                                     obj = prefab;
                                 }
+
                                 if (obj != null)
                                 {
                                     Texture2D icon = AssetPreview.GetAssetPreview(obj);
@@ -756,6 +781,7 @@ namespace traVRsal.SDK
                                         yield return new EditorWaitForSeconds(0.05f);
                                         icon = AssetPreview.GetAssetPreview(obj);
                                     }
+
                                     if (prefab != null) PrefabUtility.UnloadPrefabContents(prefab);
 
                                     // still will not return something for all assets
@@ -782,12 +808,15 @@ namespace traVRsal.SDK
                             {
                                 imageLink = File.Exists(docuPath + imageName) ? imageName : "MissingPreview.png";
                             }
+
                             objects += "<img src=\"" + imageLink + "\" class=\"mr-3\" width=\"128\">";
                             objects += "<div class=\"media-body\">/" + worldName + "/" + accessKey;
                             objects += "</div></div>";
                         }
+
                         objects += "</table>";
                     }
+
                     html = html.Replace($"{{{variableName}List}}", objects);
                     html = html.Replace($"{{{variableName}Count}}", objCount.ToString());
                 }
@@ -812,7 +841,7 @@ namespace traVRsal.SDK
             documentationInProgress = false;
         }
 
-        public static string GetLockFileLocation()
+        private static string GetLockFileLocation()
         {
             return Application.dataPath + "/../" + SDKUtil.LOCKFILE_NAME;
         }
@@ -834,6 +863,7 @@ namespace traVRsal.SDK
                 string[] files = Directory.GetFiles(Application.dataPath, "*." + extension, SearchOption.AllDirectories);
                 TileMapUtil.ConvertTileMaps(files.ToList(), TravrsalSettingsManager.Get("tiledPath", SDKUtil.TILED_PATH_DEFAULT));
             }
+
             AssetDatabase.Refresh();
         }
 
@@ -919,6 +949,7 @@ namespace traVRsal.SDK
                         remoteTarget = AWSUtil.S3CDNRoot_Alpha;
                         break;
                 }
+
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalBuildPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kLocalLoadPath, localRoot);
                 profile.SetValue(profileId, AddressableAssetSettings.kRemoteBuildPath, $"ServerData/Worlds/{worldName}/[BuildTarget]");
@@ -986,6 +1017,7 @@ namespace traVRsal.SDK
                         channelName = "ALPHA";
                         break;
                 }
+
                 EditorUtility.DisplayDialog("Success", $"Upload of {worldName} completed. Use the " + channelName + " app to test.", "OK");
             }
         }
@@ -1049,6 +1081,7 @@ namespace traVRsal.SDK
                 {
                     Debug.LogError($"There was an error updating world {worldName}: {webRequest.downloadHandler.text}");
                 }
+
                 uploadErrors = true;
             }
         }
@@ -1094,16 +1127,18 @@ namespace traVRsal.SDK
                 {
                     Debug.LogError($"There was an error fetching speech: {webRequest.downloadHandler.text}");
                 }
+
                 speechErrors = true;
             }
             else
             {
                 File.WriteAllBytes(filePath, webRequest.downloadHandler.data);
             }
+
             callback?.Invoke(!speechErrors);
         }
 
-        void OnInspectorUpdate()
+        private void OnInspectorUpdate()
         {
             Repaint();
         }
