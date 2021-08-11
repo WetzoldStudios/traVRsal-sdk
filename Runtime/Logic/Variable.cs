@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace traVRsal.SDK
@@ -11,14 +10,22 @@ namespace traVRsal.SDK
     {
         public enum Behaviour
         {
-            Unrestricted,
-            Change_Higher
+            Unrestricted = 0,
+            Change_Higher = 1
+        }
+
+        public enum Order
+        {
+            Any = 0,
+            Static = 1,
+            Random = 2
         }
 
         [Header("Configuration")] public string key;
         public object value = false;
         public Behaviour behaviour = Behaviour.Unrestricted;
         public string imageFolder;
+        public Order order;
         [DefaultValue(3)] public int targetCount = 3;
         [DefaultValue(true)] public bool resetOnCheckpoint = true;
 
@@ -91,6 +98,7 @@ namespace traVRsal.SDK
             value = copyFrom.value;
             behaviour = copyFrom.behaviour;
             imageFolder = copyFrom.imageFolder;
+            order = copyFrom.order;
             targetCount = copyFrom.targetCount;
             targetOrder = copyFrom.targetOrder;
             currentOrder = copyFrom.currentOrder;
@@ -116,7 +124,7 @@ namespace traVRsal.SDK
         {
             return key == other.key && value == other.value && behaviour == other.behaviour
                    && imageFolder == other.imageFolder && targetCount == other.targetCount
-                   && resetOnCheckpoint == other.resetOnCheckpoint;
+                   && order == other.order && resetOnCheckpoint == other.resetOnCheckpoint;
         }
 
         public override bool Equals(object obj)
@@ -134,6 +142,7 @@ namespace traVRsal.SDK
                 int hashCode = (key != null ? key.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (value != null ? value.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (int) behaviour;
+                hashCode = (hashCode * 397) ^ order.GetHashCode();
                 hashCode = (hashCode * 397) ^ (imageFolder != null ? imageFolder.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ targetCount;
                 return hashCode;
