@@ -236,7 +236,7 @@ namespace traVRsal.SDK
             Verify();
         }
 
-        private void PrintTableRow(string key, string value)
+        private static void PrintTableRow(string key, string value)
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label("", GUILayout.Width(5));
@@ -245,16 +245,25 @@ namespace traVRsal.SDK
             GUILayout.EndHorizontal();
         }
 
-        private void BeginPartialTableRow(string key)
+        private static void BeginPartialTableRow(string key)
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label("", GUILayout.Width(5));
             GUILayout.Label(key, GUILayout.Width(100));
         }
 
-        private void EndPartialTableRow()
+        private static void EndPartialTableRow()
         {
             GUILayout.EndHorizontal();
+        }
+
+        private static void PrepareWorldFiles()
+        {
+            foreach (string dir in GetWorldPaths())
+            {
+                string worldName = Path.GetFileName(dir);
+                UpdateWorldData(worldName);
+            }
         }
 
         private IEnumerator FetchTTS()
@@ -267,16 +276,29 @@ namespace traVRsal.SDK
                 string voicePath = dir + "/Audio/Voice/";
                 Directory.CreateDirectory(voicePath);
 
-                // generate loading text
-                // TODO: hash & cache + support custom loading text
+                // generate loading texts
                 string text = world.journeys?.Count > 0 ? $"Creating a random and unique play-through for {world.name}. " : $"Loading {world.name}. ";
                 text += string.IsNullOrEmpty(world.longDescription) ? world.shortDescription : world.longDescription;
 
                 string targetFile = voicePath + SDKUtil.VOICE_LOADING_WORLD;
-                bool successful = false;
-                if (File.Exists(targetFile)) File.Delete(targetFile);
-                yield return FetchSpeech(text, targetFile, result => successful = result);
-                if (!successful) yield break;
+                string targetHashFile = voicePath + SDKUtil.VOICE_LOADING_WORLD + "_" + text.GetHashString() + ".json";
+                if (!File.Exists(targetHashFile))
+                {
+                    File.WriteAllText(targetHashFile, text.GetHashString());
+                    if (File.Exists(targetFile)) File.Delete(targetFile);
+                    yield return FetchSpeech(text, targetFile, result => { });
+                }
+
+                // load referenced speech fragments
+                world.dependencies.referencedSpeech.Add(SDKUtil.VOICE_WORLD_LOADED);
+                foreach (string speech in world.dependencies.referencedSpeech)
+                {
+                    targetFile = voicePath + SDKUtil.VOICE_SPEECH_PREFIX + speech.GetHashString() + ".wav";
+                    if (!File.Exists(targetFile))
+                    {
+                        yield return FetchSpeech(speech, targetFile, result => { });
+                    }
+                }
             }
         }
 
@@ -285,6 +307,8 @@ namespace traVRsal.SDK
             preparedReleaseChannel = releaseChannel;
 
             yield return FetchUserWorlds();
+            PrepareWorldFiles();
+
             yield return FetchTTS();
             yield return PackageWorlds(packageMode, releaseChannel, true, true, force, linuxOnly);
             yield return CreateDocumentation();
@@ -481,13 +505,6 @@ namespace traVRsal.SDK
                 else
                 {
                     targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, mainTarget));
-                }
-
-                // update world content
-                foreach (string dir in worldsToBuild)
-                {
-                    string worldName = Path.GetFileName(dir);
-                    if (!UpdateWorldData(worldName)) yield break;
                 }
 
                 // iterate over all supported platforms
