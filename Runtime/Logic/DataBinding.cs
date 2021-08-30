@@ -35,8 +35,6 @@ namespace traVRsal.SDK
             DoCloseMultiplayerDialog = 135,
             DoOpenAvatarDialog = 160,
             DoCloseAvatarDialog = 161,
-            DoCreateRandomRoom = 136,
-            DoJoinRoom = 159,
             DoQuit = 126,
             DoPause = 15,
             DoUnpause = 16,
@@ -70,6 +68,7 @@ namespace traVRsal.SDK
             EnterNicknameWithTerms = 99,
             EnterPassword = 65,
             EnterRPMCode = 162,
+            EnterRoomCode = 136,
 
             WorldCategory = 10,
             WorldCover = ASYNC_RESULT + 3,

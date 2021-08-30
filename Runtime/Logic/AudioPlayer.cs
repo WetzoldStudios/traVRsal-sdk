@@ -7,37 +7,44 @@ namespace traVRsal.SDK
     {
         [Range(0, 5)] public int variableChannel;
 
-        [Header("When Variable Is True")] [Tooltip("Sound to play when the variable is true.")]
-        public AudioSource audioActive;
+        public bool stateToReactTo = true;
 
-        public bool playActiveOnlyOnce;
+        [Tooltip("Sound to play when the variable is true.")]
+        public AudioSource audio;
 
-        [Header("When Variable Is False")] [Tooltip("Sound to play when the variable is false.")]
-        public AudioSource audioInactive;
+        [Tooltip("Music to play when the variable is true, referring to a file under Audio/Music.")]
+        public string music;
 
-        public bool playInactiveOnlyOnce;
+        public bool playOnlyOnce;
 
-        private bool activeTriggered;
-        private bool inactiveTriggered;
+        private ISoundAction context;
+        private bool initDone;
+        private bool triggered;
 
-        public void VariableChanged(Variable variable, bool condition, bool initialCall = false)
+        private void Start()
         {
-            if (condition)
+            initDone = true;
+            ISoundAction[] contexts = GetComponentsInParent<ISoundAction>(true);
+            if (contexts.Length > 0)
             {
-                if (!playActiveOnlyOnce || !activeTriggered)
-                {
-                    if (audioActive != null) audioActive.Play();
-                }
-                activeTriggered = true;
+                context = contexts[0];
             }
             else
             {
-                if (!playInactiveOnlyOnce || !inactiveTriggered)
-                {
-                    if (audioInactive != null) audioInactive.Play();
-                }
-                inactiveTriggered = true;
+                EDebug.LogError($"Could not find context on {gameObject}");
             }
+        }
+
+        public void VariableChanged(Variable variable, bool condition, bool initialCall = false)
+        {
+            if (condition != stateToReactTo) return;
+
+            if (!playOnlyOnce || !triggered)
+            {
+                if (audio != null) audio.Play();
+                if (!string.IsNullOrWhiteSpace(music) && context != null) context.PlayMusic(music);
+            }
+            triggered = true;
         }
 
         public int GetVariableChannel()
