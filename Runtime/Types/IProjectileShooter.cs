@@ -3,5 +3,7 @@
     public interface IProjectileShooter
     {
         void Fire();
+
+        void Reload();
     }
 }

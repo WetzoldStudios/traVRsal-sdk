@@ -1,7 +1,7 @@
 {
   "name": "com.wetzold.travrsal.sdk",
   "description": "Provides the tools necessary to create custom worlds for traVRsal.",
-  "version": "1.1.189",
+  "version": "1.1.191",
   "unity": "2021.1",
   "displayName": "traVRsal SDK",
   "dependencies": {
@@ -15,7 +15,7 @@
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.xr.interaction.toolkit": "1.0.0-pre.5",
     "com.unity.xr.management": "4.0.7",
-    "com.unity.xr.oculus": "1.9.1"
+    "com.unity.xr.oculus": "1.10.0"
   },
   "hideInEditor": false,
   "license": "MIT",

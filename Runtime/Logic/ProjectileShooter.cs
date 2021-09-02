@@ -25,11 +25,19 @@ namespace traVRsal.SDK
 
         private IProjectileShooter shooter;
 
+        private void Start()
+        {
+            shooter = GetComponent<IProjectileShooter>();
+        }
+
         public void Fire()
         {
-            if (shooter == null) shooter = GetComponent<IProjectileShooter>();
-
             shooter?.Fire();
+        }
+
+        public void Reload()
+        {
+            shooter?.Reload();
         }
     }
 }

@@ -5,9 +5,16 @@ namespace traVRsal.SDK
     [AddComponentMenu("traVRsal/Audio Player")]
     public class AudioPlayer : MonoBehaviour, IVariableReactor
     {
+        public enum VariableState
+        {
+            Any = 0,
+            True = 1,
+            False = 2
+        }
+
         [Range(0, 5)] public int variableChannel;
 
-        public bool stateToReactTo = true;
+        public VariableState stateToReactTo = VariableState.Any;
 
         [Tooltip("Sound to play when the variable is true.")]
         public AudioSource audio;
@@ -37,7 +44,11 @@ namespace traVRsal.SDK
 
         public void VariableChanged(Variable variable, bool condition, bool initialCall = false)
         {
-            if (condition != stateToReactTo) return;
+            if (stateToReactTo != VariableState.Any)
+            {
+                if (condition && stateToReactTo != VariableState.True) return;
+                if (!condition && stateToReactTo != VariableState.False) return;
+            }
 
             if (!playOnlyOnce || !triggered)
             {

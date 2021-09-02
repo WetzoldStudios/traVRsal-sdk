@@ -45,6 +45,7 @@ namespace traVRsal.SDK
             ChallengesDialog = 13,
             ChallengesListRoot = 14,
 
+            GlobalLeaderBoardRoot = 43,
             GlobalLeaderListRoot = 18,
             WorldOverallLeaderListRoot = 29,
             WorldSpeedLeaderListRoot = 30,
@@ -58,7 +59,7 @@ namespace traVRsal.SDK
             MainMenuModalCanvasRoot = 38,
 
             AvatarName = 42,
-            
+
             TheaterRoot = 37,
             Object = 23
         }
