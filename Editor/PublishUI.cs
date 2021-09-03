@@ -967,10 +967,10 @@ namespace traVRsal.SDK
                         break;
                 }
 
-                profile.SetValue(profileId, AddressableAssetSettings.kLocalBuildPath, localRoot);
-                profile.SetValue(profileId, AddressableAssetSettings.kLocalLoadPath, localRoot);
-                profile.SetValue(profileId, AddressableAssetSettings.kRemoteBuildPath, $"ServerData/Worlds/{worldName}/[BuildTarget]");
-                profile.SetValue(profileId, AddressableAssetSettings.kRemoteLoadPath, $"{remoteTarget}Worlds/{worldName}/[BuildTarget]");
+                SetProfileValue(profile, profileId, AddressableAssetSettings.kLocalBuildPath, localRoot);
+                SetProfileValue(profile, profileId, AddressableAssetSettings.kLocalLoadPath, localRoot);
+                SetProfileValue(profile, profileId, AddressableAssetSettings.kRemoteBuildPath, $"ServerData/Worlds/{worldName}/[BuildTarget]");
+                SetProfileValue(profile, profileId, AddressableAssetSettings.kRemoteLoadPath, $"{remoteTarget}Worlds/{worldName}/[BuildTarget]");
 
                 // ensure correct group settings
                 BundledAssetGroupSchema groupSchema = group.GetSchema<BundledAssetGroupSchema>();
@@ -984,6 +984,13 @@ namespace traVRsal.SDK
                 groupSchema.BuildPath.SetVariableByName(settings, localMode ? AddressableAssetSettings.kLocalBuildPath : AddressableAssetSettings.kRemoteBuildPath);
                 groupSchema.LoadPath.SetVariableByName(settings, localMode ? AddressableAssetSettings.kLocalLoadPath : AddressableAssetSettings.kRemoteLoadPath);
             }
+        }
+
+        private static void SetProfileValue(AddressableAssetProfileSettings profile, string profileId, string variableName, string value)
+        {
+            List<string> variables = profile.GetVariableNames();
+            if (!variables.Contains(variableName)) profile.CreateValue(variableName, value);
+            profile.SetValue(profileId, variableName, value);
         }
 
         private static AddressableAssetGroup CreateAssetGroup<SchemaType>(AddressableAssetSettings settings, string groupName)
