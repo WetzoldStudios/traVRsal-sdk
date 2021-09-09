@@ -13,7 +13,8 @@ namespace traVRsal.SDK
         [Tooltip("Object which visibility should be affected.")]
         public GameObject managedObject;
 
-        [Header("Configuration")] public float distance = 0.5f;
+        [Header("Configuration")] public int checkInterval = 10;
+        public float distance = 0.5f;
 
         private void Start()
         {
@@ -23,6 +24,7 @@ namespace traVRsal.SDK
         private void Update()
         {
             if (trackedObject == null || referenceObject == null || managedObject == null) return;
+            if (Time.frameCount % checkInterval != 0) return;
 
             float measuredDistance = Mathf.Abs((trackedObject.position - referenceObject.position).magnitude);
             bool visible = measuredDistance >= distance;

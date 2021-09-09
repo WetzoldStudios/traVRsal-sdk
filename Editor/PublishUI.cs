@@ -90,7 +90,7 @@ namespace traVRsal.SDK
 
             base.OnGUI();
 
-            GUILayout.Label("Packaging ensures that the editor shows the most up to date version of your world.", EditorStyles.wordWrappedLabel);
+            GUILayout.Label("Packaging ensures that the studio shows the most up to date version of your world.", EditorStyles.wordWrappedLabel);
 
             // TODO: cache
             string[] worlds = GetWorldPaths();

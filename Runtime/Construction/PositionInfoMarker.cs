@@ -11,6 +11,7 @@ namespace traVRsal.SDK
         public int x;
         public int y;
         public bool reachable;
+        public bool behindTransition;
         public Direction transition = Direction.None;
         public bool transitionAhead;
         public Direction aheadDirection = Direction.None;
@@ -47,6 +48,7 @@ namespace traVRsal.SDK
             x = copyFrom.x;
             y = copyFrom.y;
             reachable = copyFrom.reachable;
+            behindTransition = copyFrom.behindTransition;
             transition = copyFrom.transition;
             transitionAhead = copyFrom.transitionAhead;
             aheadDirection = copyFrom.aheadDirection;
