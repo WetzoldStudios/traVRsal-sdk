@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Bhaptics.Tact.Unity;
 using UnityEngine;
+using static traVRsal.SDK.Shield;
 
 namespace traVRsal.SDK
 {
@@ -21,6 +22,9 @@ namespace traVRsal.SDK
 
         [Tooltip("Hit points to be deducted from player health")]
         public int damage = 1;
+
+        [Tooltip("Type of shield the weapon can damage")]
+        public ShieldType shieldDamage = ShieldType.None;
 
         [Tooltip("Indicator if damage is inflicted through a melee weapon")]
         public bool melee;
