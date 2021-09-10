@@ -3,5 +3,7 @@
     public interface IDataChangeTrigger
     {
         void TriggerDataUpdates();
+
+        object GetDataValue();
     }
 }

@@ -103,7 +103,7 @@ namespace traVRsal.SDK
             MPWorldName = 145,
             MPMaxPlayArea = 144,
 
-            AmmunitionRemaining = 120,
+            Item = 120,
             Points = 124,
             AllTargets = 130,
             RemainingTargets = 131,
