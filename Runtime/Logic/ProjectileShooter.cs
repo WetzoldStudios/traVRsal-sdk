@@ -11,17 +11,25 @@ namespace traVRsal.SDK
             PointDown = 1
         }
 
-        public ReloadType reloadType = ReloadType.Never;
+        [Header("Configuration")] public ReloadType reloadType = ReloadType.Never;
         public int bulletCount;
-        public GameObject bullet;
-        public Transform firePoint;
-        public GameObject layerRef;
         public float speed = 1f;
         public bool countIntoStatistics;
         public bool byPlayer;
-        public AudioSource audioSource;
-        public AudioSource reloadAudio;
+
+        [Header("Static References")] public GameObject bullet;
+        public Transform firePoint;
+        public GameObject layerRef;
         public DamageInflictor damageInflictor;
+
+        [Header("Audio")] public AudioSource fireAudio;
+        public AudioSource reloadAudio;
+
+        [Header("Animation")] public Animation animation;
+        public string fireAnimation;
+        public float fireAnimationSpeed = 1f;
+        public string reloadAnimation;
+        public float reloadAnimationSpeed = 1f;
 
         private IProjectileShooter shooter;
 
