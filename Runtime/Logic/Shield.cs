@@ -4,8 +4,13 @@ using UnityEngine;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class Shield
+    public class Shield : MonoBehaviour
     {
+        public const float SHIELD_HEIGHT = 0.005f;
+        public const float SHIELD_OFFSET = 0.005f;
+        public const float SHIELD_DURATION = 0.5f;
+        public const float SHIELD_SCALING = 1.75f;
+
         public enum ShieldType
         {
             None = 0,

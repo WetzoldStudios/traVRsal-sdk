@@ -7,7 +7,6 @@ namespace traVRsal.SDK
     public class Damageable : ExecutorConfig
     {
         public DamageableConfig config;
-        public Shield shield;
 
         public GameObject damageEffect;
         public GameObject destructionEffect;

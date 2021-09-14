@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.UI;
@@ -142,7 +143,7 @@ namespace traVRsal.SDK
             SaveWorld(world);
         }
 
-        private World LoadWorld()
+        private static World LoadWorld()
         {
             string[] paths = GetWorldPaths();
             if (paths == null || paths.Length == 0)
@@ -169,14 +170,14 @@ namespace traVRsal.SDK
             return world;
         }
 
-        private void SaveWorld(World world)
+        private static void SaveWorld(World world)
         {
             string[] paths = GetWorldPaths();
             string worldName = Path.GetFileName(paths[0]);
             string root = GetWorldsRoot() + "/" + worldName + "/";
 
             world.NullifyEmpties();
-            File.WriteAllText(root + "World.json", SDKUtil.SerializeObject(world));
+            File.WriteAllText(root + "World.json", SDKUtil.SerializeObject(world, DefaultValueHandling.Ignore));
         }
     }
 }
