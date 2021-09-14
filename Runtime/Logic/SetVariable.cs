@@ -77,6 +77,7 @@ namespace traVRsal.SDK
         {
             if (!initDone) Init();
             if (mode != Mode.ActiveAndReactive) return;
+            if (initialCall) return;
 
             StartCoroutine(DoVariableChanged(variable, condition, initialCall));
         }
