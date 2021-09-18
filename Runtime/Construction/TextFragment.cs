@@ -9,13 +9,13 @@ namespace traVRsal.SDK
     {
         public enum Event
         {
-            LoadingDone,
-            VariableOn,
-            VariableOff,
-            EnterZone,
-            EnterTransition,
-            SeeObject,
-            HearObject
+            Loading_Done,
+            Variable_On,
+            Variable_Off,
+            Enter_Zone,
+            Enter_Transition,
+            See_Object,
+            Hear_Object
         }
 
         public enum Repetition
@@ -24,7 +24,7 @@ namespace traVRsal.SDK
             Always
         }
 
-        [JsonProperty("event")] public Event worldEvent = Event.LoadingDone;
+        [JsonProperty("event")] public Event worldEvent = Event.Loading_Done;
         public Repetition repetition = Repetition.Once;
         public string key;
         public string audioEffect;
