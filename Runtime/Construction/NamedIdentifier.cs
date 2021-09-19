@@ -16,6 +16,7 @@ namespace traVRsal.SDK
             SettingsDialog = 1,
             PlayerDialog = 7,
             MultiplayerDialog = 28,
+            MultiplayerInfoDialog = 44,
             AvatarDialog = 41,
             InterstitialDialog = 12,
             IntroductionDialog = 22,
