@@ -25,5 +25,10 @@ namespace traVRsal.SDK
 
         [Tooltip("Time in seconds until shield strength is increased by 1. A value of 0 deactivates regeneration.")]
         public float regenerationPeriod;
+
+        private void Start()
+        {
+            // in to enable activation/deactivation
+        }
     }
 }

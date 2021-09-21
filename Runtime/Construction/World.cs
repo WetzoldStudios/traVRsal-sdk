@@ -120,6 +120,7 @@ namespace traVRsal.SDK
 
         [Header("Runtime Data")] public bool journeyMode;
         public bool rotateWorld;
+        public bool requiresNavMesh;
         public bool invalidSettings;
         public string chapter;
         public SkyboxMode skyboxMode = SkyboxMode.None;

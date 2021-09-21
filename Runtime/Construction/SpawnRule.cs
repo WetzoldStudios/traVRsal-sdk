@@ -64,8 +64,8 @@ namespace traVRsal.SDK
         public bool stretchToCeiling;
         public bool flipOrientation;
         public bool considerPlayerHeight;
-        [DefaultValue(-1)] public float shieldProbability = -1;
-        [DefaultValue(-1)] public float shieldRegenerationPeriod = -1;
+        [DefaultValue(-1.0f)] public float shieldProbability = -1f;
+        [DefaultValue(-1.0f)] public float shieldRegenerationPeriod = -1f;
         [DefaultValue(-1)] public int minShields = -1;
         [DefaultValue(-1)] public int maxShields = -1;
         [DefaultValue(-1)] public int maxShieldStrength = -1;
