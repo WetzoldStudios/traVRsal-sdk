@@ -31,6 +31,7 @@ namespace traVRsal.SDK
 
         [Header("Runtime")] public bool runtimeCreated;
         public bool isComboPart;
+        public bool isLocal;
         public List<string> targetOrder = new List<string>();
         public List<string> currentOrder = new List<string>();
         public int currentAutoIndex;
