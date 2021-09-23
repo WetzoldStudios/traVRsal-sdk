@@ -40,6 +40,7 @@ namespace traVRsal.SDK
 
         [Header("When Dealing Damage")] public string haptics;
         public HapticClip[] customHaptics;
+        public bool localizedHaptics;
         public GameObject hitAnimation; // only relevant for bullets right now
 
         // runtime 

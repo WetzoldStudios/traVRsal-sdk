@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Bhaptics.Tact.Unity;
 using UnityEngine;
 
 namespace traVRsal.SDK
@@ -34,6 +35,11 @@ namespace traVRsal.SDK
         public bool allowMelee;
         public bool hideWhenDestroyed = true;
         public string stateChange;
+
+        [Tooltip("Haptics to play, e.g. 'melee'")]
+        public string haptics;
+
+        public HapticClip[] customHaptics;
         public float duration = 0.2f;
 
         [HideInInspector] public List<string> breakSounds;
@@ -58,6 +64,7 @@ namespace traVRsal.SDK
             allowMelee = copyFrom.allowMelee;
             hideWhenDestroyed = copyFrom.hideWhenDestroyed;
             stateChange = copyFrom.stateChange;
+            haptics = copyFrom.haptics;
             duration = copyFrom.duration;
             breakSounds = copyFrom.breakSounds;
         }
