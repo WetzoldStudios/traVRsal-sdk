@@ -22,6 +22,7 @@ namespace traVRsal.SDK
             IntroductionDialog = 22,
             CreateWorldsDialog = 16,
             FailedEntitlementCheckDialog = 24,
+            TopDownPath = 45,
 
             InfoDialog = 10,
             InfoDialogText = 11,

@@ -156,6 +156,12 @@ namespace traVRsal.SDK
             EditorUtility.DisplayDialog("Done", $"Found {md.imageData.Count} images. Check modding.json in target folder.", "OK");
         }
 
+        [MenuItem("traVRsal/Utilities/Reserialize Assets", false, 1200)]
+        public static void ReserializeAssets()
+        {
+            AssetDatabase.ForceReserializeAssets();
+        }
+
         private static GameObject DoConvertToPiece()
         {
             GameObject go = Selection.activeGameObject;
