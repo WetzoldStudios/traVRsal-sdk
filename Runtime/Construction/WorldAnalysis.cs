@@ -6,10 +6,11 @@ namespace traVRsal.SDK
     [Serializable]
     public class WorldAnalysis
     {
+        public int totalObjects;
+        public int totalAgents;
         public List<string> referencedWorlds;
         public List<string> referencedObjects;
         public List<string> referencedSpeech;
-        public int totalObjects;
 
         public WorldAnalysis()
         {

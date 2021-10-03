@@ -42,86 +42,86 @@ namespace traVRsal.SDK
         [Header("Audio")] [Tooltip("Sound to play when movement is started.")]
         public AudioSource audio;
 
-        private float finalDistance;
-        private float finalInitialDelay;
-        private float finalDuration;
-        private float finalOnDelay;
-        private float finalOffDelay;
+        private float _finalDistance;
+        private float _finalInitialDelay;
+        private float _finalDuration;
+        private float _finalOnDelay;
+        private float _finalOffDelay;
 
-        private Vector3 originalPosition;
-        private bool changedOnce;
-        private float startTime;
-        private bool loadingDone;
-        private bool initStateDone;
-        private bool initDone;
-        private bool continueAfterPause;
-        private Tween curTween;
+        private Vector3 _originalPosition;
+        private bool _changedOnce;
+        private float _startTime;
+        private bool _loadingDone;
+        private bool _initStateDone;
+        private bool _initDone;
+        private bool _continueAfterPause;
+        private Tween _curTween;
 
         private void Start()
         {
-            if (!initStateDone) InitState();
+            if (!_initStateDone) InitState();
         }
 
         private void InitState()
         {
-            originalPosition = transform.localPosition;
+            _originalPosition = transform.localPosition;
 
-            finalDistance = Random.Range(distance.x, distance.y);
-            finalInitialDelay = Random.Range(initialDelay.x, initialDelay.y);
-            finalDuration = Random.Range(duration.x, duration.y);
-            finalOnDelay = Random.Range(onDelay.x, onDelay.y);
-            finalOffDelay = Random.Range(offDelay.x, offDelay.y);
+            _finalDistance = Random.Range(distance.x, distance.y);
+            _finalInitialDelay = Random.Range(initialDelay.x, initialDelay.y);
+            _finalDuration = Random.Range(duration.x, duration.y);
+            _finalOnDelay = Random.Range(onDelay.x, onDelay.y);
+            _finalOffDelay = Random.Range(offDelay.x, offDelay.y);
 
-            initStateDone = true;
+            _initStateDone = true;
         }
 
         private void OnEnable()
         {
-            if (!loadingDone) return;
-            if (initDone)
+            if (!_loadingDone) return;
+            if (_initDone)
             {
-                if (curTween != null && (continueAfterPause || !curTween.IsComplete())) curTween.Play();
-                continueAfterPause = false;
+                if (_curTween != null && (_continueAfterPause || !_curTween.IsComplete())) _curTween.Play();
+                _continueAfterPause = false;
                 return;
             }
 
             // needed for support of initialDelay, since any WaitForSeconds will be interrupted during loading when GO becomes inactive
-            startTime = Mathf.Max(Time.time + finalInitialDelay, Single.Epsilon);
+            _startTime = Mathf.Max(Time.time + _finalInitialDelay, Single.Epsilon);
         }
 
         private void OnDisable()
         {
-            if (curTween == null) return;
+            if (_curTween == null) return;
 
-            if (curTween.IsPlaying())
+            if (_curTween.IsPlaying())
             {
-                curTween.Pause();
-                continueAfterPause = true;
+                _curTween.Pause();
+                _continueAfterPause = true;
             }
         }
 
         private void Update()
         {
-            if (initDone || mode != Mode.Manual) return;
-            if (startTime > 0 && Time.time > startTime)
+            if (_initDone || mode != Mode.Manual) return;
+            if (_startTime > 0 && Time.time > _startTime)
             {
                 SetupManual();
-                initDone = true;
+                _initDone = true;
             }
         }
 
         private void SetupManual()
         {
-            if (finalDistance == 0) return;
+            if (_finalDistance == 0) return;
 
             Sequence s = DOTween.Sequence();
-            s.PrependInterval(finalOnDelay);
+            s.PrependInterval(_finalOnDelay);
             s.AppendCallback(PlayAudio); // OnPlay is only called once in a sequence
-            s.Append(transform.DOLocalMove(transform.localPosition + axis * finalDistance, finalDuration).SetEase(easeType));
-            s.AppendInterval(finalOffDelay);
+            s.Append(transform.DOLocalMove(transform.localPosition + axis * _finalDistance, _finalDuration).SetEase(easeType));
+            s.AppendInterval(_finalOffDelay);
             s.SetLoops(loop ? -1 : 0, loopType);
 
-            curTween = s;
+            _curTween = s;
         }
 
         private void PlayAudio()
@@ -132,28 +132,28 @@ namespace traVRsal.SDK
         public void VariableChanged(Variable variable, bool condition, bool initialCall = false)
         {
             if (mode != Mode.Variable) return;
-            if (!initStateDone) InitState();
-            initDone = true;
+            if (!_initStateDone) InitState();
+            _initDone = true;
 
-            if (curTween != null) DOTween.Kill(curTween);
+            if (_curTween != null) DOTween.Kill(_curTween);
             if (variable.value is bool)
             {
                 if (condition)
                 {
-                    curTween = transform.DOLocalMove(originalPosition + axis * finalDistance, finalDuration)
-                        .SetDelay(finalOnDelay + (changedOnce ? 0f : finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                    _curTween = transform.DOLocalMove(_originalPosition + axis * _finalDistance, _finalDuration)
+                        .SetDelay(_finalOnDelay + (_changedOnce ? 0f : _finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
                 }
                 else
                 {
-                    curTween = transform.DOLocalMove(originalPosition, finalDuration)
-                        .SetDelay(finalOffDelay + (changedOnce ? 0f : finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                    _curTween = transform.DOLocalMove(_originalPosition, _finalDuration)
+                        .SetDelay(_finalOffDelay + (_changedOnce ? 0f : _finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
                 }
             }
             else
             {
                 MovePartially(variable.GetNumeric());
             }
-            if (!initialCall && variable.everChanged) changedOnce = true;
+            if (!initialCall && variable.everChanged) _changedOnce = true;
         }
 
         public int GetVariableChannel()
@@ -163,11 +163,11 @@ namespace traVRsal.SDK
 
         private void MovePartially(float distance)
         {
-            Vector3 pos = originalPosition + (axis * finalDistance - originalPosition) * distance;
+            Vector3 pos = _originalPosition + (axis * _finalDistance - _originalPosition) * distance;
 
-            if (curTween != null) DOTween.Kill(curTween);
-            curTween = transform.DOLocalMove(pos, finalDuration)
-                .SetDelay(finalOffDelay + (changedOnce ? 0f : finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
+            if (_curTween != null) DOTween.Kill(_curTween);
+            _curTween = transform.DOLocalMove(pos, _finalDuration)
+                .SetDelay(_finalOffDelay + (_changedOnce ? 0f : _finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
         }
 
         public void ZoneChange(Zone zone, bool isCurrent)
@@ -176,15 +176,15 @@ namespace traVRsal.SDK
 
         public void FinishedLoading(Vector3 tileSizes, bool instantEnablement = false)
         {
-            if (!initStateDone) InitState();
+            if (!_initStateDone) InitState();
 
             // multiply with tile size to fit into world grid
             if (valueScale == ValueScale.Tiles)
             {
-                finalDistance *= axis.y != 0 ? tileSizes.y : tileSizes.x;
+                _finalDistance *= axis.y != 0 ? tileSizes.y : tileSizes.x;
             }
 
-            loadingDone = true;
+            _loadingDone = true;
             if (instantEnablement) OnEnable();
         }
     }

@@ -17,7 +17,7 @@ namespace traVRsal.SDK
         public bool invert;
         [Range(0, 5)] public int variableChannel;
 
-        private Tween curTween;
+        private Tween _curTween;
 
         private void Start()
         {
@@ -28,8 +28,8 @@ namespace traVRsal.SDK
         {
             float targetValue = condition ? (invert ? minValue : maxValue) : (invert ? maxValue : minValue);
 
-            curTween?.Kill();
-            curTween = DOTween.To(() => skinnedRenderer.GetBlendShapeWeight(shapeIndex), x => skinnedRenderer.SetBlendShapeWeight(shapeIndex, x), targetValue, duration);
+            _curTween?.Kill();
+            _curTween = DOTween.To(() => skinnedRenderer.GetBlendShapeWeight(shapeIndex), x => skinnedRenderer.SetBlendShapeWeight(shapeIndex, x), targetValue, duration);
         }
 
         public int GetVariableChannel()

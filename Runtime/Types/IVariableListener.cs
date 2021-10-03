@@ -4,6 +4,8 @@
     {
         void Init();
 
+        void DeInit();
+
         void VariableChange(Variable variable, bool initialCall = false);
     }
 }

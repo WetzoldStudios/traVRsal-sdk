@@ -19,35 +19,34 @@ namespace traVRsal.SDK
         public float sound2Delay;
         public float sound2Duration;
 
-        private Animator animator;
-        private float nextTrigger;
+        private Animator _animator;
+        private float _nextTrigger;
 
         private void Start()
         {
-            animator = GetComponentInChildren<Animator>();
-            nextTrigger = Time.time + Random.Range(0, initialRandomDelay);
+            _animator = GetComponentInChildren<Animator>();
+            _nextTrigger = Time.time + Random.Range(0, initialRandomDelay);
         }
 
         private void Update()
         {
-            if (Time.time > nextTrigger)
-            {
-                nextTrigger = Time.time + interval;
-                if (!string.IsNullOrEmpty(triggerKey1)) StartCoroutine(TriggerAnimation(triggerKey1, 0));
-                if (!string.IsNullOrEmpty(triggerKey2)) StartCoroutine(TriggerAnimation(triggerKey2, trigger2Offset));
+            if (!(Time.time > _nextTrigger)) return;
 
-                if (sound1 != null) StartCoroutine(PlaySound(sound1, sound1Delay, sound1Duration));
-                if (sound2 != null) StartCoroutine(PlaySound(sound2, sound2Delay, sound2Duration));
-            }
+            _nextTrigger = Time.time + interval;
+            if (!string.IsNullOrEmpty(triggerKey1)) StartCoroutine(TriggerAnimation(triggerKey1, 0));
+            if (!string.IsNullOrEmpty(triggerKey2)) StartCoroutine(TriggerAnimation(triggerKey2, trigger2Offset));
+
+            if (sound1 != null) StartCoroutine(PlaySound(sound1, sound1Delay, sound1Duration));
+            if (sound2 != null) StartCoroutine(PlaySound(sound2, sound2Delay, sound2Duration));
         }
 
         private IEnumerator TriggerAnimation(string key, float delay)
         {
             yield return new WaitForSeconds(delay);
-            animator.SetTrigger(key);
+            _animator.SetTrigger(key);
         }
 
-        private IEnumerator PlaySound(AudioSource sound, float delay, float duration)
+        private static IEnumerator PlaySound(AudioSource sound, float delay, float duration)
         {
             sound.Stop();
             yield return new WaitForSeconds(delay);

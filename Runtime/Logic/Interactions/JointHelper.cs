@@ -12,38 +12,38 @@ namespace traVRsal.SDK
         public bool lockYRotation = true;
         public bool lockZRotation = true;
 
-        private Vector3 initialPosition;
-        private Vector3 initialRotation;
+        private Vector3 _initialPosition;
+        private Vector3 _initialRotation;
 
         private void Start()
         {
-            initialPosition = transform.localPosition;
-            initialRotation = transform.localEulerAngles;
+            _initialPosition = transform.localPosition;
+            _initialRotation = transform.localEulerAngles;
         }
 
-        private void lockPosition()
+        private void LockPosition()
         {
             if (lockXPosition || lockYPosition || lockZPosition)
             {
                 Vector3 currentPosition = transform.localPosition;
-                transform.localPosition = new Vector3(lockXPosition ? initialPosition.x : currentPosition.x, lockYPosition ? initialPosition.y : currentPosition.y, lockZPosition ? initialPosition.z : currentPosition.z);
+                transform.localPosition = new Vector3(lockXPosition ? _initialPosition.x : currentPosition.x, lockYPosition ? _initialPosition.y : currentPosition.y, lockZPosition ? _initialPosition.z : currentPosition.z);
             }
 
             if (lockXRotation || lockYRotation || lockZRotation)
             {
                 Vector3 currentRotation = transform.localEulerAngles;
-                transform.localEulerAngles = new Vector3(lockXRotation ? initialRotation.x : currentRotation.x, lockYRotation ? initialRotation.y : currentRotation.y, lockZRotation ? initialRotation.z : currentRotation.z);
+                transform.localEulerAngles = new Vector3(lockXRotation ? _initialRotation.x : currentRotation.x, lockYRotation ? _initialRotation.y : currentRotation.y, lockZRotation ? _initialRotation.z : currentRotation.z);
             }
         }
 
         private void LateUpdate()
         {
-            lockPosition();
+            LockPosition();
         }
 
         private void FixedUpdate()
         {
-            lockPosition();
+            LockPosition();
         }
     }
 }

@@ -8,46 +8,45 @@ namespace traVRsal.SDK
         public float speed = 10f;
         public bool resetLayer;
 
-        private Vector3 originalPosition;
-        private Quaternion originalRotation;
-        private int originalLayer;
-        private bool doReturn;
+        private Vector3 _originalPosition;
+        private Quaternion _originalRotation;
+        private int _originalLayer;
+        private bool _doReturn;
 
         private void Start()
         {
-            originalPosition = transform.position;
-            originalRotation = transform.rotation;
-            originalLayer = gameObject.layer;
+            _originalPosition = transform.position;
+            _originalRotation = transform.rotation;
+            _originalLayer = gameObject.layer;
         }
 
         private void Update()
         {
-            if (doReturn)
+            if (!_doReturn) return;
+
+            transform.position = Vector3.Lerp(transform.position, _originalPosition, speed * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, _originalRotation, speed * Time.deltaTime);
+
+            float dist = Vector3.Distance(transform.position, _originalPosition);
+
+            // reached destination, snap to final transform position
+            if (dist <= 0.002f)
             {
-                transform.position = Vector3.Lerp(transform.position, originalPosition, speed * Time.deltaTime);
-                transform.rotation = Quaternion.Lerp(transform.rotation, originalRotation, speed * Time.deltaTime);
-
-                float dist = Vector3.Distance(transform.position, originalPosition);
-
-                // reached destination, snap to final transform position
-                if (dist <= 0.002f)
-                {
-                    doReturn = false;
-                    transform.position = originalPosition;
-                    transform.rotation = originalRotation;
-                }
+                _doReturn = false;
+                transform.position = _originalPosition;
+                transform.rotation = _originalRotation;
             }
         }
 
         public void Trigger()
         {
-            doReturn = true;
-            if (resetLayer) gameObject.layer = originalLayer;
+            _doReturn = true;
+            if (resetLayer) gameObject.layer = _originalLayer;
         }
 
         public void Stop()
         {
-            doReturn = false;
+            _doReturn = false;
         }
     }
 }

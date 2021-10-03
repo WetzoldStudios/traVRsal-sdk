@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 namespace traVRsal.SDK
 {
@@ -8,8 +10,10 @@ namespace traVRsal.SDK
     {
         public string key = "alt";
         public float duration = 5f;
-        public List<Behaviour> enabledComponents;
-        public List<Behaviour> disabledComponents;
+        [Obsolete] public List<Behaviour> enabledComponents;
+        [Obsolete] public List<Behaviour> disabledComponents;
         public List<MaterialReference> materialSlots;
+
+        public UnityEvent<bool> onStateChange;
     }
 }

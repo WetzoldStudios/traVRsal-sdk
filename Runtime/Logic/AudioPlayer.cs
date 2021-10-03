@@ -24,17 +24,23 @@ namespace traVRsal.SDK
 
         public bool playOnlyOnce;
 
-        private ISoundAction context;
-        private bool initDone;
-        private bool triggered;
+        private ISoundAction _context;
+        private bool _initDone;
+        private bool _triggered;
 
         private void Start()
         {
-            initDone = true;
+            Init();
+        }
+
+        private void Init()
+        {
+            _initDone = true;
+
             ISoundAction[] contexts = GetComponentsInParent<ISoundAction>(true);
             if (contexts.Length > 0)
             {
-                context = contexts[0];
+                _context = contexts[0];
             }
             else
             {
@@ -44,18 +50,19 @@ namespace traVRsal.SDK
 
         public void VariableChanged(Variable variable, bool condition, bool initialCall = false)
         {
+            if (!_initDone) Init();
             if (stateToReactTo != VariableState.Any)
             {
                 if (condition && stateToReactTo != VariableState.True) return;
                 if (!condition && stateToReactTo != VariableState.False) return;
             }
 
-            if (!playOnlyOnce || !triggered)
+            if (!playOnlyOnce || !_triggered)
             {
                 if (audio != null) audio.Play();
-                if (!string.IsNullOrWhiteSpace(music) && context != null) context.PlayMusic(music);
+                if (!string.IsNullOrWhiteSpace(music) && _context != null) _context.PlayMusic(music);
             }
-            triggered = true;
+            _triggered = true;
         }
 
         public int GetVariableChannel()

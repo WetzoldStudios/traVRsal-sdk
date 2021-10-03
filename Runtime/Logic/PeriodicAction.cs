@@ -16,25 +16,24 @@ namespace traVRsal.SDK
         public List<Behaviour> toggleComponents;
         public List<Collider> toggleColliders;
 
-        private float finalInterval;
-        private float nextAction;
+        private float _finalInterval;
+        private float _nextAction;
 
         private void Start()
         {
-            finalInterval = Random.Range(interval.x, interval.y);
-            nextAction = Time.time + Random.Range(initialDelay.x, initialDelay.y) + (fixedInterval ? finalInterval : Random.Range(interval.x, interval.y));
+            _finalInterval = Random.Range(interval.x, interval.y);
+            _nextAction = Time.time + Random.Range(initialDelay.x, initialDelay.y) + (fixedInterval ? _finalInterval : Random.Range(interval.x, interval.y));
         }
 
         private void Update()
         {
-            if (Time.time > nextAction)
-            {
-                nextAction = Time.time + (fixedInterval ? finalInterval : Random.Range(interval.x, interval.y));
+            if (!(Time.time > _nextAction)) return;
 
-                toggleObjects.ForEach(go => go.SetActive(!go.activeSelf));
-                toggleComponents.ForEach(b => b.enabled = !b.enabled);
-                toggleColliders.ForEach(b => b.enabled = !b.enabled);
-            }
+            _nextAction = Time.time + (fixedInterval ? _finalInterval : Random.Range(interval.x, interval.y));
+
+            toggleObjects.ForEach(go => go.SetActive(!go.activeSelf));
+            toggleComponents.ForEach(b => b.enabled = !b.enabled);
+            toggleColliders.ForEach(b => b.enabled = !b.enabled);
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace traVRsal.SDK
 {
@@ -12,10 +14,11 @@ namespace traVRsal.SDK
         public GameObject destructionEffect;
         public Vector3 destructionEffectOffset;
 
-        public List<GameObject> enabledGameObjectsOnDestruction;
-        public List<GameObject> disabledGameObjectsOnDestruction;
-        public List<Behaviour> enabledComponentsOnDestruction;
-        public List<Behaviour> disabledComponentsOnDestruction;
+        [Obsolete] public List<GameObject> enabledGameObjectsOnDestruction;
+        [Obsolete] public List<GameObject> disabledGameObjectsOnDestruction;
+        [Obsolete] public List<Behaviour> enabledComponentsOnDestruction;
+        [Obsolete] public List<Behaviour> disabledComponentsOnDestruction;
+        public UnityEvent onDestruction;
         public AudioSource[] breakSounds;
 
         public Damageable()

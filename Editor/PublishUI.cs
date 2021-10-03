@@ -32,35 +32,35 @@ namespace traVRsal.SDK
         private readonly string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};
         private readonly string[] RELEASE_CHANNELS = {"Production", "Beta", "Alpha"};
 
-        private static bool debugMode = false;
+        private static bool _debugMode = false;
 
-        private static bool packagingInProgress;
-        private static bool documentationInProgress;
-        private static bool uploadErrors;
-        private static bool speechErrors;
-        private static bool uploadInProgress;
-        private static bool verifyInProgress;
-        private static bool packagingSuccessful;
-        private static bool verificationPassed;
-        private static bool uploadPossible;
-        private static bool worldListMismatch;
+        private static bool _packagingInProgress;
+        private static bool _documentationInProgress;
+        private static bool _uploadErrors;
+        private static bool _speechErrors;
+        private static bool _uploadInProgress;
+        private static bool _verifyInProgress;
+        private static bool _packagingSuccessful;
+        private static bool _verificationPassed;
+        private static bool _uploadPossible;
+        private static bool _worldListMismatch;
 
-        private int releaseChannel;
-        private int packageMode = 1;
+        private int _releaseChannel;
+        private int _packageMode = 1;
 
-        private static DateTime uploadStartTime;
-        private static float uploadProgress = 1;
-        private static int uploadProgressId;
-        private static int uncompressedTextures;
-        private static DirectoryWatcher dirWatcher;
-        private static PublishUI window;
-        private static Dictionary<string, VerificationResult> verifications = new Dictionary<string, VerificationResult>();
-        private static int preparedReleaseChannel;
+        private static DateTime _uploadStartTime;
+        private static float _uploadProgress = 1;
+        private static int _uploadProgressId;
+        private static int _uncompressedTextures;
+        private static DirectoryWatcher _dirWatcher;
+        private static PublishUI _window;
+        private static Dictionary<string, VerificationResult> _verifications = new Dictionary<string, VerificationResult>();
+        private static int _preparedReleaseChannel;
 
         [MenuItem("traVRsal/Publisher", priority = 120)]
         public static void ShowWindow()
         {
-            window = GetWindow<PublishUI>("traVRsal Publisher");
+            _window = GetWindow<PublishUI>("traVRsal Publisher");
         }
 
         public override void OnEnable()
@@ -71,21 +71,21 @@ namespace traVRsal.SDK
 
         private static void CreateDirWatcher()
         {
-            if (dirWatcher == null)
+            if (_dirWatcher == null)
             {
-                dirWatcher = new DirectoryWatcher(new FSWParams(GetWorldsRoot(false)));
-                dirWatcher.StartFSW();
+                _dirWatcher = new DirectoryWatcher(new FSWParams(GetWorldsRoot(false)));
+                _dirWatcher.StartFSW();
             }
         }
 
         public override void OnGUI()
         {
             // independent of actual window
-            if (uploadInProgress)
+            if (_uploadInProgress)
             {
-                int timeRemaining = Mathf.Max(1, Mathf.RoundToInt((DateTime.Now.Subtract(uploadStartTime).Seconds / uploadProgress) * (1 - uploadProgress)));
-                Progress.SetRemainingTime(uploadProgressId, timeRemaining);
-                Progress.Report(uploadProgressId, uploadProgress, "Uploading worlds to server...");
+                int timeRemaining = Mathf.Max(1, Mathf.RoundToInt((DateTime.Now.Subtract(_uploadStartTime).Seconds / _uploadProgress) * (1 - _uploadProgress)));
+                Progress.SetRemainingTime(_uploadProgressId, timeRemaining);
+                Progress.Report(_uploadProgressId, _uploadProgress, "Uploading worlds to server...");
             }
 
             base.OnGUI();
@@ -118,23 +118,23 @@ namespace traVRsal.SDK
                         EditorGUILayout.Space();
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Packaging Mode:", EditorStyles.wordWrappedLabel);
-                        packageMode = EditorGUILayout.Popup(packageMode, PACKAGE_OPTIONS);
+                        _packageMode = EditorGUILayout.Popup(_packageMode, PACKAGE_OPTIONS);
                         GUILayout.EndHorizontal();
                     }
                     else
                     {
-                        packageMode = 0;
+                        _packageMode = 0;
                     }
 
-                    EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress);
+                    EditorGUI.BeginDisabledGroup(_packagingInProgress || _uploadInProgress);
                     string buttonText = "Package";
-                    if (packageMode == 1)
+                    if (_packageMode == 1)
                     {
-                        string[] worldsToBuild = GetWorldsToBuild(packageMode).Select(Path.GetFileName).ToArray();
-                        buttonText += " (" + ((dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", worldsToBuild) : "everything") + ")";
+                        string[] worldsToBuild = GetWorldsToBuild(_packageMode).Select(Path.GetFileName).ToArray();
+                        buttonText += " (" + ((_dirWatcher.affectedFiles.Count > 0) ? string.Join(", ", worldsToBuild) : "everything") + ")";
                     }
 
-                    if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(packageMode, releaseChannel, packageMode == 2, packageMode == 2), this);
+                    if (GUILayout.Button(buttonText)) EditorCoroutineUtility.StartCoroutine(PackageWorlds(_packageMode, _releaseChannel, _packageMode == 2, _packageMode == 2), this);
                     EditorGUI.EndDisabledGroup();
                 }
 
@@ -151,32 +151,32 @@ namespace traVRsal.SDK
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Release Channel:", EditorStyles.wordWrappedLabel);
-                    releaseChannel = EditorGUILayout.Popup(releaseChannel, RELEASE_CHANNELS);
+                    _releaseChannel = EditorGUILayout.Popup(_releaseChannel, RELEASE_CHANNELS);
 
-                    EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);
+                    EditorGUI.BeginDisabledGroup(_packagingInProgress || _uploadInProgress || _verifyInProgress || _documentationInProgress);
                     if (GUILayout.Button("Prepare Upload")) EditorCoroutineUtility.StartCoroutine(PrepareUpload(), this);
                     EditorGUI.EndDisabledGroup();
                     GUILayout.EndHorizontal();
                 }
 
                 CheckTokenGUI();
-                if (worldListMismatch && !SDKUtil.networkIssue)
+                if (_worldListMismatch && !SDKUtil.networkIssue)
                 {
                     EditorGUILayout.Space();
                     EditorGUILayout.HelpBox("The worlds inside your Worlds folder do not match your registered worlds on www.traVRsal.com. You probably need to rename these locally to match exactly.", MessageType.Error);
                     if (GUILayout.Button("Refresh")) EditorCoroutineUtility.StartCoroutine(RefreshVerify(), this);
                 }
 
-                if (uncompressedTextures > 0)
+                if (_uncompressedTextures > 0)
                 {
                     EditorGUILayout.Space();
                     GUILayout.BeginHorizontal();
-                    EditorGUILayout.HelpBox("Uncompressed Textures in Project: " + uncompressedTextures, MessageType.Warning);
+                    EditorGUILayout.HelpBox("Uncompressed Textures in Project: " + _uncompressedTextures, MessageType.Warning);
                     if (GUILayout.Button("Fix")) EditorCoroutineUtility.StartCoroutine(CompressTextures(), this);
                     GUILayout.EndHorizontal();
                 }
 
-                if (verifications.Count > 0)
+                if (_verifications.Count > 0)
                 {
                     EditorGUILayout.Space();
                     GUILayout.Label("Verification Results", EditorStyles.boldLabel);
@@ -184,9 +184,9 @@ namespace traVRsal.SDK
                     foreach (string dir in GetWorldPaths())
                     {
                         string worldName = Path.GetFileName(dir);
-                        if (!verifications.ContainsKey(worldName)) continue;
+                        if (!_verifications.ContainsKey(worldName)) continue;
 
-                        VerificationResult v = verifications[worldName];
+                        VerificationResult v = _verifications[worldName];
 
                         v.showDetails = EditorGUILayout.Foldout(v.showDetails, worldName);
 
@@ -207,21 +207,21 @@ namespace traVRsal.SDK
                             }
 
                             BeginPartialTableRow("Actions");
-                            EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || !uploadPossible);
+                            EditorGUI.BeginDisabledGroup(_packagingInProgress || _uploadInProgress || !_uploadPossible);
                             if (GUILayout.Button("Upload")) EditorCoroutineUtility.StartCoroutine(UploadWorld(worldName), this);
-                            if (debugMode && GUILayout.Button("Register")) EditorCoroutineUtility.StartCoroutine(PublishWorldUpdates(worldName), this);
+                            if (_debugMode && GUILayout.Button("Register")) EditorCoroutineUtility.StartCoroutine(PublishWorldUpdates(worldName), this);
                             EditorGUI.EndDisabledGroup();
                             EndPartialTableRow();
                         }
                     }
                 }
 
-                if (debugMode)
+                if (_debugMode)
                 {
                     EditorGUILayout.Space();
                     EditorGUILayout.HelpBox("Debug mode is enabled.", MessageType.Warning);
 
-                    EditorGUI.BeginDisabledGroup(packagingInProgress || uploadInProgress || verifyInProgress || documentationInProgress);
+                    EditorGUI.BeginDisabledGroup(_packagingInProgress || _uploadInProgress || _verifyInProgress || _documentationInProgress);
                     if (GUILayout.Button("Create Documentation")) EditorCoroutineUtility.StartCoroutine(CreateDocumentation(), this);
                     EditorGUI.EndDisabledGroup();
                 }
@@ -304,18 +304,18 @@ namespace traVRsal.SDK
 
         private IEnumerator PrepareUpload(bool force = false, bool linuxOnly = false)
         {
-            preparedReleaseChannel = releaseChannel;
+            _preparedReleaseChannel = _releaseChannel;
 
             yield return FetchUserWorlds();
             PrepareWorldFiles();
 
             yield return FetchTTS();
-            yield return PackageWorlds(packageMode, releaseChannel, true, true, force, linuxOnly);
+            yield return PackageWorlds(_packageMode, _releaseChannel, true, true, force, linuxOnly);
             yield return CreateDocumentation();
             PrepareCommonFiles();
             Verify();
 
-            uploadPossible = packagingSuccessful && verificationPassed;
+            _uploadPossible = _packagingSuccessful && _verificationPassed;
         }
 
         private void PrepareCommonFiles()
@@ -382,7 +382,7 @@ namespace traVRsal.SDK
                 yield return null;
             }
 
-            uncompressedTextures = 0;
+            _uncompressedTextures = 0;
 
             Progress.Remove(progressId);
             EditorUtility.DisplayDialog("Done", "Texture compression completed. Prepare the upload again.", "OK");
@@ -390,13 +390,13 @@ namespace traVRsal.SDK
 
         private void Verify()
         {
-            verifyInProgress = true;
-            verificationPassed = false;
-            worldListMismatch = false;
-            verifications.Clear();
+            _verifyInProgress = true;
+            _verificationPassed = false;
+            _worldListMismatch = false;
+            _verifications.Clear();
 
             IEnumerable<TextureImporter> uncompressed = GetUncompressedTextures();
-            uncompressedTextures = uncompressed.Count();
+            _uncompressedTextures = uncompressed.Count();
 
             foreach (string dir in GetWorldPaths())
             {
@@ -420,17 +420,17 @@ namespace traVRsal.SDK
                 result.distroExistsStandaloneLinux = Directory.Exists(result.distroPathStandaloneLinux);
                 result.distroSizeStandaloneLinux = DirectoryUtil.GetSize(result.distroPathStandaloneLinux);
 
-                verifications.Add(worldName, result);
+                _verifications.Add(worldName, result);
 
                 if (userWorlds != null && userWorlds.Count(w => w.key == worldName) == 0)
                 {
                     Debug.LogError($"Found unregistered world: {worldName}");
-                    worldListMismatch = true;
+                    _worldListMismatch = true;
                 }
             }
 
-            verifyInProgress = false;
-            verificationPassed = !worldListMismatch && !SDKUtil.invalidAPIToken && !SDKUtil.networkIssue; // TODO: do some actual checks
+            _verifyInProgress = false;
+            _verificationPassed = !_worldListMismatch && !SDKUtil.invalidAPIToken && !SDKUtil.networkIssue; // TODO: do some actual checks
         }
 
         private static string GetServerDataPath()
@@ -446,7 +446,7 @@ namespace traVRsal.SDK
                 try
                 {
                     string[] filteredWorlds = worldsToBuild.Where(
-                        worldName => dirWatcher.affectedFiles.Any(af => af.Contains("/" + Path.GetFileName(worldName) + "/") || af.Contains("\\" + Path.GetFileName(worldName) + "\\"))
+                        worldName => _dirWatcher.affectedFiles.Any(af => af.Contains("/" + Path.GetFileName(worldName) + "/") || af.Contains("\\" + Path.GetFileName(worldName) + "\\"))
                     ).ToArray();
                     if (filteredWorlds.Length > 0) worldsToBuild = filteredWorlds;
                 }
@@ -461,9 +461,11 @@ namespace traVRsal.SDK
 
         public static IEnumerator PackageWorlds(int packageMode, int releaseChannel, bool allWorlds, bool allTargets, bool force = false, bool linuxOnly = false)
         {
-            uploadPossible = false;
-            packagingInProgress = true;
-            packagingSuccessful = false;
+            _uploadPossible = false;
+            _packagingInProgress = true;
+            _packagingSuccessful = false;
+
+            PrepareWorldFiles(); // prepare again as in normal packaging world analysis and object keys would otherwise not be available instantly
 
             try
             {
@@ -543,18 +545,18 @@ namespace traVRsal.SDK
 
                 CreateAddressableSettings(!allTargets, releaseChannel); // do again to have clean build state, as some settings were messed with while building
                 RenameCatalogs();
-                packagingSuccessful = true;
+                _packagingSuccessful = true;
             }
             catch (Exception e)
             {
-                packagingInProgress = false;
+                _packagingInProgress = false;
                 EditorUtility.DisplayDialog("Error", $"Packaging could not be completed. Error: {e.Message}", "Close");
                 yield break;
             }
 
-            if (dirWatcher != null)
+            if (_dirWatcher != null)
             {
-                dirWatcher.ClearAffected(); // only do at end, since during build might cause false positives
+                _dirWatcher.ClearAffected(); // only do at end, since during build might cause false positives
             }
             else
             {
@@ -562,7 +564,7 @@ namespace traVRsal.SDK
             }
 
             RemoveLockFile();
-            packagingInProgress = false;
+            _packagingInProgress = false;
 
             Debug.Log("Packaging completed successfully.");
         }
@@ -667,7 +669,7 @@ namespace traVRsal.SDK
 
         private IEnumerator CreateDocumentation()
         {
-            documentationInProgress = true;
+            _documentationInProgress = true;
 
             string converterPath = TravrsalSettingsManager.Get("tiledPath", SDKUtil.TILED_PATH_DEFAULT);
             if (!string.IsNullOrEmpty(converterPath)) converterPath = Path.GetDirectoryName(converterPath) + "/tmxrasterizer.exe";
@@ -855,7 +857,7 @@ namespace traVRsal.SDK
                 ZipFile.CreateFromDirectory(docuPath, GetDocuArchivePath(worldName), CompressionLevel.Fastest, false);
             }
 
-            documentationInProgress = false;
+            _documentationInProgress = false;
         }
 
         private static string GetLockFileLocation()
@@ -1007,27 +1009,27 @@ namespace traVRsal.SDK
                 yield break;
             }
 
-            uploadErrors = false;
-            uploadInProgress = true;
-            uploadProgress = 0;
-            uploadStartTime = DateTime.Now;
-            uploadProgressId = Progress.Start("Uploading world");
+            _uploadErrors = false;
+            _uploadInProgress = true;
+            _uploadProgress = 0;
+            _uploadStartTime = DateTime.Now;
+            _uploadProgressId = Progress.Start("Uploading world");
 
             AWSUtil aws = new AWSUtil();
-            yield return aws.UploadDirectory(GetServerDataPath(), progress => uploadProgress = progress, "Worlds/" + worldName + "/*").AsCoroutine();
+            yield return aws.UploadDirectory(GetServerDataPath(), progress => _uploadProgress = progress, "Worlds/" + worldName + "/*").AsCoroutine();
             yield return PublishWorldUpdates(worldName);
 
-            Progress.Remove(uploadProgressId);
-            uploadInProgress = false;
+            Progress.Remove(_uploadProgressId);
+            _uploadInProgress = false;
 
-            if (uploadErrors)
+            if (_uploadErrors)
             {
                 EditorUtility.DisplayDialog("Error", "Upload could not be completed due to errors. Check the console for details.", "OK");
             }
             else
             {
                 string channelName = null;
-                switch (preparedReleaseChannel)
+                switch (_preparedReleaseChannel)
                 {
                     case 0:
                         channelName = "PRODUCTION";
@@ -1049,7 +1051,7 @@ namespace traVRsal.SDK
         private IEnumerator PublishWorldUpdates(string worldName)
         {
             string channelName = null;
-            switch (preparedReleaseChannel)
+            switch (_preparedReleaseChannel)
             {
                 case 0:
                     channelName = "live";
@@ -1077,9 +1079,9 @@ namespace traVRsal.SDK
             userWorld.min_compat_code = world.minCompatibilityVersionCode;
             userWorld.unity_version = Application.unityVersion;
             userWorld.is_virtual = (byte) (world.isVirtual ? 1 : 0);
-            userWorld.android_size = verifications[worldName].distroSizeAndroid;
-            userWorld.pc_size = verifications[worldName].distroSizeStandaloneWin;
-            userWorld.linux_size = verifications[worldName].distroSizeStandaloneLinux;
+            userWorld.android_size = _verifications[worldName].distroSizeAndroid;
+            userWorld.pc_size = _verifications[worldName].distroSizeStandaloneWin;
+            userWorld.linux_size = _verifications[worldName].distroSizeStandaloneLinux;
 
             // TODO: convert to SDKUtil function as well
             byte[] data = Encoding.UTF8.GetBytes(SDKUtil.SerializeObject(userWorld));
@@ -1092,7 +1094,7 @@ namespace traVRsal.SDK
             if (webRequest.isNetworkError)
             {
                 Debug.LogError($"Could not update world {worldName} due to network issues: {webRequest.error}");
-                uploadErrors = true;
+                _uploadErrors = true;
             }
             else if (webRequest.isHttpError)
             {
@@ -1106,7 +1108,7 @@ namespace traVRsal.SDK
                     Debug.LogError($"There was an error updating world {worldName}: {webRequest.downloadHandler.text}");
                 }
 
-                uploadErrors = true;
+                _uploadErrors = true;
             }
         }
 
@@ -1138,7 +1140,7 @@ namespace traVRsal.SDK
             if (webRequest.isNetworkError)
             {
                 Debug.LogError($"Could not fetch speech due to network issues: {webRequest.error}");
-                speechErrors = true;
+                _speechErrors = true;
             }
             else if (webRequest.isHttpError)
             {
@@ -1152,14 +1154,14 @@ namespace traVRsal.SDK
                     Debug.LogError($"There was an error fetching speech: {webRequest.downloadHandler.text}");
                 }
 
-                speechErrors = true;
+                _speechErrors = true;
             }
             else
             {
                 File.WriteAllBytes(filePath, webRequest.downloadHandler.data);
             }
 
-            callback?.Invoke(!speechErrors);
+            callback?.Invoke(!_speechErrors);
         }
 
         private void OnInspectorUpdate()

@@ -182,6 +182,7 @@ namespace traVRsal.SDK
             ShowCustomPlayerImage = 127,
             ShowIfPlatformPlayer = 128,
             ShowIfCommunityWorld = 152,
+            ShowIfRecordingAvailable = 170,
             ShowIfHaptics = 157,
 
             ShowWorldDownload = ASYNC_RESULT + 1,

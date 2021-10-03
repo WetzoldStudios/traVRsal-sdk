@@ -35,88 +35,88 @@ namespace traVRsal.SDK
         [Header("Audio")] [Tooltip("Sound to play when rotation is started.")]
         public AudioSource audio;
 
-        private float finalDegrees;
-        private float finalInitialDelay;
-        private float finalDuration;
-        private float finalOnDelay;
-        private float finalOffDelay;
+        private float _finalDegrees;
+        private float _finalInitialDelay;
+        private float _finalDuration;
+        private float _finalOnDelay;
+        private float _finalOffDelay;
 
-        private Quaternion originalRotationQ;
-        private Vector3 originalRotation;
-        private bool changedOnce;
-        private float startTime;
-        private bool initStateDone;
-        private bool initDone;
-        private bool loadingDone;
-        private bool continueAfterPause;
-        private Tween curTween;
+        private Quaternion _originalRotationQ;
+        private Vector3 _originalRotation;
+        private bool _changedOnce;
+        private float _startTime;
+        private bool _initStateDone;
+        private bool _initDone;
+        private bool _loadingDone;
+        private bool _continueAfterPause;
+        private Tween _curTween;
 
         private void Start()
         {
-            if (!initStateDone) InitState();
+            if (!_initStateDone) InitState();
         }
 
         private void InitState()
         {
-            originalRotationQ = transform.localRotation;
-            originalRotation = originalRotationQ.eulerAngles;
+            _originalRotationQ = transform.localRotation;
+            _originalRotation = _originalRotationQ.eulerAngles;
 
-            finalDegrees = Random.Range(degrees.x, degrees.y);
-            finalInitialDelay = Random.Range(initialDelay.x, initialDelay.y);
-            finalDuration = Random.Range(duration.x, duration.y);
-            finalOnDelay = Random.Range(onDelay.x, onDelay.y);
-            finalOffDelay = Random.Range(offDelay.x, offDelay.y);
+            _finalDegrees = Random.Range(degrees.x, degrees.y);
+            _finalInitialDelay = Random.Range(initialDelay.x, initialDelay.y);
+            _finalDuration = Random.Range(duration.x, duration.y);
+            _finalOnDelay = Random.Range(onDelay.x, onDelay.y);
+            _finalOffDelay = Random.Range(offDelay.x, offDelay.y);
 
-            initStateDone = true;
+            _initStateDone = true;
         }
 
         private void OnEnable()
         {
-            if (!loadingDone) return;
-            if (initDone)
+            if (!_loadingDone) return;
+            if (_initDone)
             {
-                if (curTween != null && (continueAfterPause || !curTween.IsComplete())) curTween.Play();
-                continueAfterPause = false;
+                if (_curTween != null && (_continueAfterPause || !_curTween.IsComplete())) _curTween.Play();
+                _continueAfterPause = false;
                 return;
             }
 
             // needed for support of initialDelay, since any WaitForSeconds will be interrupted during loading when GO becomes inactive
-            startTime = Mathf.Max(Time.time + finalInitialDelay, Single.Epsilon);
+            _startTime = Mathf.Max(Time.time + _finalInitialDelay, Single.Epsilon);
         }
 
         private void OnDisable()
         {
-            if (curTween == null) return;
+            if (_curTween == null) return;
 
-            if (curTween.IsPlaying())
+            if (_curTween.IsPlaying())
             {
-                curTween.Pause();
-                continueAfterPause = true;
+                _curTween.Pause();
+                _continueAfterPause = true;
             }
         }
 
         private void Update()
         {
-            if (initDone || mode != Mode.Manual) return;
-            if (startTime > 0 && Time.time > startTime)
+            if (_initDone || mode != Mode.Manual) return;
+            if (_startTime > 0 && Time.time > _startTime)
             {
                 SetupManual();
-                initDone = true;
+                _initDone = true;
             }
         }
 
         private void SetupManual()
         {
-            if (finalDegrees == 0) return;
+            if (_finalDegrees == 0) return;
 
             Sequence s = DOTween.Sequence();
-            s.PrependInterval(finalOnDelay);
+            s.PrependInterval(_finalOnDelay);
             s.AppendCallback(PlayAudio); // OnPlay is only called once in a sequence
-            s.Append(transform.DOLocalRotate(originalRotation + axis * finalDegrees, finalDuration).SetEase(easeType));
-            s.AppendInterval(finalOffDelay);
+            s.Append(transform.DOLocalRotate(_originalRotation + axis * _finalDegrees, _finalDuration).SetEase(easeType));
+            s.AppendInterval(_finalOffDelay);
             s.SetLoops(loop ? -1 : 0, loopType);
 
-            curTween = s;
+            _curTween = s;
         }
 
         private void PlayAudio()
@@ -127,19 +127,19 @@ namespace traVRsal.SDK
         public void VariableChanged(Variable variable, bool condition, bool initialCall = false)
         {
             if (mode != Mode.Variable) return;
-            if (!initStateDone) InitState();
-            initDone = true;
+            if (!_initStateDone) InitState();
+            _initDone = true;
 
             if (condition)
             {
-                curTween = transform.DOLocalRotate(originalRotation + axis * finalDegrees, finalDuration).SetDelay(finalOnDelay + (changedOnce ? 0f : finalOnDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                _curTween = transform.DOLocalRotate(_originalRotation + axis * _finalDegrees, _finalDuration).SetDelay(_finalOnDelay + (_changedOnce ? 0f : _finalOnDelay)).SetEase(easeType).OnPlay(PlayAudio);
             }
             else
             {
-                curTween = transform.DOLocalRotateQuaternion(originalRotationQ, finalDuration).SetDelay(finalOffDelay + (changedOnce ? 0f : finalOnDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                _curTween = transform.DOLocalRotateQuaternion(_originalRotationQ, _finalDuration).SetDelay(_finalOffDelay + (_changedOnce ? 0f : _finalOnDelay)).SetEase(easeType).OnPlay(PlayAudio);
             }
 
-            if (!initialCall && variable.everChanged) changedOnce = true;
+            if (!initialCall && variable.everChanged) _changedOnce = true;
         }
 
         public int GetVariableChannel()
@@ -153,7 +153,7 @@ namespace traVRsal.SDK
 
         public void FinishedLoading(Vector3 tileSizes, bool instantEnablement = false)
         {
-            loadingDone = true;
+            _loadingDone = true;
             if (instantEnablement) OnEnable();
         }
     }

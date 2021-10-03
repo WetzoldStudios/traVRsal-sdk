@@ -45,31 +45,31 @@ namespace traVRsal.SDK
 
         // runtime 
         [HideInInspector] public string originTag;
-        private Dictionary<GameObject, float> lastHit;
+        private Dictionary<GameObject, float> _lastHit;
 
         private void Start()
         {
-            lastHit = new Dictionary<GameObject, float>();
+            _lastHit = new Dictionary<GameObject, float>();
             if (string.IsNullOrEmpty(originTag)) originTag = gameObject.tag;
         }
 
         public bool IsActive(GameObject go)
         {
             if (!enabled) return false;
-            if (!lastHit.ContainsKey(go)) return true;
+            if (!_lastHit.ContainsKey(go)) return true;
 
-            return Time.time > lastHit[go] + cooldown;
+            return Time.time > _lastHit[go] + cooldown;
         }
 
         public void RegisterHit(GameObject go)
         {
-            if (!lastHit.ContainsKey(go))
+            if (!_lastHit.ContainsKey(go))
             {
-                lastHit.Add(go, Time.time);
+                _lastHit.Add(go, Time.time);
             }
             else
             {
-                lastHit[go] = Time.time;
+                _lastHit[go] = Time.time;
             }
         }
     }

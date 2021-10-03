@@ -6,23 +6,24 @@ namespace traVRsal.SDK
 {
     public class DirectoryWatcher
     {
-        public FileSystemWatcher watcher;
-        public bool isCalled = false;
+        public bool isCalled;
         public List<string> affectedFiles = new List<string>();
-        public string methodCalled = "";
         public Dictionary<string, Action> matchedMethods = new Dictionary<string, Action>();
+
+        private FileSystemWatcher _watcher;
+        private string _methodCalled = "";
 
         public DirectoryWatcher(FSWParams props = null)
         {
-            watcher = new FileSystemWatcher(props.path, props.filter);
+            _watcher = new FileSystemWatcher(props.path, props.filter);
 
-            watcher.NotifyFilter = props.notifiers;
-            watcher.IncludeSubdirectories = props.includeSubfolders;
+            _watcher.NotifyFilter = props.notifiers;
+            _watcher.IncludeSubdirectories = props.includeSubfolders;
 
-            watcher.Changed += new FileSystemEventHandler(OnChanged);
-            watcher.Created += new FileSystemEventHandler(OnCreated);
-            watcher.Deleted += new FileSystemEventHandler(OnDeleted);
-            watcher.Renamed += new RenamedEventHandler(OnRenamed);
+            _watcher.Changed += new FileSystemEventHandler(OnChanged);
+            _watcher.Created += new FileSystemEventHandler(OnCreated);
+            _watcher.Deleted += new FileSystemEventHandler(OnDeleted);
+            _watcher.Renamed += new RenamedEventHandler(OnRenamed);
         }
 
         public void ClearAffected()
@@ -32,7 +33,7 @@ namespace traVRsal.SDK
 
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            methodCalled = "OnChanged";
+            _methodCalled = "OnChanged";
 
             lock (affectedFiles)
             {
@@ -44,7 +45,7 @@ namespace traVRsal.SDK
 
         private void OnCreated(object source, FileSystemEventArgs e)
         {
-            methodCalled = "OnCreated";
+            _methodCalled = "OnCreated";
 
             lock (affectedFiles)
             {
@@ -56,7 +57,7 @@ namespace traVRsal.SDK
 
         private void OnDeleted(object source, FileSystemEventArgs e)
         {
-            methodCalled = "OnDeleted";
+            _methodCalled = "OnDeleted";
 
             lock (affectedFiles)
             {
@@ -68,7 +69,7 @@ namespace traVRsal.SDK
 
         private void OnRenamed(object source, RenamedEventArgs e)
         {
-            methodCalled = "OnRenamed";
+            _methodCalled = "OnRenamed";
 
             lock (affectedFiles)
             {
@@ -80,17 +81,17 @@ namespace traVRsal.SDK
 
         public void StartFSW()
         {
-            watcher.EnableRaisingEvents = true;
+            _watcher.EnableRaisingEvents = true;
         }
 
         public void CancelFSW()
         {
-            watcher.EnableRaisingEvents = false;
+            _watcher.EnableRaisingEvents = false;
         }
 
         public override string ToString()
         {
-            return $"Directory Watcher ({watcher.Path})";
+            return $"Directory Watcher ({_watcher.Path})";
         }
     }
 
@@ -106,8 +107,8 @@ namespace traVRsal.SDK
             this.path = path;
             this.filter = filter;
             notifiers = NotifyFilters.CreationTime | NotifyFilters.DirectoryName
-                | NotifyFilters.FileName | NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                | NotifyFilters.Size;
+                                                   | NotifyFilters.FileName | NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                                                   | NotifyFilters.Size;
             includeSubfolders = true;
         }
 

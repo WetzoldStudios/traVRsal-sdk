@@ -13,14 +13,13 @@ namespace traVRsal.SDK
 
         public RemovalType removalType = RemovalType.IfNotOnlyScene;
 
-        void Start()
+        private void Start()
         {
             switch (removalType)
             {
                 case RemovalType.IfNotOnlyScene:
                     if (SceneManager.sceneCount == 1) return;
                     break;
-
             }
             Destroy(gameObject);
         }

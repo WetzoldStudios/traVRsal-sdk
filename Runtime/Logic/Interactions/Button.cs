@@ -16,7 +16,7 @@ namespace traVRsal.SDK
         public UnityEvent OnButtonDown;
         public UnityEvent OnButtonUp;
 
-        private bool pushingDown;
+        private bool _pushingDown;
 
         private void Start()
         {
@@ -38,15 +38,15 @@ namespace traVRsal.SDK
             }
 
             float buttonDownDistance = transform.localPosition.z - buttonDownPosition.z;
-            if (buttonDownDistance <= tolerance && !pushingDown)
+            if (buttonDownDistance <= tolerance && !_pushingDown)
             {
-                pushingDown = true;
+                _pushingDown = true;
                 OnButtonDown?.Invoke();
             }
             float buttonUpDistance = buttonUpPosition.z - transform.localPosition.z;
-            if (buttonUpDistance <= tolerance && pushingDown)
+            if (buttonUpDistance <= tolerance && _pushingDown)
             {
-                pushingDown = false;
+                _pushingDown = false;
                 OnButtonUp?.Invoke();
             }
         }

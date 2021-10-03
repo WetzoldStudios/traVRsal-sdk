@@ -45,16 +45,16 @@ namespace traVRsal.SDK
             FileInfo[] files = dir.GetFiles();
             foreach (FileInfo file in files)
             {
-                string temppath = Path.Combine(destDirName, file.Name);
-                file.CopyTo(temppath, false);
+                string tempPath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(tempPath, false);
             }
 
             if (copySubDirs)
             {
-                foreach (DirectoryInfo subdir in dirs)
+                foreach (DirectoryInfo subDir in dirs)
                 {
-                    string temppath = Path.Combine(destDirName, subdir.Name);
-                    Copy(subdir.FullName, temppath, copySubDirs);
+                    string tempPath = Path.Combine(destDirName, subDir.Name);
+                    Copy(subDir.FullName, tempPath, copySubDirs);
                 }
             }
         }

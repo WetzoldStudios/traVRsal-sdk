@@ -13,44 +13,44 @@ namespace traVRsal.SDK
         public float initialDelayMin;
         public float initialDelayMax = 1f;
 
-        private float nextRotateAction = float.MaxValue;
-        private float nextSpawnAction = float.MaxValue;
-        private PatternParser rotatePattern;
-        private PatternParser spawnPattern;
-        private IProjectileShooter shooter;
-        private float delayPassedTime;
+        private float _nextRotateAction = float.MaxValue;
+        private float _nextSpawnAction = float.MaxValue;
+        private PatternParser _rotatePattern;
+        private PatternParser _spawnPattern;
+        private IProjectileShooter _shooter;
+        private float _delayPassedTime;
 
         private void Start()
         {
             if (objectToRotate == null) objectToRotate = transform;
-            shooter = gameObject.GetComponentInChildren<IProjectileShooter>();
+            _shooter = gameObject.GetComponentInChildren<IProjectileShooter>();
 
             InitSpawnPattern(spawnFrequency);
             InitRotatePattern(rotationFrequency);
 
-            delayPassedTime = Time.time + Random.Range(initialDelayMin, initialDelayMax);
+            _delayPassedTime = Time.time + Random.Range(initialDelayMin, initialDelayMax);
         }
 
         private void Update()
         {
-            if (Time.time < delayPassedTime) return;
-            if (Time.time >= nextRotateAction)
+            if (Time.time < _delayPassedTime) return;
+            if (Time.time >= _nextRotateAction)
             {
                 bool skipRotate = false;
-                string action = rotatePattern.GetNextAction();
+                string action = _rotatePattern.GetNextAction();
 
                 // gather delay to next iteration to determine tween length
                 float nextRotateDelay = 1f;
                 if (!skipRotate)
                 {
-                    if (rotatePattern.Next() != null)
+                    if (_rotatePattern.Next() != null)
                     {
-                        nextRotateDelay = (float) rotatePattern.GetNextExecution() / 1000f;
-                        nextRotateAction = Time.time + nextRotateDelay;
+                        nextRotateDelay = (float) _rotatePattern.GetNextExecution() / 1000f;
+                        _nextRotateAction = Time.time + nextRotateDelay;
                     }
                     else
                     {
-                        nextRotateAction = float.MaxValue;
+                        _nextRotateAction = float.MaxValue;
                     }
                 }
 
@@ -60,7 +60,7 @@ namespace traVRsal.SDK
                         break;
 
                     case "sync":
-                        skipRotate = spawnPattern.GetCurrentStep() > 0;
+                        skipRotate = _spawnPattern.GetCurrentStep() > 0;
                         break;
 
                     default:
@@ -70,9 +70,9 @@ namespace traVRsal.SDK
                 }
             }
 
-            if (Time.time >= nextSpawnAction)
+            if (Time.time >= _nextSpawnAction)
             {
-                string action = spawnPattern.GetNextAction();
+                string action = _spawnPattern.GetNextAction();
                 switch (action)
                 {
                     case "delay":
@@ -83,36 +83,36 @@ namespace traVRsal.SDK
                         break;
 
                     default:
-                        shooter?.Fire();
+                        _shooter?.Fire();
                         break;
                 }
 
-                if (spawnPattern.Next() != null)
+                if (_spawnPattern.Next() != null)
                 {
-                    nextSpawnAction = Time.time + (float) spawnPattern.GetNextExecution() / 1000f;
+                    _nextSpawnAction = Time.time + (float) _spawnPattern.GetNextExecution() / 1000f;
                 }
                 else
                 {
-                    nextSpawnAction = float.MaxValue;
+                    _nextSpawnAction = float.MaxValue;
                 }
             }
         }
 
         private void InitSpawnPattern(string pattern)
         {
-            spawnPattern = new PatternParser(pattern, true);
-            if (spawnPattern.GetNextExecution() != null)
+            _spawnPattern = new PatternParser(pattern, true);
+            if (_spawnPattern.GetNextExecution() != null)
             {
-                nextSpawnAction = Time.time + (float) spawnPattern.GetNextExecution() / 1000f;
+                _nextSpawnAction = Time.time + (float) _spawnPattern.GetNextExecution() / 1000f;
             }
         }
 
         private void InitRotatePattern(string pattern)
         {
-            rotatePattern = new PatternParser(pattern, true);
-            if (rotatePattern.GetNextExecution() != null)
+            _rotatePattern = new PatternParser(pattern, true);
+            if (_rotatePattern.GetNextExecution() != null)
             {
-                nextRotateAction = Time.time + (float) rotatePattern.GetNextExecution() / 1000f;
+                _nextRotateAction = Time.time + (float) _rotatePattern.GetNextExecution() / 1000f;
             }
         }
     }

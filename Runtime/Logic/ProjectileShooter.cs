@@ -31,21 +31,21 @@ namespace traVRsal.SDK
         public string reloadAnimation;
         public float reloadAnimationSpeed = 1f;
 
-        private IProjectileShooter shooter;
+        private IProjectileShooter _shooter;
 
         private void Start()
         {
-            shooter = GetComponent<IProjectileShooter>();
+            _shooter = GetComponent<IProjectileShooter>();
         }
 
         public void Fire()
         {
-            shooter?.Fire();
+            _shooter?.Fire();
         }
 
         public void Reload()
         {
-            shooter?.Reload();
+            _shooter?.Reload();
         }
     }
 }
