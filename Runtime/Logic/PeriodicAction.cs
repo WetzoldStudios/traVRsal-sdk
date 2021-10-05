@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 namespace traVRsal.SDK
 {
@@ -12,9 +15,11 @@ namespace traVRsal.SDK
         [Tooltip("Keep interval the same once initially determined or determine new after each action")]
         public bool fixedInterval = true;
 
-        [Header("Action")] public List<GameObject> toggleObjects;
-        public List<Behaviour> toggleComponents;
-        public List<Collider> toggleColliders;
+        [Header("Action")] [Obsolete] public List<GameObject> toggleObjects;
+        [Obsolete] public List<Behaviour> toggleComponents;
+        [Obsolete] public List<Collider> toggleColliders;
+
+        public UnityEvent performAction;
 
         private float _finalInterval;
         private float _nextAction;
@@ -23,6 +28,10 @@ namespace traVRsal.SDK
         {
             _finalInterval = Random.Range(interval.x, interval.y);
             _nextAction = Time.time + Random.Range(initialDelay.x, initialDelay.y) + (fixedInterval ? _finalInterval : Random.Range(interval.x, interval.y));
+
+            if (toggleObjects != null && toggleObjects.Count > 0) EDebug.LogWarning($"Obsolete logic usage on {gameObject}");
+            if (toggleComponents != null && toggleComponents.Count > 0) EDebug.LogWarning($"Obsolete logic usage on {gameObject}");
+            if (toggleColliders != null && toggleColliders.Count > 0) EDebug.LogWarning($"Obsolete logic usage on {gameObject}");
         }
 
         private void Update()
@@ -30,6 +39,7 @@ namespace traVRsal.SDK
             if (!(Time.time > _nextAction)) return;
 
             _nextAction = Time.time + (fixedInterval ? _finalInterval : Random.Range(interval.x, interval.y));
+            performAction?.Invoke();
 
             toggleObjects.ForEach(go => go.SetActive(!go.activeSelf));
             toggleComponents.ForEach(b => b.enabled = !b.enabled);

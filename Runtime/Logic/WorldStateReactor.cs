@@ -33,6 +33,8 @@ namespace traVRsal.SDK
         private void Start()
         {
             // in to enable activation/deactivation
+            
+            if (components != null && components.Length > 0) EDebug.LogWarning($"Obsolete logic usage on {gameObject}");
         }
     }
 }

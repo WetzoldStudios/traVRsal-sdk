@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace traVRsal.SDK
 {
@@ -16,6 +17,9 @@ namespace traVRsal.SDK
         public bool audioEffectOnlyOnce = true;
         [Tooltip("Text to be spoken by TTS")] public string speak;
         public bool speakOnlyOnce = true;
+
+        [Space] public UnityEvent onTriggerEnter;
+        public UnityEvent onTriggerExit;
 
         public override string ToString()
         {
