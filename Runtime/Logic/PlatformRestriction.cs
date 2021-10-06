@@ -1,17 +1,36 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 
 namespace traVRsal.SDK
 {
-    [AddComponentMenu("traVRsal/Platform Restriction")]
+    [Obsolete]
     public class PlatformRestriction : MonoBehaviour
     {
-        public RuntimePlatform[] platforms;
-
-        private void Start()
+        public enum Mode
         {
+            Disable = 0,
+            Destroy = 1
+        }
+
+        public RuntimePlatform[] platforms;
+        public Mode mode = Mode.Disable;
+
+        private void Awake()
+        {
+            EDebug.LogWarning("Platform Restriction is outdated. Switch to Environment Restriction.");
+
             bool valid = platforms.Any(p => p == Application.platform);
-            if (!valid) gameObject.SetActive(false);
+            if (valid) return;
+
+            if (mode == Mode.Disable)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
