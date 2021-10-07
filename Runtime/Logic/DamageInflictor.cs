@@ -46,11 +46,20 @@ namespace traVRsal.SDK
         // runtime 
         [HideInInspector] public string originTag;
         private Dictionary<GameObject, float> _lastHit;
+        private bool _initDone;
 
         private void Start()
         {
-            _lastHit = new Dictionary<GameObject, float>();
             if (string.IsNullOrEmpty(originTag)) originTag = gameObject.tag;
+
+            Init();
+        }
+
+        private void Init()
+        {
+            if (_initDone) return;
+            _initDone = true;
+            _lastHit = new Dictionary<GameObject, float>();
         }
 
         public bool IsActive(GameObject go)
@@ -63,6 +72,8 @@ namespace traVRsal.SDK
 
         public void RegisterHit(GameObject go)
         {
+            Init();
+
             if (!_lastHit.ContainsKey(go))
             {
                 _lastHit.Add(go, Time.time);
