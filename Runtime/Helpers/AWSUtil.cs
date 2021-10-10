@@ -20,6 +20,7 @@ namespace traVRsal.SDK
     public class AWSUtil
     {
         private const int TIMEOUT = 2500;
+        private const int RETRIES = 3;
 
         // Amazon settings
         // Amazon-only: public static string IdentityPoolId = "eu-west-1:87055e81-6bbc-4556-aa65-7b6df7d1ebe7";
@@ -91,13 +92,12 @@ namespace traVRsal.SDK
 
         public async Task UploadFile(string fileName, string remoteName, string bucket)
         {
-            lastActionSuccessful = true;
             await CarryOutAWSTask(async () =>
             {
                 FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
                 TransferUtility fileTransferUtility = new TransferUtility(Client);
-                TransferUtilityUploadRequest uploadRequest = new TransferUtilityUploadRequest()
+                TransferUtilityUploadRequest uploadRequest = new TransferUtilityUploadRequest
                 {
                     InputStream = stream,
                     Key = remoteName,
@@ -111,7 +111,6 @@ namespace traVRsal.SDK
 
         public async Task UploadDirectory(string path, Action<float> progressCallback, string pattern = "*")
         {
-            lastActionSuccessful = true;
             await CarryOutAWSTask(async () =>
             {
                 TransferUtility fileTransferUtility = new TransferUtility(Client);
@@ -168,22 +167,34 @@ namespace traVRsal.SDK
 
         private async Task CarryOutAWSTask(Func<Task> taskToPerform, string op)
         {
-            try
+            int retriesLeft = RETRIES;
+            do
             {
-                await taskToPerform();
-            }
-            catch (AmazonS3Exception amazonS3Exception)
-            {
-                lastActionSuccessful = false;
-                if (amazonS3Exception.ErrorCode != null && (amazonS3Exception.ErrorCode.Equals("InvalidAccessKeyId") || amazonS3Exception.ErrorCode.Equals("InvalidSecurity")))
+                lastActionSuccessful = true;
+                try
                 {
-                    Debug.LogError("Please check the provided AWS credentials.");
+                    await taskToPerform();
                 }
-                else
+                catch (AmazonS3Exception amazonS3Exception)
                 {
-                    Debug.LogError($"Error {amazonS3Exception.ErrorCode} connecting to AWS, for {op}: {amazonS3Exception.Message}");
+                    lastActionSuccessful = false;
+                    if (amazonS3Exception.ErrorCode != null && (amazonS3Exception.ErrorCode.Equals("InvalidAccessKeyId") || amazonS3Exception.ErrorCode.Equals("InvalidSecurity")))
+                    {
+                        Debug.LogError("Please check the provided AWS credentials.");
+                    }
+                    else
+                    {
+                        Debug.LogError($"Error {amazonS3Exception.ErrorCode} connecting to AWS, for {op}: {amazonS3Exception.Message}");
+                    }
                 }
-            }
+                catch (Exception e)
+                {
+                    lastActionSuccessful = false;
+                    Debug.LogException(e);
+                }
+
+                retriesLeft--;
+            } while (!lastActionSuccessful && retriesLeft > 0);
         }
     }
 }

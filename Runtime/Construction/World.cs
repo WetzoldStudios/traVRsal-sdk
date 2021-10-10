@@ -64,6 +64,7 @@ namespace traVRsal.SDK
         [DefaultValue(1)] public int minCompatibilityVersionCode = 1;
         public string minSize;
         public string maxSize;
+        public float minTileSize;
         public float maxTileSize;
         [DefaultValue(1.8f)] public float playerHeight = 1.8f;
         public int lives;

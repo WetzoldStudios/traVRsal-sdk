@@ -26,6 +26,7 @@ namespace traVRsal.SDK
         public int points;
         public bool isPlayer;
         public bool registerAsTarget = true;
+        public bool registerAsTargetIfDisabled;
         public string targetName;
         public bool triggerVariable;
         public string variable;
@@ -58,6 +59,7 @@ namespace traVRsal.SDK
             isPlayer = copyFrom.isPlayer;
             destructible = copyFrom.destructible;
             registerAsTarget = copyFrom.registerAsTarget;
+            registerAsTargetIfDisabled = copyFrom.registerAsTargetIfDisabled;
             targetName = copyFrom.targetName;
             triggerVariable = copyFrom.triggerVariable;
             variable = copyFrom.variable;

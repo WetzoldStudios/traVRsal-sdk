@@ -103,7 +103,7 @@ namespace traVRsal.SDK
         private void PlayAudio()
         {
             _triggered = true;
-            if (audio == null) return;
+            if (audio == null || !audio.enabled || !audio.gameObject.activeSelf) return;
 
             if (randomClips != null && randomClips.Length > 0) audio.clip = randomClips[Random.Range(0, randomClips.Length)];
             audio.Play();

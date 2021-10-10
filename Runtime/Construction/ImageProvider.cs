@@ -33,7 +33,7 @@ namespace traVRsal.SDK
 
         public string key;
         public Provider provider = Provider.Unsplash;
-        public Order order = Order.Native;
+        public Order order = Order.Random;
         public Filter filter = Filter.None;
         public bool repeatWhenDepleted = true;
 

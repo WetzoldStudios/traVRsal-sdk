@@ -1,9 +1,11 @@
 ﻿// adapted from https://stackoverflow.com/questions/3754118/how-to-filter-directory-enumeratefiles-with-multiple-criteria
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace traVRsal.SDK
 {
@@ -72,6 +74,21 @@ namespace traVRsal.SDK
             }
 
             return size;
+        }
+
+        public static bool DeleteFile(string path)
+        {
+            try
+            {
+                File.Delete(path);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+
+            return false;
         }
     }
 }
