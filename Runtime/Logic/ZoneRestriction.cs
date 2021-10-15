@@ -20,6 +20,6 @@ namespace traVRsal.SDK
         [Tooltip("Ignore zone restriction if object is contained in the first zone.")]
         public bool allowInIntro = true;
 
-        public UnityEvent<bool> onZoneChange;
+        [Space] public UnityEvent<bool> onZoneChange;
     }
 }

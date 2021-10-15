@@ -14,6 +14,8 @@ namespace traVRsal.SDK
         [Obsolete] public List<Behaviour> disabledComponents;
         public List<MaterialReference> materialSlots;
 
+        [Space] public UnityEvent onIntoState;
+        public UnityEvent onOutOfState;
         public UnityEvent<bool> onStateChange;
     }
 }

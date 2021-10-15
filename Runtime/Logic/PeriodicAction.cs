@@ -19,10 +19,11 @@ namespace traVRsal.SDK
         [Obsolete] public List<Behaviour> toggleComponents;
         [Obsolete] public List<Collider> toggleColliders;
 
-        public UnityEvent performAction;
+        public UnityEvent<bool> performAction;
 
         private float _finalInterval;
         private float _nextAction;
+        private bool _state;
 
         private void Start()
         {
@@ -38,8 +39,9 @@ namespace traVRsal.SDK
         {
             if (!(Time.time > _nextAction)) return;
 
+            _state = !_state;
             _nextAction = Time.time + (fixedInterval ? _finalInterval : Random.Range(interval.x, interval.y));
-            performAction?.Invoke();
+            performAction?.Invoke(_state);
 
             toggleObjects.ForEach(go => go.SetActive(!go.activeSelf));
             toggleComponents.ForEach(b => b.enabled = !b.enabled);
