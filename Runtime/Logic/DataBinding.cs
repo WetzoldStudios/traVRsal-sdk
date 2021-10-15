@@ -176,6 +176,7 @@ namespace traVRsal.SDK
             ShowIfOnlineAndNotInMP = 168,
             ShowIfMPPossible = 147,
             ShowIfMPHost = 138,
+            ShowIfMPParticipant = 171,
             ShowIfInMPSession = 139,
             ShowPlayerLogin = 60,
             ShowPlayerLoggedIn = 61,
@@ -220,6 +221,9 @@ namespace traVRsal.SDK
 
         [Tooltip("Maximum number of lines to be returned (... added if longer)")]
         public int maxLines;
+
+        [Tooltip("Text to be shown if value is empty")]
+        public string placeHolder;
 
         [Header("Advanced")] [Tooltip("Indicator if result should be calculated only once")]
         public bool oneTimeOnly;
