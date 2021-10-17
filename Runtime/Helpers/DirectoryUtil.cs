@@ -85,7 +85,7 @@ namespace traVRsal.SDK
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                Debug.LogError($"Error deleting file '{path}': {e.Message}");
             }
 
             return false;

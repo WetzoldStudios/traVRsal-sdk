@@ -190,7 +190,9 @@ namespace traVRsal.SDK
                 catch (Exception e)
                 {
                     lastActionSuccessful = false;
-                    Debug.LogException(e);
+                    
+                    // LogException can lead to MissingMethodException: Default constructor not found for type System.Diagnostics.SystemDiagnosticsSection
+                    Debug.LogError($"Error performing AWS task: {e.Message}");
                 }
 
                 retriesLeft--;
