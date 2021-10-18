@@ -91,6 +91,19 @@ namespace traVRsal.SDK
             originalName = name;
         }
 
+        public void ClearRenderCaches()
+        {
+            // remove all renderer caches but leave logic caches in-tact to not break downstream logic
+            materialsCache = null;
+            rendererCache = null;
+            transparentRendererCache = null;
+            untouchedRendererCache = null;
+            sceneryRendererCache = null;
+            movingRendererCache = null;
+            lightCache = null;
+            foreignVisibleRendererCache = null;
+        }
+
         public Zone(Zone copyFrom) : this()
         {
             name = copyFrom.name;
