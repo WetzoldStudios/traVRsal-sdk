@@ -46,6 +46,7 @@ namespace traVRsal.SDK
         public string shortDescription;
         public string longDescription;
         public string coverImage;
+        public string trailer;
 
         [Header("Unlocking")] public UnlockMethod unlockMethod = UnlockMethod.None;
         public string unlockCombination;

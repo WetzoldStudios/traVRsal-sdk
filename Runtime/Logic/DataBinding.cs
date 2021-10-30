@@ -45,6 +45,7 @@ namespace traVRsal.SDK
             DoStartWorldDownload = 67,
             DoStartRandomChallenge = 109,
             DoReplayWorld = 148,
+            DoPlayWorldTrailer = 173,
             DoSetDebugMode = 7,
             DoSetMetricSystem = 116,
             DoSetHaptics = 125,
@@ -191,6 +192,7 @@ namespace traVRsal.SDK
             ShowWorldChallenges = 76,
             ShowWorldStatistics = 75,
             ShowWorldLeaderboards = 149,
+            ShowWorldTrailer = 172,
 
             ImageOrigin = REQUIRE_SOURCE + 8,
             ImageOriginLogo = REQUIRE_SOURCE + 13,

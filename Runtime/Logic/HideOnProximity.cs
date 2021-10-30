@@ -26,7 +26,7 @@ namespace traVRsal.SDK
             if (trackedObject == null || referenceObject == null || managedObject == null) return;
             if (Time.frameCount % checkInterval != 0) return;
 
-            float measuredDistance = Mathf.Abs((trackedObject.position - referenceObject.position).magnitude);
+            float measuredDistance = Mathf.Abs(Vector3.Distance(trackedObject.position, referenceObject.position));
             bool visible = measuredDistance >= distance;
             if (managedObject.activeSelf != visible) managedObject.SetActive(visible);
         }

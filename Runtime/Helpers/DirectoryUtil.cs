@@ -17,6 +17,12 @@ namespace traVRsal.SDK
             File.WriteAllText(fileName, text);
         }
 
+        public static void WriteAllBytes(string fileName, byte[] bytes)
+        {
+            if (File.Exists(fileName)) File.Delete(fileName);
+            File.WriteAllBytes(fileName, bytes);
+        }
+
         // Regex version
         public static IEnumerable<string> GetFiles(string path,
             string searchPatternExpression = "",
