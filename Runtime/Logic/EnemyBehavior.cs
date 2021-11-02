@@ -42,5 +42,14 @@ namespace traVRsal.SDK
         public bool snapToGrid = true;
         public bool reportMovement = true;
         public AudioSource walkSound;
+
+        [Tooltip("Name of bool parameter defining if agent is moving or not")]
+        public string animParamMove = "move";
+
+        [Tooltip("Name of float parameter specifying the velocity in x direction")]
+        public string animParamVelocityX = "velx";
+
+        [Tooltip("Name of float parameter specifying the velocity in z direction")]
+        public string animParamVelocityZ = "velz";
     }
 }
