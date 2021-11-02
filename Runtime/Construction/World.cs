@@ -77,6 +77,7 @@ namespace traVRsal.SDK
         [DefaultValue(true)] public bool createIntro = true;
         public TargetMeasures[] measures = {TargetMeasures.Time, TargetMeasures.Distance};
         public TargetVisiblity targetVisibility = TargetVisiblity.EnteringZone;
+        public List<QualityRule> qualityRules;
 
         [Header("Items & HUD")] [DefaultValue(true)]
         public bool showHandHud = true;
@@ -152,6 +153,7 @@ namespace traVRsal.SDK
         public World()
         {
             chapters = new List<Chapter>();
+            qualityRules = new List<QualityRule>();
             zones = new List<Zone>();
             zoneTemplates = new List<Zone>();
             spawnRules = new List<SpawnRule>();
@@ -182,6 +184,7 @@ namespace traVRsal.SDK
         public void NullifyEmpties()
         {
             if (chapters is {Count: 0}) chapters = null;
+            if (qualityRules is {Count: 0}) qualityRules = null;
             if (headItems is {Length: 0}) headItems = null;
             if (defaultRandomSkybox is {Length: 0}) defaultRandomSkybox = null;
             if (inventoryItems is {Count: 0}) inventoryItems = null;
