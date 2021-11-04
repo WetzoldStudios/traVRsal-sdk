@@ -5,13 +5,15 @@ namespace traVRsal.SDK
 {
     public class BulletHellManager : MonoBehaviour
     {
-        public string rotationFrequency;
+        [Header("Configuration")] public string rotationFrequency;
         public Vector3 rotationAxis = Vector3.up;
         public Transform objectToRotate;
-        public AudioSource audioSource;
         public string spawnFrequency;
-        public float initialDelayMin;
+
+        [Header("Timings")] public float initialDelayMin;
         public float initialDelayMax = 1f;
+
+        [Header("Static References")] public AudioSource audioSource;
 
         private float _nextRotateAction = float.MaxValue;
         private float _nextSpawnAction = float.MaxValue;

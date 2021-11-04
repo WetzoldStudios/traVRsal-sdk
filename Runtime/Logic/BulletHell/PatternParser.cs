@@ -2,7 +2,7 @@
 {
     public class PatternParser
     {
-        private readonly string[] pattern = { };
+        private readonly string[] _pattern = { };
         private bool _globalLoop;
         private int _currentStep;
         private int _remainingLoops = -1;
@@ -16,31 +16,31 @@
             _globalLoop = globalLoop;
             if (!string.IsNullOrEmpty(pattern))
             {
-                this.pattern = pattern.Split(',');
-                for (int i = 0; i < this.pattern.Length; i++)
+                _pattern = pattern.Split(',');
+                for (int i = 0; i < _pattern.Length; i++)
                 {
-                    this.pattern[i] = this.pattern[i].Trim().ToLower();
+                    _pattern[i] = _pattern[i].Trim().ToLower();
                 }
             }
         }
 
         public int? GetNextExecution()
         {
-            if (pattern.Length == 0 || _currentStep >= pattern.Length) return null;
+            if (_pattern.Length == 0 || _currentStep >= _pattern.Length) return null;
 
             int idx = GetCalculatedIdx();
-            return int.Parse(pattern[idx]);
+            return int.Parse(_pattern[idx]);
         }
 
         public string GetNextAction()
         {
-            if (pattern.Length == 0 || _currentStep >= pattern.Length)
+            if (_pattern.Length == 0 || _currentStep >= _pattern.Length)
             {
                 return null;
             }
 
             int idx = GetCalculatedIdx() + 1;
-            return pattern[idx];
+            return _pattern[idx];
         }
 
         public int? Next()
@@ -63,7 +63,7 @@
             {
                 _currentStep += 2;
             }
-            if (_globalLoop && _currentStep >= pattern.Length)
+            if (_globalLoop && _currentStep >= _pattern.Length)
             {
                 _currentStep = 0;
             }
@@ -78,13 +78,13 @@
 
         private int GetCalculatedIdx()
         {
-            string cur = pattern[_currentStep];
+            string cur = _pattern[_currentStep];
             if (_remainingLoops <= 0 && cur.StartsWith("loop"))
             {
                 string[] arr = cur.Split(' ');
                 _loopLength = int.Parse(arr[1].Trim());
 
-                string loopCountStr = pattern[_currentStep + 1];
+                string loopCountStr = _pattern[_currentStep + 1];
                 _loopCount = loopCountStr == "*" ? int.MaxValue : int.Parse(loopCountStr);
                 _loopStep = 0;
                 _loopStart = _currentStep - 2 * _loopLength;
