@@ -11,7 +11,8 @@ namespace traVRsal.SDK
         public enum Behaviour
         {
             Unrestricted = 0,
-            Change_Higher = 1
+            Change_Higher = 1,
+            Change_Lower = 2
         }
 
         public enum Order

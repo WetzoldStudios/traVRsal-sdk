@@ -22,6 +22,7 @@ namespace traVRsal.SDK
         public bool isExit;
         public bool isIntro;
         public bool blockAgents = true;
+        public bool blockNavigation = true;
         public bool reactivateTransitions;
         public bool invisibleGround;
         public string variable;
@@ -131,6 +132,7 @@ namespace traVRsal.SDK
             randomMusic = copyFrom.randomMusic;
             skybox = copyFrom.skybox;
             blockAgents = copyFrom.blockAgents;
+            blockNavigation = copyFrom.blockNavigation;
             variationOf = copyFrom.variationOf;
             variable = copyFrom.variable;
             originalName = copyFrom.originalName;
@@ -160,6 +162,7 @@ namespace traVRsal.SDK
                    reactivateTransitions == zone.reactivateTransitions &&
                    invisibleGround == zone.invisibleGround &&
                    blockAgents == zone.blockAgents &&
+                   blockNavigation == zone.blockNavigation &&
                    availableTime == zone.availableTime &&
                    hasAmbientColor == zone.hasAmbientColor &&
                    hasBackgroundColor == zone.hasBackgroundColor &&
@@ -191,6 +194,7 @@ namespace traVRsal.SDK
             hashCode = hashCode * -1521134295 + invisibleGround.GetHashCode();
             hashCode = hashCode * -1521134295 + availableTime.GetHashCode();
             hashCode = hashCode * -1521134295 + blockAgents.GetHashCode();
+            hashCode = hashCode * -1521134295 + blockNavigation.GetHashCode();
             hashCode = hashCode * -1521134295 + hasAmbientColor.GetHashCode();
             hashCode = hashCode * -1521134295 + hasLightColor.GetHashCode();
             hashCode = hashCode * -1521134295 + hasBackgroundColor.GetHashCode();

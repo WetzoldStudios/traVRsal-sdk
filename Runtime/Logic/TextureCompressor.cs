@@ -10,6 +10,12 @@ namespace traVRsal.SDK
 
         private void Awake()
         {
+            Run();
+        }
+
+        [ContextMenu("Run Now")]
+        public void Run()
+        {
             GetComponentsInChildren<Renderer>(includeInactive).ForEach(r => r.materials.ForEach(m =>
             {
                 Shader shader = m.shader;
