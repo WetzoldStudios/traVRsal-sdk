@@ -3,8 +3,8 @@ using XNode;
 
 namespace traVRsal.SDK
 {
-    [CreateNodeMenu(menuName: "Comparisons/Greater Equal")]
-    public class GreaterEqualNode : Node
+    [CreateNodeMenu(menuName: "Comparisons/Equal (Float)")]
+    public class EqualFloatNode : Node
     {
         [Input] public float a;
         [Input] public float b;

@@ -3,12 +3,12 @@ using XNode;
 
 namespace traVRsal.SDK
 {
-    [CreateNodeMenu(menuName: "Comparisons/Equal")]
-    public class EqualNode : Node
+    [CreateNodeMenu(menuName: "Variables/Constant Int")]
+    [NodeTint(hex: "#B04040")]
+    public class ConstantIntNode : Node
     {
-        [Input] public float a;
-        [Input] public float b;
-        [Output] public bool result;
+        [Input] public int a;
+        [Output] public int value;
 
         public override object GetValue(NodePort port)
         {
@@ -18,9 +18,6 @@ namespace traVRsal.SDK
             {
                 case "a":
                     return a;
-
-                case "b":
-                    return b;
 
 
             }
