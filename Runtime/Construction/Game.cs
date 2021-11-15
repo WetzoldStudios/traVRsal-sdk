@@ -38,7 +38,6 @@ namespace traVRsal.SDK
         public bool enableMultiplayer;
 
         // derived 
-        public bool stickMode;
         public bool offlineMode;
 
         public Game()

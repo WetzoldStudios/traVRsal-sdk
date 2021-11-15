@@ -63,6 +63,12 @@ namespace traVRsal.SDK
             DoChallengeFilterBest = 98,
             DoOpenSDKWebsite = 129,
             DoLeaveParty = 141,
+            DoSwitchToControllers = 175,
+            DoSwitchToWalking = 176,
+            DoIncStickModeX = 180,
+            DoDecStickModeX = 181,
+            DoIncStickModeY = 182,
+            DoDecStickModeY = 183,
 
             EnterLogin = 64,
             EnterNickname = 62,
@@ -120,6 +126,9 @@ namespace traVRsal.SDK
             SettingTileCount = 5,
             SettingRenderScale = 164,
             SettingTileSizeHint = 8,
+            SettingLocomotionMethod = 174,
+            SettingStickModeX = 178,
+            SettingStickModeY = 179,
 
             StatAccuracy = 23,
             StatDeaths = 25,
@@ -186,6 +195,7 @@ namespace traVRsal.SDK
             ShowIfCommunityWorld = 152,
             ShowIfRecordingAvailable = 170,
             ShowIfHaptics = 157,
+            ShowIfControllerMovement = 177,
 
             ShowWorldDownload = ASYNC_RESULT + 1,
             ShowWorldStart = ASYNC_RESULT + 2,
