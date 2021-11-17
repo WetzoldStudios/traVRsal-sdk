@@ -39,6 +39,7 @@ namespace traVRsal.SDK
         public Vector3 targetPosition;
         public string targetLocation;
         public int targetFloor;
+        public string waypoints;
 
         [Header("Actions")] [Tooltip("Defines when a platform should move, either automatically or based on a variable.")]
         public Trigger trigger = Trigger.Variable;

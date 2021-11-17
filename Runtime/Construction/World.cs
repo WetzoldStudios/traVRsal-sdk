@@ -142,6 +142,7 @@ namespace traVRsal.SDK
         [NonSerialized] public Dictionary<string, string> zoneTemplateCache;
         [NonSerialized] public Dictionary<string, Tuple<string, BasicEntity>> locationCache;
         [NonSerialized] public Dictionary<int, HashSet<int>> zoneVisibility;
+        [NonSerialized] public Dictionary<string, Waypoint> waypointCache;
         [NonSerialized] public Challenge challenge;
         [NonSerialized] public bool useExistingWorld;
         [NonSerialized] public int autoIdx = 1;
@@ -165,6 +166,7 @@ namespace traVRsal.SDK
             zoneTemplateCache = new Dictionary<string, string>();
             locationCache = new Dictionary<string, Tuple<string, BasicEntity>>();
             zoneVisibility = new Dictionary<int, HashSet<int>>();
+            waypointCache = new Dictionary<string, Waypoint>();
             inventoryItems = new List<string>();
             speech = new List<TextFragment>();
             initialVariables = new List<Variable>();
@@ -196,6 +198,7 @@ namespace traVRsal.SDK
             if (objectSpecs is {Count: 0}) objectSpecs = null;
             if (usedTags is {Count: 0}) usedTags = null;
             if (visitedZones is {Count: 0}) visitedZones = null;
+            if (waypointCache is {Count: 0}) waypointCache = null;
             if (zoneTemplateCache is {Count: 0}) zoneTemplateCache = null;
             if (locationCache is {Count: 0}) locationCache = null;
             if (zoneVisibility is {Count: 0}) zoneVisibility = null;
