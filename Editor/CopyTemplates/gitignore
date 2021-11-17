@@ -18,6 +18,7 @@
 /ServerData
 /Documentation
 /ProjectSettings/Packages/com.wetzold.travrsal.sdk
+traVRsal-studio.json
 
 # Visual Studio cache directory
 .vs/

@@ -1,17 +1,39 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace traVRsal.SDK
 {
     public class UtilityUI : BasicEditorUI
     {
+        [MenuItem("traVRsal/Start Studio", false, 2000)]
+        public static void StartStudio()
+        {
+            string file = Application.dataPath + "/../" + SDKUtil.STUDIO_INFO_FILE;
+            if (!File.Exists(file))
+            {
+                EditorUtility.DisplayDialog("Info", "The studio could not be found yet. Make sure to start it once manually first.", "OK");
+                return;
+            }
+
+            Studio info = SDKUtil.ReadJSONFileDirect<Studio>(file);
+            if (info == null || !File.Exists(info.studioPath))
+            {
+                EditorUtility.DisplayDialog("Error", "The studio could not be found anymore. Start it manually first.", "OK");
+                return;
+            }
+
+            Process.Start(info.studioPath);
+        }
+
         [MenuItem("traVRsal/Utilities/Convert Selected to Piece", false, 1000)]
         public static void ConvertToPiece()
         {

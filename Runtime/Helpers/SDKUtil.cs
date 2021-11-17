@@ -31,6 +31,7 @@ namespace traVRsal.SDK
         public const string TILED_PATH_DEFAULT = "C:\\Program Files\\Tiled\\tiled.exe";
         public const string LOCKFILE_NAME = "traVRsal.lock";
         public const string MODFILE_NAME = "modding.json";
+        public const string STUDIO_INFO_FILE = "traVRsal-studio.json";
 
         // TTS
         public const string VOICE_SPEECH_PREFIX = "SPEECH_";

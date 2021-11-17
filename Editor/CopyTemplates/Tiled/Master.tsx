@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.4" tiledversion="1.4.3" name="Master" tilewidth="50" tileheight="50" tilecount="26" columns="0">
+<tileset version="1.5" tiledversion="1.7.1" name="Master" tilewidth="50" tileheight="50" tilecount="27" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="2" type="/Base/Ceiling">
   <properties>
@@ -194,5 +194,12 @@
    <property name="Virtual" type="bool" value="true"/>
   </properties>
   <image width="50" height="50" source="Master Images/explicit-spawn.png"/>
+ </tile>
+ <tile id="32" type="/Base/Waypoint">
+  <properties>
+   <property name="Anchor" value=""/>
+   <property name="Key" value=""/>
+  </properties>
+  <image width="50" height="50" source="Master Images/waypoint.png"/>
  </tile>
 </tileset>
