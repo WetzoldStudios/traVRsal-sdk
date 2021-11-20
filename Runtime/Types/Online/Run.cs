@@ -5,6 +5,14 @@ namespace traVRsal.SDK
     [Serializable]
     public class Run
     {
+        public enum ControlScheme
+        {
+            walking,
+            smooth,
+            teleport,
+            threadmill
+        }
+
         public int id;
         public string player_id;
         public string player_name;
@@ -40,6 +48,8 @@ namespace traVRsal.SDK
         public string custom_kpis;
         public float player_damage;
         public float score;
+        public int is_valid;
+        public ControlScheme controlScheme;
 
         public string created_at;
 
