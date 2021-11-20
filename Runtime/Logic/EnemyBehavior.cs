@@ -7,15 +7,16 @@ namespace traVRsal.SDK
     {
         public enum EnemyState
         {
-            Scan,
-            Investigate,
-            Engage
+            Scan = 0,
+            Investigate = 1,
+            Engage = 2
         }
 
         public enum Movement
         {
-            None,
-            Random
+            None = 0,
+            Random = 1,
+            Waypoint = 2
         }
 
         [Header("General")] public EnemyState state = EnemyState.Scan;
@@ -39,6 +40,7 @@ namespace traVRsal.SDK
         public Vector2 moveAreaStart = Vector2.zero;
         public Vector2 moveAreaEnd = Vector2.zero;
         public float wanderRadius = 5f;
+        public string waypoints;
         public bool snapToGrid = true;
         public bool reportMovement = true;
         public AudioSource walkSound;

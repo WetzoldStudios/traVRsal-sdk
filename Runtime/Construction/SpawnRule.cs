@@ -70,6 +70,9 @@ namespace traVRsal.SDK
         [DefaultValue(-1)] public int maxShields = -1;
         [DefaultValue(-1)] public int maxShieldStrength = -1;
 
+        [DefaultValue(-1.0f)] public float speed = -1f;
+        public string waypoints;
+
         public bool dontCountAsTarget;
         public bool dontCountAsObstacle;
 
