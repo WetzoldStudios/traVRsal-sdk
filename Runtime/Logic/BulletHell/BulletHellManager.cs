@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace traVRsal.SDK
 {
@@ -14,6 +15,8 @@ namespace traVRsal.SDK
         public float initialDelayMax = 1f;
 
         [Header("Static References")] public AudioSource audioSource;
+
+        [Header("Events")] public UnityEvent<string> onSpawn;
 
         private float _nextRotateAction = float.MaxValue;
         private float _nextSpawnAction = float.MaxValue;
@@ -86,6 +89,7 @@ namespace traVRsal.SDK
 
                     default:
                         _shooter?.Fire();
+                        onSpawn?.Invoke(action);
                         break;
                 }
 
