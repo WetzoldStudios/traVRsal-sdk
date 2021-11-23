@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 namespace traVRsal.SDK
@@ -7,9 +6,6 @@ namespace traVRsal.SDK
     [AddComponentMenu("traVRsal/World State Reactor")]
     public class WorldStateReactor : MonoBehaviour, IWorldStateReactor
     {
-        [Tooltip("Components to activate when world has finished loading.")] [Obsolete]
-        public Behaviour[] components;
-
         public UnityEvent onFinishedLoading;
 
         [Tooltip("Components to inform about zone changes. Requires WorldStateReactor components on these.")]
@@ -22,19 +18,12 @@ namespace traVRsal.SDK
 
         public void FinishedLoading(Vector3 tileSizes, bool instantEnablement = false)
         {
-            onFinishedLoading?.Invoke();
-
-            for (int i = 0; i < components.Length; i++)
-            {
-                components[i].enabled = true;
-            }
+            if (enabled) onFinishedLoading?.Invoke();
         }
 
         private void Start()
         {
             // in to enable activation/deactivation
-            
-            if (components != null && components.Length > 0) EDebug.LogWarning($"Obsolete logic usage on {gameObject}");
         }
     }
 }

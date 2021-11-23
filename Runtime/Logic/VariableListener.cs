@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 namespace traVRsal.SDK
@@ -30,15 +28,6 @@ namespace traVRsal.SDK
         [Header("Action")] public Action action = Action.Assignments_Only;
         public GameObject targetObject;
         public Behaviour component;
-
-        [Header("Static Assignments")] [Obsolete]
-        public List<GameObject> enabledObjects;
-
-        [Obsolete] public List<GameObject> disabledObjects;
-        [Obsolete] public List<Behaviour> enabledComponents;
-        [Obsolete] public List<Behaviour> disabledComponents;
-        [Obsolete] public List<Collider> enabledColliders;
-        [Obsolete] public List<Collider> disabledColliders;
 
         [Header("Events")] public UnityEvent onTrue;
         public UnityEvent onFalse;
