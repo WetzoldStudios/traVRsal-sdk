@@ -31,8 +31,6 @@ namespace traVRsal.SDK
 
         [Header("General")] public string key;
         public string layer;
-        [DefaultValue(true)] public bool enabled = true;
-        public string enabledFormula;
 
         [Header("Objects")] public string[] objectKeys;
         public ConditionalValues[] objectKeysIf;
@@ -46,21 +44,20 @@ namespace traVRsal.SDK
         public float progressionStart;
         [DefaultValue(1.0f)] public float progressionEnd = 1f;
 
-        [Header("Restrictions")] public string[] validZones;
+        [Header("Restrictions")] public bool currentZone;
+        public bool exactLocation;
+        public string[] validZones;
         public string[] validSockets;
         public string[] validObjects;
         public string[] restrictions;
-
-        [Header("Property Overrides")] public int damage;
-        public int health;
-
-        [Space] public string scale;
-        public float maxScale;
-        public float y;
-        public float[] yRange;
         public int minDistance;
+
+        [Header("Positioning")] public float y;
+        public float[] yRange;
         public string moveRandomly;
         public string rotateRandomly;
+        public string scale;
+        public float maxScale;
         public bool snap;
         public bool atCeiling;
         public bool connectToCeiling;
@@ -68,7 +65,9 @@ namespace traVRsal.SDK
         public bool flipOrientation;
         public bool considerPlayerHeight;
 
-        [Space] [DefaultValue(-1.0f)] public float speed = -1f;
+        [Header("Property Overrides")] public int damage;
+        public int health;
+        [DefaultValue(-1.0f)] public float speed = -1f;
         public string waypoints;
 
         [Header("Shields")] [DefaultValue(-1.0f)]
@@ -79,7 +78,9 @@ namespace traVRsal.SDK
         [DefaultValue(-1)] public int maxShields = -1;
         [DefaultValue(-1)] public int maxShieldStrength = -1;
 
-        [Header("Misc")] public bool dontCountAsTarget;
+        [Header("Misc")] [DefaultValue(true)] public bool enabled = true;
+        public string enabledFormula;
+        public bool dontCountAsTarget;
         public bool dontCountAsObstacle;
         public bool debug;
 

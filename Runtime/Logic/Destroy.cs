@@ -4,8 +4,8 @@ using UnityEngine.Events;
 
 namespace traVRsal.SDK
 {
-    [AddComponentMenu("traVRsal/Delay")]
-    public class Delay : MonoBehaviour
+    [AddComponentMenu("traVRsal/Destroy")]
+    public class Destroy : MonoBehaviour
     {
         public enum Mode
         {
@@ -14,9 +14,21 @@ namespace traVRsal.SDK
         }
 
         public Mode mode = Mode.Automatic;
-        [Tooltip("Delay in seconds")] public float delay = 2f;
 
-        [Space] public UnityEvent onCompletion;
+        [Tooltip("Delay for destruction in seconds")]
+        public float delay = 5f;
+
+        [Tooltip("Flag if full piece should be destroyed or only the hierarchy from this object and below")]
+        public bool partial;
+
+        [Space] public UnityEvent onDestruction;
+
+        private ISpawner _spawner;
+
+        private void Start()
+        {
+            _spawner = GetComponentInParent<ISpawner>();
+        }
 
         private void OnEnable()
         {
@@ -26,7 +38,8 @@ namespace traVRsal.SDK
         private IEnumerator DoTrigger(float delayOverride)
         {
             yield return new WaitForSeconds(delayOverride);
-            onCompletion?.Invoke();
+            onDestruction?.Invoke();
+            _spawner.Destruct(gameObject, partial);
         }
 
         [ContextMenu("Trigger")]

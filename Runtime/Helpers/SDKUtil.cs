@@ -74,6 +74,16 @@ namespace traVRsal.SDK
             Sphere
         }
 
+        public static float GetDistance(this Transform transform, Transform other)
+        {
+            return Vector3.Distance(transform.position, other.position);
+        }
+
+        public static float GetDistanceAbs(this Transform transform, Transform other)
+        {
+            return Mathf.Abs(GetDistance(transform, other));
+        }
+
         public static IEnumerator FetchAPIData<T>(string api, string player, string token, Action<T> callback, Game game, string endPoint = API_ENDPOINT)
         {
             string uri = endPoint + api;

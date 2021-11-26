@@ -148,8 +148,10 @@ namespace traVRsal.SDK
         [NonSerialized] public int autoIdx = 1;
         [NonSerialized] public int livesLeft;
         [NonSerialized] public float tileSize;
+        [NonSerialized] public float tileSizeY;
         [NonSerialized] public Vector2Int minSizeV = Vector2Int.zero;
         [NonSerialized] public Vector2Int maxSizeV = Vector2Int.zero;
+        [NonSerialized] public bool pass2;
 
         public World()
         {

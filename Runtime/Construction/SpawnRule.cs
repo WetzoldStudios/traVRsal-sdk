@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using UnityEngine;
 using static traVRsal.SDK.BasicEntity;
 
 namespace traVRsal.SDK
@@ -7,6 +8,7 @@ namespace traVRsal.SDK
     [Serializable]
     public class SpawnRule : BasicSpawnRule
     {
+        [Tooltip("Other game objects that are spawned at the exact same position the main spawn rule determined, e.g. a frame for a picture")]
         public BasicSpawnRule[] companions;
 
         public SpawnRule()
