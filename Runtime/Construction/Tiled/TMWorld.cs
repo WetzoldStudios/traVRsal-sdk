@@ -15,7 +15,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"TileMap World {worldName} ({fileName})";
+            return $"TileMap World '{worldName}' ({fileName})";
         }
     }
 }

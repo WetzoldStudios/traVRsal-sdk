@@ -226,7 +226,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"World {name}";
+            return $"World '{name}'";
         }
     }
 }

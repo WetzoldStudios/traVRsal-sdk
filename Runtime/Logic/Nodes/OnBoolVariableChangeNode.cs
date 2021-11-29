@@ -3,9 +3,9 @@ using XNode;
 
 namespace traVRsal.SDK
 {
-    [CreateNodeMenu(menuName: "Events/On Variable Change")]
+    [CreateNodeMenu(menuName: "Events/On Bool Variable Change")]
     [NodeTint(hex: "#B04040")]
-    public class OnVariableChangeNode : Node
+    public class OnBoolVariableChangeNode : Node
     {
         [Input] public string varName;
         [Output(connectionType: ConnectionType.Override)] public bool onChange;

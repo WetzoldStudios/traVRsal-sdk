@@ -32,7 +32,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"HUD Config ({text})";
+            return $"HUD Config '{text}'";
         }
     }
 }

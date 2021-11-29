@@ -48,7 +48,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Segment ({key})";
+            return $"Segment '{key}'";
         }
     }
 }

@@ -6,10 +6,14 @@ using Object = UnityEngine.Object;
 
 namespace traVRsal.SDK
 {
+    public delegate void LogEntryCreated(string message);
+
     public static class EDebug
     {
         public static List<Tuple<string, string>> errors = new List<Tuple<string, string>>();
         public static List<Tuple<string, string>> warnings = new List<Tuple<string, string>>();
+
+        public static LogEntryCreated OnLogEntryCreated;
 
         public static void Clear()
         {
@@ -21,12 +25,16 @@ namespace traVRsal.SDK
         {
             warnings.Add(new Tuple<string, string>(GetDate(), message));
             Debug.LogWarning(message, context);
+
+            OnLogEntryCreated?.Invoke(message);
         }
 
         public static void LogError(string message, Object context = null)
         {
             errors.Add(new Tuple<string, string>(GetDate(), message));
             Debug.LogError(message, context);
+
+            OnLogEntryCreated?.Invoke(message);
         }
 
         public static List<string> GetData(bool returnErrors, bool returnWarnings)

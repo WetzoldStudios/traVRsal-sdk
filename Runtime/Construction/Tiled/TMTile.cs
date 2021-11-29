@@ -14,7 +14,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Tile {id} ({type})";
+            return $"Tile '{id}' ({type})";
         }
     }
 }

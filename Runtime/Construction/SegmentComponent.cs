@@ -56,7 +56,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Component ({key})";
+            return $"Component '{key}'";
         }
     }
 }

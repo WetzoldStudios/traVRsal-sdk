@@ -48,7 +48,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"{type} property {name} ({value})";
+            return $"{type} property '{name}' ({value})";
         }
 
         private void DetectType()

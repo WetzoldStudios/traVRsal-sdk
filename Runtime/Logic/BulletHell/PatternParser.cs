@@ -19,7 +19,7 @@
                 _pattern = pattern.Split(',');
                 for (int i = 0; i < _pattern.Length; i++)
                 {
-                    _pattern[i] = _pattern[i].Trim().ToLower();
+                    _pattern[i] = _pattern[i].Trim();
                 }
             }
         }
@@ -29,7 +29,9 @@
             if (_pattern.Length == 0 || _currentStep >= _pattern.Length) return null;
 
             int idx = GetCalculatedIdx();
-            return int.Parse(_pattern[idx]);
+
+            int.TryParse(_pattern[idx], out int next);
+            return next;
         }
 
         public string GetNextAction()
@@ -40,7 +42,7 @@
             }
 
             int idx = GetCalculatedIdx() + 1;
-            return _pattern[idx];
+            return idx < _pattern.Length ? _pattern[idx] : null;
         }
 
         public int? Next()

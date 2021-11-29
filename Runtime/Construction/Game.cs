@@ -52,7 +52,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Game {name} ({key}, {worlds.Count} worlds, " + (devMode ? "Dev-Mode" : "Game-Mode") + ")";
+            return $"Game '{name}' ({key}, {worlds.Count} worlds, " + (devMode ? "Dev-Mode" : "Game-Mode") + ")";
         }
     }
 }

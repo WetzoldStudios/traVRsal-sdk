@@ -61,7 +61,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Replacement Rule {key} ({type})";
+            return $"Replacement Rule '{key}' ({type})";
         }
     }
 }

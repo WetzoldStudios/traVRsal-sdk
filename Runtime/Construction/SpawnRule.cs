@@ -83,7 +83,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Spawn Rule {key} ({amount} {amountType}, {distributionType})";
+            return $"Spawn Rule '{key}' ({amount} {amountType}, {distributionType})";
         }
     }
 }

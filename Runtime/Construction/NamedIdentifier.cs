@@ -63,6 +63,7 @@ namespace traVRsal.SDK
             AvatarName = 42,
 
             TheaterRoot = 37,
+            AutoParent = 46,
             Object = 23
         }
 
@@ -71,7 +72,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Named Identifier ({type})";
+            return $"Named Identifier '{type}'";
         }
     }
 }

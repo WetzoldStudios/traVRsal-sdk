@@ -41,7 +41,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Journey ({key})";
+            return $"Journey '{key}'";
         }
     }
 }

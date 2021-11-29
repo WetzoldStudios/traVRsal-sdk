@@ -22,7 +22,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Object {name} ({type})";
+            return $"Object '{name}' ({type})";
         }
     }
 }

@@ -213,7 +213,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Zone {name}";
+            return $"Zone '{name}'";
         }
     }
 }

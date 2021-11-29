@@ -206,7 +206,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Entity {key} ({position}, {direction})";
+            return $"Entity '{key}' ({position}, {direction})";
         }
     }
 }

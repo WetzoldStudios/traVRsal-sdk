@@ -29,7 +29,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Layer {name} ({type})";
+            return $"Layer '{name}' ({type})";
         }
     }
 }

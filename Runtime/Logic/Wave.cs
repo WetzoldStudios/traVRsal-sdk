@@ -6,8 +6,15 @@ using UnityEngine.Events;
 
 namespace traVRsal.SDK
 {
-    public class Wave : MonoBehaviour
+    public class Wave : MonoBehaviour, IWorldStateReactor
     {
+        public enum Mode
+        {
+            Automatic = 0,
+            Manual = 1
+        }
+
+        public Mode mode = Mode.Automatic;
         public string pattern;
         public bool loop;
         public SpawnRule[] spawnRules = new SpawnRule[1]; // init with 1 elements to have inspector filled with correct default values
@@ -18,6 +25,7 @@ namespace traVRsal.SDK
 
         private bool _isOver;
         private bool _isDefended;
+        private bool _inProgress;
         private float _nextSpawnAction = float.MaxValue;
         private PatternParser _spawnPattern;
         private ISpawner _spawner;
@@ -27,7 +35,7 @@ namespace traVRsal.SDK
         {
             _spawnedGos = new List<GameObject>();
             _spawner = GetComponentInParent<ISpawner>();
-            Restart();
+            _nextSpawnAction = float.MaxValue;
         }
 
         private void Update()
@@ -40,11 +48,12 @@ namespace traVRsal.SDK
                 SpawnRule rule = spawnRules.FirstOrDefault(sr => sr.key == action);
                 if (rule != null)
                 {
+                    _inProgress = true;
                     StartCoroutine(Spawn(rule));
                 }
                 else
                 {
-                    EDebug.LogError($"Spawn rule {action} is not defined in wave {gameObject.name}");
+                    EDebug.LogError($"Spawn rule '{action}' is not defined in wave '{gameObject.name}'");
                 }
 
                 if (_spawnPattern.Next() != null)
@@ -59,7 +68,7 @@ namespace traVRsal.SDK
                 }
             }
 
-            if (_isOver && !_isDefended)
+            if (_isOver && !_isDefended && !_inProgress)
             {
                 _isDefended = _spawnedGos.All(go => go == null);
                 if (_isDefended) onDefended?.Invoke();
@@ -69,9 +78,11 @@ namespace traVRsal.SDK
         private IEnumerator Spawn(SpawnRule rule)
         {
             yield return _spawner.Spawn(rule, go => _spawnedGos.Add(go));
+            _inProgress = false;
         }
 
-        public void Restart()
+        [ContextMenu("Trigger")]
+        public void Trigger()
         {
             _isDefended = false;
             _isOver = false;
@@ -82,6 +93,12 @@ namespace traVRsal.SDK
 
         private void InitSpawnPattern(string spawnPattern)
         {
+            if (string.IsNullOrWhiteSpace(spawnPattern) && spawnRules.Length > 0)
+            {
+                // auto-generate a pattern using all existing spawn rules in case there is none
+                spawnPattern = string.Join(",", spawnRules.Select(sr => "0," + sr.key));
+            }
+
             _spawnPattern = new PatternParser(spawnPattern, loop);
             if (_spawnPattern.GetNextExecution() != null)
             {
@@ -92,6 +109,15 @@ namespace traVRsal.SDK
         public override string ToString()
         {
             return $"Wave ({pattern})";
+        }
+
+        public void ZoneChange(Zone zone, bool isCurrent)
+        {
+        }
+
+        public void FinishedLoading(Vector3 tileSizes, bool instantEnablement = false)
+        {
+            if (mode == Mode.Automatic) Trigger();
         }
     }
 }
