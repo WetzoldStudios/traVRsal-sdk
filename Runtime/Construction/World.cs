@@ -26,7 +26,7 @@ namespace traVRsal.SDK
             Multiple = 2
         }
 
-        public enum TargetVisiblity
+        public enum TargetVisibility
         {
             Always = 1,
             EnteringZone = 0
@@ -76,7 +76,7 @@ namespace traVRsal.SDK
         public bool autoCheckPoints;
         [DefaultValue(true)] public bool createIntro = true;
         public TargetMeasures[] measures = {TargetMeasures.Time, TargetMeasures.Distance};
-        public TargetVisiblity targetVisibility = TargetVisiblity.EnteringZone;
+        public TargetVisibility targetVisibility = TargetVisibility.EnteringZone;
         public List<QualityRule> qualityRules;
 
         [Header("Items & HUD")] [DefaultValue(true)]
