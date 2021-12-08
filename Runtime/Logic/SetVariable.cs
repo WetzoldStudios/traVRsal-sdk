@@ -8,8 +8,8 @@ namespace traVRsal.SDK
     {
         public enum Mode
         {
-            ActiveOnly = 0,
-            ActiveAndReactive = 1
+            Manual = 0,
+            Automatic = 1
         }
 
         public enum BooleanAction
@@ -98,7 +98,7 @@ namespace traVRsal.SDK
         public void VariableChanged(Variable variable, bool condition, bool initialCall = false)
         {
             if (!_initDone) Init();
-            if (mode != Mode.ActiveAndReactive) return;
+            if (mode == Mode.Manual) return;
             if (initialCall) return;
 
             StartCoroutine(DoVariableChanged(variable, condition, initialCall));

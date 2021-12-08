@@ -8,13 +8,13 @@ namespace traVRsal.SDK
 {
     public class TileMapConverter : AssetPostprocessor
     {
-        static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
+        private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
         {
-            List<string> changedFiles = new List<string>();
+            List<string> changedFiles = new();
 
             foreach (string str in importedAssets.Concat(movedAssets).Concat(movedFromAssetPaths))
             {
-                if (str.EndsWith(TileMapUtil.MAP_EXTENSION) || str.EndsWith(TileMapUtil.WORLD_EXTENSION))
+                if (str.EndsWith("." + TileMapUtil.MAP_EXTENSION) || str.EndsWith("." + TileMapUtil.WORLD_EXTENSION))
                 {
                     changedFiles.Add(str);
                 }
@@ -25,7 +25,7 @@ namespace traVRsal.SDK
                 // only run if not in play-mode as otherwise we get duplicate reloads in game
                 if (!Application.isPlaying && Application.isEditor)
                 {
-                    ConvertTiledToJSON(changedFiles);
+                    ConvertTiledToJson(changedFiles);
 
                     // live reload in editor
                     AssetDatabase.Refresh();
@@ -33,7 +33,7 @@ namespace traVRsal.SDK
             }
         }
 
-        public static void ConvertTiledToJSON(List<string> changedFiles)
+        public static void ConvertTiledToJson(List<string> changedFiles)
         {
             // TODO: use TileMapUtil
             string tiledExe = TravrsalSettingsManager.Get("tiledPath", SDKUtil.TILED_PATH_DEFAULT);
@@ -44,13 +44,13 @@ namespace traVRsal.SDK
                 // leave old name intact and simply add .json
                 string targetName = file + ".json";
 
-                if (file.EndsWith(TileMapUtil.WORLD_EXTENSION))
+                if (file.EndsWith("." + TileMapUtil.WORLD_EXTENSION))
                 {
                     FileUtil.ReplaceFile(file, targetName);
                 }
                 else
                 {
-                    Process process = new Process();
+                    Process process = new();
                     process.StartInfo.FileName = tiledExe;
                     // do not use --resolve-types-and-properties to have full control over declaration chain
                     process.StartInfo.Arguments = "--export-map JSON --embed-tilesets \"" + file + "\" \"" + targetName + "\"";

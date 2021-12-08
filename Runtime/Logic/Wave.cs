@@ -23,6 +23,7 @@ namespace traVRsal.SDK
         public UnityEvent onOver;
         public UnityEvent onDefended;
 
+        private bool _initDone;
         private bool _isOver;
         private bool _isDefended;
         private bool _inProgress;
@@ -31,11 +32,20 @@ namespace traVRsal.SDK
         private ISpawner _spawner;
         private List<GameObject> _spawnedGos;
 
-        private void Start()
+        private void Awake()
         {
             _spawnedGos = new List<GameObject>();
-            _spawner = GetComponentInParent<ISpawner>();
             _nextSpawnAction = float.MaxValue;
+        }
+
+        private void Start()
+        {
+            _spawner = GetComponentInParent<ISpawner>();
+        }
+
+        private void OnEnable()
+        {
+            if (_initDone && mode == Mode.Automatic) Trigger();
         }
 
         private void Update()
@@ -84,11 +94,20 @@ namespace traVRsal.SDK
         [ContextMenu("Trigger")]
         public void Trigger()
         {
+            if (_nextSpawnAction < float.MaxValue) return;
+
             _isDefended = false;
             _isOver = false;
 
             InitSpawnPattern(pattern);
             onStarted?.Invoke();
+        }
+
+        [ContextMenu("Retrigger")]
+        public void Retrigger()
+        {
+            _nextSpawnAction = float.MaxValue;
+            Trigger();
         }
 
         private void InitSpawnPattern(string spawnPattern)
@@ -117,6 +136,7 @@ namespace traVRsal.SDK
 
         public void FinishedLoading(Vector3 tileSizes, bool instantEnablement = false)
         {
+            _initDone = true;
             if (mode == Mode.Automatic) Trigger();
         }
     }
