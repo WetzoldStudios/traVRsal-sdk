@@ -339,6 +339,14 @@ Shader "MazeVR/StencilObjectSimple"
         Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel"="2.0"}
         LOD 300
 
+        Stencil {
+            Ref[_StencilReference]
+            Comp[_StencilComparison]	// equal
+            Pass[_StencilOperation]	// keep
+            ReadMask[_StencilReadMask]
+            WriteMask[_StencilWriteMask]
+        }
+
         Pass
         {
             Name "ForwardLit"

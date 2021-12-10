@@ -399,6 +399,14 @@
         Tags{"RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "Lit" "IgnoreProjector" = "True" "ShaderModel"="2.0"}
         LOD 300
 
+        Stencil {
+            Ref[_StencilReference]
+            Comp[_StencilComparison]	// equal
+            Pass[_StencilOperation]	// keep
+            ReadMask[_StencilReadMask]
+            WriteMask[_StencilWriteMask]
+        }
+
         // ------------------------------------------------------------------
         //  Forward pass. Shades all light in a single pass. GI + emission + Fog
         Pass

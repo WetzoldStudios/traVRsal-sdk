@@ -168,6 +168,14 @@
         Tags {"RenderType" = "Opaque" "IgnoreProjector" = "True" "RenderPipeline" = "UniversalPipeline" "ShaderModel"="2.0"}
         LOD 100
 
+        Stencil {
+            Ref[_StencilReference]
+            Comp[_StencilComparison]	// equal
+            Pass[_StencilOperation]	// keep
+            ReadMask[_StencilReadMask]
+            WriteMask[_StencilWriteMask]
+        }
+
         Blend [_SrcBlend][_DstBlend], [_SrcBlendAlpha][_DstBlendAlpha]
         ZWrite [_ZWrite]
         Cull [_Cull]
