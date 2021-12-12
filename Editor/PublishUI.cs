@@ -597,40 +597,44 @@ namespace traVRsal.SDK
 
         private static void AddObjectSpecs(World world, string root)
         {
-            string worldBasePath = Path.GetDirectoryName(AssetDatabase.GUIDToAssetPath(AssetDatabase.AssetPathToGUID(root + "World.json"))) + "/Pieces";
+            string worldRootPath = Path.GetDirectoryName(AssetDatabase.GUIDToAssetPath(AssetDatabase.AssetPathToGUID(root + "World.json")));
             world.objectSpecs = new List<ObjectSpec>();
             world.usedTags = new HashSet<string>();
-            string[] assets = AssetDatabase.FindAssets("*", new[] {root + "Pieces"});
-            foreach (string asset in assets)
+            foreach (string folder in new[] {"Pieces", "Sceneries"})
             {
-                string assetPath = AssetDatabase.GUIDToAssetPath(asset);
-                if (!assetPath.ToLower().EndsWith(".prefab")) continue;
-
-                GameObject prefab = PrefabUtility.LoadPrefabContents(assetPath);
-                if (!string.IsNullOrWhiteSpace(prefab.tag) && !prefab.CompareTag("Untagged")) world.usedTags.Add(prefab.tag);
-
-                if (prefab.TryGetComponent(out ExtendedAttributes ea))
+                string[] assets = AssetDatabase.FindAssets("*", new[] {root + folder});
+                foreach (string asset in assets)
                 {
-                    if (!ea.spec.IsDefault())
+                    string assetPath = AssetDatabase.GUIDToAssetPath(asset);
+                    if (!assetPath.ToLower().EndsWith(".prefab")) continue;
+
+                    GameObject prefab = PrefabUtility.LoadPrefabContents(assetPath);
+                    if (!string.IsNullOrWhiteSpace(prefab.tag) && !prefab.CompareTag("Untagged")) world.usedTags.Add(prefab.tag);
+
+                    if (prefab.TryGetComponent(out ExtendedAttributes ea))
                     {
-                        string prefix = Path.GetDirectoryName(assetPath);
-                        if (prefix != null && prefix.Length > worldBasePath.Length)
+                        if (!ea.spec.IsDefault())
                         {
-                            prefix = prefix.Substring(worldBasePath.Length + 1) + "/";
-                            prefix = prefix.Replace('\\', '/');
-                        }
-                        else
-                        {
-                            prefix = "";
-                        }
+                            string worldBasePath = worldRootPath + "/" + folder;
+                            string prefix = (folder == "Pieces" ? "" : folder + "/") + Path.GetDirectoryName(assetPath);
+                            if (!string.IsNullOrEmpty(prefix) && prefix.Length > worldBasePath.Length)
+                            {
+                                prefix = prefix.Substring(worldBasePath.Length + 1) + "/";
+                                prefix = prefix.Replace('\\', '/');
+                            }
+                            else
+                            {
+                                prefix = "";
+                            }
 
-                        string fileName = Path.GetFileNameWithoutExtension(assetPath);
-                        ea.spec.objectKey = prefix + fileName;
-                        world.objectSpecs.Add(ea.spec);
+                            string fileName = Path.GetFileNameWithoutExtension(assetPath);
+                            ea.spec.objectKey = prefix + fileName;
+                            world.objectSpecs.Add(ea.spec);
+                        }
                     }
-                }
 
-                if (prefab != null) PrefabUtility.UnloadPrefabContents(prefab);
+                    if (prefab != null) PrefabUtility.UnloadPrefabContents(prefab);
+                }
             }
         }
 
