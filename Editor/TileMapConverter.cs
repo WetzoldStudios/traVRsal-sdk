@@ -10,7 +10,7 @@ namespace traVRsal.SDK
     {
         private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
         {
-            List<string> changedFiles = new();
+            List<string> changedFiles = new List<string>();
 
             foreach (string str in importedAssets.Concat(movedAssets).Concat(movedFromAssetPaths))
             {
@@ -50,7 +50,7 @@ namespace traVRsal.SDK
                 }
                 else
                 {
-                    Process process = new();
+                    Process process = new Process();
                     process.StartInfo.FileName = tiledExe;
                     // do not use --resolve-types-and-properties to have full control over declaration chain
                     process.StartInfo.Arguments = "--export-map JSON --embed-tilesets \"" + file + "\" \"" + targetName + "\"";
