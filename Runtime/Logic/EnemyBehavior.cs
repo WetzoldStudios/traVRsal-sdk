@@ -21,9 +21,16 @@ namespace traVRsal.SDK
         }
 
         [Header("General")] public EnemyState state = EnemyState.Scan;
+
+        [Tooltip("Time for which player must remain visible until switching to engage")]
         public float investigateToEngageDelay = 0.5f;
+
+        [Tooltip("Time for which player must remain invisible until switching back to scan")]
         public float investigateToScanDelay = 3f;
+
+        [Tooltip("Time for which player must remain invisible until switching back to scan")]
         public float engageToScanDelay = 3f;
+
         public BulletHellManager scanBehavior;
         public BulletHellManager investigateBehavior;
         public BulletHellManager engageBehavior;
@@ -31,6 +38,7 @@ namespace traVRsal.SDK
         [Header("Tracking")] public bool trackPlayer = true;
         public Transform tracker;
         public float trackSpeed = 1f;
+        public bool moveToPlayer;
 
         [Header("Attack")] public bool proximityDamage;
         public float proximity = 0.5f;
