@@ -1,5 +1,4 @@
-﻿using System;
-using DG.Tweening;
+﻿using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -161,9 +160,9 @@ namespace traVRsal.SDK
             return variableChannel;
         }
 
-        private void MovePartially(float distance)
+        private void MovePartially(float dist)
         {
-            Vector3 pos = _originalPosition + (axis * _finalDistance - _originalPosition) * distance;
+            Vector3 pos = _originalPosition + (axis * _finalDistance - _originalPosition) * dist;
 
             if (_curTween != null) DOTween.Kill(_curTween);
             _curTween = transform.DOLocalMove(pos, _finalDuration)

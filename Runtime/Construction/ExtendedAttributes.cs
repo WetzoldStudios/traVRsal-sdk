@@ -26,6 +26,9 @@ namespace traVRsal.SDK
         [Tooltip("Object is an item that can be carried")]
         public bool carriable;
 
+        [Tooltip("Object will control visibility of portal at same location")]
+        public bool door;
+
         [Tooltip("Object is a flat wall of width 1 that can be hidden without visual pop-in effects when walking through a transition")]
         public bool portalHole;
 
@@ -37,5 +40,13 @@ namespace traVRsal.SDK
 
         [Tooltip("Additional object attributes")]
         public ObjectSpec spec;
+
+        // cache structures
+        [NonSerialized] public Behaviour portal;
+
+        public void SetDoorOpen(bool state)
+        {
+            GetComponentInParent<IPortalAction>().SetPortalState(state);
+        }
     }
 }

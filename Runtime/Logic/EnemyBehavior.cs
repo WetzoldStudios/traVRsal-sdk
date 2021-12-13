@@ -16,7 +16,8 @@ namespace traVRsal.SDK
         {
             None = 0,
             Random = 1,
-            Waypoint = 2
+            Waypoint = 2,
+            Custom = 3
         }
 
         [Header("General")] public EnemyState state = EnemyState.Scan;

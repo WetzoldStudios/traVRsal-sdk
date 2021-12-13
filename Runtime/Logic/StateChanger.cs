@@ -11,7 +11,7 @@ namespace traVRsal.SDK
         public float duration = 5f;
         public List<MaterialReference> materialSlots;
 
-        [Space] public UnityEvent onIntoState;
+        [Header("Events")] public UnityEvent onIntoState;
         public UnityEvent onOutOfState;
         public UnityEvent<bool> onStateChange;
     }
