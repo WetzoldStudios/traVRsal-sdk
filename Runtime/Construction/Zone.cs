@@ -32,6 +32,7 @@ namespace traVRsal.SDK
         public Color backgroundColor = Color.black;
         public float lightIntensity = 1f;
         public string skybox;
+        public float fogDensity = 0.02f;
 
         [Header("Audio")] public string music;
         public float musicVolume = 1f;
@@ -50,6 +51,7 @@ namespace traVRsal.SDK
         public bool hasAmbientColor;
         public bool hasBackgroundColor;
         public bool hasLightIntensity;
+        public bool hasFog;
         public int agentCount;
         public int idx;
         public byte stencilId;
@@ -118,9 +120,11 @@ namespace traVRsal.SDK
             hasBackgroundColor = copyFrom.hasBackgroundColor;
             hasLightColor = copyFrom.hasLightColor;
             hasLightIntensity = copyFrom.hasLightIntensity;
+            hasFog = copyFrom.hasFog;
             ambientColor = copyFrom.ambientColor;
             lightColor = copyFrom.lightColor;
             lightIntensity = copyFrom.lightIntensity;
+            fogDensity = copyFrom.fogDensity;
             backgroundColor = copyFrom.backgroundColor;
             chapter = copyFrom.chapter;
             createCheckpoint = copyFrom.createCheckpoint;
@@ -168,10 +172,12 @@ namespace traVRsal.SDK
                    hasBackgroundColor == zone.hasBackgroundColor &&
                    hasLightColor == zone.hasLightColor &&
                    hasLightIntensity == zone.hasLightIntensity &&
+                   hasFog == zone.hasFog &&
                    ambientColor.Equals(zone.ambientColor) &&
                    lightColor.Equals(zone.lightColor) &&
                    backgroundColor.Equals(zone.backgroundColor) &&
                    lightIntensity == zone.lightIntensity &&
+                   fogDensity == zone.fogDensity &&
                    skybox == zone.skybox &&
                    music == zone.music &&
                    randomMusic == zone.randomMusic &&
@@ -199,10 +205,12 @@ namespace traVRsal.SDK
             hashCode = hashCode * -1521134295 + hasLightColor.GetHashCode();
             hashCode = hashCode * -1521134295 + hasBackgroundColor.GetHashCode();
             hashCode = hashCode * -1521134295 + hasLightIntensity.GetHashCode();
+            hashCode = hashCode * -1521134295 + hasFog.GetHashCode();
             hashCode = hashCode * -1521134295 + ambientColor.GetHashCode();
             hashCode = hashCode * -1521134295 + lightColor.GetHashCode();
             hashCode = hashCode * -1521134295 + backgroundColor.GetHashCode();
             hashCode = hashCode * -1521134295 + lightIntensity.GetHashCode();
+            hashCode = hashCode * -1521134295 + fogDensity.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(skybox);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(music);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(randomMusic);

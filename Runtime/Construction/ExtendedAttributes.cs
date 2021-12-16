@@ -43,10 +43,12 @@ namespace traVRsal.SDK
 
         // cache structures
         [NonSerialized] public Behaviour portal;
+        private IPortalAction _portalAction;
 
         public void SetDoorOpen(bool state)
         {
-            GetComponentInParent<IPortalAction>().SetPortalState(state);
+            _portalAction ??= GetComponentsInParent<IPortalAction>(true)[0];
+            _portalAction.SetPortalState(state);
         }
     }
 }

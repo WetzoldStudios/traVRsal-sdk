@@ -11,6 +11,9 @@ namespace traVRsal.SDK
         [Tooltip("Tag of object that should be reacted on by the trigger. Separate multiple by comma.")]
         public string source = SDKUtil.PLAYER_HEAD_TAG;
 
+        [Tooltip("Delay until trigger will execute again")]
+        public float cooldown;
+
         [Tooltip("Name of audio file under Audio/Effects")]
         public string audioEffect;
 
@@ -23,7 +26,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return "Trigger Reactor";
+            return $"Trigger Reactor ({source})";
         }
     }
 }
