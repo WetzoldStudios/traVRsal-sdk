@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace traVRsal.SDK
 {
@@ -14,7 +15,9 @@ namespace traVRsal.SDK
         }
 
         public Mode mode = Mode.Automatic;
-        [Tooltip("Delay in seconds")] public float duration = 2f;
+
+        [Tooltip("Delay in seconds")] [FormerlySerializedAs("delay")]
+        public float duration = 2f;
 
         [Header("Events")] public UnityEvent onCompletion;
 
