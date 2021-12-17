@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,30 +14,30 @@ namespace traVRsal.SDK
         }
 
         public Mode mode = Mode.Automatic;
-        [Tooltip("Delay in seconds")] public float delay = 2f;
+        [Tooltip("Delay in seconds")] public float duration = 2f;
 
-        [Space] public UnityEvent onCompletion;
+        [Header("Events")] public UnityEvent onCompletion;
+
+        private ITime _timer;
 
         private void OnEnable()
         {
-            if (mode == Mode.Automatic) StartCoroutine(DoTrigger(delay));
-        }
-
-        private IEnumerator DoTrigger(float delayOverride)
-        {
-            yield return new WaitForSeconds(delayOverride);
-            onCompletion?.Invoke();
+            if (mode == Mode.Automatic) Trigger(duration);
         }
 
         [ContextMenu("Trigger")]
         public void Trigger()
         {
-            StartCoroutine(DoTrigger(delay));
+            Trigger(duration);
         }
 
-        public void Trigger(float delayOverride)
+        public void Trigger(float durationOverride)
         {
-            StartCoroutine(DoTrigger(delayOverride));
+            _timer ??= GetComponentsInParent<ITime>(true).FirstOrDefault();
+            if (_timer == null) return;
+
+            // use central timer since coroutines are canceled when objects become inactive
+            _timer.Delay(durationOverride, () => onCompletion?.Invoke());
         }
     }
 }

@@ -18,7 +18,7 @@ namespace traVRsal.SDK
         [Tooltip("Delay for destruction in seconds")]
         public float delay = 5f;
 
-        [Tooltip("Flag if full piece should be destroyed or only the hierarchy from this object and below")]
+        [Tooltip("Flag if only the hierarchy from this object and below or the full piece should be destroyed")]
         public bool partial;
 
         [Space] public UnityEvent onDestruction;
