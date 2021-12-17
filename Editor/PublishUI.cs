@@ -28,6 +28,7 @@ namespace traVRsal.SDK
         private const string TTS_MOOD = "cheerful";
         private const string TTS_PITCH = "low";
         private const string TTS_SPEED = "";
+        private const string REPLICA_PREFIX = "replica-";
 
         private readonly string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};
         private readonly string[] RELEASE_CHANNELS = {"Production", "Beta", "Alpha"};
@@ -266,7 +267,7 @@ namespace traVRsal.SDK
             }
         }
 
-        private IEnumerator FetchTTS()
+        private static IEnumerator FetchTTS()
         {
             foreach (string dir in GetWorldPaths())
             {
@@ -291,13 +292,38 @@ namespace traVRsal.SDK
 
                 // load referenced speech fragments
                 world.dependencies.referencedSpeech.Add(SDKUtil.VOICE_WORLD_LOADED);
+                List<string> failedReplica = new List<string>();
                 foreach (string speech in world.dependencies.referencedSpeech)
                 {
                     targetFile = voicePath + SDKUtil.VOICE_SPEECH_PREFIX + speech.GetHashString() + ".wav";
-                    if (!File.Exists(targetFile))
+
+                    // always override replica files to ensure latest is used
+                    if (speech.ToLowerInvariant().StartsWith(REPLICA_PREFIX))
+                    {
+                        string idx = speech.Substring(REPLICA_PREFIX.Length);
+                        string detailSourceFile = "/Replica/line_" + idx + ".wav";
+                        string sourceFile = Application.dataPath + detailSourceFile;
+                        if (File.Exists(sourceFile))
+                        {
+                            File.Copy(sourceFile, targetFile, true);
+                        }
+                        else
+                        {
+                            _speechErrors = true;
+                            failedReplica.Add(detailSourceFile);
+                        }
+                    }
+                    else if (!File.Exists(targetFile))
                     {
                         yield return FetchSpeech(speech, targetFile, result => { });
                     }
+                }
+
+                if (failedReplica.Count > 0)
+                {
+                    Debug.LogError("The following Replica voice-overs could not be found: " + string.Join(", ", failedReplica));
+                    EditorUtility.DisplayDialog("Voice-Over Errors", "The following Replica voice-overs could not be found:\n\n" +
+                                                                     string.Join("\n", failedReplica), "OK");
                 }
             }
         }
@@ -309,7 +335,6 @@ namespace traVRsal.SDK
             yield return FetchUserWorlds();
             PrepareWorldFiles();
 
-            yield return FetchTTS();
             yield return PackageWorlds(_packageMode, _releaseChannel, true, true, force, linuxOnly);
             yield return CreateDocumentation();
             PrepareCommonFiles();
@@ -466,6 +491,7 @@ namespace traVRsal.SDK
             _packagingSuccessful = false;
 
             PrepareWorldFiles(); // prepare again as in normal packaging world analysis and object keys would otherwise not be available instantly
+            yield return FetchTTS();
 
             try
             {
@@ -569,7 +595,7 @@ namespace traVRsal.SDK
             Debug.Log("Packaging completed successfully.");
         }
 
-        private string GetDocuPath(string worldName)
+        private static string GetDocuPath(string worldName)
         {
             return $"{Application.dataPath}/../Documentation/{worldName}/";
         }
@@ -666,7 +692,7 @@ namespace traVRsal.SDK
             world.versionCode++;
         }
 
-        private string GetDocuArchivePath(string worldName)
+        private static string GetDocuArchivePath(string worldName)
         {
             return GetDocuPath(worldName) + "../" + worldName + "-docs.zip";
         }
@@ -1116,7 +1142,7 @@ namespace traVRsal.SDK
             }
         }
 
-        private IEnumerator FetchSpeech(string text, string filePath, Action<bool> callback)
+        private static IEnumerator FetchSpeech(string text, string filePath, Action<bool> callback)
         {
             Debug.Log("Remote (Fetch Speech)");
 
@@ -1151,7 +1177,7 @@ namespace traVRsal.SDK
                 if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
                 {
                     SDKUtil.invalidAPIToken = true;
-                    Debug.LogError("Invalid or expired API Token.");
+                    Debug.LogError("Invalid or expired API Token");
                 }
                 else
                 {

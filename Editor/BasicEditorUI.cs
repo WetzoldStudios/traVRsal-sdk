@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -75,7 +76,7 @@ namespace traVRsal.SDK
             return true;
         }
 
-        private void SetupTags()
+        private static void SetupTags()
         {
             List<string> requiredTags = new List<string> {"ExcludeTeleport", SDKUtil.INTERACTABLE_TAG, SDKUtil.ENEMY_TAG, SDKUtil.PLAYER_HEAD_TAG, SDKUtil.COLLECTIBLE_TAG, SDKUtil.PLAYER_HELPER_TAG};
             Enumerable.Range(1, 100).ForEach(i => requiredTags.Add("Object " + i));
@@ -111,10 +112,10 @@ namespace traVRsal.SDK
             {
                 return Directory.GetDirectories(Application.dataPath + "/Worlds").Where(s => !Path.GetFileName(s).StartsWith("_")).ToArray();
             }
-            return new string[0];
+            return Array.Empty<string>();
         }
 
-        protected string GetAPIToken()
+        protected static string GetAPIToken()
         {
             return TravrsalSettingsManager.Get("apiKey", "");
         }
