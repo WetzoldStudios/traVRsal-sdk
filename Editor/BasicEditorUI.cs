@@ -26,7 +26,7 @@ namespace traVRsal.SDK
             logo = new GUIStyle {normal = {background = logoImage}, fixedWidth = 128, fixedHeight = 64};
 
             // perform (cheap) setup tasks
-            SetupTags();
+            SetupTagsAndLayers();
 
             EditorCoroutineUtility.StartCoroutine(FetchUserWorlds(), this);
         }
@@ -76,13 +76,16 @@ namespace traVRsal.SDK
             return true;
         }
 
-        private static void SetupTags()
+        private static void SetupTagsAndLayers()
         {
+            Dictionary<int, string> requiredLayers = new Dictionary<int, string> {{SDKUtil.ALWAYS_FRONT_LAYER, "Always In Front"}};
+
             List<string> requiredTags = new List<string> {"ExcludeTeleport", SDKUtil.INTERACTABLE_TAG, SDKUtil.ENEMY_TAG, SDKUtil.PLAYER_HEAD_TAG, SDKUtil.COLLECTIBLE_TAG, SDKUtil.PLAYER_HELPER_TAG};
             Enumerable.Range(1, 100).ForEach(i => requiredTags.Add("Object " + i));
 
             SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
             SerializedProperty tagsProp = tagManager.FindProperty("tags");
+            SerializedProperty layersProp = tagManager.FindProperty("layers");
 
             // delete all tags first
             for (int i = tagsProp.arraySize - 1; i >= 0; i--)
@@ -96,6 +99,13 @@ namespace traVRsal.SDK
                 tagsProp.InsertArrayElementAtIndex(i);
                 SerializedProperty newTag = tagsProp.GetArrayElementAtIndex(i);
                 newTag.stringValue = requiredTags[i];
+            }
+
+            // override layers
+            foreach (KeyValuePair<int, string> layer in requiredLayers)
+            {
+                SerializedProperty sp = layersProp.GetArrayElementAtIndex(layer.Key);
+                sp.stringValue = layer.Value;
             }
 
             tagManager.ApplyModifiedProperties();

@@ -15,7 +15,8 @@ namespace traVRsal.SDK
             Enter_Zone,
             Enter_Transition,
             See_Object,
-            Hear_Object
+            Hear_Object,
+            Custom
         }
 
         public enum Repetition

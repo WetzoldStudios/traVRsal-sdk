@@ -56,6 +56,9 @@ namespace traVRsal.SDK
             new HashSetConverter()
         };
 
+        // Layers
+        public const int ALWAYS_FRONT_LAYER = 3;
+
         // Tags
         public const string INTERACTABLE_TAG = "Interactable";
         public const string COLLECTIBLE_TAG = "Collectible";

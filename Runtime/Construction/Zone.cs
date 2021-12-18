@@ -72,6 +72,7 @@ namespace traVRsal.SDK
         [NonSerialized] public List<Renderer> untouchedRendererCache;
         [NonSerialized] public List<Renderer> sceneryRendererCache;
         [NonSerialized] public List<Renderer> movingRendererCache;
+        [NonSerialized] public List<Renderer> alwaysFrontRendererCache;
         [NonSerialized] public List<Light> lightCache;
         [NonSerialized] public Dictionary<int, List<Renderer>> foreignVisibleRendererCache;
         [NonSerialized] public List<Behaviour> portalCache;
@@ -103,6 +104,7 @@ namespace traVRsal.SDK
             untouchedRendererCache = null;
             sceneryRendererCache = null;
             movingRendererCache = null;
+            alwaysFrontRendererCache = null;
             lightCache = null;
             foreignVisibleRendererCache = null;
         }

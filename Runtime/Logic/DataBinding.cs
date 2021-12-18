@@ -41,6 +41,7 @@ namespace traVRsal.SDK
             DoReturnToMain = 17,
             DoReturnToMainInterstitial = 70,
             DoPostChallenge = 72,
+            DoStartIntro = 184,
             DoStartWorld = 14,
             DoStartWorldDownload = 67,
             DoStartRandomChallenge = 109,
