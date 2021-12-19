@@ -53,6 +53,7 @@ namespace traVRsal.SDK
         private static float _uploadProgress = 1;
         private static int _uploadProgressId;
         private static int _uncompressedTextures;
+        private static int _problematicAudio;
         private static DirectoryWatcher _dirWatcher;
         private static PublishUI _window;
         private static Dictionary<string, VerificationResult> _verifications = new Dictionary<string, VerificationResult>();
@@ -172,8 +173,17 @@ namespace traVRsal.SDK
                 {
                     EditorGUILayout.Space();
                     GUILayout.BeginHorizontal();
-                    EditorGUILayout.HelpBox("Uncompressed Textures in Project: " + _uncompressedTextures, MessageType.Warning);
+                    EditorGUILayout.HelpBox("Uncompressed textures in project: " + _uncompressedTextures, MessageType.Warning);
                     if (GUILayout.Button("Fix")) EditorCoroutineUtility.StartCoroutine(CompressTextures(), this);
+                    GUILayout.EndHorizontal();
+                }
+
+                if (_problematicAudio > 0)
+                {
+                    EditorGUILayout.Space();
+                    GUILayout.BeginHorizontal();
+                    EditorGUILayout.HelpBox("Non-optimal audio in project: " + _problematicAudio, MessageType.Warning);
+                    if (GUILayout.Button("Fix")) EditorCoroutineUtility.StartCoroutine(OptimizeAudio(), this);
                     GUILayout.EndHorizontal();
                 }
 
@@ -269,6 +279,7 @@ namespace traVRsal.SDK
 
         private static IEnumerator FetchTTS()
         {
+            List<string> failedReplica = new List<string>();
             foreach (string dir in GetWorldPaths())
             {
                 World world = SDKUtil.ReadJSONFileDirect<World>(dir + "/World.json");
@@ -283,7 +294,8 @@ namespace traVRsal.SDK
 
                 string targetFile = voicePath + SDKUtil.VOICE_LOADING_WORLD;
                 string targetHashFile = voicePath + SDKUtil.VOICE_LOADING_WORLD + "_" + text.GetHashString() + ".json";
-                if (!File.Exists(targetHashFile))
+                string targetHashOverrideFile = voicePath + SDKUtil.VOICE_LOADING_WORLD + ".json";
+                if (!File.Exists(targetHashFile) && !File.Exists(targetHashOverrideFile))
                 {
                     File.WriteAllText(targetHashFile, text.GetHashString());
                     if (File.Exists(targetFile)) File.Delete(targetFile);
@@ -292,7 +304,6 @@ namespace traVRsal.SDK
 
                 // load referenced speech fragments
                 world.dependencies.referencedSpeech.Add(SDKUtil.VOICE_WORLD_LOADED);
-                List<string> failedReplica = new List<string>();
                 foreach (string speech in world.dependencies.referencedSpeech)
                 {
                     targetFile = voicePath + SDKUtil.VOICE_SPEECH_PREFIX + speech.GetHashString() + ".wav";
@@ -318,13 +329,13 @@ namespace traVRsal.SDK
                         yield return FetchSpeech(speech, targetFile, result => { });
                     }
                 }
+            }
 
-                if (failedReplica.Count > 0)
-                {
-                    Debug.LogError("The following Replica voice-overs could not be found: " + string.Join(", ", failedReplica));
-                    EditorUtility.DisplayDialog("Voice-Over Errors", "The following Replica voice-overs could not be found:\n\n" +
-                                                                     string.Join("\n", failedReplica), "OK");
-                }
+            if (failedReplica.Count > 0)
+            {
+                Debug.LogError("The following Replica voice-overs could not be found: " + string.Join(", ", failedReplica));
+                EditorUtility.DisplayDialog("Voice-Over Errors", "The following Replica voice-overs could not be found:\n\n" +
+                                                                 string.Join("\n", failedReplica), "OK");
             }
         }
 
@@ -377,6 +388,20 @@ namespace traVRsal.SDK
             }
         }
 
+        private static IEnumerable<AudioImporter> GetProblematicAudio()
+        {
+            return AssetDatabase.FindAssets("t:audioclip", null)
+                .Select(guid => AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid)) as AudioImporter)
+                .Where(ai => ai != null)
+                .Where(ai => !ai.assetPath.StartsWith("Packages/"))
+                .Where(ai => !ai.assetPath.Contains("/Editor/"))
+                .Where(ai => ai.ContainsSampleSettingsOverride("Android")
+                             || ai.defaultSampleSettings.sampleRateSetting == AudioSampleRateSetting.PreserveSampleRate
+                             || ai.defaultSampleSettings.compressionFormat != AudioCompressionFormat.Vorbis
+                             || ai.defaultSampleSettings.quality > 0.5f
+                             || (ai.assetPath.Contains("/Music/") && !ai.loadInBackground));
+        }
+
         private static IEnumerable<TextureImporter> GetUncompressedTextures()
         {
             return AssetDatabase.FindAssets("t:texture", null)
@@ -413,6 +438,38 @@ namespace traVRsal.SDK
             EditorUtility.DisplayDialog("Done", "Texture compression completed. Prepare the upload again.", "OK");
         }
 
+        private static IEnumerator OptimizeAudio()
+        {
+            IEnumerable<AudioImporter> uncompressed = GetProblematicAudio();
+
+            int progressId = Progress.Start("Compressing project audio");
+            int current = 0;
+            int total = uncompressed.Count();
+            foreach (AudioImporter ai in uncompressed)
+            {
+                current++;
+                Progress.Report(progressId, (float) current / total, ai.assetPath);
+
+                if (ai.assetPath.Contains("/Music")) ai.loadInBackground = true;
+                ai.ClearSampleSettingOverride("Android");
+
+                AudioImporterSampleSettings settings = ai.defaultSampleSettings;
+                settings.compressionFormat = AudioCompressionFormat.Vorbis;
+                if (settings.quality > 0.5f) settings.quality = 0.5f;
+                if (settings.sampleRateSetting == AudioSampleRateSetting.PreserveSampleRate) settings.sampleRateSetting = AudioSampleRateSetting.OptimizeSampleRate;
+                ai.defaultSampleSettings = settings;
+
+                AssetDatabase.ImportAsset(ai.assetPath);
+
+                yield return null;
+            }
+
+            _problematicAudio = 0;
+
+            Progress.Remove(progressId);
+            EditorUtility.DisplayDialog("Done", "Audio optimization completed. Prepare the upload again.", "OK");
+        }
+
         private void Verify()
         {
             _verifyInProgress = true;
@@ -422,6 +479,9 @@ namespace traVRsal.SDK
 
             IEnumerable<TextureImporter> uncompressed = GetUncompressedTextures();
             _uncompressedTextures = uncompressed.Count();
+
+            IEnumerable<AudioImporter> audioProblems = GetProblematicAudio();
+            _problematicAudio = audioProblems.Count();
 
             foreach (string dir in GetWorldPaths())
             {
@@ -503,6 +563,7 @@ namespace traVRsal.SDK
                 CreateLockFile();
                 ConvertTileMaps();
                 CreateAddressableSettings(!allTargets, releaseChannel);
+                PlayerSettings.colorSpace = ColorSpace.Linear;
                 EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ASTC;
                 EditorUserBuildSettings.selectedStandaloneTarget = mainTarget;
                 PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x); // Linux can only be built with Mono on Windows
