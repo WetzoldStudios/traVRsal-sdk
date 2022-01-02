@@ -123,6 +123,12 @@ namespace traVRsal.SDK
             _curTween = s;
         }
 
+        [ContextMenu("Trigger")]
+        public void Trigger()
+        {
+            _curTween?.Play();
+        }
+
         private void PlayAudio()
         {
             if (audio != null) audio.Play();
