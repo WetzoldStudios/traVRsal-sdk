@@ -354,7 +354,7 @@ namespace traVRsal.SDK
             _uploadPossible = _packagingSuccessful && _verificationPassed;
         }
 
-        private void PrepareCommonFiles()
+        private static void PrepareCommonFiles()
         {
             foreach (string dir in GetWorldPaths())
             {
@@ -597,12 +597,12 @@ namespace traVRsal.SDK
                 }
 
                 // iterate over all supported platforms
+                AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
                 foreach (Tuple<BuildTargetGroup, BuildTarget> target in targets)
                 {
                     EditorUserBuildSettings.SwitchActiveBuildTarget(target.Item1, target.Item2);
 
                     // build each world individually
-                    AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
                     foreach (string dir in worldsToBuild)
                     {
                         string worldName = Path.GetFileName(dir);
@@ -1002,7 +1002,7 @@ namespace traVRsal.SDK
             AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
             settings.ActivePlayModeDataBuilderIndex = localMode ? 0 : 2;
             settings.BuildRemoteCatalog = true;
-            settings.DisableCatalogUpdateOnStartup = true;
+            settings.DisableCatalogUpdateOnStartup = false;
             settings.ContiguousBundles = true;
             settings.IgnoreUnsupportedFilesInBuild = true;
             settings.ShaderBundleNaming = ShaderBundleNaming.Custom;
@@ -1067,6 +1067,8 @@ namespace traVRsal.SDK
 
                 // ensure correct group settings
                 BundledAssetGroupSchema groupSchema = group.GetSchema<BundledAssetGroupSchema>();
+                groupSchema.AssetBundledCacheClearBehavior = BundledAssetGroupSchema.CacheClearBehavior.ClearWhenWhenNewVersionLoaded;
+                groupSchema.ForceUniqueProvider = true;
                 groupSchema.UseAssetBundleCache = true;
                 groupSchema.UseAssetBundleCrc = false;
                 groupSchema.IncludeInBuild = isBase;

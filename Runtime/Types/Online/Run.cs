@@ -10,7 +10,7 @@ namespace traVRsal.SDK
             walking,
             smooth,
             teleport,
-            threadmill
+            treadmill
         }
 
         public int id;
@@ -59,7 +59,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return $"Remote Run Data {world}";
+            return $"Remote Run Data ({world})";
         }
     }
 }
