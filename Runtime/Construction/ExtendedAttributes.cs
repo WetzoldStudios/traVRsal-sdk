@@ -7,7 +7,8 @@ namespace traVRsal.SDK
     {
         Auto = 0,
         XZ = 1,
-        XYZ = 2
+        XYZ = 2,
+        None = 3
     }
 
     [Serializable]
