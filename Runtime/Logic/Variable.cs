@@ -25,6 +25,7 @@ namespace traVRsal.SDK
         [Header("Configuration")] public string key;
         public object value = false;
         public Behaviour behaviour = Behaviour.Unrestricted;
+        public float coolDown;
         public string imageFolder;
         public Order order;
         [DefaultValue(3)] public int targetCount = 3;
@@ -42,6 +43,7 @@ namespace traVRsal.SDK
         [NonSerialized] public List<Variable> children;
         [NonSerialized] public List<Variable> affects;
         [NonSerialized] public int changeFrame;
+        [NonSerialized] public float lastChange;
         [NonSerialized] public bool everChanged;
 
         public Variable()
@@ -99,6 +101,7 @@ namespace traVRsal.SDK
         {
             value = copyFrom.value;
             behaviour = copyFrom.behaviour;
+            coolDown = copyFrom.coolDown;
             imageFolder = copyFrom.imageFolder;
             order = copyFrom.order;
             targetCount = copyFrom.targetCount;
@@ -125,6 +128,7 @@ namespace traVRsal.SDK
         protected bool Equals(Variable other)
         {
             return key == other.key && value == other.value && behaviour == other.behaviour
+                   && coolDown == other.coolDown
                    && imageFolder == other.imageFolder && targetCount == other.targetCount
                    && order == other.order && resetOnCheckpoint == other.resetOnCheckpoint;
         }
@@ -144,6 +148,7 @@ namespace traVRsal.SDK
                 int hashCode = (key != null ? key.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (value != null ? value.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (int) behaviour;
+                hashCode = (hashCode * 397) ^ coolDown.GetHashCode();
                 hashCode = (hashCode * 397) ^ order.GetHashCode();
                 hashCode = (hashCode * 397) ^ (imageFolder != null ? imageFolder.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ targetCount;
