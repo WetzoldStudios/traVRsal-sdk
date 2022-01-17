@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = System.Random;
 
 namespace traVRsal.SDK
 {
@@ -54,6 +55,7 @@ namespace traVRsal.SDK
         public bool hasFog;
         public int agentCount;
         public int idx;
+        public int seed;
         public byte stencilId;
         public int layerIdx;
         public int navAgentId;
@@ -63,6 +65,7 @@ namespace traVRsal.SDK
         public float remainingTime;
 
         // cache structures
+        [NonSerialized] public Random random;
         [NonSerialized] public Transform node;
         [NonSerialized] public Bounds bounds;
         [NonSerialized] public Transform center;

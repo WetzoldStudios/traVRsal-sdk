@@ -81,7 +81,7 @@ namespace traVRsal.SDK
             if (_isOver && !_isDefended && !_inProgress)
             {
                 _isDefended = _spawnedGos.All(go => go == null);
-                if (_isDefended) onDefended?.Invoke();
+                if (_isDefended) TriggerDefended();
             }
         }
 
@@ -108,6 +108,12 @@ namespace traVRsal.SDK
         {
             _nextSpawnAction = float.MaxValue;
             Trigger();
+        }
+
+        [ContextMenu("Set To Defended")]
+        public void TriggerDefended()
+        {
+            onDefended?.Invoke();
         }
 
         private void InitSpawnPattern(string spawnPattern)

@@ -12,6 +12,7 @@ namespace traVRsal.SDK
         {
             Enemy = 0,
             Player = 1,
+            OtherPlayer = 6,
             Environment = 2,
             Boundary = 3,
             Falling = 4,
@@ -21,7 +22,7 @@ namespace traVRsal.SDK
         [Header("Configuration")] public bool instantKill;
 
         [Tooltip("Hit points to be deducted from player health")]
-        public int damage = 1;
+        public float damage = 1;
 
         [Tooltip("Type of shield the weapon can damage")]
         public ShieldType shieldDamage = ShieldType.None;
