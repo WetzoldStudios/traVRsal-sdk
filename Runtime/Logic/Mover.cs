@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 namespace traVRsal.SDK
@@ -40,6 +41,8 @@ namespace traVRsal.SDK
 
         [Header("Audio")] [Tooltip("Sound to play when movement is started.")]
         public AudioSource audio;
+
+        [Header("Events")] public UnityEvent onReachedDestination;
 
         private float _finalDistance;
         private float _finalInitialDelay;
@@ -118,6 +121,7 @@ namespace traVRsal.SDK
             s.AppendCallback(PlayAudio); // OnPlay is only called once in a sequence
             s.Append(transform.DOLocalMove(transform.localPosition + axis * _finalDistance, _finalDuration).SetEase(easeType));
             s.AppendInterval(_finalOffDelay);
+            s.AppendCallback(() => onReachedDestination?.Invoke());
             s.SetLoops(loop ? -1 : 0, loopType);
 
             _curTween = s;
@@ -146,12 +150,14 @@ namespace traVRsal.SDK
                 if (condition)
                 {
                     _curTween = transform.DOLocalMove(_originalPosition + axis * _finalDistance, _finalDuration)
-                        .SetDelay(_finalOnDelay + (_changedOnce ? 0f : _finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                        .SetDelay(_finalOnDelay + (_changedOnce ? 0f : _finalInitialDelay))
+                        .SetEase(easeType).OnPlay(PlayAudio).OnComplete(() => onReachedDestination?.Invoke());
                 }
                 else
                 {
                     _curTween = transform.DOLocalMove(_originalPosition, _finalDuration)
-                        .SetDelay(_finalOffDelay + (_changedOnce ? 0f : _finalInitialDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                        .SetDelay(_finalOffDelay + (_changedOnce ? 0f : _finalInitialDelay))
+                        .SetEase(easeType).OnPlay(PlayAudio);
                 }
             }
             else

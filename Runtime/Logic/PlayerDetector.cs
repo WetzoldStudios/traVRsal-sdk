@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace traVRsal.SDK
 {
@@ -15,5 +16,8 @@ namespace traVRsal.SDK
 
         [Tooltip("Defines if actions based on visibility should be triggered, e.g. speech if defined. Deactivate for slight performance improvements.")]
         public bool reportVisibility = true;
+
+        [Header("Events")] public UnityEvent onDetected;
+        public UnityEvent onLostSight;
     }
 }

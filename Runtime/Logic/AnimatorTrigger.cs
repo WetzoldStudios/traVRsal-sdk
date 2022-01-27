@@ -15,7 +15,7 @@ namespace traVRsal.SDK
         private void Start()
         {
             if (animator == null) animator = GetComponentInChildren<Animator>();
-            if (animator == null) EDebug.LogWarning($"Animator trigger on {gameObject} could not find any attached animator component.");
+            if (animator == null) EDebug.LogWarning($"Animator trigger on {gameObject} could not find any attached animator component");
         }
 
         public void VariableChanged(Variable variable, bool condition, bool initialCall = false)
