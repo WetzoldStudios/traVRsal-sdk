@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace traVRsal.SDK
 {
@@ -62,5 +63,8 @@ namespace traVRsal.SDK
 
         [Tooltip("Name of float parameter specifying the velocity in z direction")]
         public string animParamVelocityZ = "velz";
+
+        [Header("Events")] public UnityEvent onWaypointReached;
+        public UnityEvent onLastWaypointReached;
     }
 }
