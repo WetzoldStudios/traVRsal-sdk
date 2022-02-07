@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -41,6 +42,97 @@ namespace traVRsal.SDK
             if (go == null) return;
 
             CreatePrefab(go.transform.parent.gameObject);
+        }
+
+        [MenuItem("traVRsal/Utilities/Add Stencil Support to Shader", false, 1001)]
+        public static void AddStencilSupport()
+        {
+            if (Selection.count == 0 || Selection.count > 1)
+            {
+                EditorUtility.DisplayDialog("Error", "Select a single shader file first.", "OK");
+                return;
+            }
+
+            string path = AssetDatabase.GetAssetPath(Selection.activeObject);
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return;
+
+            // check file type
+            if (!path.ToLowerInvariant().EndsWith(".shader"))
+            {
+                EditorUtility.DisplayDialog("Error", "You need to select a .shader file.", "OK");
+                return;
+            }
+
+            string c = File.ReadAllText(path);
+            int changes = 0;
+
+            // find property section
+            int propPos = c.IndexOf('{') + 1;
+            Match match = Regex.Match(c, "(Properties\\W*{)");
+            if (match.Success)
+            {
+                propPos = match.Index + match.Length;
+            }
+            else
+            {
+                c = c.Substring(0, propPos) + " Properties {}" + c.Substring(propPos);
+                propPos += 13;
+                changes++;
+            }
+
+            // add missing properties
+            if (c.IndexOf("\"Stencil Read Mask\"", propPos) <= 0)
+            {
+                c = c.Substring(0, propPos) + "\n        _StencilReadMask(\"Stencil Read Mask\", Float) = 255\n" + c.Substring(propPos);
+                changes++;
+            }
+            if (c.IndexOf("\"Stencil Write Mask\"", propPos) <= 0)
+            {
+                c = c.Substring(0, propPos) + "\n        _StencilWriteMask(\"Stencil Write Mask\", Float) = 255\n" + c.Substring(propPos);
+                changes++;
+            }
+            if (c.IndexOf("\"Stencil Operation\"", propPos) <= 0)
+            {
+                c = c.Substring(0, propPos) + "\n        [Enum(UnityEngine.Rendering.StencilOp)] _StencilOperation(\"Stencil Operation\", Float) = 0\n" + c.Substring(propPos);
+                changes++;
+            }
+            if (c.IndexOf("\"Stencil Comparison\"", propPos) <= 0)
+            {
+                c = c.Substring(0, propPos) + "\n        [Enum(UnityEngine.Rendering.CompareFunction)] _StencilComparison(\"Stencil Comparison\", Float) = 3\n" + c.Substring(propPos);
+                changes++;
+            }
+            if (c.IndexOf("\"Stencil Reference\"", propPos) <= 0)
+            {
+                c = c.Substring(0, propPos) + "\n        [IntRange] _StencilReference(\"Stencil Reference\", Range(0, 255)) = 0\n" + c.Substring(propPos);
+                changes++;
+            }
+
+            if (c.IndexOf("Stencil {") <= 0)
+            {
+                // find sub shader sections
+                Regex subRegex = new Regex("(SubShader\\W*{)", RegexOptions.Compiled | RegexOptions.RightToLeft);
+                foreach (Match match2 in subRegex.Matches(c))
+                {
+                    Debug.Log("Found SubShader Section");
+
+                    int subPos = match2.Index + match2.Length;
+                    c = c.Substring(0, subPos) +
+                        "\n        Stencil {\n" +
+                        "          Ref[_StencilReference]\n" +
+                        "          Comp[_StencilComparison]\n" +
+                        "          Pass[_StencilOperation]\n" +
+                        "          ReadMask[_StencilReadMask]\n" +
+                        "          WriteMask[_StencilWriteMask]\n" +
+                        "        }\n" +
+                        c.Substring(subPos);
+                    changes++;
+                }
+            }
+
+            File.WriteAllText(path, c);
+            AssetDatabase.Refresh();
+
+            EditorUtility.DisplayDialog("Success", "Changes done: " + changes, "OK");
         }
 
         [MenuItem("traVRsal/Utilities/Replace Project Shaders with traVRsal Shaders", false, 1100)]
