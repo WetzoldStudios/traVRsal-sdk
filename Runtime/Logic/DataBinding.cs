@@ -47,6 +47,7 @@ namespace traVRsal.SDK
             DoStartIntro = 184,
             DoStartWorld = 14,
             DoStartWorldDownload = 67,
+            DoStartWorldPurchase = 191,
             DoStartRandomChallenge = 109,
             DoReplayWorld = 148,
             DoPlayWorldTrailer = 173,
@@ -55,6 +56,8 @@ namespace traVRsal.SDK
             DoSetHaptics = 125,
             DoSetHQShaders = 158,
             DoSetChallengeGhosts = 165,
+            DoSendReport = 192,
+            DoSendDelayedReport = 193,
             DoLogOut = 63,
             DoClearCache = 68,
             DoResetSettings = 111,
@@ -86,6 +89,7 @@ namespace traVRsal.SDK
             WorldName = 2,
             WorldShortDescription = 11,
             WorldLongDescription = 12,
+            WorldPrice = 190,
             WorldTimer = PERIODIC + 3,
             WorldUpdate = 56,
             WorldUpdateRelative = 92,
@@ -204,10 +208,13 @@ namespace traVRsal.SDK
 
             ShowWorldDownload = ASYNC_RESULT + 1,
             ShowWorldStart = ASYNC_RESULT + 2,
+            ShowWorldPurchase = 189,
             ShowWorldChallenges = 76,
             ShowWorldStatistics = 75,
             ShowWorldLeaderboards = 149,
             ShowWorldTrailer = 172,
+
+            ObjectHealth = REQUIRE_SOURCE + 50,
 
             ImageOrigin = REQUIRE_SOURCE + 8,
             ImageOriginLogo = REQUIRE_SOURCE + 13,

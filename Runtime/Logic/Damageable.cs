@@ -4,7 +4,7 @@ using UnityEngine.Events;
 namespace traVRsal.SDK
 {
     [AddComponentMenu("traVRsal/Damageable")]
-    public class Damageable : ExecutorConfig
+    public class Damageable : ExecutorConfig, IDataSource
     {
         public DamageableConfig config;
 
