@@ -11,6 +11,7 @@ namespace traVRsal.SDK
             None = 39,
             Pivot = 9,
             InventoryItem = 40,
+            HeightAffector = 47,
 
             GameOverDialog = 5,
             SettingsDialog = 1,

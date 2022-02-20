@@ -35,6 +35,7 @@ namespace traVRsal.SDK
         [DefaultValue("GameOver-traVRsal")] public string gameOverScene = "GameOver-traVRsal";
         [DefaultValue("Theater-traVRsal")] public string theaterScene = "Theater-traVRsal";
         public bool devMode;
+        public bool demoMode;
         public bool enableMultiplayer;
 
         // derived 
