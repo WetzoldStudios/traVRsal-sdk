@@ -12,8 +12,12 @@ namespace traVRsal.SDK
         public GameObject destructionEffect;
         public Vector3 destructionEffectOffset;
 
-        public UnityEvent onDestruction;
         public AudioSource[] breakSounds;
+
+        [Header("Events")] public UnityEvent onHit;
+        public UnityEvent onMeleeHit;
+        public UnityEvent onRangedHit;
+        public UnityEvent onDestruction;
 
         public Damageable()
         {
