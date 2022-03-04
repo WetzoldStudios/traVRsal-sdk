@@ -47,7 +47,7 @@ namespace traVRsal.SDK
         public string longDescription;
         public string coverImage;
         public string trailer;
-        public string sku; 
+        public string sku;
 
         [Header("Unlocking")] public UnlockMethod unlockMethod = UnlockMethod.None;
         public string unlockCombination;
@@ -75,6 +75,7 @@ namespace traVRsal.SDK
         [DefaultValue(300)] public int availableTime = 5 * 60;
         [DefaultValue(true)] public bool enableChallenges = true;
         public bool autoCheckPoints;
+        [DefaultValue(1f)] public float loadingMusicVolume = 1f;
         [DefaultValue(true)] public bool createIntro = true;
         public TargetMeasures[] measures = {TargetMeasures.Time, TargetMeasures.Distance};
         public TargetVisibility targetVisibility = TargetVisibility.EnteringZone;
