@@ -47,6 +47,7 @@ namespace traVRsal.SDK
         [Header("Restrictions")] public bool currentZone;
         public bool exactLocation;
         public string[] validZones;
+        public string[] validTags;
         public string[] validSockets;
         public string[] validObjects;
         public string[] restrictions;

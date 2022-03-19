@@ -15,6 +15,7 @@ namespace traVRsal.SDK
         }
 
         [Header("Configuration")] public string name;
+        public string tag;
         public Vector2Int minSize = new Vector2Int(4, 4);
         public int availableTime;
         public TimeResetMode timeResetMode = TimeResetMode.OnZoneEntryAndDeath;
@@ -115,6 +116,7 @@ namespace traVRsal.SDK
         public Zone(Zone copyFrom) : this()
         {
             name = copyFrom.name;
+            tag = copyFrom.tag;
             minSize = copyFrom.minSize;
             curSize = copyFrom.curSize;
             offset = copyFrom.offset;
@@ -147,6 +149,7 @@ namespace traVRsal.SDK
             originalName = copyFrom.originalName;
             properties = SDKUtil.CopyProperties(copyFrom.properties);
 
+            floors = new List<Floor>();
             foreach (Floor floor in copyFrom.floors)
             {
                 Floor copy = new Floor(floor);
@@ -160,6 +163,7 @@ namespace traVRsal.SDK
         {
             return obj is Zone zone &&
                    name == zone.name &&
+                   tag == zone.tag &&
                    chapter == zone.chapter &&
                    createCheckpoint == zone.createCheckpoint &&
                    minSize.Equals(zone.minSize) &&
@@ -194,6 +198,7 @@ namespace traVRsal.SDK
         {
             int hashCode = -1742729958;
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(tag);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(chapter);
             hashCode = hashCode * -1521134295 + minSize.GetHashCode();
             hashCode = hashCode * -1521134295 + offset.GetHashCode();
