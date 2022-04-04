@@ -23,6 +23,7 @@ namespace traVRsal.SDK
 {
     public class PublishUI : BasicEditorUI
     {
+        private const string PREFS_PREFIX = "[traVRsal]-[SDK]-";
         private const string TTS_LANGUAGE_CODE = "en-US";
         private const string TTS_VOICE = "en-US-GuyNeural";
         private const string TTS_MOOD = "cheerful";
@@ -69,6 +70,13 @@ namespace traVRsal.SDK
         {
             base.OnEnable();
             CreateDirWatcher();
+
+            _releaseChannel = PlayerPrefs.GetInt(PREFS_PREFIX + "Channel", _releaseChannel);
+        }
+
+        public void OnDisable()
+        {
+            PlayerPrefs.SetInt(PREFS_PREFIX + "Channel", _releaseChannel);
         }
 
         private static void CreateDirWatcher()
