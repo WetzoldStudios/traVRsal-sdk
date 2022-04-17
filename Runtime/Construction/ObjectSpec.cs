@@ -27,6 +27,7 @@ namespace traVRsal.SDK
         [Tooltip("Moves object to the ceiling.")]
         public bool atCeiling;
 
+        [Tooltip("Snap object to the next nearby surface.")]
         public bool pinToSide;
 
         [Tooltip("Snaps an object to the side and not to the front, e.g. when attaching directional arrows to the wall.")]

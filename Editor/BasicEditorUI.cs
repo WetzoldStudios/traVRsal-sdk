@@ -80,7 +80,10 @@ namespace traVRsal.SDK
         {
             Dictionary<int, string> requiredLayers = new Dictionary<int, string> {{SDKUtil.ALWAYS_FRONT_LAYER, "Always In Front"}};
 
-            List<string> requiredTags = new List<string> {"ExcludeTeleport", SDKUtil.INTERACTABLE_TAG, SDKUtil.ENEMY_TAG, SDKUtil.PLAYER_HEAD_TAG, SDKUtil.COLLECTIBLE_TAG, SDKUtil.PLAYER_HELPER_TAG};
+            List<string> requiredTags = new List<string>
+            {
+                "ExcludeTeleport", SDKUtil.INTERACTABLE_TAG, SDKUtil.ENEMY_TAG, SDKUtil.PLAYER_HEAD_TAG, SDKUtil.COLLECTIBLE_TAG, SDKUtil.PLAYER_HELPER_TAG, SDKUtil.PLAYER_HAND_TAG, SDKUtil.RESERVED1_TAG, SDKUtil.RESERVED2_TAG, SDKUtil.RESERVED3_TAG, SDKUtil.RESERVED4_TAG, SDKUtil.RESERVED5_TAG
+            };
             Enumerable.Range(1, 100).ForEach(i => requiredTags.Add("Object " + i));
 
             SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);

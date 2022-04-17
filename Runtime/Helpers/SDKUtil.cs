@@ -64,8 +64,14 @@ namespace traVRsal.SDK
         public const string COLLECTIBLE_TAG = "Collectible";
         public const string PLAYER_TAG = "Player";
         public const string PLAYER_HEAD_TAG = "Player Head";
+        public const string PLAYER_HAND_TAG = "Player Hand";
         public const string PLAYER_HELPER_TAG = "Player Helper";
         public const string ENEMY_TAG = "Enemy";
+        public const string RESERVED1_TAG = "Reserved for Future 1";
+        public const string RESERVED2_TAG = "Reserved for Future 2";
+        public const string RESERVED3_TAG = "Reserved for Future 3";
+        public const string RESERVED4_TAG = "Reserved for Future 4";
+        public const string RESERVED5_TAG = "Reserved for Future 5";
 
         public static bool invalidAPIToken;
         public static bool networkIssue;
