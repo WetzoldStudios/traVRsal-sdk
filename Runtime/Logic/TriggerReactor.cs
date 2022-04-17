@@ -11,6 +11,9 @@ namespace traVRsal.SDK
         [Tooltip("Tag of object that should be reacted on by the trigger. Separate multiple by comma.")]
         public string source = SDKUtil.PLAYER_HEAD_TAG;
 
+        [Tooltip("Delay while object needs to remain in trigger before trigger reacts. Will fire OnTriggerValid once time has passed.")]
+        public float delay;
+
         [Tooltip("Delay until trigger will execute again")]
         public float cooldown;
 
@@ -22,6 +25,10 @@ namespace traVRsal.SDK
         public bool speakOnlyOnce = true;
 
         [Space] public UnityEvent onTriggerEnter;
+
+        [Tooltip("Raised if a delay is set and delay has passed")]
+        public UnityEvent onTriggerValid;
+
         public UnityEvent onTriggerExit;
 
         public override string ToString()
