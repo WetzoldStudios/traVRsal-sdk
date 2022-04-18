@@ -17,6 +17,9 @@ namespace traVRsal.SDK
         [Tooltip("Delay until trigger will execute again")]
         public float cooldown;
 
+        [Tooltip("Name of variable that must be true before validation can succeed")]
+        public string validationCondition;
+
         [Tooltip("Name of audio file under Audio/Effects")]
         public string audioEffect;
 
@@ -24,10 +27,16 @@ namespace traVRsal.SDK
         [Tooltip("Text to be spoken by TTS")] public string speak;
         public bool speakOnlyOnce = true;
 
-        [Space] public UnityEvent onTriggerEnter;
+        [Header("Events")] public UnityEvent onTriggerEnter;
 
         [Tooltip("Raised if a delay is set and delay has passed")]
-        public UnityEvent onTriggerValid;
+        public UnityEvent onActivated;
+
+        [Tooltip("Raised if a delay is set and validation condition is set and true")]
+        public UnityEvent onValidated;
+
+        [Tooltip("Raised if a delay is set and validation condition is set but not true")]
+        public UnityEvent onNotValidated;
 
         public UnityEvent onTriggerExit;
 
