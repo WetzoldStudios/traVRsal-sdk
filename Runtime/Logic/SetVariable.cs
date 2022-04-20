@@ -54,33 +54,29 @@ namespace traVRsal.SDK
         public void ReachActionMin()
         {
             if (!_initDone) Init();
+            if (!_context.ReachActionMin(variableChannel)) return;
             if (minSound != null && minSound.clip != null) minSound.Play();
-
-            _context.ReachActionMin(variableChannel);
         }
 
         public void ReachActionMin(string key)
         {
             if (!_initDone) Init();
+            if (!_context.ReachActionMin(key)) return;
             if (minSound != null && minSound.clip != null) minSound.Play();
-
-            _context.ReachActionMin(key);
         }
 
         public void ReachActionMax()
         {
             if (!_initDone) Init();
+            if (!_context.ReachActionMax(variableChannel)) return;
             if (maxSound != null && maxSound.clip != null) maxSound.Play();
-
-            _context.ReachActionMax(variableChannel);
         }
 
         public void ReachActionMax(string key)
         {
             if (!_initDone) Init();
+            if (!_context.ReachActionMax(key)) return;
             if (maxSound != null && maxSound.clip != null) maxSound.Play();
-
-            _context.ReachActionMax(key);
         }
 
         public void ToggleAction()

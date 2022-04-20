@@ -110,8 +110,9 @@ namespace traVRsal.SDK
             everChanged = copyFrom.everChanged;
             resetOnCheckpoint = copyFrom.resetOnCheckpoint;
 
-            // ensure we are always using floats when using decimals for compatibility (e.g. FlowCanvas sync)
+            // ensure all numeric values are streamlined for consistency
             if (value is double) value = Convert.ChangeType(value, typeof(float));
+            if (value is long) value = Convert.ChangeType(value, typeof(int));
         }
 
         public string GetPersistedState()
