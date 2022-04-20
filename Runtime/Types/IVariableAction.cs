@@ -10,5 +10,8 @@
 
         void ToggleAction(int variableChannel);
         void ToggleAction(string key);
+
+        void Increase(string key);
+        void Decrease(string key);
     }
 }

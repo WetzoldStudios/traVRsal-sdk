@@ -79,6 +79,18 @@ namespace traVRsal.SDK
             if (maxSound != null && maxSound.clip != null) maxSound.Play();
         }
 
+        public void Increase(string key)
+        {
+            if (!_initDone) Init();
+            _context.Increase(key);
+        }
+
+        public void Decrease(string key)
+        {
+            if (!_initDone) Init();
+            _context.Decrease(key);
+        }
+
         public void ToggleAction()
         {
             if (!_initDone) Init();
