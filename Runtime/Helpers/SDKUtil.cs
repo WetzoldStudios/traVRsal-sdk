@@ -58,6 +58,7 @@ namespace traVRsal.SDK
 
         // Layers
         public const int ALWAYS_FRONT_LAYER = 3;
+        public const int LOGIC_LAYER = 6;
 
         // Tags
         public const string INTERACTABLE_TAG = "Interactable";

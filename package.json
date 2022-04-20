@@ -15,7 +15,7 @@
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.xr.interaction.toolkit": "2.0.1",
     "com.unity.xr.management": "4.2.1",
-    "com.unity.xr.oculus": "1.11.2"
+    "com.unity.xr.oculus": "2.0.0-preview.5"
   },
   "hideInEditor": false,
   "license": "MIT",

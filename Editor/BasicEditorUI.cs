@@ -78,7 +78,11 @@ namespace traVRsal.SDK
 
         private static void SetupTagsAndLayers()
         {
-            Dictionary<int, string> requiredLayers = new Dictionary<int, string> {{SDKUtil.ALWAYS_FRONT_LAYER, "Always In Front"}};
+            Dictionary<int, string> requiredLayers = new Dictionary<int, string>
+            {
+                {SDKUtil.ALWAYS_FRONT_LAYER, "Always In Front"},
+                {SDKUtil.LOGIC_LAYER, "Logic"}
+            };
 
             List<string> requiredTags = new List<string>
             {

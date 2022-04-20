@@ -122,6 +122,7 @@ namespace traVRsal.SDK
         public MultiBehaviors behaviors;
         public List<Credit> credits;
         public List<string> customShaders;
+        public List<string> logic;
 
         [Header("Runtime Data")] public bool journeyMode;
         public bool rotateWorld;
@@ -179,6 +180,7 @@ namespace traVRsal.SDK
             journeys = new List<Journey>();
             journeyTemplates = new List<Journey>();
             customShaders = new List<string>();
+            logic = new List<string>();
             dependencies = new WorldAnalysis();
         }
 
@@ -211,6 +213,7 @@ namespace traVRsal.SDK
             if (settings is {Count: 0}) settings = null;
             if (worldData is {Count: 0}) worldData = null;
             if (customShaders is {Count: 0}) customShaders = null;
+            if (logic is {Count: 0}) logic = null;
             if (credits is {Count: 0}) credits = null;
             if (journeys is {Count: 0}) journeys = null;
             if (journeyTemplates is {Count: 0}) journeyTemplates = null;
