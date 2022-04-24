@@ -6,6 +6,7 @@ using System.Linq;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace traVRsal.SDK
 {
@@ -13,6 +14,7 @@ namespace traVRsal.SDK
     {
         public UserWorld[] userWorlds;
 
+        protected static string _replicaToken;
         private static GUIStyle logo;
         private Vector2 windowScrollPos;
 
@@ -132,17 +134,43 @@ namespace traVRsal.SDK
             return Array.Empty<string>();
         }
 
-        protected static string GetAPIToken()
-        {
-            return TravrsalSettingsManager.Get("apiKey", "");
-        }
-
         protected IEnumerator FetchUserWorlds()
         {
             yield return SDKUtil.FetchAPIData<UserWorld[]>("userworlds", null, GetAPIToken(), worlds =>
             {
                 if (worlds != null) userWorlds = worlds;
             }, null);
+        }
+
+        protected static string GetAPIToken()
+        {
+            return TravrsalSettingsManager.Get("apiKey", "");
+        }
+
+        protected static IEnumerator GetReplicaToken()
+        {
+            string login = TravrsalSettingsManager.Get("replicaLogin", "");
+            string password = TravrsalSettingsManager.Get("replicaPassword", "");
+            if (string.IsNullOrWhiteSpace(login)) yield break; // nothing configured
+
+            Debug.Log("Remote (Get Replica Token)");
+
+            WWWForm form = new WWWForm();
+            form.AddField("client_id", login);
+            form.AddField("secret", password);
+
+            using UnityWebRequest www = UnityWebRequest.Post(SDKUtil.REPLICA_ENDPOINT + "auth", form);
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("Replica authentication error: " + www.error);
+            }
+            else
+            {
+                _replicaToken = SDKUtil.DeserializeObject<ReplicaAuth>(www.downloadHandler.text).access_token;
+                Debug.Log("Replica Token: " + _replicaToken);
+            }
         }
     }
 }

@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
 using Newtonsoft.Json;
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
-using UnityEditor.PackageManager;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
+using UnityEngine.Networking;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace traVRsal.SDK
@@ -16,11 +19,14 @@ namespace traVRsal.SDK
         private string worldSetting;
         private string customShader;
         private string fixedSize = "4";
+        private static ReplicaVoice[] _replicaVoices;
+        private int replicaVoice;
 
         [MenuItem("traVRsal/Constructor", priority = 110)]
         public static void ShowWindow()
         {
             GetWindow<ConstructorUI>("traVRsal Constructor");
+            EditorCoroutineUtility.StartCoroutineOwnerless(FetchReplicaVoices());
         }
 
         public override void OnGUI()
@@ -40,6 +46,13 @@ namespace traVRsal.SDK
             EditorGUILayout.Space();
             worldSetting = EditorGUILayout.TextField("New World Setting:", worldSetting);
             if (GUILayout.Button("Create World Setting")) ManipulateWorld("AddSetting");
+
+            if (_replicaVoices != null)
+            {
+                EditorGUILayout.Space();
+                replicaVoice = EditorGUILayout.Popup("New Replica Voice", replicaVoice, _replicaVoices.Select(v => v.name).ToArray());
+                if (GUILayout.Button("Add Voice")) ManipulateWorld("AddReplicaVoice");
+            }
 
             EditorGUILayout.Space();
             customShader = EditorGUILayout.TextField("Shader Name:", customShader);
@@ -111,21 +124,26 @@ namespace traVRsal.SDK
 
                 case "AddVariable":
                     if (string.IsNullOrEmpty(varName)) return;
-                    if (world.initialVariables == null) world.initialVariables = new List<Variable>();
+                    world.initialVariables ??= new List<Variable>();
                     world.initialVariables.Add(new Variable(varName));
                     varName = "";
                     break;
 
                 case "AddSetting":
                     if (string.IsNullOrEmpty(worldSetting)) return;
-                    if (world.settings == null) world.settings = new List<WorldSetting>();
+                    world.settings ??= new List<WorldSetting>();
                     world.settings.Add(new WorldSetting(worldSetting));
                     worldSetting = "";
                     break;
 
+                case "AddReplicaVoice":
+                    world.voices ??= new List<VoiceSpec>();
+                    world.voices.Add(new VoiceSpec(VoiceSpec.TTSBackend.Replica, _replicaVoices[replicaVoice].name, _replicaVoices[replicaVoice].uuid));
+                    break;
+
                 case "AddCustomShader":
                     if (string.IsNullOrEmpty(customShader)) return;
-                    if (world.customShaders == null) world.customShaders = new List<string>();
+                    world.customShaders ??= new List<string>();
                     world.customShaders.Add(customShader);
                     customShader = "";
                     break;
@@ -178,6 +196,42 @@ namespace traVRsal.SDK
 
             world.NullifyEmpties();
             File.WriteAllText(root + "World.json", SDKUtil.SerializeObject(world, DefaultValueHandling.Ignore));
+        }
+
+        private static IEnumerator FetchReplicaVoices()
+        {
+            Debug.Log("Remote (Fetch Replica Voices)");
+
+            if (_replicaToken == null) yield return GetReplicaToken();
+            if (_replicaToken != null)
+            {
+                using UnityWebRequest webRequest = UnityWebRequest.Get(SDKUtil.REPLICA_ENDPOINT + "voices");
+                webRequest.SetRequestHeader("Authorization", "Bearer " + _replicaToken);
+                webRequest.timeout = SDKUtil.TIMEOUT;
+                yield return webRequest.SendWebRequest();
+
+                if (webRequest.isNetworkError)
+                {
+                    Debug.LogError($"Could not fetch Replica voices due to network issues: {webRequest.error}");
+                }
+                else if (webRequest.isHttpError)
+                {
+                    if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
+                    {
+                        Debug.LogError($"Invalid or expired API Token when contacting Replica");
+                    }
+                    else
+                    {
+                        Debug.LogError($"There was an error fetching data: {webRequest.downloadHandler.text}");
+                    }
+                }
+                else
+                {
+                    _replicaVoices = SDKUtil.DeserializeObject<ReplicaVoice[]>(webRequest.downloadHandler.text)
+                        .Where(rv => !rv.name.StartsWith("(old model)"))
+                        .ToArray();
+                }
+            }
         }
     }
 }

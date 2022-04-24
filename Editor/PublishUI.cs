@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Security;
 using System.Text;
 using Newtonsoft.Json;
@@ -15,7 +16,9 @@ using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
+using UnityEditor.Events;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Networking;
 using CompressionLevel = System.IO.Compression.CompressionLevel;
 
@@ -285,7 +288,7 @@ namespace traVRsal.SDK
             }
         }
 
-        private static IEnumerator FetchTTS()
+        private static IEnumerator FetchDefaultTTS()
         {
             List<string> failedReplica = new List<string>();
             foreach (string dir in GetWorldPaths())
@@ -307,7 +310,7 @@ namespace traVRsal.SDK
                 {
                     File.WriteAllText(targetHashFile, text.GetHashString());
                     if (File.Exists(targetFile)) File.Delete(targetFile);
-                    yield return FetchSpeech(text, targetFile, result => { });
+                    yield return FetchDefaultSpeech(text, targetFile, result => { });
                 }
 
                 // load referenced speech fragments
@@ -334,7 +337,7 @@ namespace traVRsal.SDK
                     }
                     else if (!File.Exists(targetFile))
                     {
-                        yield return FetchSpeech(speech, targetFile, result => { });
+                        yield return FetchDefaultSpeech(speech, targetFile, result => { });
                     }
                 }
             }
@@ -344,6 +347,128 @@ namespace traVRsal.SDK
                 Debug.LogError("The following Replica voice-overs could not be found: " + string.Join(", ", failedReplica));
                 EditorUtility.DisplayDialog("Voice-Over Errors", "The following Replica voice-overs could not be found:\n\n" +
                                                                  string.Join("\n", failedReplica), "OK");
+            }
+        }
+
+        /// <summary>
+        /// Download all speech, create all components and verify result at build time so that world loading is as fast as possible.
+        /// </summary>
+        private static IEnumerator MaterializeStories()
+        {
+            string transName = SDKUtil.AUTO_GENERATED + "StoryPlayer";
+            int errorCount = 0;
+
+            _replicaToken = null; // force re-auth and new token each time packaging is done
+            foreach (string dir in GetWorldPaths())
+            {
+                string worldName = Path.GetFileName(dir);
+                string root = GetWorldsRoot() + "/" + worldName + "/";
+                foreach (string folder in new[] {"Pieces", "Sceneries", "Logic"})
+                {
+                    string[] assets = AssetDatabase.FindAssets("*", new[] {root + folder});
+
+                    int progressId = Progress.Start("Scanning prefabs for stories");
+                    int current = 0;
+                    int total = assets.Length;
+
+                    foreach (string asset in assets)
+                    {
+                        current++;
+                        string assetPath = AssetDatabase.GUIDToAssetPath(asset);
+                        if (!assetPath.ToLower().EndsWith(".prefab")) continue;
+                        Progress.Report(progressId, (float) current / total, assetPath);
+
+                        GameObject go = PrefabUtility.LoadPrefabContents(assetPath);
+                        bool changed = false;
+                        StoryPlayer[] players = go.GetComponentsInChildren<StoryPlayer>(true);
+                        foreach (StoryPlayer story in players)
+                        {
+                            // recreate logic root
+                            Transform t = story.transform.Find(transName);
+                            if (t != null) DestroyImmediate(t.gameObject);
+                            if (story.file == null) continue;
+
+                            // establish default components
+                            t = new GameObject(transName).transform;
+                            t.parent = story.transform;
+                            GameObject tg = t.gameObject;
+                            AudioSource audioSource = tg.AddComponent<AudioSource>();
+                            audioSource.playOnAwake = false;
+
+                            // parse story script
+                            StoryScript script = new StoryScript(story.file.text);
+
+                            int subProgressId = Progress.Start("Materializing story", null, Progress.Options.None, progressId);
+                            int subCurrent = 0;
+                            int subTotal = script.GetActionCount();
+
+                            UnityEvent lastChain = null;
+                            foreach (StoryAction action in script.actions)
+                            {
+                                subCurrent++;
+
+                                UnityEvent nextChain = null;
+                                object obj = null;
+                                switch (action.type)
+                                {
+                                    case StoryAction.LineType.Pause:
+                                        Delay delay = tg.AddComponent<Delay>();
+                                        delay.mode = Delay.Mode.Manual;
+                                        delay.duration = action.duration;
+
+                                        delay.onCompletion = new UnityEvent(); // otherwise not initialized yet
+                                        nextChain = delay.onCompletion;
+                                        obj = delay;
+                                        break;
+
+                                    case StoryAction.LineType.Speech:
+                                        string cacheName = "";
+                                        yield return FetchReplicaSpeech(action.content, action.filePath, success =>
+                                        {
+                                            if (!success)
+                                            {
+                                                Debug.LogError($"Could not successfully generate voice file for Replica line: {action}");
+                                                errorCount++;
+                                            }
+                                        });
+                                        SpeechPlayer player = tg.AddComponent<SpeechPlayer>();
+                                        player.subtitle = action.content;
+                                        player.speaker = action.speaker;
+
+                                        player.onDone = new UnityEvent(); // otherwise not initialized yet
+                                        nextChain = player.onDone;
+                                        obj = player;
+
+                                        break;
+                                }
+                                if (lastChain != null)
+                                {
+                                    MethodInfo targetInfo = UnityEventBase.GetValidMethodInfo(obj, "Trigger", Type.EmptyTypes);
+                                    UnityAction ua = Delegate.CreateDelegate(typeof(UnityAction), obj, targetInfo, false) as UnityAction;
+
+                                    UnityEventTools.AddPersistentListener(lastChain, ua);
+                                }
+                                lastChain = nextChain;
+                                Progress.Report(subProgressId, (float) subCurrent / subTotal, action.raw);
+                                if (subCurrent > 5) break;
+                            }
+
+                            Progress.Remove(subProgressId);
+                            changed = true;
+                        }
+
+                        if (changed) PrefabUtility.SaveAsPrefabAsset(go, assetPath);
+                        PrefabUtility.UnloadPrefabContents(go);
+
+                        yield return null;
+                    }
+                    Progress.Remove(progressId);
+                }
+            }
+
+            if (errorCount > 0)
+            {
+                EditorUtility.DisplayDialog("Story Errors", $"{errorCount} issues were found in stories. Check the error log for details.", "OK");
             }
         }
 
@@ -559,7 +684,8 @@ namespace traVRsal.SDK
             _packagingSuccessful = false;
 
             PrepareWorldFiles(); // prepare again as in normal packaging world analysis and object keys would otherwise not be available instantly
-            yield return FetchTTS();
+            yield return FetchDefaultTTS();
+            yield return MaterializeStories();
 
             try
             {
@@ -1222,12 +1348,11 @@ namespace traVRsal.SDK
             }
         }
 
-        private static IEnumerator FetchSpeech(string text, string filePath, Action<bool> callback)
+        private static IEnumerator FetchDefaultSpeech(string text, string filePath, Action<bool> callback)
         {
             Debug.Log("Remote (Fetch Speech)");
 
             string uri = SDKUtil.API_ENDPOINT + "tts/ms";
-
             string ssml = "<speak version=\"1.0\" xmlns=\"https://www.w3.org/2001/10/synthesis\" xmlns:mstts=\"https://www.w3.org/2001/mstts\" " +
                           "xml:lang=\"" + TTS_LANGUAGE_CODE + "\">" +
                           "<voice name=\"" + TTS_VOICE + "\">" +
@@ -1269,6 +1394,21 @@ namespace traVRsal.SDK
             else
             {
                 File.WriteAllBytes(filePath, webRequest.downloadHandler.data);
+            }
+
+            callback?.Invoke(!_speechErrors);
+        }
+
+        private static IEnumerator FetchReplicaSpeech(string text, string filePath, Action<bool> callback)
+        {
+            Debug.Log("Remote (Fetch Replica Speech)");
+
+            if (_replicaToken == null) yield return GetReplicaToken();
+            if (_replicaToken == null)
+            {
+                _speechErrors = true;
+                callback?.Invoke(false);
+                yield break;
             }
 
             callback?.Invoke(!_speechErrors);

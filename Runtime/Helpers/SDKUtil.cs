@@ -37,6 +37,7 @@ namespace traVRsal.SDK
         public const string VOICE_SPEECH_PREFIX = "SPEECH_";
         public const string VOICE_LOADING_WORLD = "LoadingWorld.wav";
         public const string VOICE_WORLD_LOADED = "Step onto the marker to open the portal, and then walk through!";
+        public const string REPLICA_ENDPOINT = "https://api.replicastudios.com/";
 
         // only use specified converters to ensure consistent file format
         private static readonly List<JsonConverter> JSON_CONVERTERS = new List<JsonConverter>

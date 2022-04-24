@@ -116,6 +116,7 @@ namespace traVRsal.SDK
         public List<WorldSetting> settings;
         public List<ImageProvider> imageProviders;
         public List<Variable> initialVariables;
+        public List<VoiceSpec> voices;
         public List<TextFragment> speech;
         public List<ReplacementRule> replacements;
         public List<SpawnRule> spawnRules;

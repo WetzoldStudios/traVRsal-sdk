@@ -5,36 +5,36 @@ namespace traVRsal.SDK
 {
     public static class TravrsalSettingsManager
     {
-        private static Settings sInstance;
+        private static Settings _sInstance;
 
-        internal static Settings instance
+        internal static Settings Instance
         {
             get
             {
-                if (sInstance == null) sInstance = new Settings(SDKUtil.PACKAGE_NAME);
+                if (_sInstance == null) _sInstance = new Settings(SDKUtil.PACKAGE_NAME);
 
-                return sInstance;
+                return _sInstance;
             }
         }
 
         public static void Save()
         {
-            instance.Save();
+            Instance.Save();
         }
 
         public static T Get<T>(string key, T fallback = default(T), SettingsScope scope = SettingsScope.Project)
         {
-            return instance.Get<T>(key, scope, fallback);
+            return Instance.Get(key, scope, fallback);
         }
 
         public static void Set<T>(string key, T value, SettingsScope scope = SettingsScope.Project)
         {
-            instance.Set<T>(key, value, scope);
+            Instance.Set(key, value, scope);
         }
 
         public static bool ContainsKey<T>(string key, SettingsScope scope = SettingsScope.Project)
         {
-            return instance.ContainsKey<T>(key, scope);
+            return Instance.ContainsKey<T>(key, scope);
         }
     }
 }
