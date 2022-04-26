@@ -1,12 +1,8 @@
 {
-    "name": "traVRsal.SDK.editor",
+    "name": "JD.EditorAudioUtils.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:f31202898ebcfb34e91cb967cb9c7ec5",
-        "GUID:69448af7b92c7f342b298e06a37122aa",
-        "GUID:3771859730d597341ac66e0cfda571af",
-        "GUID:478a2357cc57436488a56e564b08d223",
-        "GUID:3b657de9509b8304997f7568b9c95b61"
+        "GUID:fcf4fc281d895334da97cd1cd2603d83"
     ],
     "includePlatforms": [
         "Editor"

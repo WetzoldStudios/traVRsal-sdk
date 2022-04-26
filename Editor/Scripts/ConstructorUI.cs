@@ -1,11 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using JD.EditorAudioUtils;
 using Newtonsoft.Json;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
+using UnityEditor.Experimental;
 using UnityEngine;
 using UnityEngine.Networking;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
@@ -14,56 +17,79 @@ namespace traVRsal.SDK
 {
     public class ConstructorUI : BasicEditorUI
     {
+        private const string SPEECH_TEST = "I could be your game voice, if you chose me.";
+
         private string zoneName;
         private string varName;
         private string worldSetting;
         private string customShader;
         private string fixedSize = "4";
-        private static ReplicaVoice[] _replicaVoices;
+
+        private bool _replicaInitDone;
+        private bool _replicaDownloadInProgress;
+        private ReplicaVoice[] _replicaVoices;
         private int replicaVoice;
 
         [MenuItem("traVRsal/Constructor", priority = 110)]
         public static void ShowWindow()
         {
             GetWindow<ConstructorUI>("traVRsal Constructor");
-            EditorCoroutineUtility.StartCoroutineOwnerless(FetchReplicaVoices());
         }
 
         public override void OnGUI()
         {
+            GUILayoutOption width = GUILayout.Width(50);
+            if (!_replicaInitDone)
+            {
+                _replicaInitDone = true;
+                EditorCoroutineUtility.StartCoroutine(FetchReplicaVoices(), this);
+            }
             base.OnGUI();
 
             GUILayout.Label("Use the following quick-actions to create often needed entities.", EditorStyles.wordWrappedLabel);
 
             EditorGUILayout.Space();
+            EditorGUILayout.BeginHorizontal();
             zoneName = EditorGUILayout.TextField("New Zone:", zoneName);
-            if (GUILayout.Button("Create Zone")) ManipulateWorld("AddZone");
+            if (GUILayout.Button("Add", width)) ManipulateWorld("AddZone");
+            EditorGUILayout.EndHorizontal();
 
-            EditorGUILayout.Space();
+            EditorGUILayout.BeginHorizontal();
             varName = EditorGUILayout.TextField("New Variable:", varName);
-            if (GUILayout.Button("Create Variable")) ManipulateWorld("AddVariable");
+            if (GUILayout.Button("Add", width)) ManipulateWorld("AddVariable");
+            EditorGUILayout.EndHorizontal();
 
-            EditorGUILayout.Space();
+            EditorGUILayout.BeginHorizontal();
             worldSetting = EditorGUILayout.TextField("New World Setting:", worldSetting);
-            if (GUILayout.Button("Create World Setting")) ManipulateWorld("AddSetting");
+            if (GUILayout.Button("Add", width)) ManipulateWorld("AddSetting");
+            EditorGUILayout.EndHorizontal();
 
             if (_replicaVoices != null)
             {
-                EditorGUILayout.Space();
-                replicaVoice = EditorGUILayout.Popup("New Replica Voice", replicaVoice, _replicaVoices.Select(v => v.name).ToArray());
-                if (GUILayout.Button("Add Voice")) ManipulateWorld("AddReplicaVoice");
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.BeginHorizontal();
+                replicaVoice = EditorGUILayout.Popup("New Replica Voice:", replicaVoice, _replicaVoices.Select(v => v.name).ToArray());
+                EditorGUI.BeginDisabledGroup(_replicaDownloadInProgress);
+                if (GUILayout.Button(EditorGUIUtility.IconContent("PlayButton"), GUILayout.Width(30))) EditorCoroutineUtility.StartCoroutine(TestReplicaVoice(), this);
+                EditorGUI.EndDisabledGroup();
+                EditorGUILayout.EndHorizontal();
+                if (GUILayout.Button("Add", width)) ManipulateWorld("AddReplicaVoice");
+                EditorGUILayout.EndHorizontal();
             }
 
-            EditorGUILayout.Space();
-            customShader = EditorGUILayout.TextField("Shader Name:", customShader);
-            if (GUILayout.Button("Add Custom Shader")) ManipulateWorld("AddCustomShader");
+            EditorGUILayout.BeginHorizontal();
+            customShader = EditorGUILayout.TextField("Custom Shader Name:", customShader);
+            if (GUILayout.Button("Add", width)) ManipulateWorld("AddCustomShader");
+            EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space(20f);
             GUILayout.Label("Misc", EditorStyles.boldLabel);
 
             EditorGUILayout.Space();
+            EditorGUILayout.BeginHorizontal();
             fixedSize = EditorGUILayout.TextField("Fixed Tile Count:", fixedSize);
-            if (GUILayout.Button("Set Fixed Count")) ManipulateWorld("SetFixedTileCount");
+            if (GUILayout.Button("Set", width)) ManipulateWorld("SetFixedTileCount");
+            EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space();
             if (GUILayout.Button("Set Minimum World Version to Current SDK Version")) ManipulateWorld("SetToCurrentVersion");
@@ -198,7 +224,7 @@ namespace traVRsal.SDK
             File.WriteAllText(root + "World.json", SDKUtil.SerializeObject(world, DefaultValueHandling.Ignore));
         }
 
-        private static IEnumerator FetchReplicaVoices()
+        private IEnumerator FetchReplicaVoices()
         {
             Debug.Log("Remote (Fetch Replica Voices)");
 
@@ -218,7 +244,7 @@ namespace traVRsal.SDK
                 {
                     if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
                     {
-                        Debug.LogError($"Invalid or expired API Token when contacting Replica");
+                        Debug.LogError("Invalid or expired API Token when contacting Replica");
                     }
                     else
                     {
@@ -232,6 +258,21 @@ namespace traVRsal.SDK
                         .ToArray();
                 }
             }
+        }
+
+        private IEnumerator TestReplicaVoice()
+        {
+            _replicaDownloadInProgress = true;
+
+            string uuid = _replicaVoices[replicaVoice].uuid;
+            string dir = Application.persistentDataPath + "/SpeechCache";
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            string filePath = $"{dir}/ReplicaSample-{uuid}.wav";
+
+            if (!File.Exists(filePath)) yield return FetchReplicaSpeech(SPEECH_TEST, uuid, filePath, _ => { });
+            yield return SDKUtil.LoadAudioFromFile(filePath, EditorAudioUtility.PlayPreviewClip);
+
+            _replicaDownloadInProgress = false;
         }
     }
 }

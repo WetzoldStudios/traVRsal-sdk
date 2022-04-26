@@ -32,8 +32,8 @@ namespace traVRsal.SDK
 
         public VoiceSpec(TTSBackend backend, string speaker, string voice) : this()
         {
+            key = speaker;
             this.backend = backend;
-            this.key = speaker;
             this.speaker = speaker;
             this.voice = voice;
         }
@@ -41,7 +41,7 @@ namespace traVRsal.SDK
         public string GetText(string phrase)
         {
             // check for inline adjustments
-            // TODO: decommit, change to separate voice definition
+            // TODO: deprecate, change to separate voice definition
             string[] arr = StringExt.CleanSplit(phrase, PREFIX_SEP);
             if (arr.Length > 1)
             {
@@ -49,6 +49,16 @@ namespace traVRsal.SDK
             }
 
             return phrase;
+        }
+
+        private string GetCompoundKey()
+        {
+            return backend + "|" + voice + "|" + language + "|" + mood + "|" + speed + "|" + pitch;
+        }
+
+        public string GetHashedFileName(string phrase)
+        {
+            return (GetCompoundKey() + "@" + phrase).GetHashString();
         }
 
         public override string ToString()

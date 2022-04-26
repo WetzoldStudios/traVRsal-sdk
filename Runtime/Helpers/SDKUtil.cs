@@ -95,6 +95,31 @@ namespace traVRsal.SDK
             return Mathf.Abs(GetDistance(transform, other));
         }
 
+        public static IEnumerator LoadAudioFromFile(string filePath, Action<AudioClip> callback)
+        {
+            if (!File.Exists(filePath))
+            {
+                callback(null);
+                yield break;
+            }
+
+            using UnityWebRequest uwr = UnityWebRequestMultimedia.GetAudioClip("file://" + filePath, AudioType.WAV);
+            ((DownloadHandlerAudioClip) uwr.downloadHandler).streamAudio = true;
+            yield return uwr.SendWebRequest();
+
+            if (uwr.isNetworkError || uwr.isHttpError)
+            {
+                Debug.LogError(uwr.error);
+                yield break;
+            }
+
+            DownloadHandlerAudioClip dlHandler = (DownloadHandlerAudioClip) uwr.downloadHandler;
+            if (dlHandler.isDone)
+            {
+                callback(dlHandler.audioClip);
+            }
+        }
+
         public static IEnumerator FetchAPIData<T>(string api, string player, string token, Action<T> callback, Game game, string endPoint = API_ENDPOINT)
         {
             string uri = endPoint + api;

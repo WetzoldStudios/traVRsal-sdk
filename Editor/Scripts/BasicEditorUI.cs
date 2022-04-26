@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -159,18 +160,73 @@ namespace traVRsal.SDK
             form.AddField("client_id", login);
             form.AddField("secret", password);
 
-            using UnityWebRequest www = UnityWebRequest.Post(SDKUtil.REPLICA_ENDPOINT + "auth", form);
-            yield return www.SendWebRequest();
+            using UnityWebRequest webRequest = UnityWebRequest.Post(SDKUtil.REPLICA_ENDPOINT + "auth", form);
+            yield return webRequest.SendWebRequest();
 
-            if (www.result != UnityWebRequest.Result.Success)
+            if (webRequest.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError("Replica authentication error: " + www.error);
+                Debug.LogError("Replica authentication error: " + webRequest.error);
             }
             else
             {
-                _replicaToken = SDKUtil.DeserializeObject<ReplicaAuth>(www.downloadHandler.text).access_token;
+                _replicaToken = SDKUtil.DeserializeObject<ReplicaAuth>(webRequest.downloadHandler.text).access_token;
                 Debug.Log("Replica Token: " + _replicaToken);
             }
+        }
+
+        protected static IEnumerator FetchReplicaSpeech(string text, string speaker, string filePath, Action<bool> callback)
+        {
+            Debug.Log("Remote (Fetch Replica Speech)");
+
+            if (_replicaToken == null) yield return GetReplicaToken();
+            if (_replicaToken != null)
+            {
+                string escapedText = UnityWebRequest.EscapeURL(text);
+                using UnityWebRequest webRequest = UnityWebRequest.Get($"{SDKUtil.REPLICA_ENDPOINT}speech?txt={escapedText}&speaker_id={speaker}&extension=wav&bit_rate=128&sample_rate=22050");
+                webRequest.SetRequestHeader("Authorization", "Bearer " + _replicaToken);
+                webRequest.timeout = SDKUtil.TIMEOUT;
+                yield return webRequest.SendWebRequest();
+
+                if (webRequest.isNetworkError)
+                {
+                    Debug.LogError($"Could not fetch Replica speech due to network issues: {webRequest.error}");
+                }
+                else if (webRequest.isHttpError)
+                {
+                    if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
+                    {
+                        Debug.LogError("Invalid or expired API Token when contacting Replica");
+                    }
+                    else
+                    {
+                        Debug.LogError($"There was an error fetching speech data: {webRequest.downloadHandler.text}");
+                    }
+                }
+                else
+                {
+                    ReplicaSpeech result = SDKUtil.DeserializeObject<ReplicaSpeech>(webRequest.downloadHandler.text);
+                    Debug.Log(" Speech duration: " + result.duration);
+
+                    // download actual file
+                    using UnityWebRequest fileRequest = UnityWebRequest.Get(result.url);
+                    DownloadHandlerFile dh = new DownloadHandlerFile(filePath);
+                    dh.removeFileOnAbort = true;
+                    fileRequest.downloadHandler = dh;
+                    yield return fileRequest.SendWebRequest();
+                    if (fileRequest.result != UnityWebRequest.Result.Success)
+                    {
+                        Debug.LogError($"Could not fetch Replica speech file: {fileRequest.error}");
+                    }
+                    else
+                    {
+                        Debug.Log(" Saved to: " + filePath);
+                        callback?.Invoke(true);
+                        yield break;
+                    }
+                }
+            }
+
+            callback?.Invoke(false);
         }
     }
 }

@@ -58,6 +58,7 @@ namespace traVRsal.SDK
         private static int _uploadProgressId;
         private static int _uncompressedTextures;
         private static int _problematicAudio;
+        private static int _storyErrorCount;
         private static DirectoryWatcher _dirWatcher;
         private static PublishUI _window;
         private static Dictionary<string, VerificationResult> _verifications = new Dictionary<string, VerificationResult>();
@@ -178,6 +179,14 @@ namespace traVRsal.SDK
                     EditorGUILayout.Space();
                     EditorGUILayout.HelpBox("The worlds inside your Worlds folder do not match your registered worlds on www.traVRsal.com. You probably need to rename these locally to match exactly.", MessageType.Error);
                     if (GUILayout.Button("Refresh")) EditorCoroutineUtility.StartCoroutine(RefreshVerify(), this);
+                }
+
+                if (_storyErrorCount > 0)
+                {
+                    EditorGUILayout.Space();
+                    GUILayout.BeginHorizontal();
+                    EditorGUILayout.HelpBox($"Stories contain {_storyErrorCount} errors that need to be fixed first. See console for details.", MessageType.Error);
+                    GUILayout.EndHorizontal();
                 }
 
                 if (_uncompressedTextures > 0)
@@ -356,13 +365,16 @@ namespace traVRsal.SDK
         private static IEnumerator MaterializeStories()
         {
             string transName = SDKUtil.AUTO_GENERATED + "StoryPlayer";
-            int errorCount = 0;
 
+            _storyErrorCount = 0;
             _replicaToken = null; // force re-auth and new token each time packaging is done
             foreach (string dir in GetWorldPaths())
             {
+                World world = SDKUtil.ReadJSONFileDirect<World>(dir + "/World.json");
                 string worldName = Path.GetFileName(dir);
                 string root = GetWorldsRoot() + "/" + worldName + "/";
+                string absTargetDir = $"{dir}/Audio/Voice/Generated";
+                string relTargetDir = $"Assets/Worlds/{worldName}/Audio/Voice/Generated";
                 foreach (string folder in new[] {"Pieces", "Sceneries", "Logic"})
                 {
                     string[] assets = AssetDatabase.FindAssets("*", new[] {root + folder});
@@ -422,18 +434,44 @@ namespace traVRsal.SDK
                                         break;
 
                                     case StoryAction.LineType.Speech:
-                                        string cacheName = "";
-                                        yield return FetchReplicaSpeech(action.content, action.filePath, success =>
+                                        VoiceSpec vs = world.voices?.Where(v => v.key == action.speaker).FirstOrDefault();
+                                        if (vs == null)
                                         {
-                                            if (!success)
+                                            _storyErrorCount++;
+                                            EDebug.LogError($"{story} contains undefined voice reference: {action.speaker}");
+                                            continue;
+                                        }
+
+                                        if (!Directory.Exists(absTargetDir)) Directory.CreateDirectory(absTargetDir);
+                                        string hash = vs.GetHashedFileName(action.content);
+                                        string hashFile = $"{hash}.wav";
+                                        action.filePath = $"{absTargetDir}/{hashFile}";
+                                        if (!File.Exists(action.filePath))
+                                        {
+                                            switch (vs.backend)
                                             {
-                                                Debug.LogError($"Could not successfully generate voice file for Replica line: {action}");
-                                                errorCount++;
+                                                case VoiceSpec.TTSBackend.Replica:
+                                                    yield return FetchReplicaSpeech(action.content, vs.voice, action.filePath, success =>
+                                                    {
+                                                        if (!success)
+                                                        {
+                                                            Debug.LogError($"Could not successfully generate voice file for Replica line: {action}");
+                                                            _storyErrorCount++;
+                                                        }
+                                                    });
+                                                    break;
+
+                                                default:
+                                                    Debug.LogError($"{vs} references TTS backend '{vs.backend}' which is not yet supported in stories");
+                                                    _storyErrorCount++;
+                                                    break;
                                             }
-                                        });
+                                            AssetDatabase.Refresh();
+                                        }
                                         SpeechPlayer player = tg.AddComponent<SpeechPlayer>();
                                         player.subtitle = action.content;
                                         player.speaker = action.speaker;
+                                        player.clip = AssetDatabase.LoadAssetAtPath($"{relTargetDir}/{hashFile}", typeof(AudioClip)) as AudioClip;
 
                                         player.onDone = new UnityEvent(); // otherwise not initialized yet
                                         nextChain = player.onDone;
@@ -441,7 +479,7 @@ namespace traVRsal.SDK
 
                                         break;
                                 }
-                                if (lastChain != null)
+                                if (lastChain != null && obj != null)
                                 {
                                     MethodInfo targetInfo = UnityEventBase.GetValidMethodInfo(obj, "Trigger", Type.EmptyTypes);
                                     UnityAction ua = Delegate.CreateDelegate(typeof(UnityAction), obj, targetInfo, false) as UnityAction;
@@ -466,9 +504,9 @@ namespace traVRsal.SDK
                 }
             }
 
-            if (errorCount > 0)
+            if (_storyErrorCount > 0)
             {
-                EditorUtility.DisplayDialog("Story Errors", $"{errorCount} issues were found in stories. Check the error log for details.", "OK");
+                EditorUtility.DisplayDialog("Story Errors", $"{_storyErrorCount} issues were found in stories. Check the error log for details.", "OK");
             }
         }
 
@@ -648,7 +686,7 @@ namespace traVRsal.SDK
             }
 
             _verifyInProgress = false;
-            _verificationPassed = !_worldListMismatch && !SDKUtil.invalidAPIToken && !SDKUtil.networkIssue; // TODO: do some actual checks
+            _verificationPassed = !_worldListMismatch && !SDKUtil.invalidAPIToken && !SDKUtil.networkIssue && _storyErrorCount == 0;
         }
 
         private static string GetServerDataPath()
@@ -687,92 +725,95 @@ namespace traVRsal.SDK
             yield return FetchDefaultTTS();
             yield return MaterializeStories();
 
-            try
+            if (_storyErrorCount == 0)
             {
-                string[] worldsToBuild = allWorlds ? GetWorldPaths() : GetWorldsToBuild(packageMode);
-                if (worldsToBuild.Length == 0) yield break;
-                string resultFolder = Application.dataPath + "/../traVRsal/";
-                BuildTarget mainTarget = linuxOnly || Application.platform == RuntimePlatform.LinuxEditor ? BuildTarget.StandaloneLinux64 : BuildTarget.StandaloneWindows64;
-
-                CreateLockFile();
-                ConvertTileMaps();
-                CreateAddressableSettings(!allTargets, releaseChannel);
-                PlayerSettings.colorSpace = ColorSpace.Linear;
-                EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ASTC;
-                EditorUserBuildSettings.selectedStandaloneTarget = mainTarget;
-                PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x); // Linux can only be built with Mono on Windows
-
-                AddressableAssetSettings.CleanPlayerContent();
-                AssetDatabase.SaveAssets();
-
-                if (Directory.Exists(GetServerDataPath()) && (packageMode == 0 || allWorlds)) Directory.Delete(GetServerDataPath(), true);
-
-                // set build targets
-                List<Tuple<BuildTargetGroup, BuildTarget>> targets = new List<Tuple<BuildTargetGroup, BuildTarget>>();
-                if (allTargets)
+                try
                 {
-                    targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Android, BuildTarget.Android));
+                    string[] worldsToBuild = allWorlds ? GetWorldPaths() : GetWorldsToBuild(packageMode);
+                    if (worldsToBuild.Length == 0) yield break;
+                    string resultFolder = Application.dataPath + "/../traVRsal/";
+                    BuildTarget mainTarget = linuxOnly || Application.platform == RuntimePlatform.LinuxEditor ? BuildTarget.StandaloneLinux64 : BuildTarget.StandaloneWindows64;
 
-                    // set windows/linux last so that we can continue with editor iterations normally right afterwards
-                    if (Application.platform == RuntimePlatform.LinuxEditor)
+                    CreateLockFile();
+                    ConvertTileMaps();
+                    CreateAddressableSettings(!allTargets, releaseChannel);
+                    PlayerSettings.colorSpace = ColorSpace.Linear;
+                    EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ASTC;
+                    EditorUserBuildSettings.selectedStandaloneTarget = mainTarget;
+                    PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x); // Linux can only be built with Mono on Windows
+
+                    AddressableAssetSettings.CleanPlayerContent();
+                    AssetDatabase.SaveAssets();
+
+                    if (Directory.Exists(GetServerDataPath()) && (packageMode == 0 || allWorlds)) Directory.Delete(GetServerDataPath(), true);
+
+                    // set build targets
+                    List<Tuple<BuildTargetGroup, BuildTarget>> targets = new List<Tuple<BuildTargetGroup, BuildTarget>>();
+                    if (allTargets)
                     {
-                        if (BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64)) targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
-                        if (BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64)) targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
+                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Android, BuildTarget.Android));
+
+                        // set windows/linux last so that we can continue with editor iterations normally right afterwards
+                        if (Application.platform == RuntimePlatform.LinuxEditor)
+                        {
+                            if (BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64)) targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
+                            if (BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64)) targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
+                        }
+                        else
+                        {
+                            if (BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64)) targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
+                            if (BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64)) targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
+                        }
                     }
                     else
                     {
-                        if (BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64)) targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64));
-                        if (BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64)) targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
+                        targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, mainTarget));
                     }
-                }
-                else
-                {
-                    targets.Add(new Tuple<BuildTargetGroup, BuildTarget>(BuildTargetGroup.Standalone, mainTarget));
-                }
 
-                // iterate over all supported platforms
-                AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
-                foreach (Tuple<BuildTargetGroup, BuildTarget> target in targets)
-                {
-                    EditorUserBuildSettings.SwitchActiveBuildTarget(target.Item1, target.Item2);
-
-                    // build each world individually
-                    foreach (string dir in worldsToBuild)
+                    // iterate over all supported platforms
+                    AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
+                    foreach (Tuple<BuildTargetGroup, BuildTarget> target in targets)
                     {
-                        string worldName = Path.GetFileName(dir);
-                        string serverDir = GetServerDataPath() + "/Worlds/" + Path.GetFileName(dir);
-                        if (!allTargets && Directory.Exists(resultFolder + worldName)) Directory.Delete(resultFolder + worldName, true);
+                        EditorUserBuildSettings.SwitchActiveBuildTarget(target.Item1, target.Item2);
 
-                        if (packageMode == 1 && !allWorlds && Directory.Exists(serverDir)) Directory.Delete(serverDir, true);
-
-                        settings.activeProfileId = settings.profileSettings.GetProfileId(worldName);
-                        settings.groups.ForEach(group =>
+                        // build each world individually
+                        foreach (string dir in worldsToBuild)
                         {
-                            if (group.ReadOnly) return;
-                            group.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = group.name == worldName;
+                            string worldName = Path.GetFileName(dir);
+                            string serverDir = GetServerDataPath() + "/Worlds/" + Path.GetFileName(dir);
+                            if (!allTargets && Directory.Exists(resultFolder + worldName)) Directory.Delete(resultFolder + worldName, true);
 
-                            // default group ensures there is no accidental local default group resulting in local paths being baked into addressable for shaders
-                            if (group.name == worldName && group.CanBeSetAsDefault()) settings.DefaultGroup = group;
-                        });
+                            if (packageMode == 1 && !allWorlds && Directory.Exists(serverDir)) Directory.Delete(serverDir, true);
 
-                        BundledAssetGroupSchema schema = settings.groups.First(group => @group.name == worldName).GetSchema<BundledAssetGroupSchema>();
-                        settings.RemoteCatalogBuildPath = schema.BuildPath;
-                        settings.RemoteCatalogLoadPath = schema.LoadPath;
-                        settings.ShaderBundleCustomNaming = worldName;
+                            settings.activeProfileId = settings.profileSettings.GetProfileId(worldName);
+                            settings.groups.ForEach(group =>
+                            {
+                                if (group.ReadOnly) return;
+                                group.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = group.name == worldName;
 
-                        AddressableAssetSettings.BuildPlayerContent();
+                                // default group ensures there is no accidental local default group resulting in local paths being baked into addressable for shaders
+                                if (group.name == worldName && group.CanBeSetAsDefault()) settings.DefaultGroup = group;
+                            });
+
+                            BundledAssetGroupSchema schema = settings.groups.First(group => @group.name == worldName).GetSchema<BundledAssetGroupSchema>();
+                            settings.RemoteCatalogBuildPath = schema.BuildPath;
+                            settings.RemoteCatalogLoadPath = schema.LoadPath;
+                            settings.ShaderBundleCustomNaming = worldName;
+
+                            AddressableAssetSettings.BuildPlayerContent();
+                        }
                     }
-                }
 
-                CreateAddressableSettings(!allTargets, releaseChannel); // do again to have clean build state, as some settings were messed with while building
-                RenameCatalogs();
-                _packagingSuccessful = true;
-            }
-            catch (Exception e)
-            {
-                _packagingInProgress = false;
-                EditorUtility.DisplayDialog("Error", $"Packaging could not be completed. Error: {e.Message}", "Close");
-                yield break;
+                    CreateAddressableSettings(!allTargets, releaseChannel); // do again to have clean build state, as some settings were messed with while building
+                    RenameCatalogs();
+                    _packagingSuccessful = true;
+                }
+                catch (Exception e)
+                {
+                    _packagingInProgress = false;
+                    EditorUtility.DisplayDialog("Error", $"Packaging could not be completed. Error: {e.Message}", "Close");
+                    yield break;
+                }
             }
 
             if (_dirWatcher != null)
@@ -1394,21 +1435,6 @@ namespace traVRsal.SDK
             else
             {
                 File.WriteAllBytes(filePath, webRequest.downloadHandler.data);
-            }
-
-            callback?.Invoke(!_speechErrors);
-        }
-
-        private static IEnumerator FetchReplicaSpeech(string text, string filePath, Action<bool> callback)
-        {
-            Debug.Log("Remote (Fetch Replica Speech)");
-
-            if (_replicaToken == null) yield return GetReplicaToken();
-            if (_replicaToken == null)
-            {
-                _speechErrors = true;
-                callback?.Invoke(false);
-                yield break;
             }
 
             callback?.Invoke(!_speechErrors);
