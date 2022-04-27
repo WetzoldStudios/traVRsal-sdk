@@ -21,12 +21,13 @@ namespace traVRsal.SDK
         private string varName;
         private string worldSetting;
         private string customShader;
+        private int replicaVoice;
         private string fixedSize = "4";
 
+        private int _oldReplicaVoice;
         private bool _replicaInitDone;
         private bool _replicaDownloadInProgress;
         private ReplicaVoice[] _replicaVoices;
-        private int replicaVoice;
 
         [MenuItem("traVRsal/Constructor", priority = 110)]
         public static void ShowWindow()
@@ -66,7 +67,11 @@ namespace traVRsal.SDK
             {
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.BeginHorizontal();
+
                 replicaVoice = EditorGUILayout.Popup("New Replica Voice:", replicaVoice, _replicaVoices.Select(v => v.name).ToArray());
+                if (replicaVoice != _oldReplicaVoice) EditorCoroutineUtility.StartCoroutine(TestReplicaVoice(), this);
+                _oldReplicaVoice = replicaVoice;
+
                 EditorGUI.BeginDisabledGroup(_replicaDownloadInProgress);
                 if (GUILayout.Button(EditorGUIUtility.IconContent("PlayButton"), GUILayout.Width(30))) EditorCoroutineUtility.StartCoroutine(TestReplicaVoice(), this);
                 EditorGUI.EndDisabledGroup();
@@ -243,6 +248,7 @@ namespace traVRsal.SDK
                     if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
                     {
                         Debug.LogError("Invalid or expired API Token when contacting Replica");
+                        _replicaToken = null;
                     }
                     else
                     {

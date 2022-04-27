@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security;
 
 namespace traVRsal.SDK
 {
@@ -38,7 +39,7 @@ namespace traVRsal.SDK
             this.voice = voice;
         }
 
-        public string GetText(string phrase)
+        private string GetContent(string phrase)
         {
             // check for inline adjustments
             // TODO: deprecate, change to separate voice definition
@@ -49,6 +50,39 @@ namespace traVRsal.SDK
             }
 
             return phrase;
+        }
+
+        public string GetRawText(string phrase)
+        {
+            // TODO: filter out tags etc for clean subtitles
+            return GetContent(phrase);
+        }
+
+        public string GetSSML(string phrase)
+        {
+            switch (backend)
+            {
+                case TTSBackend.Replica:
+                    // more complex tags will lead to malformed URL exceptions as will an empty prosody
+                    if (!string.IsNullOrWhiteSpace(pitch) || !string.IsNullOrWhiteSpace(speed))
+                    {
+                        return "<speak>" +
+                               "<prosody" + (!string.IsNullOrWhiteSpace(pitch) ? " pitch=\"" + pitch + "\"" : "")
+                               + (!string.IsNullOrWhiteSpace(speed) ? " rate=\"" + speed + "\"" : "") + ">" +
+                               SecurityElement.Escape(GetContent(phrase)) +
+                               "</prosody></speak>";
+                    }
+                    return "<speak>" + SecurityElement.Escape(GetContent(phrase)) + "</speak>";
+
+                default:
+                    return "<speak version=\"1.0\" xmlns=\"https://www.w3.org/2001/10/synthesis\" xmlns:mstts=\"https://www.w3.org/2001/mstts\" " +
+                           "xml:lang=\"" + language + "\">" +
+                           "<voice name=\"" + voice + "\">" +
+                           "<mstts:express-as type=\"" + mood + "\">" +
+                           "<prosody pitch=\"" + pitch + "\" " + (!string.IsNullOrEmpty(speed) ? "rate=\"" + speed + "\"" : "") + ">" +
+                           SecurityElement.Escape(GetContent(phrase)) +
+                           "</prosody></mstts:express-as></voice></speak>";
+            }
         }
 
         private string GetCompoundKey()

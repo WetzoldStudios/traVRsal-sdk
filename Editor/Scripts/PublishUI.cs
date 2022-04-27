@@ -443,7 +443,8 @@ namespace traVRsal.SDK
                                         }
 
                                         if (!Directory.Exists(absTargetDir)) Directory.CreateDirectory(absTargetDir);
-                                        string hash = vs.GetHashedFileName(action.content);
+                                        string ssml = vs.GetSSML(action.content);
+                                        string hash = vs.GetHashedFileName(ssml);
                                         string hashFile = $"{hash}.wav";
                                         action.filePath = $"{absTargetDir}/{hashFile}";
                                         if (!File.Exists(action.filePath))
@@ -451,7 +452,7 @@ namespace traVRsal.SDK
                                             switch (vs.backend)
                                             {
                                                 case VoiceSpec.TTSBackend.Replica:
-                                                    yield return FetchReplicaSpeech(action.content, vs.voice, action.filePath, success =>
+                                                    yield return FetchReplicaSpeech(ssml, vs.voice, action.filePath, success =>
                                                     {
                                                         if (!success)
                                                         {
@@ -469,7 +470,7 @@ namespace traVRsal.SDK
                                             AssetDatabase.Refresh();
                                         }
                                         SpeechPlayer player = tg.AddComponent<SpeechPlayer>();
-                                        player.subtitle = action.content;
+                                        player.subtitle = vs.GetRawText(action.content);
                                         player.speaker = action.speaker;
                                         player.clip = AssetDatabase.LoadAssetAtPath($"{relTargetDir}/{hashFile}", typeof(AudioClip)) as AudioClip;
 
@@ -502,11 +503,6 @@ namespace traVRsal.SDK
                     }
                     Progress.Remove(progressId);
                 }
-            }
-
-            if (_storyErrorCount > 0)
-            {
-                EditorUtility.DisplayDialog("Story Errors", $"{_storyErrorCount} issues were found in stories. Check the error log for details.", "OK");
             }
         }
 

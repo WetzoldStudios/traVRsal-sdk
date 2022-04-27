@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -183,6 +184,7 @@ namespace traVRsal.SDK
             {
                 string escapedText = UnityWebRequest.EscapeURL(text);
                 using UnityWebRequest webRequest = UnityWebRequest.Get($"{SDKUtil.REPLICA_ENDPOINT}speech?txt={escapedText}&speaker_id={speaker}&extension=wav&bit_rate=128&sample_rate=22050");
+                Debug.Log(" URL: " + webRequest.uri);
                 webRequest.SetRequestHeader("Authorization", "Bearer " + _replicaToken);
                 webRequest.timeout = SDKUtil.TIMEOUT;
                 yield return webRequest.SendWebRequest();
