@@ -39,4 +39,5 @@ This SDK is licensed under the MIT license except for all contents in "Third-Par
 * AWS SDK
 * bhaptics SDK
 * DOTween
+* EditorAudioUtils
 * XNode

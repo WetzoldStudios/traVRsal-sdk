@@ -34,7 +34,7 @@ namespace traVRsal.SDK
                 }
                 else
                 {
-                    worldIdx = EditorGUILayout.Popup("Registered Worlds:", worldIdx, userWorlds.Select(w => w.key).ToArray());
+                    worldIdx = EditorGUILayout.Popup("Registered World Keys:", worldIdx, userWorlds.Select(w => w.key).ToArray());
                     worldName = userWorlds[worldIdx].key;
                     if (GUILayout.Button("Create Selected World")) CreateSampleWorld();
                 }
