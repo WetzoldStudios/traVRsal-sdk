@@ -41,6 +41,7 @@ namespace traVRsal.SDK
             ChaptersDialog = 33,
             ChaptersListRoot = 34,
             ChapterCover = 36,
+            ChapterPrice = 48,
 
             FeaturedWorldsRoot = 32,
             FeaturedWorldsListRoot = 0,

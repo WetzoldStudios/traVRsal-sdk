@@ -20,6 +20,7 @@ namespace traVRsal.SDK
         public string coverImage;
         [DefaultValue(1)] public UnlockRule unlockRule = UnlockRule.EnterZone;
         public string condition;
+        public string sku;
 
         public Chapter()
         {

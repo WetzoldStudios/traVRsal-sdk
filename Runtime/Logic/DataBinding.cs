@@ -209,6 +209,7 @@ namespace traVRsal.SDK
             ShowWorldDownload = ASYNC_RESULT + 1,
             ShowWorldStart = ASYNC_RESULT + 2,
             ShowWorldPurchase = 189,
+            ShowWorldPurchaseChapterAlternative = 195,
             ShowWorldChallenges = 76,
             ShowWorldStatistics = 75,
             ShowWorldLeaderboards = 149,
