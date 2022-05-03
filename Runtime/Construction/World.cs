@@ -56,6 +56,7 @@ namespace traVRsal.SDK
         public string lockedLongDescription;
         public string unlockLink;
         public string unlockLinkTitle;
+        public string unlockAchievement;
 
         [Header("Chapters")] public bool loadAllChapters;
         public string defaultChapter;
