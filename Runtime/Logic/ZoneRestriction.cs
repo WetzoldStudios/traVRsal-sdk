@@ -6,11 +6,14 @@ namespace traVRsal.SDK
     [AddComponentMenu("traVRsal/Zone Restriction")]
     public class ZoneRestriction : ExecutorConfig
     {
-        [Tooltip("Components to inform about the zone change.")] [SerializeReference]
-        public Component[] informedComponents;
+        [Tooltip("Reacts only if a specifically named zone becomes active, otherwise the one where the component is placed.")]
+        public string filter;
 
         [Tooltip("Ignore zone restriction if object is contained in the first zone.")]
         public bool allowInIntro = true;
+
+        [Tooltip("Components to inform about the zone change.")] [SerializeReference]
+        public Component[] informedComponents;
 
         [Header("Events")] [Tooltip("Anytime the zone becomes active, also during initial loading. Can fire multiple times.")]
         public UnityEvent onActive;

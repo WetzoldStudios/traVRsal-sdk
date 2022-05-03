@@ -13,6 +13,8 @@ namespace traVRsal.SDK
         {
             Speech = 0,
             Pause = 1,
+            WaitForZone = 2,
+            WaitForVariable = 3,
             Empty = 99
         }
 
@@ -35,6 +37,7 @@ namespace traVRsal.SDK
             {
                 line = line.Replace("[", "").Replace("]", "");
                 string[] arr = line.Split(':').Select(s => s.Trim()).ToArray();
+                if (arr.Length > 1) content = arr[1];
                 switch (arr[0].ToLower())
                 {
                     case "pause":
@@ -43,6 +46,18 @@ namespace traVRsal.SDK
                         {
                             EDebug.LogError($"Story contains invalid Pause value: {line}");
                         }
+                        break;
+
+                    case "waitforzone":
+                        type = LineType.WaitForZone;
+                        break;
+
+                    case "waitforvariable":
+                        type = LineType.WaitForVariable;
+                        break;
+
+                    default:
+                        EDebug.LogError($"Story contains invalid command: {arr[0]}");
                         break;
                 }
             }
@@ -61,7 +76,7 @@ namespace traVRsal.SDK
 
         public override string ToString()
         {
-            return "Story Action";
+            return $"{type} ({content})";
         }
     }
 }

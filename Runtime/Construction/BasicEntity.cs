@@ -182,7 +182,7 @@ namespace traVRsal.SDK
 
         public override int GetHashCode()
         {
-            var hashCode = 813519686;
+            int hashCode = 813519686;
             hashCode = hashCode * -1521134295 + EqualityComparer<Vector2Int>.Default.GetHashCode(position);
             hashCode = hashCode * -1521134295 + EqualityComparer<Vector2Int>.Default.GetHashCode(scale);
             hashCode = hashCode * -1521134295 + EqualityComparer<Vector2Int>.Default.GetHashCode(anchor);

@@ -6,7 +6,7 @@ namespace traVRsal.SDK
     [AddComponentMenu("traVRsal/World State Reactor")]
     public class WorldStateReactor : MonoBehaviour, IWorldStateReactor
     {
-        public UnityEvent onFinishedLoading;
+        [Header("Events")] public UnityEvent onFinishedLoading;
 
         [Tooltip("Components to inform about zone changes. Requires WorldStateReactor components on these.")]
         public Component[] inform;

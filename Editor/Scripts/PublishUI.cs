@@ -392,23 +392,25 @@ namespace traVRsal.SDK
 
                         GameObject go = PrefabUtility.LoadPrefabContents(assetPath);
                         bool changed = false;
+                        int varChannel = 0;
                         StoryPlayer[] players = go.GetComponentsInChildren<StoryPlayer>(true);
                         foreach (StoryPlayer story in players)
                         {
                             // recreate logic root
-                            Transform t = story.transform.Find(transName);
-                            if (t != null) DestroyImmediate(t.gameObject);
+                            Transform autoRoot = story.transform.Find(transName);
+                            if (autoRoot != null) DestroyImmediate(autoRoot.gameObject);
                             if (story.file == null) continue;
-
-                            // establish default components
-                            t = new GameObject(transName).transform;
-                            t.parent = story.transform;
-                            GameObject tg = t.gameObject;
-                            AudioSource audioSource = tg.AddComponent<AudioSource>();
-                            audioSource.playOnAwake = false;
 
                             // parse story script
                             StoryScript script = new StoryScript(story.file.text);
+                            if (script.actions.Count == 0) continue;
+
+                            // establish default components
+                            autoRoot = new GameObject(transName).transform;
+                            autoRoot.parent = story.transform;
+                            GameObject autoRootGo = autoRoot.gameObject;
+                            AudioSource audioSource = autoRootGo.AddComponent<AudioSource>();
+                            audioSource.playOnAwake = false;
 
                             int subProgressId = Progress.Start("Materializing story", null, Progress.Options.None, progressId);
                             int subCurrent = 0;
@@ -419,18 +421,40 @@ namespace traVRsal.SDK
                             {
                                 subCurrent++;
 
+                                // one GO per action
+                                GameObject actionGo = new GameObject(action.ToString());
+                                actionGo.transform.parent = autoRoot;
+
                                 UnityEvent nextChain = null;
                                 object obj = null;
                                 switch (action.type)
                                 {
                                     case StoryAction.LineType.Pause:
-                                        Delay delay = tg.AddComponent<Delay>();
+                                        Delay delay = actionGo.AddComponent<Delay>();
                                         delay.mode = Delay.Mode.Manual;
                                         delay.duration = action.duration;
 
                                         delay.onCompletion = new UnityEvent(); // otherwise not initialized yet
                                         nextChain = delay.onCompletion;
                                         obj = delay;
+                                        break;
+
+                                    case StoryAction.LineType.WaitForZone:
+                                        ZoneRestriction zr = actionGo.AddComponent<ZoneRestriction>();
+                                        zr.filter = action.content;
+                                        zr.onBecomeActive = new UnityEvent(); // otherwise not initialized yet
+                                        nextChain = zr.onBecomeActive;
+                                        obj = zr;
+                                        break;
+
+                                    case StoryAction.LineType.WaitForVariable:
+                                        VariableListener vl = actionGo.AddComponent<VariableListener>();
+                                        vl.variable = action.content;
+                                        vl.variableChannel = varChannel;
+                                        vl.onTrue = new UnityEvent(); // otherwise not initialized yet
+                                        nextChain = vl.onTrue;
+                                        obj = vl;
+                                        varChannel++;
                                         break;
 
                                     case StoryAction.LineType.Speech:
@@ -469,7 +493,7 @@ namespace traVRsal.SDK
                                             }
                                             AssetDatabase.Refresh();
                                         }
-                                        SpeechPlayer player = tg.AddComponent<SpeechPlayer>();
+                                        SpeechPlayer player = actionGo.AddComponent<SpeechPlayer>();
                                         player.subtitle = vs.GetRawText(action.content);
                                         player.speaker = action.speaker;
                                         player.clip = AssetDatabase.LoadAssetAtPath($"{relTargetDir}/{hashFile}", typeof(AudioClip)) as AudioClip;
@@ -480,16 +504,31 @@ namespace traVRsal.SDK
 
                                         break;
                                 }
-                                if (lastChain != null && obj != null)
+                                if (obj != null)
                                 {
                                     MethodInfo targetInfo = UnityEventBase.GetValidMethodInfo(obj, "Trigger", Type.EmptyTypes);
-                                    UnityAction ua = Delegate.CreateDelegate(typeof(UnityAction), obj, targetInfo, false) as UnityAction;
+                                    if (targetInfo != null) // not all logic components are directly triggered, e.g. zone restrictions, variable listeners...
+                                    {
+                                        UnityAction ua = Delegate.CreateDelegate(typeof(UnityAction), obj, targetInfo, false) as UnityAction;
 
-                                    UnityEventTools.AddPersistentListener(lastChain, ua);
+                                        if (lastChain != null)
+                                        {
+                                            UnityEventTools.AddPersistentListener(lastChain, ua);
+                                        }
+                                        else if (subCurrent == 1)
+                                        {
+                                            // if first item, remove all old trigger listeners then link from story
+                                            for (int i = story.onTrigger.GetPersistentEventCount() - 1; i >= 0; i--)
+                                            {
+                                                UnityEventTools.RemovePersistentListener(story.onTrigger, i);
+                                            }
+                                            UnityEventTools.AddPersistentListener(story.onTrigger, ua);
+                                        }
+                                    }
                                 }
                                 lastChain = nextChain;
                                 Progress.Report(subProgressId, (float) subCurrent / subTotal, action.raw);
-                                if (subCurrent > 5) break;
+                                if (subCurrent > 8) break;
                             }
 
                             Progress.Remove(subProgressId);

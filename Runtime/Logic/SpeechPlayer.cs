@@ -25,6 +25,7 @@ namespace traVRsal.SDK
             _audioSource = GetComponentInParent<AudioSource>();
         }
 
+        [ContextMenu("Trigger")]
         public void Trigger()
         {
             StartCoroutine(PlayAudio());

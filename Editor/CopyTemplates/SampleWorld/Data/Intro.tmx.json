@@ -6,7 +6,9 @@
          "id":5,
          "layers":[
                 {
-                 "data":[0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 "data":[4, 4, 4,
+                    4, 4, 4,
+                    4, 4, 4],
                  "height":3,
                  "id":1,
                  "name":"Ground",
@@ -34,7 +36,7 @@
                  "name":"Transitions",
                  "objects":[
                         {
-                         "gid":0,
+                         "gid":8,
                          "height":50,
                          "id":8,
                          "name":"",
@@ -62,7 +64,7 @@
                          "y":150
                         }, 
                         {
-                         "gid":0,
+                         "gid":20,
                          "height":50,
                          "id":64,
                          "name":"",
@@ -80,7 +82,9 @@
                  "y":0
                 }, 
                 {
-                 "data":[0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 "data":[2684354566, 3221225477, 3221225478,
+                    2684354565, 0, 1610612741,
+                    6, 5, 1610612742],
                  "height":3,
                  "id":3,
                  "name":"Walls",
@@ -101,9 +105,12 @@
                  "width":3,
                  "x":0,
                  "y":0
-                }, 
+                },
+            
                 {
-                 "data":[0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 "data":[0, 0, 0,
+                    0, 2684354565, 0,
+                    0, 2684354565, 0],
                  "height":3,
                  "id":12,
                  "name":"Walls2",
@@ -158,7 +165,7 @@
          "value":false
         }],
  "renderorder":"left-up",
- "tiledversion":"1.7.1",
+ "tiledversion":"1.8.4",
  "tileheight":50,
  "tilesets":[
         {
@@ -173,7 +180,7 @@
         }, 
         {
          "columns":0,
-         "firstgid":1,
+         "firstgid":21,
          "margin":0,
          "name":"Deco",
          "spacing":0,
@@ -183,6 +190,6 @@
         }],
  "tilewidth":50,
  "type":"map",
- "version":"1.6",
+ "version":"1.8",
  "width":3
 }
