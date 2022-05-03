@@ -112,7 +112,7 @@ namespace Bhaptics.Tact.Unity
                 // TODO DEBUGGING USAGE.
                 for (var i = 0; i < refreshActions.Count; i++)
                 {
-                    refreshActions[i]?.Invoke();
+                    refreshActions[i].Invoke();
                 }
                 return;
             }
@@ -120,7 +120,7 @@ namespace Bhaptics.Tact.Unity
             Devices = androidHapticPlayer.GetDevices();
             for (var i = 0; i < refreshActions.Count; i++)
             {
-                refreshActions[i]?.Invoke();
+                refreshActions[i].Invoke();
             }
         }
 
@@ -213,10 +213,21 @@ namespace Bhaptics.Tact.Unity
 
         public static void AddRefreshAction(UnityAction action)
         {
-            refreshActions.Add(action);
-
+            if (!refreshActions.Contains(action))
+            {
+                refreshActions.Add(action);
+            }
         }
-        public static void RemoveRefreshAction()
+
+        public static void RemoveRefreshAction(UnityAction action)
+        {
+            if (refreshActions.Contains(action))
+            {
+                refreshActions.Remove(action);
+            }
+        }
+
+        public static void ClearRefreshAction()
         {
             refreshActions.Clear();
         }

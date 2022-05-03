@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -54,6 +53,8 @@ namespace Bhaptics.Tact.Unity
                 controllers.Add(go);
             }
 
+            BhapticsAndroidManager.AddRefreshAction(Refresh);
+
             if (helpButton != null)
             {
                 helpButton.onClick.AddListener(OnHelp);
@@ -91,15 +92,16 @@ namespace Bhaptics.Tact.Unity
             }
         }
 
-        private void OnEnable()
+        void OnDestroy()
         {
-            BhapticsAndroidManager.AddRefreshAction(Refresh);
+            BhapticsAndroidManager.RemoveRefreshAction(Refresh);
         }
 
-        private void OnDisable()
-        {
-            BhapticsAndroidManager.RemoveRefreshAction();
-        }
+
+
+
+
+
 
         private void Refresh()
         {

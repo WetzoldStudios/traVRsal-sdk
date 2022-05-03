@@ -140,15 +140,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DefaultClips:
-  - {fileID: 11400000, guid: 2bd12233aad9f0c469e210e3cc42cfb8, type: 2}
+  - {fileID: 11400000, guid: 1fb3e3cd3ac583d488a33a94650d6c1f, type: 2}
   HeadClips:
-  - {fileID: 11400000, guid: 7d73368c6dbb377408ca86f17df3f14f, type: 2}
-  - {fileID: 11400000, guid: 676bd799a914bf34a9e22d827bcc599d, type: 2}
+  - {fileID: 11400000, guid: 0a42e33ee32cac84b86b857255b41cd4, type: 2}
+  - {fileID: 11400000, guid: 3813e27411657554ba7fe5d62fb2fad9, type: 2}
   BodyClips:
-  - {fileID: 11400000, guid: 2bd12233aad9f0c469e210e3cc42cfb8, type: 2}
-  - {fileID: 11400000, guid: 9f4fe66a35bb542479d3dcd616ab1a4f, type: 2}
+  - {fileID: 11400000, guid: 1fb3e3cd3ac583d488a33a94650d6c1f, type: 2}
+  - {fileID: 11400000, guid: 70ff3f2b5ecc4aa41afec8a4d0d05185, type: 2}
   LeftArmClips:
-  - {fileID: 11400000, guid: 9639340d9aaa9ff429587d280ff0c045, type: 2}
+  - {fileID: 11400000, guid: 221907c45f8787c43ab884d8a1807dc9, type: 2}
   RightArmClips:
-  - {fileID: 11400000, guid: 61877b4daa3ca45408910a8c75139679, type: 2}
+  - {fileID: 11400000, guid: 0c203ea680987a143a8bc09977ccd97c, type: 2}
   yOffsetMultiplier: 1

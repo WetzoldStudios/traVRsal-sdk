@@ -44,3 +44,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Config: {fileID: 11400000, guid: 89fbd85dc802f0b4d8a59155a56b1e7e, type: 2}
+  hapticClipsOnAwake:
+  - {fileID: 11400000, guid: 9d380be65e7a58d47a446e306ab3fd98, type: 2}
+  - {fileID: 11400000, guid: d655cfa6c8d0b9149912d12ef324a69e, type: 2}
+  - {fileID: 11400000, guid: 8c427cadcc7f37d4997f60f36d843aab, type: 2}
+  - {fileID: 11400000, guid: 4b8483cf0ad1b5047bbd0fcd723b3734, type: 2}
+  - {fileID: 11400000, guid: 3b00cef228cdb0c47afa1f89759ea9c8, type: 2}
+  - {fileID: 11400000, guid: 8e45af2dd73ba474b9d0164cde86cbc9, type: 2}
+  - {fileID: 11400000, guid: 2984074cfcac2194a860804b281b7739, type: 2}
+  - {fileID: 11400000, guid: a82f5f1ad65a9bb4faf224cc6df3899a, type: 2}
