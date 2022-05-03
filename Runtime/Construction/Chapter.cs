@@ -21,6 +21,7 @@ namespace traVRsal.SDK
         [DefaultValue(1)] public UnlockRule unlockRule = UnlockRule.EnterZone;
         public string condition;
         public string sku;
+        public string unlockAchievement;
 
         public Chapter()
         {
