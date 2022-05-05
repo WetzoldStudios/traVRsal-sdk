@@ -427,6 +427,9 @@ namespace traVRsal.SDK
 
                                 UnityEvent nextChain = null;
                                 object obj = null;
+                                object param = null;
+                                MethodInfo targetInfo = null;
+                                bool keepChain = false; // true in case component is an action only and next one should follow immediately
                                 switch (action.type)
                                 {
                                     case StoryAction.LineType.Pause:
@@ -441,7 +444,7 @@ namespace traVRsal.SDK
 
                                     case StoryAction.LineType.WaitForZone:
                                         ZoneRestriction zr = actionGo.AddComponent<ZoneRestriction>();
-                                        zr.filter = action.content;
+                                        zr.filter = action.param;
                                         zr.onBecomeActive = new UnityEvent(); // otherwise not initialized yet
                                         nextChain = zr.onBecomeActive;
                                         obj = zr;
@@ -449,12 +452,39 @@ namespace traVRsal.SDK
 
                                     case StoryAction.LineType.WaitForVariable:
                                         VariableListener vl = actionGo.AddComponent<VariableListener>();
-                                        vl.variable = action.content;
+                                        vl.variable = action.param;
                                         vl.variableChannel = varChannel;
                                         vl.onTrue = new UnityEvent(); // otherwise not initialized yet
                                         nextChain = vl.onTrue;
                                         obj = vl;
                                         varChannel++;
+                                        break;
+
+                                    case StoryAction.LineType.SetVariable:
+                                        SetVariable sv = actionGo.AddComponent<SetVariable>();
+                                        if (bool.TryParse(action.value, out bool boolVal))
+                                        {
+                                            string method = boolVal ? "ReachActionMax" : "ReachActionMin";
+                                            targetInfo = UnityEventBase.GetValidMethodInfo(sv, method, new[] {typeof(string)});
+                                            param = action.param;
+                                        }
+                                        else
+                                        {
+                                            _storyErrorCount++;
+                                            EDebug.LogError($"Could not parse boolean value (true/false) in story: {action.value}");
+                                        }
+                                        obj = sv;
+                                        keepChain = true;
+                                        break;
+
+                                    case StoryAction.LineType.IncVariable:
+                                    case StoryAction.LineType.DecVariable:
+                                        SetVariable sv2 = actionGo.AddComponent<SetVariable>();
+                                        string method2 = action.type == StoryAction.LineType.IncVariable ? "Increase" : "Decrease";
+                                        targetInfo = UnityEventBase.GetValidMethodInfo(sv2, method2, new[] {typeof(string)});
+                                        param = action.param;
+                                        obj = sv2;
+                                        keepChain = true;
                                         break;
 
                                     case StoryAction.LineType.Speech:
@@ -467,7 +497,7 @@ namespace traVRsal.SDK
                                         }
 
                                         if (!Directory.Exists(absTargetDir)) Directory.CreateDirectory(absTargetDir);
-                                        string ssml = vs.GetSSML(action.content);
+                                        string ssml = vs.GetSSML(action.param);
                                         string hash = vs.GetHashedFileName(ssml);
                                         string hashFile = $"{hash}.wav";
                                         action.filePath = $"{absTargetDir}/{hashFile}";
@@ -480,21 +510,21 @@ namespace traVRsal.SDK
                                                     {
                                                         if (!success)
                                                         {
-                                                            Debug.LogError($"Could not successfully generate voice file for Replica line: {action}");
                                                             _storyErrorCount++;
+                                                            Debug.LogError($"Could not successfully generate voice file for Replica line: {action}");
                                                         }
                                                     });
                                                     break;
 
                                                 default:
-                                                    Debug.LogError($"{vs} references TTS backend '{vs.backend}' which is not yet supported in stories");
                                                     _storyErrorCount++;
+                                                    Debug.LogError($"{vs} references TTS backend '{vs.backend}' which is not yet supported in stories");
                                                     break;
                                             }
                                             AssetDatabase.Refresh();
                                         }
                                         SpeechPlayer player = actionGo.AddComponent<SpeechPlayer>();
-                                        player.subtitle = vs.GetRawText(action.content);
+                                        player.subtitle = vs.GetRawText(action.param);
                                         player.speaker = action.speaker;
                                         player.clip = AssetDatabase.LoadAssetAtPath($"{relTargetDir}/{hashFile}", typeof(AudioClip)) as AudioClip;
 
@@ -506,14 +536,22 @@ namespace traVRsal.SDK
                                 }
                                 if (obj != null)
                                 {
-                                    MethodInfo targetInfo = UnityEventBase.GetValidMethodInfo(obj, "Trigger", Type.EmptyTypes);
+                                    if (targetInfo == null) targetInfo = UnityEventBase.GetValidMethodInfo(obj, "Trigger", Type.EmptyTypes);
                                     if (targetInfo != null) // not all logic components are directly triggered, e.g. zone restrictions, variable listeners...
                                     {
                                         UnityAction ua = Delegate.CreateDelegate(typeof(UnityAction), obj, targetInfo, false) as UnityAction;
 
                                         if (lastChain != null)
                                         {
-                                            UnityEventTools.AddPersistentListener(lastChain, ua);
+                                            if (param is string stringParam)
+                                            {
+                                                UnityAction<string> ua2 = Delegate.CreateDelegate(typeof(UnityAction<string>), obj, targetInfo, false) as UnityAction<string>;
+                                                UnityEventTools.AddStringPersistentListener(lastChain, ua2, stringParam);
+                                            }
+                                            else
+                                            {
+                                                UnityEventTools.AddPersistentListener(lastChain, ua);
+                                            }
                                         }
                                         else if (subCurrent == 1)
                                         {
@@ -526,9 +564,9 @@ namespace traVRsal.SDK
                                         }
                                     }
                                 }
-                                lastChain = nextChain;
+                                if (!keepChain) lastChain = nextChain;
                                 Progress.Report(subProgressId, (float) subCurrent / subTotal, action.raw);
-                                if (subCurrent > 8) break;
+                                if (subCurrent > 30) break;
                             }
 
                             Progress.Remove(subProgressId);

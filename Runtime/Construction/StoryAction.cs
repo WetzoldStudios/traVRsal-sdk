@@ -15,12 +15,16 @@ namespace traVRsal.SDK
             Pause = 1,
             WaitForZone = 2,
             WaitForVariable = 3,
+            SetVariable = 4,
+            IncVariable = 5,
+            DecVariable = 6,
             Empty = 99
         }
 
         public LineType type = LineType.Empty;
         public string raw;
-        public string content;
+        public string param;
+        public string value;
 
         public string speaker;
         public string filePath;
@@ -37,7 +41,8 @@ namespace traVRsal.SDK
             {
                 line = line.Replace("[", "").Replace("]", "");
                 string[] arr = line.Split(':').Select(s => s.Trim()).ToArray();
-                if (arr.Length > 1) content = arr[1];
+                if (arr.Length >= 2) param = arr[1];
+                if (arr.Length >= 3) value = arr[2];
                 switch (arr[0].ToLower())
                 {
                     case "pause":
@@ -56,6 +61,19 @@ namespace traVRsal.SDK
                         type = LineType.WaitForVariable;
                         break;
 
+                    case "setvariable":
+                        type = LineType.SetVariable;
+                        if (string.IsNullOrWhiteSpace(value)) value = "true";
+                        break;
+
+                    case "incvariable":
+                        type = LineType.IncVariable;
+                        break;
+
+                    case "decvariable":
+                        type = LineType.IncVariable;
+                        break;
+
                     default:
                         EDebug.LogError($"Story contains invalid command: {arr[0]}");
                         break;
@@ -70,13 +88,13 @@ namespace traVRsal.SDK
                     speaker = line.Substring(0, speakerPos).Trim();
                     line = line.Substring(speakerPos + 1).Trim();
                 }
-                content = line;
+                param = line;
             }
         }
 
         public override string ToString()
         {
-            return $"{type} ({content})";
+            return $"{type} ({param})";
         }
     }
 }

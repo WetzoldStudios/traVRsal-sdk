@@ -4,5 +4,6 @@
     {
         void ShowTheater(string video);
         void LoadWorld(string worldName);
+        void UnlockAchievement(string key);
     }
 }

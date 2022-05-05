@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="left-up" compressionlevel="0" width="3" height="3" tilewidth="50" tileheight="50" infinite="0" nextlayerid="29" nextobjectid="65">
  <properties>
+  <property name="AutoElevate" type="bool" value="false"/>
   <property name="NoAgents" type="bool" value="false"/>
   <property name="NoSpawning" type="bool" value="false"/>
  </properties>

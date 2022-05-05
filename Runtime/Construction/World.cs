@@ -57,6 +57,7 @@ namespace traVRsal.SDK
         public string unlockLink;
         public string unlockLinkTitle;
         public string unlockAchievement;
+        public string finishAchievement;
 
         [Header("Chapters")] public bool loadAllChapters;
         public string defaultChapter;
