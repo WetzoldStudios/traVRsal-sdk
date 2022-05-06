@@ -22,6 +22,8 @@ namespace traVRsal.SDK
             DoCloseChaptersDialog = 156,
             DoOpenSettingsDialog = 20,
             DoCloseSettingsDialog = 21,
+            DoOpenSupportDialog = 196,
+            DoCloseSupportDialog = 197,
             DoOpenPlayerDialog = 58,
             DoClosePlayerDialog = 59,
             DoCloseInfoDialog = 69,
@@ -37,6 +39,7 @@ namespace traVRsal.SDK
             DoOpenAvatarDialog = 160,
             DoCloseAvatarDialog = 161,
             DoCloseIntroductionDialog = 186,
+            DoBuySupporterPack = 198,
             DoQuit = 126,
             DoPause = 15,
             DoUnpause = 16,
@@ -109,6 +112,8 @@ namespace traVRsal.SDK
             PlayerAvatarUrl = 163,
             PlayerImage = ASYNC_RESULT + 4,
             PlayerLives = 167,
+
+            SupportPackageCount = 199,
 
             MPPlayerCount = 137,
             MPPlayerNames = 143,

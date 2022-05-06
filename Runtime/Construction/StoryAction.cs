@@ -23,6 +23,7 @@ namespace traVRsal.SDK
 
         public LineType type = LineType.Empty;
         public string raw;
+        public int lineNr;
         public string param;
         public string value;
 
@@ -31,12 +32,14 @@ namespace traVRsal.SDK
 
         public float duration;
 
-        public StoryAction(string line)
+        public StoryAction(string line, int lineNr)
         {
+            this.lineNr = lineNr;
             if (string.IsNullOrWhiteSpace(line)) return;
             line = line.Trim();
             raw = line;
 
+            if (line.StartsWith("//")) return;
             if (line.StartsWith(CODE_START))
             {
                 line = line.Replace("[", "").Replace("]", "");
@@ -49,7 +52,7 @@ namespace traVRsal.SDK
                         type = LineType.Pause;
                         if (!float.TryParse(arr[1], NumberStyles.Number, NumberFormatInfo.InvariantInfo, out duration))
                         {
-                            EDebug.LogError($"Story contains invalid Pause value: {line}");
+                            EDebug.LogError($"Story contains invalid Pause value on line {lineNr}: {line}");
                         }
                         break;
 
@@ -75,7 +78,7 @@ namespace traVRsal.SDK
                         break;
 
                     default:
-                        EDebug.LogError($"Story contains invalid command: {arr[0]}");
+                        EDebug.LogError($"Story contains invalid command on line {lineNr}: {arr[0]}");
                         break;
                 }
             }

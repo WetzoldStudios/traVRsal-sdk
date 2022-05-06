@@ -471,7 +471,7 @@ namespace traVRsal.SDK
                                         else
                                         {
                                             _storyErrorCount++;
-                                            EDebug.LogError($"Could not parse boolean value (true/false) in story: {action.value}");
+                                            EDebug.LogError($"Could not parse boolean value (true/false) in {story} on line {action.lineNr}: {action.value}");
                                         }
                                         obj = sv;
                                         keepChain = true;
@@ -492,7 +492,7 @@ namespace traVRsal.SDK
                                         if (vs == null)
                                         {
                                             _storyErrorCount++;
-                                            EDebug.LogError($"{story} contains undefined voice reference: {action.speaker}");
+                                            EDebug.LogError($"{story} contains undefined voice reference on line {action.lineNr}: {action.raw}");
                                             continue;
                                         }
 

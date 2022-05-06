@@ -21,6 +21,7 @@ namespace traVRsal.SDK
             AvatarDialog = 41,
             InterstitialDialog = 12,
             IntroductionDialog = 22,
+            SupportDialog = 49,
             CreateWorldsDialog = 16,
             FailedEntitlementCheckDialog = 24,
             TopDownPath = 45,
