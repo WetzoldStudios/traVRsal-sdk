@@ -18,6 +18,7 @@ namespace traVRsal.SDK
             SetVariable = 4,
             IncVariable = 5,
             DecVariable = 6,
+            Break = 98,
             Empty = 99
         }
 
@@ -48,6 +49,10 @@ namespace traVRsal.SDK
                 if (arr.Length >= 3) value = arr[2];
                 switch (arr[0].ToLower())
                 {
+                    case "break":
+                        type = LineType.Break;
+                        break;
+                    
                     case "pause":
                         type = LineType.Pause;
                         if (!float.TryParse(arr[1], NumberStyles.Number, NumberFormatInfo.InvariantInfo, out duration))

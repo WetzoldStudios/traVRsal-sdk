@@ -566,7 +566,6 @@ namespace traVRsal.SDK
                                 }
                                 if (!keepChain) lastChain = nextChain;
                                 Progress.Report(subProgressId, (float) subCurrent / subTotal, action.raw);
-                                if (subCurrent > 30) break;
                             }
 
                             Progress.Remove(subProgressId);

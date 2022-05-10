@@ -7,7 +7,19 @@ namespace traVRsal.SDK
     [Serializable]
     public class HUDConfig
     {
-        [Header("Configuration")] public Reference text = Reference.TimeElapsed;
+        public enum Location
+        {
+            Hands = 0,
+            LowerLeft = 1,
+            LowerCenter = 2,
+            LowerRight = 3,
+            UpperLeft = 4,
+            UpperCenter = 5,
+            UpperRight = 6
+        }
+
+        [Header("Configuration")] public Location location = Location.Hands;
+        public Reference text = Reference.TimeElapsed;
         public string textWhenZero;
         public bool hideTextWhenZero;
         public string subText;

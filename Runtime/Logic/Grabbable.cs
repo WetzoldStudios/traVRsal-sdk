@@ -11,11 +11,11 @@ namespace traVRsal.SDK
 
         [Header("On Grab")] public bool hideHand = true;
 
-        [Space] public UnityEvent onGrab;
-
         [Header("On Drop")] public bool activateGravity = true;
         public bool deactivateKinematic = true;
 
-        [Space] public UnityEvent onDrop;
+        [Header("Events")] public UnityEvent onGrab;
+        public UnityEvent onDrop;
+        public UnityEvent onTouchHead;
     }
 }

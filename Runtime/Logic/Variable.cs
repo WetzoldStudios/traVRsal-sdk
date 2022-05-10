@@ -126,6 +126,13 @@ namespace traVRsal.SDK
             Merge(v);
         }
 
+        public Variable WithValue(object newValue)
+        {
+            value = newValue;
+
+            return this;
+        }
+
         protected bool Equals(Variable other)
         {
             return key == other.key && value == other.value && behaviour == other.behaviour

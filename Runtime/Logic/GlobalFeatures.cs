@@ -47,5 +47,10 @@ namespace traVRsal.SDK
         {
             _api?.LoadWorld(worldName);
         }
+
+        public void ShowHud(bool state)
+        {
+            _api?.ShowHud(state);
+        }
     }
 }

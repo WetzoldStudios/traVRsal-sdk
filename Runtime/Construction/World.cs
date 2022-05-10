@@ -48,6 +48,7 @@ namespace traVRsal.SDK
         public string coverImage;
         public string trailer;
         public string sku;
+        public bool hasDemo;
 
         [Header("Unlocking")] public UnlockMethod unlockMethod = UnlockMethod.None;
         public string unlockCombination;
@@ -86,7 +87,7 @@ namespace traVRsal.SDK
         [Header("Items & HUD")] [DefaultValue(true)]
         public bool showHandHud = true;
 
-        public HUDConfig[] customHandHuds;
+        public HUDConfig[] customHuds;
         public Reference defaultHandHud;
         public Reference defaultHandHudMain;
         public Reference defaultHandHudSecondary;

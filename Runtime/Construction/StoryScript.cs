@@ -23,12 +23,13 @@ namespace traVRsal.SDK
             {
                 StoryAction action = new StoryAction(_rawLines[i], i + 1);
                 if (action.type == StoryAction.LineType.Empty) continue;
+                if (action.type == StoryAction.LineType.Break) break;
 
                 actions.Add(action);
             }
         }
 
-        public int GetActionCount() => _rawLines.Length;
+        public int GetActionCount() => actions.Count;
 
         public override string ToString()
         {

@@ -1,4 +1,4 @@
-﻿Shader "MazeVR/StencilObject"
+Shader "MazeVR/StencilObject"
 {
     Properties
     {
