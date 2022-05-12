@@ -38,6 +38,7 @@ namespace traVRsal.SDK
             WorldBrowserDialog = 20,
             WorldBrowserDialogPosition = 21,
             WorldStartButton = 35,
+            WorldTestimonials = 50,
 
             ChaptersDialog = 33,
             ChaptersListRoot = 34,

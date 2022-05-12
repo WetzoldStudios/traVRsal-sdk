@@ -219,6 +219,7 @@ namespace traVRsal.SDK
             ShowWorldStatistics = 75,
             ShowWorldLeaderboards = 149,
             ShowWorldTrailer = 172,
+            ShowWorldTestimonials = 200,
 
             ObjectHealth = REQUIRE_SOURCE + 50,
 

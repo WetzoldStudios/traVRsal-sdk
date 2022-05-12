@@ -45,10 +45,12 @@ namespace traVRsal.SDK
         [DefaultValue("Experience")] public string category = "Experience";
         public string shortDescription;
         public string longDescription;
+        public string prePurchaseLongDescription;
         public string coverImage;
         public string trailer;
         public string sku;
         public bool hasDemo;
+        public List<Testimonial> testimonials;
 
         [Header("Unlocking")] public UnlockMethod unlockMethod = UnlockMethod.None;
         public string unlockCombination;
@@ -164,6 +166,7 @@ namespace traVRsal.SDK
 
         public World()
         {
+            testimonials = new List<Testimonial>();
             chapters = new List<Chapter>();
             qualityRules = new List<QualityRule>();
             zones = new List<Zone>();
@@ -197,6 +200,7 @@ namespace traVRsal.SDK
 
         public void NullifyEmpties()
         {
+            if (testimonials is {Count: 0}) testimonials = null;
             if (chapters is {Count: 0}) chapters = null;
             if (qualityRules is {Count: 0}) qualityRules = null;
             if (headItems is {Length: 0}) headItems = null;
