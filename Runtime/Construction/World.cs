@@ -87,6 +87,8 @@ namespace traVRsal.SDK
         [Header("Items & HUD")] [DefaultValue(true)]
         public bool showHandHud = true;
 
+        public bool showScreenHud;
+
         public HUDConfig[] customHuds;
         public Reference defaultHandHud;
         public Reference defaultHandHudMain;

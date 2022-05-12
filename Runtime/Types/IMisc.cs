@@ -5,6 +5,6 @@
         void ShowTheater(string video);
         void LoadWorld(string worldName);
         void UnlockAchievement(string key);
-        void ShowHud(bool state);
+        void ShowScreenHud(bool state);
     }
 }

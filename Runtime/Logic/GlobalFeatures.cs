@@ -12,7 +12,7 @@ namespace traVRsal.SDK
 
         private void Start()
         {
-            _api = transform.parent.GetComponentInParent<IMisc>(); // don't accidentally refer to self
+            _api = GetComponentInParent<IMisc>();
             _spawner = GetComponentInParent<ISpawner>();
             _env = GetComponentInParent<IEnvironment>();
             _audio = GetComponentInParent<ISoundAction>();
@@ -48,9 +48,14 @@ namespace traVRsal.SDK
             _api?.LoadWorld(worldName);
         }
 
-        public void ShowHud(bool state)
+        public void ShowScreenHud(bool state)
         {
-            _api?.ShowHud(state);
+            _api?.ShowScreenHud(state);
+        }
+
+        public void Destruct(GameObject go)
+        {
+            _spawner?.Destruct(go);
         }
     }
 }
