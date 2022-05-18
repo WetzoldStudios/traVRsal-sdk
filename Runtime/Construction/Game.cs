@@ -12,7 +12,8 @@ namespace traVRsal.SDK
         {
             Live = 0,
             Beta = 1,
-            Alpha = 2
+            Alpha = 2,
+            All = 99
         }
 
         public enum PublishingEnvironment

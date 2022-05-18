@@ -16,6 +16,7 @@ namespace traVRsal.SDK
         public int id;
         public string player_id;
         public string player_name;
+        public int support_level;
         public string world;
         public string world_file;
         public string world_date;

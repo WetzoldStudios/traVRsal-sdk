@@ -136,6 +136,7 @@ namespace traVRsal.SDK
         public bool rotateWorld;
         public bool requiresNavMesh;
         public bool invalidSettings;
+        public Game.ReleaseChannel channel;
         public string chapter;
         public SkyboxMode skyboxMode = SkyboxMode.None;
         public List<ObjectSpec> objectSpecs;

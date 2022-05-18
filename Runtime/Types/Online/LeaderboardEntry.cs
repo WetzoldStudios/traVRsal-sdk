@@ -7,6 +7,7 @@ namespace traVRsal.SDK
     {
         public string player_name;
         public string player_id;
+        public int support_level;
         public float score;
         public int rank;
         public bool rank_gap;

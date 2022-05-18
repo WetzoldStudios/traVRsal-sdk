@@ -137,8 +137,8 @@ namespace traVRsal.SDK
 
             SettingPadding = 6,
             SettingTileCount = 5,
-            SettingRenderScale = 164,
             SettingTileSizeHint = 8,
+            SettingRenderScale = 164,
             SettingLocomotionMethod = 174,
             SettingStickModeX = 178,
             SettingStickModeY = 179,

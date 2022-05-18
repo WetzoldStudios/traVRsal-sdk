@@ -22,6 +22,7 @@ namespace traVRsal.SDK
         public string condition;
         public string sku;
         public string unlockAchievement;
+        [DefaultValue(99)] public Game.ReleaseChannel channelFilter = Game.ReleaseChannel.All;
 
         public Chapter()
         {
@@ -31,6 +32,13 @@ namespace traVRsal.SDK
         {
             this.key = key;
             this.unlockRule = unlockRule;
+        }
+
+        public Chapter WithChannelFilter(Game.ReleaseChannel channelFilter)
+        {
+            this.channelFilter = channelFilter;
+
+            return this;
         }
 
         public override string ToString()

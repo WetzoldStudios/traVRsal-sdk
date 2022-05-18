@@ -14,6 +14,8 @@ namespace traVRsal.SDK
         public string oculus_id; // php will not convert biginteger correctly
         public string nickname;
         public float distance;
+        public int support_level;
+        public int support_level_increase;
 
         public string device;
         public string app_version;
