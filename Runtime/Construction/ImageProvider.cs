@@ -11,7 +11,8 @@ namespace traVRsal.SDK
         {
             Unsplash = 0,
             Giphy = 1,
-            Device = 2
+            Device = 2,
+            World = 3
         }
 
         public enum Order
@@ -33,6 +34,7 @@ namespace traVRsal.SDK
 
         public string key;
         public Provider provider = Provider.Unsplash;
+        public string folder;
         public Order order = Order.Random;
         public Filter filter = Filter.None;
         public bool repeatWhenDepleted = true;

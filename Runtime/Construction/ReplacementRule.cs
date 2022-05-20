@@ -9,9 +9,9 @@ namespace traVRsal.SDK
     {
         public enum ReplacementType
         {
-            Object,
-            Material,
-            Property
+            Object = 0,
+            Material = 1,
+            Property = 2
         }
 
         public ReplacementType type = ReplacementType.Object;
@@ -26,6 +26,7 @@ namespace traVRsal.SDK
         public string[] randomMaterials;
 
         public string[] validZones;
+        public string[] invalidZones;
 
         public TMProperty[] properties;
 
@@ -49,6 +50,7 @@ namespace traVRsal.SDK
             randomMaterials = copyFrom.randomMaterials;
             randomObjects = copyFrom.randomObjects;
             validZones = copyFrom.validZones;
+            invalidZones = copyFrom.invalidZones;
             orientation = copyFrom.orientation;
             properties = SDKUtil.CopyProperties(copyFrom.properties);
         }

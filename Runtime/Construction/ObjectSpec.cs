@@ -10,10 +10,10 @@ namespace traVRsal.SDK
     {
         public enum PivotType
         {
-            Bottom_Front_Left,
-            Bottom_Front_Center,
-            Center,
-            Bottom_Center
+            Bottom_Front_Left = 0,
+            Bottom_Front_Center = 1,
+            Center = 2,
+            Bottom_Center = 3
         }
 
         [HideInInspector] public string objectKey;
@@ -64,6 +64,8 @@ namespace traVRsal.SDK
             if (width != 1) return false;
             if (atCeiling) return false;
             if (pinToSide) return false;
+            if (standalone) return false;
+            if (standaloneAllSides) return false;
             if (snapSideways) return false;
             if (!adjustMaterials) return false;
             if (pivotType != PivotType.Bottom_Front_Left) return false;
@@ -77,10 +79,7 @@ namespace traVRsal.SDK
             {
                 return $"Spec for soft-referenced {objectKey} (pivot: {pivotType}, pin-to-side: {pinToSide})";
             }
-            else
-            {
-                return $"Spec for {gameObject} (pivot: {pivotType}, pin-to-side: {pinToSide})";
-            }
+            return $"Spec for {gameObject} (pivot: {pivotType}, pin-to-side: {pinToSide})";
         }
     }
 }

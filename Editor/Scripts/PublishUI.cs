@@ -14,6 +14,7 @@ using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Build;
+using UnityEditor.AddressableAssets.GUI;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEditor.Events;
@@ -305,7 +306,7 @@ namespace traVRsal.SDK
                 World world = SDKUtil.ReadJSONFileDirect<World>(dir + "/World.json");
                 if (world.isVirtual) continue;
 
-                string voicePath = dir + "/Audio/Voice/";
+                string voicePath = dir + "/Audio/Voice/Generated/";
                 Directory.CreateDirectory(voicePath);
 
                 // generate loading texts
@@ -796,6 +797,7 @@ namespace traVRsal.SDK
             PrepareWorldFiles(); // prepare again as in normal packaging world analysis and object keys would otherwise not be available instantly
             yield return FetchDefaultTTS();
             yield return MaterializeStories();
+            yield return IndexFolders();
 
             if (_storyErrorCount == 0)
             {
@@ -1012,6 +1014,32 @@ namespace traVRsal.SDK
         private static string GetDocuArchivePath(string worldName)
         {
             return GetDocuPath(worldName) + "../" + worldName + "-docs.zip";
+        }
+
+        private static IEnumerator IndexFolders()
+        {
+            foreach (string dir in GetWorldPaths())
+            {
+                string[] folders = Directory.GetDirectories(dir, "*", SearchOption.AllDirectories);
+                foreach (string folder in folders)
+                {
+                    string catalogFile = folder + "/" + SDKUtil.FILE_LISTING;
+                    FileUtil.DeleteFileOrDirectory(catalogFile);
+
+                    IEnumerable<string> files = DirectoryUtil.GetFiles(folder, new[] {"*.*"});
+                    List<FileDetails> result = new List<FileDetails>();
+                    foreach (string file in files)
+                    {
+                        if (Directory.Exists(file)) continue; // skip directories
+                        FileInfo fi = new FileInfo(file);
+                        if (fi.Extension == ".meta") continue;
+
+                        result.Add(new FileDetails(fi.Name, fi.Length, fi.CreationTimeUtc, fi.LastWriteTimeUtc));
+                    }
+                    if (result.Count > 0) File.WriteAllText(catalogFile, SDKUtil.SerializeObject(result, DefaultValueHandling.Ignore));
+                }
+                yield return null;
+            }
         }
 
         private IEnumerator CreateDocumentation()
