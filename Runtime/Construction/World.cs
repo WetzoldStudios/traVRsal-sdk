@@ -47,6 +47,7 @@ namespace traVRsal.SDK
         public string longDescription;
         public string prePurchaseLongDescription;
         public string coverImage;
+        public string loadingVoice;
         public string trailer;
         public string sku;
         public bool hasDemo;
@@ -82,6 +83,7 @@ namespace traVRsal.SDK
         public bool autoCheckPoints;
         [DefaultValue(1f)] public float loadingMusicVolume = 1f;
         [DefaultValue(true)] public bool createIntro = true;
+        [DefaultValue(true)] public bool waitForIntroVoice = true;
         public TargetMeasures[] measures = {TargetMeasures.Time, TargetMeasures.Distance};
         public TargetVisibility targetVisibility = TargetVisibility.EnteringZone;
         public List<QualityRule> qualityRules;
