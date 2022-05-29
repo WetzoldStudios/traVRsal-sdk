@@ -29,9 +29,9 @@ namespace traVRsal.SDK
         private const string PREFS_PREFIX = "[traVRsal]-[SDK]-";
         private const string TTS_LANGUAGE_CODE = "en-US";
         private const string TTS_VOICE = "en-US-GuyNeural";
-        private const string TTS_MOOD = "cheerful";
+        private const string TTS_MOOD = "friendly";
         private const string TTS_PITCH = "low";
-        private const string TTS_SPEED = "";
+        private const string TTS_SPEED = "10%";
         private const string REPLICA_PREFIX = "replica-";
 
         private readonly string[] PACKAGE_OPTIONS = {"Everything", "Intelligent"};

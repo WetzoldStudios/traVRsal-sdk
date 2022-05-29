@@ -197,6 +197,7 @@ namespace traVRsal.SDK
             ShowIfAlpha = 154,
             ShowIfOffline = 113,
             ShowIfOnlineAndNotInMP = 168,
+            ShowIfMPConnected = 201,
             ShowIfMPPossible = 147,
             ShowIfMPHost = 138,
             ShowIfMPParticipant = 171,
