@@ -84,6 +84,8 @@ namespace traVRsal.SDK
 
         public static bool DeleteFile(string path)
         {
+            if (string.IsNullOrWhiteSpace(path)) return false;
+
             try
             {
                 File.Delete(path);

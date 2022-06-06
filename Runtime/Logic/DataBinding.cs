@@ -40,6 +40,8 @@ namespace traVRsal.SDK
             DoCloseAvatarDialog = 161,
             DoCloseIntroductionDialog = 186,
             DoBuySupporterPack = 198,
+            DoExplainGlobalLeaderboard = 202,
+            DoExplainWorldLeaderboard = 203,
             DoQuit = 126,
             DoPause = 15,
             DoUnpause = 16,

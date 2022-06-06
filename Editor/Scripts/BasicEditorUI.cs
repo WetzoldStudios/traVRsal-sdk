@@ -17,8 +17,8 @@ namespace traVRsal.SDK
         public UserWorld[] userWorlds;
 
         protected static string _replicaToken;
-        private static GUIStyle logo;
-        private Vector2 windowScrollPos;
+        private static GUIStyle _logo;
+        private Vector2 _windowScrollPos;
 
         public virtual void OnEnable()
         {
@@ -27,7 +27,7 @@ namespace traVRsal.SDK
             Texture2D logoImage = AssetDatabase.LoadAssetAtPath($"Packages/com.wetzold.travrsal.sdk/Editor/Images/{logoName}", typeof(Texture2D)) as Texture2D;
             if (logoImage == null) logoImage = AssetDatabase.LoadAssetAtPath($"Assets/SDK/Editor/Images/{logoName}", typeof(Texture2D)) as Texture2D;
 
-            logo = new GUIStyle {normal = {background = logoImage}, fixedWidth = 128, fixedHeight = 64};
+            _logo = new GUIStyle {normal = {background = logoImage}, fixedWidth = 128, fixedHeight = 64};
 
             // perform (cheap) setup tasks
             SetupTagsAndLayers();
@@ -37,11 +37,11 @@ namespace traVRsal.SDK
 
         public virtual void OnGUI()
         {
-            windowScrollPos = GUILayout.BeginScrollView(windowScrollPos, false, false);
+            _windowScrollPos = GUILayout.BeginScrollView(_windowScrollPos, false, false);
             EditorGUILayout.Space();
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            GUILayout.Box("", logo);
+            GUILayout.Box("", _logo);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             EditorGUILayout.Space();
@@ -92,7 +92,7 @@ namespace traVRsal.SDK
             {
                 "ExcludeTeleport", SDKUtil.INTERACTABLE_TAG, SDKUtil.ENEMY_TAG, SDKUtil.PLAYER_HEAD_TAG, SDKUtil.COLLECTIBLE_TAG, SDKUtil.PLAYER_HELPER_TAG, SDKUtil.PLAYER_HAND_TAG, SDKUtil.RESERVED1_TAG, SDKUtil.RESERVED2_TAG, SDKUtil.RESERVED3_TAG, SDKUtil.RESERVED4_TAG, SDKUtil.RESERVED5_TAG
             };
-            Enumerable.Range(1, 100).ForEach(i => requiredTags.Add("Object " + i));
+            Enumerable.Range(1, 110).ForEach(i => requiredTags.Add("Object " + i));
 
             SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
             SerializedProperty tagsProp = tagManager.FindProperty("tags");

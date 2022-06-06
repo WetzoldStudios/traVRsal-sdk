@@ -9,9 +9,9 @@ namespace traVRsal.SDK
 {
     public class SetupUI : BasicEditorUI
     {
-        private int worldIdx;
-        private string worldName;
-        private bool showMaintenance;
+        private int _worldIdx;
+        private string _worldName;
+        private bool _showMaintenance;
 
         [MenuItem("traVRsal/Setup", priority = 100)]
         public static void ShowWindow()
@@ -34,8 +34,8 @@ namespace traVRsal.SDK
                 }
                 else
                 {
-                    worldIdx = EditorGUILayout.Popup("Registered World Keys:", worldIdx, userWorlds.Select(w => w.key).ToArray());
-                    worldName = userWorlds[worldIdx].key;
+                    _worldIdx = EditorGUILayout.Popup("Registered World Keys:", _worldIdx, userWorlds.Select(w => w.key).ToArray());
+                    _worldName = userWorlds[_worldIdx].key;
                     if (GUILayout.Button("Create Selected World")) CreateSampleWorld();
                 }
 
@@ -48,8 +48,8 @@ namespace traVRsal.SDK
             if (Directory.Exists(GetWorldsRoot(false)))
             {
                 EditorGUILayout.Space();
-                showMaintenance = EditorGUILayout.Foldout(showMaintenance, "Maintenance Functions");
-                if (showMaintenance)
+                _showMaintenance = EditorGUILayout.Foldout(_showMaintenance, "Maintenance Functions");
+                if (_showMaintenance)
                 {
                     if (GUILayout.Button("Update/Restore Tiled Data")) RestoreTiled();
                 }
@@ -60,17 +60,17 @@ namespace traVRsal.SDK
 
         private string GetWorldPath(bool relative)
         {
-            return GetWorldsRoot(relative) + "/" + worldName;
+            return GetWorldsRoot(relative) + "/" + _worldName;
         }
 
         private void CreateSampleWorld()
         {
-            if (string.IsNullOrEmpty(worldName))
+            if (string.IsNullOrEmpty(_worldName))
             {
                 EditorUtility.DisplayDialog("Invalid Entry", "No world key specified.", "OK");
                 return;
             }
-            if (!IsValidWorldName(worldName))
+            if (!IsValidWorldName(_worldName))
             {
                 EditorUtility.DisplayDialog("Invalid Entry", "World key is not valid: must be upper and lower case characters, numbers and underscore only.", "OK");
                 return;
@@ -88,7 +88,7 @@ namespace traVRsal.SDK
             Selection.activeObject = obj;
             EditorGUIUtility.PingObject(obj);
 
-            worldName = "";
+            _worldName = "";
         }
 
         private void SetupGitIgnore()
