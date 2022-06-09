@@ -251,7 +251,7 @@ namespace traVRsal.SDK
             if (md.imageData == null) md.imageData = new List<ImageData>();
 
             // gather images
-            IEnumerable<string> files = DirectoryUtil.GetFiles(path, new[] {"*.png", "*.jpg"});
+            IEnumerable<string> files = IOUtils.GetFiles(path, new[] {"*.png", "*.jpg"});
             foreach (string file in files)
             {
                 string fileName = Path.GetFileName(file);

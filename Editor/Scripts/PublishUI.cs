@@ -731,22 +731,22 @@ namespace traVRsal.SDK
                 string worldName = Path.GetFileName(dir);
 
                 VerificationResult result = new VerificationResult();
-                result.sourceSize = DirectoryUtil.GetSize(dir);
+                result.sourceSize = IOUtils.GetSize(dir);
 
                 result.documentationPath = GetDocuArchivePath(worldName);
                 result.documentationExists = File.Exists(result.documentationPath);
 
                 result.distroPathAndroid = GetServerDataPath() + "/Worlds/" + worldName + "/Android";
                 result.distroExistsAndroid = Directory.Exists(result.distroPathAndroid);
-                result.distroSizeAndroid = DirectoryUtil.GetSize(result.distroPathAndroid);
+                result.distroSizeAndroid = IOUtils.GetSize(result.distroPathAndroid);
 
                 result.distroPathStandaloneWin = GetServerDataPath() + "/Worlds/" + worldName + "/StandaloneWindows64";
                 result.distroExistsStandaloneWin = Directory.Exists(result.distroPathStandaloneWin);
-                result.distroSizeStandaloneWin = DirectoryUtil.GetSize(result.distroPathStandaloneWin);
+                result.distroSizeStandaloneWin = IOUtils.GetSize(result.distroPathStandaloneWin);
 
                 result.distroPathStandaloneLinux = GetServerDataPath() + "/Worlds/" + worldName + "/StandaloneLinux64";
                 result.distroExistsStandaloneLinux = Directory.Exists(result.distroPathStandaloneLinux);
-                result.distroSizeStandaloneLinux = DirectoryUtil.GetSize(result.distroPathStandaloneLinux);
+                result.distroSizeStandaloneLinux = IOUtils.GetSize(result.distroPathStandaloneLinux);
 
                 _verifications.Add(worldName, result);
 
@@ -1025,7 +1025,7 @@ namespace traVRsal.SDK
                     string catalogFile = folder + "/" + SDKUtil.FILE_LISTING;
                     FileUtil.DeleteFileOrDirectory(catalogFile);
 
-                    IEnumerable<string> files = DirectoryUtil.GetFiles(folder, new[] {"*.*"});
+                    IEnumerable<string> files = IOUtils.GetFiles(folder, new[] {"*.*"});
                     List<FileDetails> result = new List<FileDetails>();
                     foreach (string file in files)
                     {
@@ -1068,7 +1068,7 @@ namespace traVRsal.SDK
                 // fill HTML template
                 string id = AssetDatabase.FindAssets("WorldDocu")[0];
                 string path = AssetDatabase.GUIDToAssetPath(id);
-                DirectoryUtil.Copy(Application.dataPath + "/../" + path, docuPath);
+                IOUtils.Copy(Application.dataPath + "/../" + path, docuPath);
                 AssetDatabase.Refresh();
 
                 string html = File.ReadAllText(docuPath + "index.html");
@@ -1215,7 +1215,7 @@ namespace traVRsal.SDK
                 }
 
                 // copy data contents and world descriptor
-                DirectoryUtil.Copy(root + "/Data", docuPath + "/Data");
+                IOUtils.Copy(root + "/Data", docuPath + "/Data");
                 FileUtil.CopyFileOrDirectory(root + "/World.json", docuPath + "/World.json");
 
                 // remove all meta files

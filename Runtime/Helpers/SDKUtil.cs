@@ -8,6 +8,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Converters;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -20,7 +21,9 @@ namespace traVRsal.SDK
     {
         public const string PING_ENDPOINT = "www.travrsal.com";
         public const string SERVER_ENDPOINT = "https://www.travrsal.com";
+
         public const string API_ENDPOINT = SERVER_ENDPOINT + "/api/";
+
         // public const string API_ENDPOINT = "http://localhost:8000/api/";
         public const int TIMEOUT = 20;
 
@@ -166,7 +169,7 @@ namespace traVRsal.SDK
                     }
                     else
                     {
-                        callback(DeserializeObject<T>(webRequest.downloadHandler.text));
+                        yield return DeserializeObjectAsync(webRequest.downloadHandler.text, callback);
                     }
                     yield break;
                 }
@@ -237,6 +240,21 @@ namespace traVRsal.SDK
             return JsonConvert.DeserializeObject<T>(json, GetDefaultJsonSettings());
         }
 
+        public static async Task<T> DeserializeObjectAsync<T>(string json)
+        {
+            T result = default;
+            await Task.Factory.StartNew(() => result = DeserializeObject<T>(json));
+
+            return result;
+        }
+
+        public static IEnumerator DeserializeObjectAsync<T>(string json, Action<T> callback)
+        {
+            Task<T> task = DeserializeObjectAsync<T>(json);
+            yield return new WaitUntil(() => task.IsCompleted);
+            callback(task.Result);
+        }
+
         // inspired from https://stackoverflow.com/questions/33100164/customize-identation-parameter-in-jsonconvert-serializeobject
         public static string SerializeObject<T>(T value, DefaultValueHandling defaultHandling = DefaultValueHandling.Include, Formatting formatting = Formatting.Indented)
         {
@@ -257,6 +275,21 @@ namespace traVRsal.SDK
             jsonSerializer.Serialize(jsonWriter, value, typeof(T));
 
             return sw.ToString();
+        }
+
+        public static async Task<string> SerializeObjectAsync<T>(T value, DefaultValueHandling defaultHandling = DefaultValueHandling.Include, Formatting formatting = Formatting.Indented)
+        {
+            string result = null;
+            await Task.Factory.StartNew(() => result = SerializeObject(value, defaultHandling, formatting));
+
+            return result;
+        }
+
+        public static IEnumerator SerializeObjectAsync<T>(T value, Action<string> callback, DefaultValueHandling defaultHandling = DefaultValueHandling.Include, Formatting formatting = Formatting.Indented)
+        {
+            Task<string> task = SerializeObjectAsync(value);
+            yield return new WaitUntil(() => task.IsCompleted);
+            callback(task.Result);
         }
 
         // inspired from https://stackoverflow.com/questions/281640/how-do-i-get-a-human-readable-file-size-in-bytes-abbreviation-using-net

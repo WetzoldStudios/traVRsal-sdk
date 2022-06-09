@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace traVRsal.SDK
@@ -67,29 +68,19 @@ namespace traVRsal.SDK
             return result;
         }
 
-        public static string CompressToBase64(string text)
-        {
-            return Convert.ToBase64String(Compress(text));
-        }
-
-        public static string DecompressFromBase64(string text)
-        {
-            return Decompress(Convert.FromBase64String(text));
-        }
-
         // based on https://stackoverflow.com/questions/16606552/compress-and-decompress-string-in-c-sharp
-        public static byte[] Compress(string text)
+        public static async Task<byte[]> Compress(string text)
         {
             byte[] bytes = Encoding.Unicode.GetBytes(text);
             using MemoryStream mso = new MemoryStream();
             using (GZipStream gs = new GZipStream(mso, CompressionMode.Compress))
             {
-                gs.Write(bytes, 0, bytes.Length);
+                await gs.WriteAsync(bytes, 0, bytes.Length);
             }
             return mso.ToArray();
         }
 
-        public static string Decompress(byte[] data)
+        public static async Task<string> Decompress(byte[] data)
         {
             // Read the last 4 bytes to get the length
             byte[] lengthBuffer = new byte[4];
@@ -99,7 +90,7 @@ namespace traVRsal.SDK
             byte[] buffer = new byte[uncompressedSize];
             using MemoryStream ms = new MemoryStream(data);
             using GZipStream gzip = new GZipStream(ms, CompressionMode.Decompress);
-            gzip.Read(buffer, 0, uncompressedSize);
+            await gzip.ReadAsync(buffer, 0, uncompressedSize);
             return Encoding.Unicode.GetString(buffer);
         }
 

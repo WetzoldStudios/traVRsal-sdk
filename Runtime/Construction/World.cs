@@ -166,6 +166,7 @@ namespace traVRsal.SDK
         [NonSerialized] public Vector2Int minSizeV = Vector2Int.zero;
         [NonSerialized] public Vector2Int maxSizeV = Vector2Int.zero;
         [NonSerialized] public bool pass2;
+        [NonSerialized] public Dictionary<string, ObjectSpec> objectSpecsMap;
 
         public World()
         {
