@@ -9,6 +9,12 @@ namespace traVRsal.SDK
     [Serializable]
     public class World
     {
+        public enum WorldType
+        {
+            Offline = 0,
+            Online = 1
+        }
+
         public enum TargetMeasures
         {
             Time = 0,
@@ -37,6 +43,8 @@ namespace traVRsal.SDK
             None = 0,
             ButtonCombination = 1
         }
+
+        public WorldType type = WorldType.Offline;
 
         [Header("Presentation")] public string key;
         public string version;
