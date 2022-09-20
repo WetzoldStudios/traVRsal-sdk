@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class TMObject
+    public sealed class TMObject
     {
         public bool ellipse;
         public uint gid;

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class ImageProvider
+    public sealed class ImageProvider
     {
         public enum Provider
         {

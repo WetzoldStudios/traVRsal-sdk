@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace traVRsal.SDK
 {
-    public class TileMapUtil
+    public static class TileMapUtil
     {
-        public const string WORLD_EXTENSION = "world";
-        public const string MAP_EXTENSION = "tmx";
-        public const string TILESET_EXTENSION = "tsx";
-        public const string TEMPLATE_EXTENSION = "tx";
+        public const string WorldExtension = "world";
+        public const string MapExtension = "tmx";
+        public const string TileSetExtension = "tsx";
+        public const string TemplateExtension = "tx";
 
         public static void ConvertTileMaps(List<string> files, string tiledExecutable)
         {
@@ -27,11 +27,11 @@ namespace traVRsal.SDK
                 // leave old name intact and simply add .json
                 string targetName = file + ".json";
 
-                if (name.EndsWith(WORLD_EXTENSION))
+                if (name.EndsWith(WorldExtension))
                 {
                     File.Copy(file, targetName, true);
                 }
-                else if (name.EndsWith(MAP_EXTENSION))
+                else if (name.EndsWith(MapExtension))
                 {
                     System.Diagnostics.Process process = new System.Diagnostics.Process();
                     process.StartInfo.FileName = tiledExecutable;

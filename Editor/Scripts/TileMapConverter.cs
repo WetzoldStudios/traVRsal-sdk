@@ -14,7 +14,7 @@ namespace traVRsal.SDK
 
             foreach (string str in importedAssets.Concat(movedAssets).Concat(movedFromAssetPaths))
             {
-                if (str.EndsWith("." + TileMapUtil.MAP_EXTENSION) || str.EndsWith("." + TileMapUtil.WORLD_EXTENSION))
+                if (str.EndsWith("." + TileMapUtil.MapExtension) || str.EndsWith("." + TileMapUtil.WorldExtension))
                 {
                     changedFiles.Add(str);
                 }
@@ -44,7 +44,7 @@ namespace traVRsal.SDK
                 // leave old name intact and simply add .json
                 string targetName = file + ".json";
 
-                if (file.EndsWith("." + TileMapUtil.WORLD_EXTENSION))
+                if (file.EndsWith("." + TileMapUtil.WorldExtension))
                 {
                     FileUtil.ReplaceFile(file, targetName);
                 }

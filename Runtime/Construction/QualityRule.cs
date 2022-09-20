@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class QualityRule
+    public sealed class QualityRule
     {
         public string[] restrictions;
 

@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class StoryScript
+    public sealed class StoryScript
     {
         public List<StoryAction> actions;
 

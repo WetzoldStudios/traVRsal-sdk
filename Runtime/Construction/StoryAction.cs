@@ -5,9 +5,9 @@ using System.Linq;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class StoryAction
+    public sealed class StoryAction
     {
-        public const string CODE_START = "[";
+        public const string CodeStart = "[";
 
         public enum LineType
         {
@@ -41,7 +41,7 @@ namespace traVRsal.SDK
             raw = line;
 
             if (line.StartsWith("//")) return;
-            if (line.StartsWith(CODE_START))
+            if (line.StartsWith(CodeStart))
             {
                 line = line.Replace("[", "").Replace("]", "");
                 string[] arr = line.Split(':').Select(s => s.Trim()).ToArray();

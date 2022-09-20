@@ -4,7 +4,7 @@ using UnityEngine;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class MaterialReference
+    public sealed class MaterialReference
     {
         public Renderer renderer;
         public int slot = 0;

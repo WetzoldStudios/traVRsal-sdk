@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace traVRsal.SDK
 {
-    public class DirectoryWatcher
+    public sealed class DirectoryWatcher
     {
         public bool isCalled;
         public List<string> affectedFiles = new List<string>();

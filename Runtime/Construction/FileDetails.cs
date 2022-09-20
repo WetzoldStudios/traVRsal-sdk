@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class FileDetails
+    public sealed class FileDetails
     {
         public string name;
         public DateTime createDate;

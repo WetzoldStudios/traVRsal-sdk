@@ -5,9 +5,9 @@ using UnityEngine;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class SegmentComponent
+    public sealed class SegmentComponent
     {
-        public const int UNLIMITED = -1;
+        public const int Unlimited = -1;
 
         public enum ComponentType
         {
@@ -19,8 +19,8 @@ namespace traVRsal.SDK
         public string key;
         [DefaultValue(1)]
         public int min = 1;
-        [DefaultValue(UNLIMITED)]
-        public int max = UNLIMITED;
+        [DefaultValue(Unlimited)]
+        public int max = Unlimited;
 
         [Header("Runtime Information")]
         public string finalKey;
@@ -28,14 +28,14 @@ namespace traVRsal.SDK
 
         public SegmentComponent() { }
 
-        public SegmentComponent(string key, int min = 1, int max = UNLIMITED) : this()
+        public SegmentComponent(string key, int min = 1, int max = Unlimited) : this()
         {
             this.key = key;
             this.min = min;
             this.max = max;
         }
 
-        public SegmentComponent(Zone zone, int min = 1, int max = UNLIMITED) : this(zone.name, min, max)
+        public SegmentComponent(Zone zone, int min = 1, int max = Unlimited) : this(zone.name, min, max)
         {
             this.zone = zone;
         }

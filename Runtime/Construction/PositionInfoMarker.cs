@@ -6,7 +6,7 @@ using static traVRsal.SDK.BasicEntity;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class PositionInfoMarker
+    public sealed class PositionInfoMarker
     {
         public int x;
         public int y;

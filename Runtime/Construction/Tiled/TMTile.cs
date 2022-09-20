@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class TMTile
+    public sealed class TMTile
     {
         public int id;
         public string image;

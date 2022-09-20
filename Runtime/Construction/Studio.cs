@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class Studio
+    public sealed class Studio
     {
         public string projectFolder;
         public string studioPath;

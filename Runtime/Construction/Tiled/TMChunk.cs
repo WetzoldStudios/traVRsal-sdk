@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class TMChunk
+    public sealed class TMChunk
     {
         public uint[] data;
         public int height;

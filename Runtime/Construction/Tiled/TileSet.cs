@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class TileSet
+    public sealed class TileSet
     {
         public int columns;
         public int firstgid;

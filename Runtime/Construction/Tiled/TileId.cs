@@ -1,6 +1,6 @@
 ﻿namespace traVRsal.SDK
 {
-    public class TileId
+    public sealed class TileId
     {
         private const uint TiledHexagonal120Flag = 0x10000000;
         private const uint TiledDiagonalFlipFlag = 0x20000000;

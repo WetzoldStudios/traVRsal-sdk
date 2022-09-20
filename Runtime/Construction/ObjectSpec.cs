@@ -6,7 +6,7 @@ using UnityEngine;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class ObjectSpec
+    public sealed class ObjectSpec
     {
         public enum PivotType
         {

@@ -4,9 +4,9 @@ using System.Security;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class VoiceSpec
+    public sealed class VoiceSpec
     {
-        public const char PREFIX_SEP = '|';
+        public const char PrefixSep = '|';
 
         public enum TTSBackend
         {
@@ -43,7 +43,7 @@ namespace traVRsal.SDK
         {
             // check for inline adjustments
             // TODO: deprecate, change to separate voice definition
-            string[] arr = StringExt.CleanSplit(phrase, PREFIX_SEP);
+            string[] arr = StringExt.CleanSplit(phrase, PrefixSep);
             if (arr.Length > 1)
             {
                 phrase = arr[arr.Length - 1];

@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class Credit
+    public sealed class Credit
     {
         public string activity;
         public string author;

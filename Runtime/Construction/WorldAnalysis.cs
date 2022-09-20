@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class WorldAnalysis
+    public sealed class WorldAnalysis
     {
         public int totalObjects;
         public int totalAgents;

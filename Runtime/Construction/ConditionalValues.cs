@@ -1,6 +1,6 @@
 ﻿namespace traVRsal.SDK
 {
-    public class ConditionalValues
+    public sealed class ConditionalValues
     {
         public string condition;
         public string[] values;

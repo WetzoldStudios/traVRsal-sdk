@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class TileMap
+    public sealed class TileMap
     {
         public string backgroundcolor;
         public int compressionlevel;

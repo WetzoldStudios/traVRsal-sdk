@@ -1,6 +1,6 @@
 ﻿namespace traVRsal.SDK
 {
-    public class PatternParser
+    public sealed class PatternParser
     {
         private readonly string[] _pattern = { };
         private bool _globalLoop;

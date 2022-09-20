@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class WorldDataReference
+    public sealed class WorldDataReference
     {
         public enum ImportType
         {

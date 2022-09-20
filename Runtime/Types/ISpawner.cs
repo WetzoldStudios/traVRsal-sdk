@@ -11,5 +11,6 @@ namespace traVRsal.SDK
         IEnumerator Spawn(SpawnRule rule, Action<GameObject> callback = null);
 
         void Destruct(GameObject go, bool partial = false);
+        void TriggerAutoReturn(GameObject go);
     }
 }

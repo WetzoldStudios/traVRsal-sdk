@@ -5,7 +5,7 @@ using UnityEngine;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class WorldSetting
+    public sealed class WorldSetting
     {
         public enum SettingsType
         {
@@ -36,15 +36,15 @@ namespace traVRsal.SDK
             return string.IsNullOrEmpty(currentValue) ? defaultValue : currentValue;
         }
 
-        public WorldSetting WithCurrentValue(string currentValue)
+        public WorldSetting WithCurrentValue(string value)
         {
-            this.currentValue = currentValue;
+            currentValue = value;
             return this;
         }
 
-        public WorldSetting WithDefaultValue(string defaultValue)
+        public WorldSetting WithDefaultValue(string value)
         {
-            this.defaultValue = defaultValue;
+            defaultValue = value;
             return this;
         }
 

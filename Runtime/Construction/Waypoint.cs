@@ -5,7 +5,7 @@ using UnityEngine;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class Waypoint : MonoBehaviour
+    public sealed class Waypoint : MonoBehaviour
     {
         public enum Type
         {

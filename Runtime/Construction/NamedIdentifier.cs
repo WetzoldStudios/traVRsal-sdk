@@ -4,7 +4,7 @@ using UnityEngine;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class NamedIdentifier : MonoBehaviour
+    public sealed class NamedIdentifier : MonoBehaviour
     {
         public enum IdentifierType
         {

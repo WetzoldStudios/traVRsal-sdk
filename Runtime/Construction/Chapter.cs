@@ -4,7 +4,7 @@ using System.ComponentModel;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class Chapter
+    public sealed class Chapter
     {
         public enum UnlockRule
         {

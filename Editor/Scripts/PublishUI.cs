@@ -1251,7 +1251,7 @@ namespace traVRsal.SDK
 
         private static void ConvertTileMaps()
         {
-            foreach (string extension in new[] {TileMapUtil.MAP_EXTENSION, TileMapUtil.WORLD_EXTENSION})
+            foreach (string extension in new[] {TileMapUtil.MapExtension, TileMapUtil.WorldExtension})
             {
                 string[] files = Directory.GetFiles(Application.dataPath, "*." + extension, SearchOption.AllDirectories);
                 TileMapUtil.ConvertTileMaps(files.ToList(), TravrsalSettingsManager.Get("tiledPath", SDKUtil.TILED_PATH_DEFAULT));

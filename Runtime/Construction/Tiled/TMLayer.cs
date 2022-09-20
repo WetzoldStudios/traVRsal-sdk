@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class TMLayer
+    public sealed class TMLayer
     {
         public TMChunk[] chunks;
         public string compression;

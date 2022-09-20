@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class WorldMap
+    public sealed class WorldMap
     {
         public string fileName;
         public int x;

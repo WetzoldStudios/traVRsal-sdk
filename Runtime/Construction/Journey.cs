@@ -7,7 +7,7 @@ using UnityEngine;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class Journey
+    public sealed class Journey
     {
         public const int SUM_OF_SEGMENTS = -1;
 

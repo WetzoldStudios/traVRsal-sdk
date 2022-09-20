@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class TMWorld
+    public sealed class TMWorld
     {
         public string type;
         public WorldMap[] maps;

@@ -5,7 +5,7 @@ using static traVRsal.SDK.BasicEntity;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class ReplacementRule
+    public sealed class ReplacementRule
     {
         public enum ReplacementType
         {

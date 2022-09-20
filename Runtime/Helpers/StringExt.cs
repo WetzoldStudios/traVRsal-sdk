@@ -15,7 +15,7 @@ namespace traVRsal.SDK
 {
     public static class StringExt
     {
-        public static readonly char[] DEFAULT_SEPARATORS = {',', ';'};
+        public static readonly char[] DefaultSeparators = {',', ';'};
 
         public static string ReplaceIgnoreCase(this string input, string oldValue, string newValue)
         {
@@ -134,7 +134,7 @@ namespace traVRsal.SDK
 
             List<string> result = new List<string>();
 
-            string[] arr = contents.Split(DEFAULT_SEPARATORS);
+            string[] arr = contents.Split(DefaultSeparators);
             for (int i = 0; i < arr.Length; i++)
             {
                 string content = arr[i].Trim();
@@ -186,7 +186,7 @@ namespace traVRsal.SDK
 
         public static Vector2 Str2Vector2(string value, Dictionary<string, float> units = null)
         {
-            string[] arr = CleanSplit(value, DEFAULT_SEPARATORS);
+            string[] arr = CleanSplit(value, DefaultSeparators);
             if (arr == null || arr.Length < 2) return Vector2.zero;
 
             float x = Str2Float(arr[0], units);
@@ -196,7 +196,7 @@ namespace traVRsal.SDK
 
         public static Vector3 Str2Vector3(string value, Dictionary<string, float> units = null)
         {
-            string[] arr = CleanSplit(value, DEFAULT_SEPARATORS);
+            string[] arr = CleanSplit(value, DefaultSeparators);
             if (arr == null || arr.Length < 3) return Vector3.zero;
 
             float x = Str2Float(arr[0], units);

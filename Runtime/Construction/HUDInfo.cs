@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [AddComponentMenu("traVRsal/HUD Info")]
-    public class HUDInfo : MonoBehaviour
+    public sealed class HUDInfo : MonoBehaviour
     {
         public HUDConfig config;
 

@@ -6,7 +6,7 @@ using static traVRsal.SDK.BasicEntity;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class SpawnRule : BasicSpawnRule
+    public sealed class SpawnRule : BasicSpawnRule
     {
         [Tooltip("Other game objects that are spawned at the exact same position the main spawn rule determined, e.g. a frame for a picture")]
         public BasicSpawnRule[] companions;

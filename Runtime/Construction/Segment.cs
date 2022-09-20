@@ -5,9 +5,9 @@ using System.ComponentModel;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class Segment
+    public sealed class Segment
     {
-        public const int SUM_OF_COMPONENTS = -1;
+        public const int SumOfComponents = -1;
 
         public enum Order
         {
@@ -18,7 +18,7 @@ namespace traVRsal.SDK
         [DefaultValue(true)] public bool enabled = true;
         public string key;
         public string chapter;
-        [DefaultValue(SUM_OF_COMPONENTS)] public int length = SUM_OF_COMPONENTS;
+        [DefaultValue(SumOfComponents)] public int length = SumOfComponents;
         public List<SegmentComponent> components;
         public Order order = Order.Random;
 
@@ -27,7 +27,7 @@ namespace traVRsal.SDK
             components = new List<SegmentComponent>();
         }
 
-        public Segment(string key, Order order = Order.Random, int length = SUM_OF_COMPONENTS) : this()
+        public Segment(string key, Order order = Order.Random, int length = SumOfComponents) : this()
         {
             this.key = key;
             this.order = order;

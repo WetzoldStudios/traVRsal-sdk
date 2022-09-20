@@ -5,7 +5,7 @@ using static traVRsal.SDK.DataBinding;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class HUDConfig
+    public sealed class HUDConfig
     {
         public enum Location
         {

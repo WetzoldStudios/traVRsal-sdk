@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class TMGrid
+    public sealed class TMGrid
     {
         public int height;
         public string orientation;

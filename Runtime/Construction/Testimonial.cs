@@ -3,7 +3,7 @@
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class Testimonial
+    public sealed class Testimonial
     {
         public string text;
         public string author;

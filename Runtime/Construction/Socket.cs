@@ -2,7 +2,7 @@
 
 namespace traVRsal.SDK
 {
-    public class Socket : MonoBehaviour
+    public sealed class Socket : MonoBehaviour
     {
         public string key;
 

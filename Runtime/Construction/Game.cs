@@ -6,7 +6,7 @@ using UnityEngine;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class Game
+    public sealed class Game
     {
         public enum ReleaseChannel
         {

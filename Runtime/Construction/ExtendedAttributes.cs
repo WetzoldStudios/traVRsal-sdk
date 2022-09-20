@@ -13,7 +13,7 @@ namespace traVRsal.SDK
 
     [Serializable]
     [DisallowMultipleComponent]
-    public class ExtendedAttributes : MonoBehaviour
+    public sealed class ExtendedAttributes : MonoBehaviour
     {
         [Tooltip("Object is static, does not move, is not an agent and does not use logic components, enabling further performance enhancements.")]
         public bool environment;

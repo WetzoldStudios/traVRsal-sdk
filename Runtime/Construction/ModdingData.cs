@@ -5,7 +5,7 @@ using static traVRsal.SDK.ImageProvider;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class ModdingData
+    public sealed class ModdingData
     {
         public Order imageOrder = Order.List;
         public Filter imageFilter = Filter.None;

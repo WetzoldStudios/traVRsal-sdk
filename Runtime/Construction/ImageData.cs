@@ -4,7 +4,7 @@ using UnityEngine;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class ImageData
+    public sealed class ImageData
     {
         [Header("Metadata")] public string imageLink;
         public string animationLink;

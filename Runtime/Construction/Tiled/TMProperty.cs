@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace traVRsal.SDK
 {
     [Serializable]
-    public class TMProperty
+    public sealed class TMProperty
     {
         public string name;
         public string type = "auto";
