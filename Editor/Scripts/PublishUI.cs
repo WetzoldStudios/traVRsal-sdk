@@ -387,7 +387,7 @@ namespace traVRsal.SDK
                     {
                         current++;
                         string assetPath = AssetDatabase.GUIDToAssetPath(asset);
-                        if (!assetPath.ToLower().EndsWith(".prefab")) continue;
+                        if (!assetPath.ToLowerInvariant().EndsWith(".prefab")) continue;
                         Progress.Report(progressId, (float) current / total, assetPath);
 
                         GameObject go = PrefabUtility.LoadPrefabContents(assetPath);
@@ -942,7 +942,7 @@ namespace traVRsal.SDK
                 foreach (string asset in assets)
                 {
                     string assetPath = AssetDatabase.GUIDToAssetPath(asset);
-                    if (!assetPath.ToLower().EndsWith(".prefab")) continue;
+                    if (!assetPath.ToLowerInvariant().EndsWith(".prefab")) continue;
 
                     // construct key
                     string worldBasePath = worldRootPath + "/" + folder;
@@ -1101,7 +1101,7 @@ namespace traVRsal.SDK
                             string assetPath = AssetDatabase.GUIDToAssetPath(asset);
                             if (doneAlready.Contains(assetPath)) continue;
                             doneAlready.Add(assetPath);
-                            if (assetPath.ToLower().EndsWith(".md")) continue;
+                            if (assetPath.ToLowerInvariant().EndsWith(".md")) continue;
 
                             string imageLink = "NoPreview.png";
                             bool withExtension = true;
@@ -1111,7 +1111,7 @@ namespace traVRsal.SDK
                             switch (folder)
                             {
                                 case "Data":
-                                    if (!assetPath.ToLower().EndsWith(".tmx")) continue;
+                                    if (!assetPath.ToLowerInvariant().EndsWith(".tmx")) continue;
                                     imageLink = folder + "/" + Path.GetFileName(assetPath) + ".png";
                                     TileMapUtil.TileMapToImage(assetPath, docuPath + imageLink, converterPath);
                                     withExtension = false;
@@ -1123,20 +1123,20 @@ namespace traVRsal.SDK
                                     break;
 
                                 case "Materials":
-                                    if (!assetPath.ToLower().EndsWith(".mat")) continue;
+                                    if (!assetPath.ToLowerInvariant().EndsWith(".mat")) continue;
                                     withExtension = false;
                                     generatePreview = true;
                                     type = typeof(Material);
                                     break;
 
                                 case "Pieces":
-                                    if (!assetPath.ToLower().EndsWith(".prefab")) continue;
+                                    if (!assetPath.ToLowerInvariant().EndsWith(".prefab")) continue;
                                     withExtension = false;
                                     generatePreview = true;
                                     break;
 
                                 case "Sceneries":
-                                    if (!assetPath.ToLower().EndsWith(".prefab")) continue;
+                                    if (!assetPath.ToLowerInvariant().EndsWith(".prefab")) continue;
                                     withExtension = false;
                                     generatePreview = true;
                                     break;

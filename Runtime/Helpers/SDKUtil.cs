@@ -187,7 +187,7 @@ namespace traVRsal.SDK
             webRequest.SetRequestHeader("X-Do-Not-Track", Application.isEditor ? "True" : "False");
             if (game != null)
             {
-                webRequest.SetRequestHeader("X-Channel", game.channel.ToString().ToLower());
+                webRequest.SetRequestHeader("X-Channel", game.channel.ToString().ToLowerInvariant());
                 webRequest.SetRequestHeader("X-DevMode", game.devMode ? "True" : "False");
             }
         }

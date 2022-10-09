@@ -47,7 +47,7 @@ namespace traVRsal.SDK
                 string[] arr = line.Split(':').Select(s => s.Trim()).ToArray();
                 if (arr.Length >= 2) param = arr[1];
                 if (arr.Length >= 3) value = arr[2];
-                switch (arr[0].ToLower())
+                switch (arr[0].ToLowerInvariant())
                 {
                     case "break":
                         type = LineType.Break;

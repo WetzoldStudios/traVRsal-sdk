@@ -81,7 +81,7 @@ namespace traVRsal.SDK
         {
             this.name = Path.GetFileNameWithoutExtension(name);
             key = name;
-            lowKey = key.ToLower();
+            lowKey = key.ToLowerInvariant();
         }
 
         public BasicEntity(BasicEntity copyFrom)

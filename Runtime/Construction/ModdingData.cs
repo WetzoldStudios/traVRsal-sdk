@@ -25,7 +25,7 @@ namespace traVRsal.SDK
             {
                 mod.imageData.ForEach(id =>
                 {
-                    if (!id.imageLink.ToLower().StartsWith("http")) id.imageLink = dirName + "/" + id.imageLink;
+                    if (!id.imageLink.ToLowerInvariant().StartsWith("http")) id.imageLink = dirName + "/" + id.imageLink;
                 });
                 if (imageData == null)
                 {

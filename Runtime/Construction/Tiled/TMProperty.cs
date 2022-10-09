@@ -53,9 +53,9 @@ namespace traVRsal.SDK
 
         private void DetectType()
         {
-            if (type.ToLower() == "auto")
+            if (type.ToLowerInvariant() == "auto")
             {
-                string valueLC = value.ToLower();
+                string valueLC = value.ToLowerInvariant();
                 if (valueLC == "true" || valueLC == "false")
                 {
                     type = "bool";

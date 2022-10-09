@@ -22,7 +22,7 @@ namespace traVRsal.SDK
             for (int i = 0; i < files.Count; i++)
             {
                 string file = files[i];
-                string name = file.ToLower();
+                string name = file.ToLowerInvariant();
 
                 // leave old name intact and simply add .json
                 string targetName = file + ".json";
