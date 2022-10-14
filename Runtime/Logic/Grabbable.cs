@@ -12,7 +12,10 @@ namespace traVRsal.SDK
         [Tooltip("Return item either to the ground in front of the player or to its original position.")]
         public bool returnToOriginalPosition;
 
-        [Header("On Grab")] public bool hideHand = true;
+        [Header("On Grab")] [Tooltip("Add this item to the permanent inventory. It cannot be dropped anymore but only switched.")]
+        public bool addToInventory;
+
+        public bool hideHand = true;
 
         [Header("On Drop")] public bool activateGravity = true;
         public bool deactivateKinematic = true;

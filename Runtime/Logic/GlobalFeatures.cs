@@ -18,6 +18,11 @@ namespace traVRsal.SDK
             _audio = GetComponentInParent<ISoundAction>();
         }
 
+        public void ResetZoneTimer()
+        {
+            _env?.ResetZoneTimer();
+        }
+
         public void SetLightIntensity(float intensity)
         {
             _env?.SetLightIntensity(intensity);

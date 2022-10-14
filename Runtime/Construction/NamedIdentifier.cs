@@ -66,6 +66,7 @@ namespace traVRsal.SDK
 
             AvatarName = 42,
 
+            AudioType = 51,
             TheaterRoot = 37,
             AutoParent = 46,
             Object = 23
