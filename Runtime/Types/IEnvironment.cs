@@ -8,6 +8,5 @@ namespace traVRsal.SDK
         void SetLightIntensity(float intensity);
         void SetLightColor(Color color);
         void SetAmbientLightColor(Color color);
-        void ResetZoneTimer();
     }
 }

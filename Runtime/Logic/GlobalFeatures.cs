@@ -20,7 +20,12 @@ namespace traVRsal.SDK
 
         public void ResetZoneTimer()
         {
-            _env?.ResetZoneTimer();
+            _api?.ResetZoneTimer();
+        }
+
+        public void GotoZone(string key)
+        {
+            _api?.GotoZone(key);
         }
 
         public void SetLightIntensity(float intensity)

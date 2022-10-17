@@ -5,6 +5,7 @@ namespace traVRsal.SDK
     [Serializable]
     public sealed class TMLayer
     {
+        public string @class;
         public TMChunk[] chunks;
         public string compression;
         public uint[] data;

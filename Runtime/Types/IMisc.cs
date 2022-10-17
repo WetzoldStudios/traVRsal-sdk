@@ -6,5 +6,7 @@
         void LoadWorld(string worldName);
         void UnlockAchievement(string key);
         void ShowScreenHud(bool state);
+        void ResetZoneTimer();
+        void GotoZone(string key);
     }
 }
