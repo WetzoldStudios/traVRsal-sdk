@@ -19,6 +19,8 @@ namespace traVRsal.SDK
         public TMObject[] objects;
         public float offsetx;
         public float offsety;
+        public float parallaxx;
+        public float parallaxy;
         public float opacity;
         public TMProperty[] properties;
         public string transparentcolor;

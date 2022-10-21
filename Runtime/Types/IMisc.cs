@@ -7,6 +7,7 @@
         void UnlockAchievement(string key);
         void ShowScreenHud(bool state);
         void ResetZoneTimer();
+        void ResetWorldTimer();
         void GotoZone(string key);
     }
 }

@@ -22,6 +22,13 @@ namespace traVRsal.SDK
             Random = 2
         }
 
+        public enum Logic
+        {
+            None = 0,
+            Combo = 1,
+            Cycle = 2
+        }
+
         [Header("Configuration")] public string key;
         public object value = false;
         public Behaviour behaviour = Behaviour.Unrestricted;
@@ -32,6 +39,7 @@ namespace traVRsal.SDK
         [DefaultValue(true)] public bool resetOnCheckpoint = true;
 
         [Header("Runtime")] public bool runtimeCreated;
+        public Logic logic;
         public bool isComboPart;
         public bool isLocal;
         public List<string> targetOrder = new List<string>();

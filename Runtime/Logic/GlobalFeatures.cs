@@ -23,6 +23,11 @@ namespace traVRsal.SDK
             _api?.ResetZoneTimer();
         }
 
+        public void ResetWorldTimer()
+        {
+            _api?.ResetWorldTimer();
+        }
+
         public void GotoZone(string key)
         {
             _api?.GotoZone(key);
