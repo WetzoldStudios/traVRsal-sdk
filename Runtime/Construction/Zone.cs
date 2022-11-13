@@ -25,6 +25,7 @@ namespace traVRsal.SDK
         public bool isIntro;
         public bool blockAgents = true;
         public bool blockNavigation = true;
+        public bool noNavigation;
         public bool reactivateTransitions;
         public bool invisibleGround;
         public string variable;

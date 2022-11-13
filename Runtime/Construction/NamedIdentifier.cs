@@ -65,6 +65,7 @@ namespace traVRsal.SDK
             MainMenuModalCanvasRoot = 38,
 
             AvatarName = 42,
+            AvatarMirror = 52,
 
             AudioType = 51,
             TheaterRoot = 37,
