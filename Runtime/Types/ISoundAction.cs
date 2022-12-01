@@ -3,5 +3,6 @@
     public interface ISoundAction
     {
         void PlayMusic(string music);
+        void PlayAudioEffect(string path);
     }
 }

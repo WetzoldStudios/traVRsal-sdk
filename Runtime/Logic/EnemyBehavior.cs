@@ -39,6 +39,10 @@ namespace traVRsal.SDK
         [Header("Tracking")] public bool trackPlayer = true;
         public Transform tracker;
         public float trackSpeed = 1f;
+
+        [Tooltip("Will not only rotate around Y but also X, e.g. a drone pointing its gun at a player.")]
+        public bool alignAllAxis;
+
         public bool moveToPlayer;
 
         [Header("Attack")] public bool proximityDamage;
@@ -50,9 +54,17 @@ namespace traVRsal.SDK
         public Vector2 moveAreaStart = Vector2.zero;
         public Vector2 moveAreaEnd = Vector2.zero;
         public float wanderRadius = 5f;
+        public float destinationTolerance = 0.4f;
         public string waypoints;
         public bool snapToGrid = true;
         public bool reportMovement = true;
+
+        [Tooltip("Will move designated object to vertical position of waypoints, e.g. to simulate a flying drone.")]
+        public bool adjustVertically;
+
+        [Tooltip("Object that will be adjusted, should be a child below the navmesh agent.")]
+        public Transform objectToAdjust;
+
         public AudioSource walkSound;
 
         [Tooltip("Name of bool parameter defining if agent is moving or not")]

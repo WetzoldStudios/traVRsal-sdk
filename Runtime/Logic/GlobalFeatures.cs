@@ -53,6 +53,11 @@ namespace traVRsal.SDK
             _audio?.PlayMusic(music);
         }
 
+        public void PlayAudioEffect(string path)
+        {
+            _audio?.PlayAudioEffect(path);
+        }
+
         public void ShowTheater(string video)
         {
             _api?.ShowTheater(video);

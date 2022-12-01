@@ -58,6 +58,7 @@ namespace traVRsal.SDK
             DoPlayWorldTrailer = 173,
             DoSetDebugMode = 7,
             DoSetMetricSystem = 116,
+            DoSetLeftHanded = 206,
             DoSetHaptics = 125,
             DoSetHQShaders = 158,
             DoSetChallengeGhosts = 165,

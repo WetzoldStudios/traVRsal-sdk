@@ -17,6 +17,9 @@ namespace traVRsal.SDK
 
         public bool hideHand = true;
 
+        [Tooltip("Pose to make when item is grabbed. Supported predefined poses: Pistol, Ball, Rock, Controller")]
+        public string handPose;
+
         [Header("On Drop")] public bool activateGravity = true;
         public bool deactivateKinematic = true;
 

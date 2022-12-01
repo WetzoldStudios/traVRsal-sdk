@@ -92,6 +92,7 @@ namespace traVRsal.SDK
         [DefaultValue(1f)] public float loadingMusicVolume = 1f;
         [DefaultValue(true)] public bool createIntro = true;
         public bool waitForIntroVoice;
+        [DefaultValue(true)] public bool playIntroInstructions = true;
         public TargetMeasures[] measures = {TargetMeasures.Time, TargetMeasures.Distance};
         public TargetVisibility targetVisibility = TargetVisibility.EnteringZone;
         public List<QualityRule> qualityRules;
