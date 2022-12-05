@@ -36,6 +36,7 @@ namespace traVRsal.SDK
         public float lightIntensity = 1f;
         public string skybox;
         public float fogDensity = 0.02f;
+        public float floorVisibility;
 
         [Header("Audio")] public string music;
         public float musicVolume = 1f;

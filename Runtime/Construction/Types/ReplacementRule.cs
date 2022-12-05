@@ -27,6 +27,7 @@ namespace traVRsal.SDK
 
         public string[] validZones;
         public string[] invalidZones;
+        public string[] validTags;
 
         public TMProperty[] properties;
 
@@ -51,6 +52,7 @@ namespace traVRsal.SDK
             randomObjects = copyFrom.randomObjects;
             validZones = copyFrom.validZones;
             invalidZones = copyFrom.invalidZones;
+            validTags = copyFrom.validTags;
             orientation = copyFrom.orientation;
             properties = SDKUtil.CopyProperties(copyFrom.properties);
         }

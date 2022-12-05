@@ -71,7 +71,8 @@ namespace traVRsal.SDK
         public string unlockAchievement;
         public string finishAchievement;
 
-        [Header("Chapters")] public bool loadAllChapters;
+        [Header("Chapters")] public bool loadPreviousChapters;
+        public bool loadFollowingChapters;
         public string defaultChapter;
         public List<Chapter> chapters;
 
