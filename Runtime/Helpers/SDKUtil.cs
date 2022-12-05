@@ -310,38 +310,6 @@ namespace traVRsal.SDK
             return text.Length < maxLength ? text : text.Substring(0, maxLength);
         }
 
-        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
-        {
-            foreach (T obj in source)
-            {
-                action(obj);
-            }
-            return source;
-        }
-
-        public static T[] Append<T>(this T[] data, T element)
-        {
-            Array.Resize(ref data, data.Length + 1);
-            data[data.Length - 1] = element;
-
-            return data;
-        }
-
-        public static void AddRange<T>(this IList<T> list, IEnumerable<T> collection)
-        {
-            if (list is List<T> result)
-            {
-                result.AddRange(collection);
-            }
-            else
-            {
-                foreach (T obj in collection)
-                {
-                    list.Add(obj);
-                }
-            }
-        }
-
         public static byte[] GetHash(this string inputString)
         {
             HashAlgorithm algorithm = SHA256.Create();

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace traVRsal.SDK
@@ -6,6 +8,23 @@ namespace traVRsal.SDK
     [AddComponentMenu("traVRsal/Randomizer")]
     public class Randomizer : MonoBehaviour
     {
+        public enum CommonComponents
+        {
+            Damageable
+        }
+
+        [Header("Keep Objects")] public bool keepRandomObjects;
+
+        [Tooltip("Will delete children randomly until only specified number remains. Use different values for X and Y to define a random range.")]
+        public Vector2Int objectsToKeep;
+
+        [Header("Keep Components")] public bool keepRandomComponents;
+
+        [Tooltip("Will remove components of children randomly until only specified number remains. Use different values for X and Y to define a random range.")]
+        public Vector2Int componentsToKeep;
+
+        public CommonComponents componentToKeepType;
+
         [Header("Move")] public bool randomMovement;
 
         [Tooltip("Distance the object should be moved. Use different values for X and Y to define a range for a random distance.")]
@@ -39,8 +58,39 @@ namespace traVRsal.SDK
         [Tooltip("Scale of the object, e.g. (1.2,1.2) for 20% bigger. Use different values for X and Y to define a range for a random scale.")]
         public Vector2 scaleZ = new Vector2(0f, 0f);
 
-        private void Start()
+        private void Awake()
         {
+            // global rules
+            if (keepRandomObjects)
+            {
+                int finalObjectsToKeep = Random.Range(objectsToKeep.x, objectsToKeep.y);
+                while (transform.childCount > finalObjectsToKeep) DestroyImmediate(transform.GetChild(Random.Range(0, transform.childCount)).gameObject);
+            }
+            if (keepRandomComponents)
+            {
+                int finalComponentsToKeep = Random.Range(componentsToKeep.x, componentsToKeep.y);
+                MonoBehaviour[] components = null;
+                switch (componentToKeepType)
+                {
+                    case CommonComponents.Damageable:
+                        components = GetComponentsInChildren<Damageable>(true);
+                        break;
+
+                    default:
+                        EDebug.LogError($"Unsupported randomization component: {componentToKeepType}");
+                        break;
+                }
+                if (components != null && components.Length > finalComponentsToKeep)
+                {
+                    List<MonoBehaviour> list = components.ToList();
+                    list.Shuffle();
+                    for (int i = finalComponentsToKeep; i < list.Count; i++)
+                    {
+                        DestroyImmediate(list[i]);
+                    }
+                }
+            }
+
             // apply to all children
             for (int i = 0; i < transform.childCount; i++)
             {
