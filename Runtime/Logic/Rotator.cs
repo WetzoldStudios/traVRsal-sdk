@@ -121,7 +121,7 @@ namespace traVRsal.SDK
 
         private void PlayAudio()
         {
-            if (audio != null) audio.Play();
+            if (_loadingDone && audio != null) audio.Play();
         }
 
         public void VariableChanged(Variable variable, bool condition, bool initialCall = false)
@@ -132,11 +132,19 @@ namespace traVRsal.SDK
 
             if (condition)
             {
-                _curTween = transform.DOLocalRotate(_originalRotation + axis * _finalDegrees, _finalDuration).SetDelay(_finalOnDelay + (_changedOnce ? 0f : _finalOnDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                _curTween = transform.DOLocalRotate(_originalRotation + axis * _finalDegrees, _finalDuration)
+                    .SetDelay(_finalOnDelay + (_changedOnce ? 0f : _finalOnDelay)).SetEase(easeType).OnPlay(() =>
+                    {
+                        if (!initialCall) PlayAudio();
+                    });
             }
             else
             {
-                _curTween = transform.DOLocalRotateQuaternion(_originalRotationQ, _finalDuration).SetDelay(_finalOffDelay + (_changedOnce ? 0f : _finalOnDelay)).SetEase(easeType).OnPlay(PlayAudio);
+                _curTween = transform.DOLocalRotateQuaternion(_originalRotationQ, _finalDuration)
+                    .SetDelay(_finalOffDelay + (_changedOnce ? 0f : _finalOnDelay)).SetEase(easeType).OnPlay(() =>
+                    {
+                        if (!initialCall) PlayAudio();
+                    });
             }
 
             if (!initialCall && variable.everChanged) _changedOnce = true;

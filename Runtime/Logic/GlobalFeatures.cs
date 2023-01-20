@@ -73,7 +73,7 @@ namespace traVRsal.SDK
             _api?.ShowScreenHud(state);
         }
 
-        public void Destruct(GameObject go)
+        public void Destruct(GameObject go = null)
         {
             _spawner?.Destruct(go);
         }

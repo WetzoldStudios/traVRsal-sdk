@@ -10,7 +10,7 @@ namespace traVRsal.SDK
 
         IEnumerator Spawn(SpawnRule rule, Action<GameObject> callback = null);
 
-        void Destruct(GameObject go, bool partial = false);
+        void Destruct(GameObject go = null, bool partial = false);
         void TriggerAutoReturn(GameObject go);
     }
 }

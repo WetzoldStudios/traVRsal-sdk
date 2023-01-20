@@ -35,6 +35,10 @@ namespace traVRsal.SDK
         [Header("Destruction")] public bool destructible = true;
         public bool allowMelee;
         public bool hideWhenDestroyed = true;
+
+        [Tooltip("If true will remove the whole piece where the damageable belongs to, otherwise only this game object.")]
+        public bool removeFullObject = true;
+
         public string stateChange;
 
         [Tooltip("Haptics to play, e.g. 'melee'")]
