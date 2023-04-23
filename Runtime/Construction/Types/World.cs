@@ -120,6 +120,7 @@ namespace traVRsal.SDK
         public string defaultSkybox;
         public bool firstSkyboxInIntro;
         public bool lastSkyboxInOutro;
+        [DefaultValue(1000f)] public float skyboxDistance = 1000f;
         public string defaultScenery;
         [DefaultValue("/Base/LightHall")] public string introScenery = "/Base/LightHall";
 
