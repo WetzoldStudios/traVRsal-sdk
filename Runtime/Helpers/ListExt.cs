@@ -150,8 +150,11 @@ namespace traVRsal.SDK
             }
         }
 
+#if UNITY_2023_1_OR_NEWER
+#else
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source) => new HashSet<T>(source);
-
+#endif
+        
         /// <summary>
         /// Topological Sorting (Kahn's algorithm) 
         /// </summary>

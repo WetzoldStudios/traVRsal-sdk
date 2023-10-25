@@ -147,6 +147,7 @@ namespace traVRsal.SDK
 
         [Header("Runtime Data")] public bool journeyMode;
         public bool rotateWorld;
+        public bool passthrough;
         public bool requiresNavMesh;
         public bool invalidSettings;
         public Game.ReleaseChannel channel;

@@ -61,6 +61,7 @@ namespace traVRsal.SDK
             DoSetLeftHanded = 206,
             DoSetHaptics = 125,
             DoSetHQShaders = 158,
+            DoSetPassthrough = 207,
             DoSetChallengeGhosts = 165,
             DoSetPlayerAvatarSystem = 205,
             DoSendReport = 192,
@@ -216,6 +217,7 @@ namespace traVRsal.SDK
             ShowIfHaptics = 157,
             ShowIfControllerMovement = 177,
             ShowIfInMainMenu = 188,
+            ShowIfNotPassthrough = 208,
 
             ShowWorldDownload = ASYNC_RESULT + 1,
             ShowWorldStart = ASYNC_RESULT + 2,

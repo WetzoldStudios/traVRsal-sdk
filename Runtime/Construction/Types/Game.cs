@@ -43,6 +43,9 @@ namespace traVRsal.SDK
         // derived 
         public bool offlineMode;
 
+        // runtime
+        public bool forceNoGravity;
+
         public Game()
         {
             worlds = new List<string>();

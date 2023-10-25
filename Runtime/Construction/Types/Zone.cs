@@ -35,6 +35,7 @@ namespace traVRsal.SDK
         public Color backgroundColor = Color.black;
         public float lightIntensity = 1f;
         public string skybox;
+        public bool passthrough;
         public float fogDensity = 0.02f;
         public float floorVisibility;
 
@@ -87,6 +88,7 @@ namespace traVRsal.SDK
         [NonSerialized] public List<Socket> sockets;
         [NonSerialized] public List<GameObject> socketItems;
         [NonSerialized] public GameObject navBlockerNode;
+        [NonSerialized] public GameObject skyboxNode;
 
         public Zone()
         {
@@ -164,36 +166,36 @@ namespace traVRsal.SDK
         public override bool Equals(object obj)
         {
             return obj is Zone zone &&
-                   name == zone.name &&
-                   tag == zone.tag &&
-                   chapter == zone.chapter &&
-                   createCheckpoint == zone.createCheckpoint &&
-                   minSize.Equals(zone.minSize) &&
-                   offset.Equals(zone.offset) &&
-                   // FIXME: returns false for some reason
-                   EqualityComparer<List<Floor>>.Default.Equals(floors, zone.floors) &&
-                   isExit == zone.isExit &&
-                   isIntro == zone.isIntro &&
-                   reactivateTransitions == zone.reactivateTransitions &&
-                   invisibleGround == zone.invisibleGround &&
-                   blockAgents == zone.blockAgents &&
-                   blockNavigation == zone.blockNavigation &&
-                   availableTime == zone.availableTime &&
-                   hasAmbientColor == zone.hasAmbientColor &&
-                   hasBackgroundColor == zone.hasBackgroundColor &&
-                   hasLightColor == zone.hasLightColor &&
-                   hasLightIntensity == zone.hasLightIntensity &&
-                   hasFog == zone.hasFog &&
-                   ambientColor.Equals(zone.ambientColor) &&
-                   lightColor.Equals(zone.lightColor) &&
-                   backgroundColor.Equals(zone.backgroundColor) &&
-                   lightIntensity == zone.lightIntensity &&
-                   fogDensity == zone.fogDensity &&
-                   skybox == zone.skybox &&
-                   music == zone.music &&
-                   randomMusic == zone.randomMusic &&
-                   variable == zone.variable &&
-                   EqualityComparer<TMProperty[]>.Default.Equals(properties, zone.properties);
+                name == zone.name &&
+                tag == zone.tag &&
+                chapter == zone.chapter &&
+                createCheckpoint == zone.createCheckpoint &&
+                minSize.Equals(zone.minSize) &&
+                offset.Equals(zone.offset) &&
+                // FIXME: returns false for some reason
+                EqualityComparer<List<Floor>>.Default.Equals(floors, zone.floors) &&
+                isExit == zone.isExit &&
+                isIntro == zone.isIntro &&
+                reactivateTransitions == zone.reactivateTransitions &&
+                invisibleGround == zone.invisibleGround &&
+                blockAgents == zone.blockAgents &&
+                blockNavigation == zone.blockNavigation &&
+                availableTime == zone.availableTime &&
+                hasAmbientColor == zone.hasAmbientColor &&
+                hasBackgroundColor == zone.hasBackgroundColor &&
+                hasLightColor == zone.hasLightColor &&
+                hasLightIntensity == zone.hasLightIntensity &&
+                hasFog == zone.hasFog &&
+                ambientColor.Equals(zone.ambientColor) &&
+                lightColor.Equals(zone.lightColor) &&
+                backgroundColor.Equals(zone.backgroundColor) &&
+                lightIntensity == zone.lightIntensity &&
+                fogDensity == zone.fogDensity &&
+                skybox == zone.skybox &&
+                music == zone.music &&
+                randomMusic == zone.randomMusic &&
+                variable == zone.variable &&
+                EqualityComparer<TMProperty[]>.Default.Equals(properties, zone.properties);
         }
 
         public override int GetHashCode()
