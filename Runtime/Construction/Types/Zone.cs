@@ -146,6 +146,7 @@ namespace traVRsal.SDK
             music = copyFrom.music;
             randomMusic = copyFrom.randomMusic;
             skybox = copyFrom.skybox;
+            passthrough = copyFrom.passthrough;
             blockAgents = copyFrom.blockAgents;
             blockNavigation = copyFrom.blockNavigation;
             variationOf = copyFrom.variationOf;
@@ -192,6 +193,7 @@ namespace traVRsal.SDK
                 lightIntensity == zone.lightIntensity &&
                 fogDensity == zone.fogDensity &&
                 skybox == zone.skybox &&
+                passthrough == zone.passthrough &&
                 music == zone.music &&
                 randomMusic == zone.randomMusic &&
                 variable == zone.variable &&
@@ -225,6 +227,7 @@ namespace traVRsal.SDK
             hashCode = hashCode * -1521134295 + backgroundColor.GetHashCode();
             hashCode = hashCode * -1521134295 + lightIntensity.GetHashCode();
             hashCode = hashCode * -1521134295 + fogDensity.GetHashCode();
+            hashCode = hashCode * -1521134295 + passthrough.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(skybox);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(music);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(randomMusic);

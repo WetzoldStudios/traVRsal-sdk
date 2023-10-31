@@ -147,7 +147,6 @@ namespace traVRsal.SDK
 
         [Header("Runtime Data")] public bool journeyMode;
         public bool rotateWorld;
-        public bool passthrough;
         public bool requiresNavMesh;
         public bool invalidSettings;
         public Game.ReleaseChannel channel;
@@ -170,6 +169,7 @@ namespace traVRsal.SDK
         [NonSerialized] public Dictionary<int, HashSet<int>> zoneVisibility;
         [NonSerialized] public Dictionary<string, Waypoint> waypointCache;
         [NonSerialized] public Challenge challenge;
+        [NonSerialized] public bool passthrough;
         [NonSerialized] public bool useExistingWorld;
         [NonSerialized] public int autoIdx = 1;
         [NonSerialized] public int livesLeft;

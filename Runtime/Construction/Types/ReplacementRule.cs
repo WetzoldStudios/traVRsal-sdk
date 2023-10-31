@@ -48,6 +48,7 @@ namespace traVRsal.SDK
             key = copyFrom.key;
             keys = copyFrom.keys;
             objectKey = copyFrom.objectKey;
+            materials = copyFrom.materials;
             randomMaterials = copyFrom.randomMaterials;
             randomObjects = copyFrom.randomObjects;
             validZones = copyFrom.validZones;
