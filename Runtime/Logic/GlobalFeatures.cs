@@ -33,6 +33,11 @@ namespace traVRsal.SDK
             _api?.GotoZone(key);
         }
 
+        public void SetPassthrough(bool state)
+        {
+            _env?.SetPassthrough(state);
+        }
+
         public void SetLightIntensity(float intensity)
         {
             _env?.SetLightIntensity(intensity);
