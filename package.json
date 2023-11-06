@@ -1,7 +1,7 @@
 {
   "name": "com.wetzold.travrsal.sdk",
   "description": "Provides the tools necessary to create worlds for traVRsal.",
-  "version": "1.2.207",
+  "version": "1.2.217",
   "unity": "2023.1",
   "displayName": "traVRsal SDK",
   "dependencies": {
