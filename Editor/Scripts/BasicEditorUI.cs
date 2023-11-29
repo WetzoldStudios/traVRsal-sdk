@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Rendering;
 
 namespace traVRsal.SDK
 {
@@ -24,13 +24,14 @@ namespace traVRsal.SDK
         {
             string logoName = EditorGUIUtility.isProSkin ? "travrsal-white-300.png" : "travrsal-300.png";
 
-            Texture2D logoImage = AssetDatabase.LoadAssetAtPath($"Packages/com.wetzold.travrsal.sdk/Editor/Images/{logoName}", typeof(Texture2D)) as Texture2D;
-            if (logoImage == null) logoImage = AssetDatabase.LoadAssetAtPath($"Assets/SDK/Editor/Images/{logoName}", typeof(Texture2D)) as Texture2D;
+            Texture2D logoImage = AssetDatabase.LoadAssetAtPath($"Packages/com.wetzold.travrsal.sdk/Editor/Images/{logoName}", typeof (Texture2D)) as Texture2D;
+            if (logoImage == null) logoImage = AssetDatabase.LoadAssetAtPath($"Assets/SDK/Editor/Images/{logoName}", typeof (Texture2D)) as Texture2D;
 
             _logo = new GUIStyle {normal = {background = logoImage}, fixedWidth = 128, fixedHeight = 64};
 
             // perform (cheap) setup tasks
             SetupTagsAndLayers();
+            EnsureGraphicsAPIs();
 
             EditorCoroutineUtility.StartCoroutine(FetchUserWorlds(), this);
         }
@@ -78,6 +79,15 @@ namespace traVRsal.SDK
             }
 
             return true;
+        }
+
+        private void EnsureGraphicsAPIs()
+        {
+            GraphicsDeviceType[] apis = PlayerSettings.GetGraphicsAPIs(BuildTarget.Android);
+            if (apis.Length != 2 || apis[0] != GraphicsDeviceType.Vulkan || apis[1] != GraphicsDeviceType.OpenGLES3)
+            {
+                PlayerSettings.SetGraphicsAPIs(BuildTarget.Android, new[] {GraphicsDeviceType.Vulkan, GraphicsDeviceType.OpenGLES3});
+            }
         }
 
         private static void SetupTagsAndLayers()
@@ -195,7 +205,7 @@ namespace traVRsal.SDK
                 }
                 else if (webRequest.isHttpError)
                 {
-                    if (webRequest.responseCode == (int) HttpStatusCode.Unauthorized)
+                    if (webRequest.responseCode == (int)HttpStatusCode.Unauthorized)
                     {
                         Debug.LogError("Invalid or expired API Token when contacting Replica");
                     }
