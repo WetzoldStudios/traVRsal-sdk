@@ -83,6 +83,7 @@ namespace traVRsal.SDK
 
         private void EnsureGraphicsAPIs()
         {
+            PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.Android, false);
             GraphicsDeviceType[] apis = PlayerSettings.GetGraphicsAPIs(BuildTarget.Android);
             if (apis.Length != 2 || apis[0] != GraphicsDeviceType.Vulkan || apis[1] != GraphicsDeviceType.OpenGLES3)
             {
